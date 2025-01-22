@@ -1,0 +1,26 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:vue/vue3-recommended",
+    "@nuxtjs/eslint-config-typescript",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module"
+  },
+  "plugins": ["vue", "@typescript-eslint"],
+  "ignorePatterns": ["api/", "src/utils/auth/define/"],
+  "rules": {
+    "vue/multi-word-component-names": "off", // コンポーネント名の命名ルールを無効
+    "object-shorthand": "off", // オブジェクトの省略記法は分かりにくいので無効
+    "no-console": "off" // console.log();OK
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint --ext .ts,.js,.vue .",
+    "format": "prettier --write .",
+    "generate-api": "openapi2aspida",
+    "generate-api-auth": "npx openapi2aspida -i=./openapi-auth.json -o=src/utils/auth/define",
+    "start": "nuxt start"
+  },
+  "dependencies": {
+    "@aspida/axios": "^1.14.0",
+    "@nuxthq/ui": "^2.7.0",
+    "@pinia/nuxt": "^0.9.0",
+    "@vee-validate/i18n": "^4.15.0",
+    "aspida": "^1.14.0",
+    "flowbite": "^2.5.2",
+    "moment": "^2.30.1",
+    "nuxt": "^3.15.1",
+    "pinia": "^2.3.0",
+    "pinia-plugin-persistedstate": "^4.2.0",
+    "swiper": "^11.2.1",
+    "typescript": "^5.7.3",
+    "vee-validate": "^4.15.0",
+    "vue": "^3.5.13",
+    "vue-router": "latest",
+    "vue-uuid": "^3.0.0",
+    "yup": "^1.6.1",
+    "yup-locale-ja": "^1.0.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.7.9",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-nuxt": "^4.0.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "openapi2aspida": "^0.24.0",
+    "postcss": "^8.4.49",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.17"
+  }
+}
