@@ -1,0 +1,12 @@
+﻿services:
+  csharp-personalstore:
+    image: csharp-personalstore
+    build:
+      context: .
+      dockerfile: CSharp-PersonalStore/Dockerfile
+
+  server:
+    image: server
+    build:
+      context: .
+      dockerfile: server/Dockerfile

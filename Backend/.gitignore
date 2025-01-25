@@ -1,0 +1,21 @@
+# Bỏ qua các thư mục build
+bin/
+obj/
+
+# Bỏ qua các file tạm của IDE (Visual Studio, Rider, v.v.)
+.vs/
+.idea/
+
+# Bỏ qua các file nhị phân
+*.exe
+*.dll
+*.pdb
+
+# Bỏ qua các file hệ thống
+Thumbs.db
+.DS_Store
+
+*.user
+*.userosscache
+*.suo
+*.sln.docstates

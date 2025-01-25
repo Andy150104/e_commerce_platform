@@ -1,0 +1,3 @@
+OpenIdDict:
+    - https://documentation.openiddict.com/guides/getting-started/creating-your-own-server-instance
+    - https://github.com/openiddict/openiddict-core
