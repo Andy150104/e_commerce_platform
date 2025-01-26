@@ -11,7 +11,7 @@ using Client.Utils.Consts;
 namespace server.Controllers.V1;
 
 /// <summary>
-///  HelloController - Print Hello World
+/// HelloController - Print Hello World
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
@@ -33,7 +33,7 @@ public class HelloWordController : AbstractApiController<HelloWordRequest, Hello
     }
     
     /// <summary>
-    ///  
+    /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -58,7 +58,7 @@ public class HelloWordController : AbstractApiController<HelloWordRequest, Hello
         
         // True
         response.Success = true;
-        response.SetMessage(MessageId.E10000);
+        response.SetMessage(MessageId.I00001, "HelloWorld is");
         return response;
     }
 
