@@ -1,6 +1,7 @@
-Message content, MessageId, Message, Example message,
+Message content,MessageId,Message,Example message,
 Processing successful,I00001,{0} Processing completed successfully. {1},,
-Input error, I10000, No data exists that matches the entered conditions. ,,
+Input error,I10000, No data exists that matches the entered conditions. ,,
 Processing successful (for Select controller), I99999, Processing completed successfully. ,,
-Required error, E10000, Input error. Check the message of the error item. ,,
-User not found, E11001, User not found. ,No data has been selected. Please select one or more.,
+Required error,E10000, Input error. Check the message of the error item. ,,
+User not found,E11001, User not found. ,No data has been selected. Please select one or more.,
+Report API error, E99001, A problem occurred with the report service.

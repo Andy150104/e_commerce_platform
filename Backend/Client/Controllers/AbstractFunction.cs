@@ -23,20 +23,20 @@ public class AbstractFunction<T, U, V>
     {
         switch (e)
         {
-            case AggregateException: // Report API connection error
+            case AggregateException:
                 logger.Warn($"Report API connection error ：{e.Message}");
                 returnValue.SetMessage(MessageId.E99001);
                 break;
-            case DbUpdateConcurrencyException: // Exclusive control error UPDT_DATE is different
+            case DbUpdateConcurrencyException: 
                 logger.Error($"Exclusive error ：{e.Message}");
-                returnValue.SetMessage(MessageId.I00001);
+                returnValue.SetMessage(MessageId.E99001);
                 break;
             case InvalidOperationException:
                 if (e.InnerException?.HResult == -2146233088)
                 {
                     // Exclusive control error Another update in the transaction
                     logger.Error($"Exclusive error ：{e.Message}");
-                    returnValue.SetMessage(MessageId.I00001);
+                    returnValue.SetMessage(MessageId.E99001);
                 }
                 else
                 {
@@ -51,27 +51,26 @@ public class AbstractFunction<T, U, V>
                 {
                     // SQL timeout
                     logger.Error($"SQL timeout error ：{e.Message} {e.StackTrace} {e.InnerException}");
-                    returnValue.SetMessage(MessageId.I00001);
+                    returnValue.SetMessage(MessageId.E99001);
                 }
                 else if (ex.Number == 3961)
                 {
                     // Error that occurs when the definition of a view or the like is changed during execution
                     logger.Warn($"The definition of a view, etc. was changed during processing ：{e.Message} {e.StackTrace} {e.InnerException}");
-                    returnValue.SetMessage(MessageId.E99999);
+                    returnValue.SetMessage(MessageId.E99001);
                 }
                 else
                 {
                     logger.Warn($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
-                    returnValue.SetMessage(MessageId.E99999);
+                    returnValue.SetMessage(MessageId.E99001);
                 }
 
                 break;
             case Exception:
                 // System error
                 logger.Warn($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
-                returnValue.SetMessage(MessageId.E99999);
+                returnValue.SetMessage(MessageId.E99001);
                 break;
-
         }
 
         returnValue.Success = false;

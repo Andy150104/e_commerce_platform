@@ -14,7 +14,9 @@ public partial class Messages
         //If there is no message that matches the CSV, the following will be returned.
         var message = "No matching message.";
 
-        var csvPath = System.AppDomain.CurrentDomain.BaseDirectory + $"Settings/ConstantCSV/MessageId.csv";
+        // var csvPath = System.AppDomain.CurrentDomain.BaseDirectory + $"Settings/ConstantCSV/MessageId.csv";
+        var csvPath = Path.Combine(Directory.GetCurrentDirectory(), "Settings/ConstanstCSV/MessageId.csv");
+
         if (!File.Exists(csvPath)) return $"{csvPath} not found.";
 
         var reader = new StreamReader(File.OpenRead(csvPath));

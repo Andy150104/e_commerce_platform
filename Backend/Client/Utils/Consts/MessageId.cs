@@ -36,12 +36,12 @@ public class MessageId
     public readonly static string E00000 = "E00000";
     
     /// <summary>
-    ///
+    /// Report API error: A problem has occurred with the report service.
     /// </summary>
     public readonly static string E99001 = "E99001";
     
     /// <summary>
-    ///
+    /// Other error: A system error occurred.\nPlease contact your system administrator.
     /// </summary>
     public readonly static string E99999 = "E99999";
     

@@ -61,12 +61,12 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
         logger.Warn(request);
 
         // Check authentication information
-        if (appDbContext?.IdentityEntity == null)
+        if (appDbContext.IdentityEntity == null)
         {
             // Authentication error
             logger.Fatal($"Authenticated, but information is missing.");
             returnValue.Success = false;
-            returnValue.SetMessage(MessageId.I00001);
+            returnValue.SetMessage("Failed to get user information.");
             logger.Warn(returnValue);
             return returnValue;
         }
@@ -80,7 +80,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
             // Additional user information error
             logger.Error($"Failed to get additional user information.：{e.Message}");
             returnValue.Success = false;
-            returnValue.SetMessage("Failed to get additional user information.");
+            returnValue.SetMessage("Failed to get user information.");
             logger.Warn(returnValue);
             return returnValue;
         }
