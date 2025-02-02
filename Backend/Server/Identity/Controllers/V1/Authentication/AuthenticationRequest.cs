@@ -1,11 +1,11 @@
-namespace server.Identity.Controllers;
+namespace Server.Identity.Controllers;
 
 public class AuthenticationRequest
 {
     /// <summary>
     ///  UserName
     /// </summary>
-    public string UserName { get; set; }
+    public string UserNameOrEmail { get; set; }
     
     /// <summary>
     /// Password

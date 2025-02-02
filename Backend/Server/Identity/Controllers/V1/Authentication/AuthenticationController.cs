@@ -1,33 +1,41 @@
 using System.Security.Claims;
-using Server.Models.Helper;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
 using Server.Helpers;
+using Server.Models;
+using Server.Models.Helper;
 
-namespace server.Identity.Controllers;
+namespace Server.Identity.Controllers;
 
 /// <summary>
-/// 
+/// Authentication controller - Exchange token
 /// </summary>
 public class AuthenticationController : ControllerBase
 {
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManage;
     private readonly IOpenIddictScopeManager _scopeManager;
     private readonly AppDbContext _context;
 
     /// <summary>
-    ///  Constructor
+    /// Constructor
     /// </summary>
     /// <param name="scopeManager"></param>
     /// <param name="context"></param>
-    public AuthenticationController(IOpenIddictScopeManager scopeManager, AppDbContext context)
+    /// <param name="userManager"></param>
+    /// <param name="signInManager"></param>
+    public AuthenticationController(IOpenIddictScopeManager scopeManager, AppDbContext context, UserManager<User> userManager, SignInManager<User> signInManager)
     {
         _scopeManager = scopeManager;
         _context = context;
+        _userManager = userManager;
+        _signInManage = signInManager;
     }
 
     /// <summary>
@@ -70,43 +78,36 @@ public class AuthenticationController : ControllerBase
     /// <returns></returns>
     private async Task<IActionResult> TokensForPasswordGrantType(AuthenticationRequest request)
     {
-        var user = await _context.Users
-            .Include(x => x.Role)
-            .Where(x => x.UserName == request.UserName)
-            .Where(x => x.IsEnabled == true)
-            .FirstOrDefaultAsync(); 
-
-        if (user == null)
+        // Check user exists
+        var userExist = _context.VwUserLogins.AsNoTracking().FirstOrDefault(x => x.UserName == request.UserNameOrEmail || x.Email == request.UserNameOrEmail);
+        if (userExist == null)
         {
             return Unauthorized();
         }
-
-        if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        // If user exists
+        var user = await _userManager.FindByIdAsync(userExist.UserId);
+        // Check password
+        if (!await _userManager.CheckPasswordAsync(user, request.Password))
         {
-            if (user.AuthFailedCount >= 5)
+            user.AccessFailedCount++;
+            if (user.AccessFailedCount >= 5)
             {
-                user.IsEnabled = false;
-                await _context.SaveChangesAsync();
-                return Unauthorized();
+                user.LockoutEnd = DateTime.UtcNow.AddMinutes(30);
             }
-            else
-            {
-                user.AuthFailedCount += 1;
-                user.LockDate = System.DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-                return this.StatusCode(423);
-            }
-        } 
-        
-        if (user.LockDate.HasValue && (DateTime.UtcNow - user.LockDate.Value).TotalMinutes > 30)
+        }
+        // Check lockout
+        if (user.LockoutEnd != null && user.LockoutEnd > DateTime.UtcNow)
         {
-            user.LockDate = null;
-            user.AuthFailedCount = 0;
-            await _context.SaveChangesAsync();
+            return Unauthorized();
+        }
+        // Check user is active
+        if (!user.IsActive)
+        {
+            return Unauthorized();
         }
         
-        user.AuthFailedCount = 0;
-        user.LockDate = null;
+        user.AccessFailedCount = 0;
+        user.LockoutEnd = null;
         await _context.SaveChangesAsync();
         
         var identity = new ClaimsIdentity(
@@ -115,10 +116,11 @@ public class AuthenticationController : ControllerBase
             OpenIddictConstants.Claims.Role
         );
         
-        identity.SetClaim(OpenIddictConstants.Claims.Subject, user.Id.ToString(), OpenIddictConstants.Destinations.AccessToken);
-        identity.SetClaim(OpenIddictConstants.Claims.Name, user.UserName, OpenIddictConstants.Destinations.AccessToken);
-        identity.SetClaim("UserId", request.UserName, OpenIddictConstants.Destinations.AccessToken);
-        identity.SetClaim(OpenIddictConstants.Claims.Role, user.Role.Name, OpenIddictConstants.Destinations.AccessToken);        
+        identity.SetClaim(OpenIddictConstants.Claims.Subject, userExist.UserId.ToString(), OpenIddictConstants.Destinations.AccessToken);
+        identity.SetClaim(OpenIddictConstants.Claims.Name, userExist.UserName, OpenIddictConstants.Destinations.AccessToken);
+        identity.SetClaim("UserId", request.UserNameOrEmail, OpenIddictConstants.Destinations.AccessToken);
+        identity.SetClaim(OpenIddictConstants.Claims.Email, userExist.Email, OpenIddictConstants.Destinations.AccessToken);
+        identity.SetClaim(OpenIddictConstants.Claims.Role, userExist.RoleName, OpenIddictConstants.Destinations.AccessToken);        
         identity.SetClaim(OpenIddictConstants.Claims.Audience, "service_client", OpenIddictConstants.Destinations.AccessToken);        
         
         identity.SetDestinations(claim =>
@@ -128,6 +130,7 @@ public class AuthenticationController : ControllerBase
                 OpenIddictConstants.Claims.Subject => new[] { OpenIddictConstants.Destinations.AccessToken },
                 OpenIddictConstants.Claims.Name => new[] { OpenIddictConstants.Destinations.AccessToken },
                 "UserId" => new[] { OpenIddictConstants.Destinations.AccessToken },
+                OpenIddictConstants.Claims.Email => new[] { OpenIddictConstants.Destinations.AccessToken },
                 OpenIddictConstants.Claims.Role => new[] { OpenIddictConstants.Destinations.AccessToken },
                 OpenIddictConstants.Claims.Audience => new[] { OpenIddictConstants.Destinations.AccessToken },
                 _ => new[] { OpenIddictConstants.Destinations.AccessToken }
