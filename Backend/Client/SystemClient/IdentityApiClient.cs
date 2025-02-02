@@ -14,10 +14,12 @@ public class IdentityApiClient : IIdentityApiClient
         var userNm = identity.FindFirst("UserId")?.Value;
         if (string.IsNullOrEmpty(userNm)) 
             return null;
+        var email = identity.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
 
         var identityEntity = new IdentityEntity()
         {
             UserName = userNm,
+            Email = email
         };
         return identityEntity;
     }

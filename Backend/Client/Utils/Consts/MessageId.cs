@@ -6,7 +6,7 @@ namespace Client.Utils.Consts;
 public class MessageId
 {
     /// <summary>
-    /// 
+    /// Processing successfully {0}
     /// </summary>
     public readonly static string I00000 = "I00000";
     
@@ -73,5 +73,10 @@ public class MessageId
     /// <summary>
     /// Password is invalid
     /// </summary>
-    public readonly static string E11005 = "E11006";
+    public readonly static string E11005 = "E11005";
+    
+    /// <summary>
+    /// Failed to get user information.
+    /// </summary>
+    public readonly static string E11006 = "E11006";
 }

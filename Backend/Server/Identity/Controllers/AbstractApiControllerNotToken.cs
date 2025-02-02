@@ -1,21 +1,12 @@
-using Client.Controllers;
-using Client.Models.Helper;
-using Client.SystemClient;
-using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
+using Server.Controllers;
+using Server.Models.Helper;
 
 namespace Client.Controllers;
 
-/// <summary>
-/// API Controller Abstract Class
-/// </summary>
-/// <typeparam name="T"></typeparam>
-/// <typeparam name="U"></typeparam>
-/// <typeparam name="V"></typeparam>
-public abstract class AbstractApiController<T, U, V> : ControllerBase
+public abstract class AbstractApiControllerNotToken<T, U, V> : ControllerBase
     where T : AbstractApiRequest
     where U : AbstractApiResponse<V>
 {
@@ -35,11 +26,6 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
     protected internal abstract U ErrorCheck(T request, List<DetailError> detailErrorList, IDbContextTransaction transaction);
 
     /// <summary>
-    /// Authentication API client
-    /// </summary>
-    protected IIdentityApiClient _identityApiClient;
-
-    /// <summary>
     /// Transaction isolation level
     /// </summary>
     /// <remarks>
@@ -57,34 +43,6 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
     /// <returns></returns>
     protected U Post(T request, AppDbContext appDbContext, Logger logger, U returnValue)
     {
-        appDbContext.IdentityEntity = _identityApiClient?.GetIdentity(User);
-        logger.Warn(request);
-
-        // Check authentication information
-        if (appDbContext.IdentityEntity == null)
-        {
-            // Authentication error
-            logger.Fatal($"Authenticated, but information is missing.");
-            returnValue.Success = false;
-            returnValue.SetMessage("Failed to get user information.");
-            logger.Warn(returnValue);
-            return returnValue;
-        }
-        // Additional user information
-        try
-        {
-            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications.AsNoTracking().FirstOrDefault().UserName;
-        }
-        catch (Exception e)
-        {
-            // Additional user information error
-            logger.Error($"Failed to get additional user information.：{e.Message}");
-            returnValue.Success = false;
-            returnValue.SetMessage(MessageId.E11006);
-            logger.Warn(returnValue);
-            return returnValue;
-        }
-
         try
         {
             appDbContext. _Logger = logger;

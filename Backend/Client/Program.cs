@@ -6,15 +6,20 @@ using NSwag.Generation.Processors.Security;
 using OpenIddict.Validation.AspNetCore;
 using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
 using Client.SystemClient;
+using server.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//  
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.UseOpenIddict();
+});
+
+builder.Services.AddDbContext<BBExTradingFloorContext>(options =>
 {
     options.UseSqlServer(connectionString);
     options.UseOpenIddict();

@@ -1,25 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 namespace Server.Models;
 
-public partial class User
+public class User : IdentityUser
 {
-    public long Id { get; set; }
+    public bool IsActive { get; set; }
 
-    public string UserName { get; set; } = null!;
-
-    public string PasswordHash { get; set; } = null!;
-
-    public DateTime? LockDate { get; set; }
-
-    public byte AuthFailedCount { get; set; }
-
-    public bool IsEnabled { get; set; }
-
-    public string Email { get; set; } = null!;
+    public string RoleId { get; set; }
     
-    public long RoleId { get; set; }
-
-    public virtual Role Role { get; set; }
+    [ForeignKey("RoleId")]
+    public virtual Role Role { get; set; } = null!;
 }
