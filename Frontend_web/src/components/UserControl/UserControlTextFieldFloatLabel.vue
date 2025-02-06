@@ -78,7 +78,7 @@
   const props = defineProps({
     textModel: {
       type: String,
-      required: true,
+      required: false,
       default: '',
     },
     xmlColumn: {

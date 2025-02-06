@@ -36,3 +36,7 @@ export enum StepStatus {
   pendingStep = 1,
   finishStep = 2
 }
+export interface selectItem {
+  text: string
+  value: string
+}

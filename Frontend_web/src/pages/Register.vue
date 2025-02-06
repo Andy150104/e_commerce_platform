@@ -5,11 +5,11 @@
       <div class="mb-10 animate-jump-in animate-once animate-ease-linear">
         <ProgressStepper :items="stepperStore.steppList" />
       </div>
-      <div v-show="store.createFlgInput" :class="'animate-fade-right grid grid-cols-1 gap-8 ' + className.COLS_2">
+      <div v-show="store.createFlgAccountInfo" :class="'animate-fade-right grid grid-cols-1 gap-8 ' + className.COLS_2">
         <div class="space-y-4">
           <h2 class="text-2xl font-semibold">Profile</h2>
           <p class="text-sm text-gray-600 dark:text-gray-400">This information will be displayed publicly so be careful what you share.</p>
-          <div class="h-full w-full">
+          <div class="w-full">
             <img
               v-if="uploadImageStore.uploadImage.length > 0"
               class="rounded-full object-cover mx-auto aspect-square w-40 h-40 md:w-64 md:h-64"
@@ -62,50 +62,102 @@
           </div>
         </div>
       </div>
-      <div v-show="store.createFlgNextInputInfo" class="space-y-6">
+      <div v-show="store.createFlgPersonalInfo" class="space-y-6">
         <h2 class="text-2xl font-semibold">Personal Information</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">Use a permanent address where you can receive mail.</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-right">
           <div class="space-y-4">
             <div>
-              <label for="first-name" class="block text-sm font-medium">First name</label>
-              <input type="text" id="first-name" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
+              <UserControlTextFieldLabel
+                :xml-column="xmlColumns.firstName"
+                :maxlength="50"
+                :disabled="false"
+                :err-msg="fieldErrors.firstName"
+                :placeholder="'John'"
+              />
             </div>
             <div>
-              <label for="email-address" class="block text-sm font-medium">Email address</label>
-              <input type="email" id="email-address" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
+              <UserControlTextFieldLabel
+                :xml-column="xmlColumns.email"
+                :maxlength="50"
+                :disabled="false"
+                :err-msg="fieldErrors.email"
+                :placeholder="'abc@gmail.com'"
+              />
             </div>
             <div>
-              <label for="country" class="block text-sm font-medium">Country</label>
-              <select id="country" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
-                <option>United States</option>
-                <option>Canada</option>
-                <option>United Kingdom</option>
-              </select>
+              <UserControlTextFieldLabel
+                :xml-column="xmlColumns.phoneNumber"
+                :maxlength="50"
+                :disabled="false"
+                :err-msg="fieldErrors.phoneNumber"
+                :placeholder="'123456789'"
+              />
             </div>
             <div>
-              <label for="street-address" class="block text-sm font-medium">Street address</label>
-              <input type="text" id="street-address" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
+              <UserControlDateField
+                :xml-column="xmlColumns.birthday"
+                :err-msg="fieldErrors.birthday"
+                :disabled="false"
+                :maxlength="10"
+                :date-model="'11/1/2002'"
+                :is-inline="false"
+                :date-picker-position="'top right'"
+              />
+              <UserControlRadioButton
+                :xml-column="xmlColumns.gender"
+                :model="fieldValues.gender"
+                :disabled="false"
+                :err-msg="fieldErrors.gender"
+                :master-name="'Gender'"
+              />
             </div>
           </div>
           <div class="space-y-4">
             <div>
-              <label for="last-name" class="block text-sm font-medium">Last name</label>
-              <input type="text" id="last-name" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
+              <UserControlTextFieldLabel
+                :xml-column="xmlColumns.lastName"
+                :maxlength="50"
+                :disabled="false"
+                :err-msg="fieldErrors.lastName"
+                :placeholder="'John'"
+              />
             </div>
             <div>
-              <label for="city" class="block text-sm font-medium">City</label>
-              <input type="text" id="city" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
+              <UserControlTextFieldLabel
+                :xml-column="xmlColumns.country"
+                :maxlength="50"
+                :disabled="false"
+                :err-msg="fieldErrors.country"
+                :placeholder="'Viet Nam'"
+              />
             </div>
             <div>
-              <label for="state-province" class="block text-sm font-medium">State / Province</label>
-              <input type="text" id="state-province" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
+              <UserControlTextFieldLabel
+                :xml-column="xmlColumns.city"
+                :maxlength="50"
+                :disabled="false"
+                :err-msg="fieldErrors.city"
+                :placeholder="'Ho Chi Minh'"
+              />
             </div>
             <div>
-              <label for="zip-postal-code" class="block text-sm font-medium">ZIP / Postal code</label>
-              <input type="text" id="zip-postal-code" class="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500">
+              <UserControlTextFieldLabel
+                :xml-column="xmlColumns.ward"
+                :maxlength="50"
+                :disabled="false"
+                :err-msg="fieldErrors.ward"
+                :placeholder="'District 0'"
+              />
             </div>
           </div>
+        </div>
+      </div>
+      <div v-show="store.createFlgPlan" class="space-y-6">
+        <h2 class="text-2xl font-semibold">Plan Supscription</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-400">Use a permanent address where you can receive mail.</p>
+        <div class="grid grid-cols-1 animate-fade-right">
+          <CardPlan/>
         </div>
       </div>
       <div class="flex justify-between mt-8">
@@ -118,30 +170,38 @@
 <script setup lang="ts">
   import BaseControlTextField from '@PKG_SRC/components/Basecontrol/BaseControlTextField.vue'
   import LabelItem from '@PKG_SRC/components/Basecontrol/LabelItem.vue'
+  import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
   import ProgressStepper from '@PKG_SRC/components/Stepper/ProgressStepper.vue'
+  import UserControlDateField from '@PKG_SRC/components/UserControl/UserControlDateField.vue'
+  import UserControlRadioButton from '@PKG_SRC/components/UserControl/UserControlRadioButton.vue'
+  import UserControlTextFieldLabel from '@PKG_SRC/components/UserControl/UserControlTextFieldLabel.vue'
   import UserControlUploadImage from '@PKG_SRC/components/UserControl/UserControlUploadImage.vue'
   import BaseScreenAuth from '@PKG_SRC/layouts/Basecreen/BaseScreenAuth.vue'
   import { useRegisterStore } from '@PKG_SRC/stores/Modules/Register/RegisterStore'
   import { useStepperStore } from '@PKG_SRC/stores/Modules/Register/StepperStore'
   import { useUploadImageStore } from '@PKG_SRC/stores/Modules/usercontrol/uploadImageStore'
   import type { StepItem } from '@PKG_SRC/types'
-import { StepStatus } from '@PKG_SRC/types/enums/constantFrontend'
+  import { StepStatus } from '@PKG_SRC/types/enums/constantFrontend'
   import { className } from '@PKG_SRC/utils/class/className'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import { useForm } from 'vee-validate'
 
   const steppList = ref<StepItem[]>([
     {
-      nameItem: 'Personal Info',
-      status: 0,
+      nameItem: 'Account Info',
+      status: StepStatus.currentStep,
     },
     {
-      nameItem: 'Plan Scription',
-      status: 1,
+      nameItem: 'Personal Info',
+      status: StepStatus.pendingStep,
+    },
+    {
+      nameItem: 'Plan Supscription',
+      status: StepStatus.pendingStep,
     },
     {
       nameItem: 'Confirm',
-      status: 2,
+      status: StepStatus.finishStep,
     },
   ])
   const uploadImageStore = useUploadImageStore()
@@ -165,23 +225,92 @@ import { StepStatus } from '@PKG_SRC/types/enums/constantFrontend'
       visible: true,
       option: '',
     }),
+    email: XmlLoadColumn({
+      id: 'email',
+      name: 'Email',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    phoneNumber: XmlLoadColumn({
+      id: 'phoneNumber',
+      name: 'Phone Number',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    birthday: XmlLoadColumn({
+      id: 'birthday',
+      name: 'Birthday',
+      rules: '',
+      visible: true,
+      option: '',
+    }),
+    firstName: XmlLoadColumn({
+      id: 'firstName',
+      name: 'First Name',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    lastName: XmlLoadColumn({
+      id: 'lastName',
+      name: 'Last Name',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    gender: XmlLoadColumn({
+      id: 'gender',
+      name: 'Gender',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    city: XmlLoadColumn({
+      id: 'city',
+      name: 'City',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    country: XmlLoadColumn({
+      id: 'country',
+      name: 'Country',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    ward: XmlLoadColumn({
+      id: 'ward',
+      name: 'Ward',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
   }
-  const updateFlags = (isInput: boolean, isInputInfor:boolean, isPlan: boolean, isComplete: boolean) => {
-    store.createFlgInput = isInput
-    store.createFlgNextInputInfo = isInputInfor
+  const updateFlags = (isAccount: boolean, isPersonal: boolean, isPlan: boolean, isComplete: boolean) => {
+    store.createFlgAccountInfo = isAccount
+    store.createFlgPersonalInfo = isPersonal
     store.createFlgPlan = isPlan
     store.createFlgComplete = isComplete
   }
 
   const moveToNextStep = () => {
-    stepperStore.updateStepStatus(1, StepStatus.currentStep)
-    updateFlags(false, true, false, false)
+    stepperStore.moveToNextStep()
+    if (store.createFlgAccountInfo) return updateFlags(false, true, false, false)
+    if (store.createFlgPersonalInfo) return updateFlags(false, false, true, false)
+    if (store.createFlgPlan) return updateFlags(false, false, false, true)
   }
 
   const onBackStep = () => {
-    stepperStore.updateStepStatus(0, StepStatus.currentStep)
-    stepperStore.updateStepStatus(1, StepStatus.pendingStep)
-    updateFlags(true, false, false, false)
+    if (store.createFlgAccountInfo){
+      window.location.href = document.referrer
+    }
+    stepperStore.moveToPreviousStep()
+    if (store.createFlgPersonalInfo) return updateFlags(true, false, false, false)
+    if (store.createFlgPlan) return updateFlags(false, true, false, false)
+    if (store.createFlgComplete) return updateFlags(false, false, true, false)
   }
 
   onMounted(() => {

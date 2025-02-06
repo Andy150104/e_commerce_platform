@@ -1,7 +1,7 @@
 <template>
   <div class="md:flex md:items-center md:space-x-4 space-y-4 md:space-y-0 w-full">
     <div class="relative w-full">
-      <div class="absolute left-3 top-4">
+      <div class="absolute left-3 top-7">
         <svg
           class="w-4 h-4 text-gray-500 dark:text-gray-400"
           aria-hidden="true"
@@ -30,21 +30,22 @@
         :disabled="disabled"
         :readonly="readonly"
         :placeholder="props.placeholder"
+        :datepicker-orientation="datePickerPosition"
         autocomplete="off"
         @blur="onBlur"
       />
       <div v-if="errMessage">
-    <UAlert
-      icon="i-heroicons-command-line"
-      color="rose"
-      padding="p-1"
-      variant="outline"
-      :title="errMsg"
-      :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link' }"
-      :ui="{ padding: 'p-1 mt-3 mb-3'}"
-      @close="onClose"
-    />
-  </div>
+        <UAlert
+          icon="i-heroicons-command-line"
+          color="rose"
+          padding="p-1"
+          variant="outline"
+          :title="errMsg"
+          :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link' }"
+          :ui="{ padding: 'p-1 mt-3 mb-3' }"
+          @close="onClose"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -57,6 +58,7 @@
   import { _padding } from '#tailwind-config/theme'
   import { className } from '@PKG_SRC/utils/class/className'
   import LabelItem from './LabelItem.vue'
+  import { initFlowbite } from 'flowbite'
   const props = defineProps({
     xmlColumn: {
       type: Object as PropType<xmlColumn>,
@@ -104,6 +106,11 @@
       required: false,
       default: false,
     },
+    datePickerPosition: {
+      type: String,
+      required: false,
+      default: 'bottom left'
+    }
   })
   interface Emits {
     (e: 'on-blur'): void
@@ -133,7 +140,7 @@
       emit('on-blur')
     })
   }
-  
+
   const classField = computed(() => {
     return errMessage.value ? className.DATE_TIME_PICKER_TODAY : className.DATE_TIME_PICKER_TODAY
   })
@@ -149,13 +156,11 @@
       errMessage.value = err
     }
   )
-  //   watch(
-  //     () => props.errMsg,
-  //     (msg: string) => {
-  //       messageShowHide(fieldId, msg)
-  //     }
-  //   )
-  // 親コンポーネントから参照できるメソッド
+
+  onMounted(() => {
+    initFlowbite()
+  })
+
   defineExpose({
     onFocus,
   })

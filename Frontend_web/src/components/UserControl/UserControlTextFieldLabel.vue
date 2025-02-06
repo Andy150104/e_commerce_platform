@@ -1,36 +1,14 @@
 <template>
   <div>
-    <div class="md:flex md:items-center md:space-x-4 space-y-4 md:space-y-0">
-      <LabelItem :xml-column="xmlColumn" :class-label="classLabelField" />
-      <Field
-        :id="fieldId"
-        v-model="model"
-        type="text"
-        :class="classField"
-        :data-enter-move="move"
-        :name="xmlColumn.id"
-        :rules="fieldRules"
-        onfocus="select()"
-        :disabled="disabled"
-        :readonly="readonly"
-        :placeholder="props.placeholder"
-        @blur="onBlur"
-        @change="onChange"
-        @input="onInput"
-      />
-    </div>
-    <div v-if="errMessage">
-      <UAlert
-        icon="i-heroicons-command-line"
-        color="rose"
-        padding="p-1"
-        variant="outline"
-        :title="errMsg"
-        :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link' }"
-        :ui="{ padding: 'p-1 mt-3 mb-3'}"
-        @close="onClose"
-      />
-    </div>
+    <LabelItem :xml-column="xmlColumn" />
+    <BaseControlTextField
+      :xml-column="xmlColumn"
+      :type="type"
+      :maxlength="maxlength"
+      :disabled="disabled"
+      :err-msg="errMsg"
+      :placeholder="placeholder"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -42,10 +20,11 @@
   import { _padding } from '#tailwind-config/theme'
   import { className } from '@PKG_SRC/utils/class/className'
   import LabelItem from '../Basecontrol/LabelItem.vue'
+import BaseControlTextField from '../Basecontrol/BaseControlTextField.vue'
   const props = defineProps({
     textModel: {
       type: String,
-      required: true,
+      required: false,
       default: '',
     },
     xmlColumn: {
@@ -89,6 +68,11 @@
       required: false,
       default: false,
     },
+    type: {
+      type: String,
+      required: false,
+      default: 'text',
+    }
   })
   interface Emits {
     (e: 'on-blur'): void

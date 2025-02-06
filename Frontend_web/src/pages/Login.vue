@@ -1,7 +1,8 @@
 <template>
   <BaseScreenAuth>
     <template #body>
-      <h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center">Login</h2>
+      <div class="py-20 mx-14">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center">Login</h2>
 
       <div class="mt-6">
         <!-- Email -->
@@ -42,8 +43,9 @@
       <!-- Login Link -->
       <p class="text-sm text-center text-gray-600 dark:text-gray-400 mt-4">
         You don't have account?
-        <a href="#" class="text-blue-600 dark:text-blue-400 underline">Sign up</a>
+        <a href="/Register" class="text-blue-600 dark:text-blue-400 underline">Sign up</a>
       </p>
+      </div>
     </template>
   </BaseScreenAuth>
 </template>

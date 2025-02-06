@@ -1,807 +1,292 @@
 {
-  "openapi": "3.0.1",
+  "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "swagger": "2.0",
   "info": {
-    "title": "Mana API",
-    "version": "v1"
+    "title": "My Title",
+    "version": "1.0.0"
   },
+  "host": "localhost:7021",
+  "schemes": [
+    "https"
+  ],
   "paths": {
-    "/api/Auth/Register": {
+    "/connect/token": {
       "post": {
-        "tags": ["Auth"],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequestDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequestDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegisterRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponse`1"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponse`1"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponse`1"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Auth/Login": {
-      "post": {
-        "tags": ["Auth"],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequestDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequestDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Images/Upload": {
-      "post": {
-        "tags": ["Images"],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": ["File", "FileName"],
-                "type": "object",
-                "properties": {
-                  "File": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "FileName": {
-                    "type": "string"
-                  },
-                  "FileDescription": {
-                    "type": "string"
-                  }
-                }
-              },
-              "encoding": {
-                "File": {
-                  "style": "form"
-                },
-                "FileName": {
-                  "style": "form"
-                },
-                "FileDescription": {
-                  "style": "form"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Regions": {
-      "get": {
-        "tags": ["Regions"],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": ["Regions"],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRegionRequestDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRegionRequestDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddRegionRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Regions/{id}": {
-      "get": {
-        "tags": ["Regions"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
+        "tags": [
+          "Authentication"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "put": {
-        "tags": ["Regions"],
+        "operationId": "Authentication_Exchange",
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRegionRequestDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRegionRequestDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRegionRequestDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["Regions"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Students": {
-      "get": {
-        "tags": ["Students"],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Walks": {
-      "post": {
-        "tags": ["Walks"],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddWalkRequestsDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddWalkRequestsDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddWalkRequestsDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "get": {
-        "tags": ["Walks"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Walks/GetAllWalks": {
-      "get": {
-        "tags": ["Walks"],
-        "parameters": [
-          {
-            "name": "filterOn",
+            "type": "string",
+            "name": "UserNameOrEmail",
             "in": "query",
+            "x-nullable": false
+          },
+          {
+            "type": "string",
+            "name": "Password",
+            "in": "query",
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
             "schema": {
+              "type": "file"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UserInsert": {
+      "post": {
+        "tags": [
+          "UserInsert"
+        ],
+        "operationId": "UserInsert_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInsertRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UserInsertResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UserInsertVerify": {
+      "post": {
+        "tags": [
+          "UserInsertVerify"
+        ],
+        "operationId": "UserInsertVerify_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserInsertVerifyRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UserInsertVerifyResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "UserInsertResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
               "type": "string"
             }
-          },
-          {
-            "name": "filterQuery",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "isAscending",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "pageNumber",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1000
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/WalkDtoPaginatedResponseApiResponse"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WalkDtoPaginatedResponseApiResponse"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WalkDtoPaginatedResponseApiResponse"
-                }
-              }
-            }
           }
         }
-      }
+      ]
     },
-    "/api/Walks/{id}": {
-      "put": {
-        "tags": ["Walks"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWalkRequestDto"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWalkRequestDto"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWalkRequestDto"
-              }
-            }
+    "AbstractApiResponseOfString": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
           }
         },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "delete": {
-        "tags": ["Walks"],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
+        "response": {
+          "type": "string"
         }
       }
     },
-    "/WeatherForecast": {
-      "get": {
-        "tags": ["WeatherForecast"],
-        "operationId": "GetWeatherForecast",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
-                  }
-                }
-              }
+    "DetailError": {
+      "type": "object",
+      "required": [
+        "field",
+        "columnName",
+        "messageId",
+        "errorMessage"
+      ],
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "columnName": {
+          "type": "string"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "UserInsertRequest": {
+      "type": "object",
+      "required": [
+        "username",
+        "email",
+        "password"
+      ],
+      "properties": {
+        "username": {
+          "type": "string",
+          "minLength": 1
+        },
+        "email": {
+          "type": "string",
+          "minLength": 1
+        },
+        "password": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "UserInsertVerifyResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
             }
           }
+        }
+      ]
+    },
+    "UserInsertVerifyRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "key"
+          ],
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AbstractApiRequest": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "isOnlyValidation"
+      ],
+      "properties": {
+        "isOnlyValidation": {
+          "type": "boolean"
         }
       }
     }
   },
-  "components": {
-    "schemas": {
-      "AddRegionRequestDto": {
-        "required": ["code", "name"],
-        "type": "object",
-        "properties": {
-          "code": {
-            "maxLength": 3,
-            "minLength": 3,
-            "type": "string"
-          },
-          "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "regionImageUrl": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "AddWalkRequestsDto": {
-        "required": ["description", "difficultyId", "lengthInKM", "name", "regionId"],
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "description": {
-            "maxLength": 1000,
-            "minLength": 1,
-            "type": "string"
-          },
-          "lengthInKM": {
-            "maximum": 50,
-            "minimum": 0,
-            "type": "number",
-            "format": "double"
-          },
-          "walkImageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "difficultyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "regionId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ApiResponse`1": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "messageId": {
-            "type": "string",
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "response": {
-            "$ref": "#/components/schemas/T"
-          }
-        },
-        "additionalProperties": false
-      },
-      "DifficultyDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LoginRequestDto": {
-        "required": ["password", "userName"],
-        "type": "object",
-        "properties": {
-          "userName": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string",
-            "format": "password"
-          }
-        },
-        "additionalProperties": false
-      },
-      "RegionDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "code": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "regionImageUrl": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "RegisterRequestDto": {
-        "required": ["password", "userName"],
-        "type": "object",
-        "properties": {
-          "userName": {
-            "minLength": 1,
-            "type": "string",
-            "format": "email"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string",
-            "format": "password"
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "T": {
-        "type": "object",
-        "additionalProperties": false
-      },
-      "UpdateRegionRequestDto": {
-        "required": ["code", "name"],
-        "type": "object",
-        "properties": {
-          "code": {
-            "maxLength": 3,
-            "minLength": 3,
-            "type": "string"
-          },
-          "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "type": "string"
-          },
-          "regionImageUrl": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdateWalkRequestDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "lengthInKM": {
-            "type": "number",
-            "format": "double"
-          },
-          "walkImageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "difficultyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "regionId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WalkDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "lengthInKM": {
-            "type": "number",
-            "format": "double"
-          },
-          "walkImageUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "difficultyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "regionId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "region": {
-            "$ref": "#/components/schemas/RegionDto"
-          },
-          "difficulty": {
-            "$ref": "#/components/schemas/DifficultyDto"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WalkDtoPaginatedResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/WalkDto"
-            },
-            "nullable": true
-          },
-          "currentPage": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalItems": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WalkDtoPaginatedResponseApiResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "messageId": {
-            "type": "string",
-            "nullable": true
-          },
-          "message": {
-            "type": "string",
-            "nullable": true
-          },
-          "response": {
-            "$ref": "#/components/schemas/WalkDtoPaginatedResponse"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WeatherForecast": {
-        "type": "object",
-        "properties": {
-          "date": {
-            "type": "string",
-            "format": "date"
-          },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "summary": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "securitySchemes": {
-      "Bearer": {
-        "type": "apiKey",
-        "name": "Authorization",
-        "in": "header"
-      }
+  "securityDefinitions": {
+    "JWT Token": {
+      "type": "apiKey",
+      "description": "Copy this into the value field: Bearer {token}",
+      "name": "Authorization",
+      "in": "header"
     }
   },
   "security": [
     {
-      "Bearer": []
+      "JWT Token": []
     }
   ]
 }

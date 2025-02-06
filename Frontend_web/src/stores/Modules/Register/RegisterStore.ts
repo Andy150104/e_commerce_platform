@@ -1,9 +1,22 @@
+import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 
-const fieldsInitialize = { userName: '', password: '' }
+export const fieldsInitialize = { 
+  userName: '',
+  password: '',
+  email: '', 
+  phoneNumber: '',
+  birthday: '',
+  firstName: '',
+  lastName: '',
+  gender: '1',
+  city: '',
+  country: '',
+  ward: '',
+}
 export type FormSchema = typeof fieldsInitialize
 
-const errorFieldsInitialize = { userName: '', password: '' }
+const errorFieldsInitialize = createErrorFields(fieldsInitialize)
 
 const fields = {
   values: fieldsInitialize,
@@ -14,22 +27,18 @@ const fields = {
 export type RegisterState = {
   fields: typeof fields
 } & {
-  createFlgInput: boolean
-  createFlgNextInputInfo: boolean,
+  createFlgAccountInfo: boolean
+  createFlgPersonalInfo: boolean
   createFlgPlan: boolean
   createFlgComplete: boolean
 }
 
 export const useRegisterStore = defineStore('Register', {
   state: (): RegisterState => ({
-    fields: {
-      values: fieldsInitialize,
-      errors: errorFieldsInitialize,
-      ...veeValidateStateInitialize,
-    },
-    createFlgInput: false,
+    fields,
+    createFlgAccountInfo: false,
     createFlgPlan: false,
-    createFlgNextInputInfo: false,
+    createFlgPersonalInfo: false,
     createFlgComplete: false,
   }),
   getters: {
@@ -54,5 +63,19 @@ export const useRegisterStore = defineStore('Register', {
       await this.fields.validate()
       return this.fieldValid
     },
+    async RegisterUser() {
+      const validation: any = await this.fields.validate()
+      if (validation.valid === false) return false
+
+      const apiClient = useApiClient()
+      const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+
+      // const res = apiClient.api.v1.URSUserRegister.$post({
+      //   body: {
+          
+      //   },
+      // })
+      // res.
+    }
   },
 })
