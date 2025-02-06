@@ -73,14 +73,14 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
         // Additional user information
         try
         {
-            appDbContext.IdentityEntity.UserName = appDbContext.Users.AsNoTracking().FirstOrDefault().UserName;
+            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications.AsNoTracking().FirstOrDefault().UserName;
         }
         catch (Exception e)
         {
             // Additional user information error
             logger.Error($"Failed to get additional user information.：{e.Message}");
             returnValue.Success = false;
-            returnValue.SetMessage("Failed to get user information.");
+            returnValue.SetMessage(MessageId.E11006);
             logger.Warn(returnValue);
             return returnValue;
         }

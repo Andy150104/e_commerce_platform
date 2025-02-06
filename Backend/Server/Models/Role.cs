@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Server.Models;
 
-public partial class Role
+public class Role : IdentityRole
 {
-    public long Id { get; set; }
-
-    public string Name { get; set; } = null!;
-
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

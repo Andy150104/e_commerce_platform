@@ -86,54 +86,50 @@ public class AbstractFunction<T, U, V>
     public static List<DetailError> ErrorCheck(ModelStateDictionary modelState)
     {
         var detailErrorList = new List<DetailError>();
-        // Check the state of ModelState
+
+        // If there is no error, return
         if (modelState.IsValid) 
             return detailErrorList;
 
-        var keys = modelState.Keys;
-        foreach (var key in keys)
+        foreach (var entry in modelState)
         {
-            ModelStateEntry modelStateEntity = null;
-            if (modelState.TryGetValue(key, out modelStateEntity) && modelStateEntity != null && modelStateEntity.ValidationState != ModelValidationState.Valid)
+            var key = entry.Key;
+            var modelStateEntity = entry.Value;
+
+            if (modelStateEntity == null || modelStateEntity.ValidationState == ModelValidationState.Valid)
+                continue;
+
+            // Remove the prefix "Value." from the key
+            var keyReplace = Regex.Replace(key, @"^Value\.", "");
+            keyReplace = Regex.Replace(keyReplace, @"^Value\[\d+\]\.", "");
+
+            // Get error message
+            var errorMessage = string.Join("; ", modelStateEntity.Errors.Select(e => e.ErrorMessage));
+
+            var detailError = new DetailError();
+            Match matchesKey;
+
+            // Extract information from the key in the structure: object[index].property
+            if ((matchesKey = new Regex(@"^(.*?)\[(\d+)\]\.(.*?)$").Match(keyReplace)).Success)
             {
-                // Remove Value., Value[] from the beginning (corresponding to multiple updates in the master screen)
-                var keyReplace = key;
-                keyReplace = Regex.Replace(keyReplace, @"^Value\.", "");
-                keyReplace = Regex.Replace(keyReplace, @"^Value\[\d+\]\.", "");
-                var error = new KeyValuePair<string, string>(keyReplace, string.Join(";", modelStateEntity.Errors.Select(e => e.ErrorMessage)));
-                Match matchesKey = null;
-                var detailError = new DetailError();
-
-                // Get the key
-                if ((matchesKey = new Regex(@"^(.*?)\[(.*?)\]\.(.*?)$").Match(error.Key)).Success)
-                {
-                    // For lists such as spreadsheets
-                    int i = 0;
-                    var field = "";
-                    var row = 0;
-                    var columnName = "";
-                    foreach (Group item in matchesKey.Groups)
-                    {
-                        if (i == 1) field = item.Value.ToString();
-                        if (i == 2) row = Convert.ToInt32(item.Value.ToString());
-                        if (i == 3) columnName = item.Value.ToString();
-                        i++;
-                    }
-                    detailError.field = field;
-                    // Since the line number starts from 0, add 1
-                    detailError.columnName = columnName;
-                }
-                else
-                {
-                    // For normal fields
-                    detailError.field = error.Key.Split('.').LastOrDefault();
-                }
-                // Convert the first letter of the field name to lowercase
-                detailError.field = StringUtil.ToLowerCase(detailError.field);
-                detailErrorList.Add(detailError);
+                // In the case of a list
+                detailError.field = matchesKey.Groups[1].Value;
             }
-        }
+            else
+            {
+                // In the case of a single item
+                detailError.field = keyReplace.Split('.').LastOrDefault();
+            }
 
+            // Convert the field name to lowercase
+            detailError.field = StringUtil.ToLowerCase(detailError.field);
+
+            // Set the error message
+            detailError.ErrorMessage = errorMessage;
+
+            detailErrorList.Add(detailError);
+        }
         return detailErrorList;
     }
+
 }

@@ -1,7 +1,7 @@
 
 using Server.Controllers;
 
-namespace server.Identity.Controllers.V1.User;
+namespace Server.Identity.Controllers.V1.User;
 
 public class UserInsertResponse : AbstractApiResponse<string>
 {

@@ -1,15 +1,18 @@
 using System.Net;
-using Server.Models.Helper;
+using client.Models;
 using Microsoft.AspNetCore.Identity;
+using Server.Models.Helper;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using OpenIddict.Abstractions;
 using Server;
+using Server.Helpers;
 using Server.Identity;
-using Server.Identity.Models;
+using Server.Models;
+// using Server.Identity.Models;
 using Server.SystemClient;
-using Role = Server.Identity.Models.Role;
+// using Role = Server.Identity.Models.Role;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +25,34 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 { 
     options.UseSqlServer(connectionString);
     options.UseOpenIddict();
+});
+// Identity configuration
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings.
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+
+    // User settings.
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = true;
+
+    // Lockout settings.
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+
+    // User settings.
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+    options.User.RequireUniqueEmail = false;
 });
 
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
@@ -49,19 +80,6 @@ builder.Services.AddCors(options =>
                             .AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader());
-});
-
-// Use AppDbContext that inherits DB context
-builder.Services.AddDbContext<AppDbContext>(option =>
-{
-    option.UseOpenIddict();
-});
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.ClaimsIdentity.UserNameClaimType = OpenIddictConstants.Claims.Name;
-    options.ClaimsIdentity.UserIdClaimType = OpenIddictConstants.Claims.Subject;
-    options.ClaimsIdentity.RoleClaimType = OpenIddictConstants.Claims.Role;
 });
 
 // Configure the OpenIddict server
@@ -115,12 +133,6 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = OpenIddictConstants.Schemes.Bearer;
     options.DefaultChallengeScheme = OpenIddictConstants.Schemes.Bearer;
 });
-// Add the OpenIddict validation component
-builder.Services.AddIdentity<Users, Role>()
-    .AddSignInManager()
-    .AddUserStore<UserStore>()
-    .AddRoleStore<RoleStore>()
-    .AddUserManager<UserManager<Users>>();
 // DB context that inherits AppDbContext
 builder.Services.AddHttpContextAccessor();
 // ConfigureServices
@@ -132,6 +144,20 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 builder.Services.AddHostedService<Worker>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var roleManager = services.GetRequiredService<RoleManager<Role>>();
+        await DbInitializer.SeedRoles(roleManager);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error seeding roles: {ex.Message}");
+    }
+}
 
 app.UseCors();
 app.UseRouting();

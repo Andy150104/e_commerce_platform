@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace server.Identity.Controllers.V1.User;
+namespace Server.Identity.Controllers.V1.User;
 
 public class UserInsertRequest
 {
