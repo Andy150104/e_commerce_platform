@@ -27,33 +27,36 @@
           <h2 class="text-2xl font-bold text-center text-gray-900 mb-8 dark:text-white">Featured Products</h2>
           <CardContainer>
             <template #body>
-              <CardProduct2 :product-model="store.produtList"/>
+              <CardProduct2 :product-model="store.produtList" />
             </template>
           </CardContainer>
           <div class="text-center mt-8">
-            <button :class="className.BUTTON_DAFAULT_WHITE">Explore More</button>
+            <button :class="className.BUTTON_DEFAULT_WHITE">Explore More</button>
           </div>
         </div>
         <!-- Description block -->
-        <div class="bg-gray-100 p-16 rounded-xl mb-16">
+        <div class="bg-gray-100 p-8 rounded-xl mb-16">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div class="text-center lg:text-left">
-              <h2 class="text-2xl font-semibold text-gray-900 mb-4">Seamless and Transparent Product Exchange System</h2>
+            <div class="flex flex-col justify-center text-center lg:text-left">
+              <h2 class="text-2xl font-semibold text-gray-900 mb-4">
+                Seamless and Transparent Product<br />
+                Exchange System
+              </h2>
               <p class="text-lg text-gray-700 mb-8">
                 Connect with others to exchange products effortlessly. Simply upload the item you want to trade, browse and choose what you love from
                 others, and complete the transaction in just a few simple steps. Our platform ensures safety and transparency for every exchange!
               </p>
             </div>
             <div>
-              <img src="https://placehold.co/600x400" alt="Image" class="w-full rounded-lg" />
+              <Carousel :image-list="store.imageList.imagesList" />
             </div>
           </div>
         </div>
         <!-- Plan -->
-         <div class="mb-16 mx-auto max-w-[1600px]">
+        <div class="mb-16 mx-auto max-w-[1600px]">
           <h2 class="text-2xl font-bold text-center text-gray-900 mb-8 dark:text-white">Featured Products</h2>
-          <CardPlan/>
-         </div>
+          <CardPlan />
+        </div>
       </div>
     </template>
   </BaseScreenHome>
@@ -67,8 +70,9 @@
   import CardProduct2 from '@PKG_SRC/components/Card/CardProduct2.vue'
   import CardContainer from '@PKG_SRC/layouts/CardContainer/CardContainer.vue'
   import { useMypgStore } from '@PKG_SRC/stores/Modules/Mypg/Mypg'
-import { useTestStore } from '@PKG_SRC/stores/Modules/Mypg/testStore'
-import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
+  import { useTestStore } from '@PKG_SRC/stores/Modules/Mypg/testStore'
+  import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
+  import Carousel from '@PKG_SRC/components/Carousel/Carousel.vue'
 
   const gradientCard = ref<HTMLElement | null>(null)
   const gradientEffect = ref<HTMLElement | null>(null)
@@ -87,6 +91,7 @@ import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
     gradientEffect.value!.style.opacity = '0'
   }
   onMounted(async () => {
+    store.GetImageList()
     store.GetProductList()
     await nextTick()
     if (gradientCard.value && gradientEffect.value) {

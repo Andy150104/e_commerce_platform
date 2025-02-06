@@ -14,6 +14,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'test2',
     'mode',
     'Home',
+    'sample',
+    'Login',
+    'Product2',
+    'Register',
   ]
   if (!authStore.isAuthorization && !loginNotRequiredRoutes.includes(relativePath)) {
     return { path: '/' }

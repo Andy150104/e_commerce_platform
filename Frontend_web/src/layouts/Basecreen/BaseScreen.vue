@@ -9,9 +9,13 @@
       <slot name="body"></slot>
     </div>
     <FooterControl />
+    <Loading/>
+    <ScrollToTopBtn/>
   </div>
 </template>
 <script lang="ts" setup>
+  import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
   import FooterControl from '@PKG_SRC/components/Footer/FooterControl.vue'
+  import ScrollToTopBtn from '../Btn/ScrollToTopBtn.vue';
   import NavBar from '@PKG_SRC/components/NavBar/NavBar.vue'
 </script>

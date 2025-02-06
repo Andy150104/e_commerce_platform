@@ -1,17 +1,26 @@
 <template>
   <!--  from-blue-900 via-gray-900 to-black  -->
-  <nav class="bg-gradient-to-r from-blue-400 via-blue-500/50 to-blue-400/10 opacity-80 transition-all duration-500 border-b border-gray-200 dark:bg-slate-950 dark:border-gray-600 dark:opacity-90 sticky top-0 z-50 backdrop-blur-lg">
+  <nav
+    class="bg-gradient-to-r from-blue-400 via-blue-500/50 to-blue-400/10 opacity-80 transition-all duration-500 border-b border-gray-200 dark:bg-slate-950 dark:border-gray-600 dark:opacity-90 sticky top-0 z-50 backdrop-blur-lg"
+  >
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
       </a>
-      <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+      <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse gap-2">
         <button
           type="button"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
+          @click="onMoveToRegister"
+          >
           Get started
+        </button>
+        <button
+          class="text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-purple-500 dark:hover:bg-purple-600 dark:focus:ring-purple-800"
+          @click="onMoveToLogin"
+        >
+          Login
         </button>
         <button
           data-collapse-toggle="navbar-cta"
@@ -30,8 +39,9 @@
         <ul
           :class="[
             'flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700',
-            isMobile ? ' bg-gray-50 md:bg-white dark:bg-gray-800 md:dark:bg-slate-950':''
-          ]">
+            isMobile ? ' bg-gray-50 md:bg-white dark:bg-gray-800 md:dark:bg-slate-950' : '',
+          ]"
+        >
           <li>
             <a
               href="#"
@@ -71,15 +81,23 @@
   import { onMounted } from 'vue'
 
   const isMobile = ref(false)
+  const router = useRouter()
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
       isMobile.value = true
-    }
-    else{
+    } else {
       isMobile.value = false
     }
     console.log(isMobile.value)
+  }
+
+  const onMoveToLogin = () =>{
+    router.push('/Login')
+  }
+
+  const onMoveToRegister = () =>{
+    router.push('/Register')
   }
 
   onMounted(() => {
