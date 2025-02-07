@@ -19,6 +19,10 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
     
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="context"></param>
     public URSUserRegisterController(AppDbContext context)
     {
         _context = context;
@@ -31,6 +35,7 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
+    [HttpPost]
     public override URSUserRegisterResponse Post(URSUserRegisterRequest request)
     {
         return Post(request, _context, logger, new URSUserRegisterResponse());
@@ -47,15 +52,18 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     {
         var response = new URSUserRegisterResponse() { Success = false };
 
+        // Check if the user already exists
         var userSelect = _context.VwUserAuthentications.AsNoTracking().FirstOrDefault(x => x.UserName == request.UserName 
                                                                              || x.Email == request.Email);
-
+        
+        // If the user already exists, return an error
         if (userSelect != null)
         {
             response.SetMessage(MessageId.E11004);
             return response;
         }
 
+        // Create a new user
         var newUser = new User()
         {
             UserName = request.UserName,
@@ -67,6 +75,8 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             ImageUrl = request.ImageUrl,
             PlanId = request.PlanId,
         };
+        
+        // Add new user
         _context.Add(newUser);
         _context.SaveChanges();
         transaction.Commit();
