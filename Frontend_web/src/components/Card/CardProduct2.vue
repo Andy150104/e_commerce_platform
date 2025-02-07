@@ -2,7 +2,7 @@
   <div
     v-for="(product, index) in productModel"
     :key="index"
-    class="max-w-sm md:max-w-[400px] w-full h-[600px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+    class="animate-fade-up max-w-sm md:max-w-[400px] w-full h-[600px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
   >
     <!-- Carousel Section -->
     <div id="carouselExample" class="relative h-[300px]" data-carousel="static">
@@ -62,7 +62,7 @@
         <button class="flex-1 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100">
           Wishlist
         </button>
-        <button class="flex-1 py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700">
+        <button class="flex-1 py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700" @click="emit('on-buy')">
           Buy now
         </button>
       </div>
@@ -91,6 +91,12 @@
   const formatRating = (rating: number) => {
     return new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(rating)
   }
+
+  interface Emits {
+    (e: 'on-buy'): void
+  }
+
+  const emit = defineEmits<Emits>()
 
   onMounted(async () => {
     await nextTick()

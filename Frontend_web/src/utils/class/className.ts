@@ -17,7 +17,10 @@ interface ClassNames {
   DATE_TIME_PICKER_TODAY: string
   BUTTON_GRADIENT_1: String,
   BUTTON_GRADIENT_2: String,
-  BUTTON_DAFAULT_WHITE: String
+  BUTTON_DEFAULT_WHITE: String
+  BUTTON_DEFAULT_BLUE_1: String
+  BUTTON_DEFAULT_BLUE_2: String
+  BUTTON_DEFAULT_GRAY_1: String
 }
 
 export const className: ClassNames = {
@@ -42,8 +45,11 @@ export const className: ClassNames = {
   COLS_2: 'md:grid-cols-2',
   COLS_3: 'md:grid-cols-3',
   COLS_4: 'md:grid-cols-4',
-  DATE_TIME_PICKER_TODAY: 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 px-2.5 pb-2.5 pt-4 dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+  DATE_TIME_PICKER_TODAY: 'border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 px-2.5 pb-2.5 pt-4 my-3 dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
   BUTTON_GRADIENT_1:'text-gray-900 bg-gradient-to-r from-teal-200 to-lime-200 hover:bg-gradient-to-l hover:from-teal-200 hover:to-lime-200 focus:ring-4 focus:outline-none focus:ring-lime-200 dark:focus:ring-teal-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2',
   BUTTON_GRADIENT_2:'text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2',
-  BUTTON_DAFAULT_WHITE: 'text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2'
+  BUTTON_DEFAULT_WHITE: 'text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2',
+  BUTTON_DEFAULT_BLUE_1: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
+  BUTTON_DEFAULT_BLUE_2: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
+  BUTTON_DEFAULT_GRAY_1: 'bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600',
 }

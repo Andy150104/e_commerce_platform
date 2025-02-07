@@ -3,7 +3,7 @@
     <Field
       :id="fieldId"
       v-model="model"
-      type="text"
+      :type="type"
       :class="classField"
       :data-enter-move="move"
       :name="xmlColumn.id"
@@ -26,7 +26,7 @@
       variant="outline"
       :title="errMsg"
       :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link' }"
-      :ui="{ padding: 'p-1 mt-3 mb-3', wrapper: 'w-3/6 relative overflow-hidden' }"
+      :ui="{ padding: 'p-1 mt-3 mb-3', wrapper: 'w-full relative overflow-hidden' }"
       @close="onClose"
     />
   </div>
@@ -42,7 +42,7 @@
   const props = defineProps({
     textModel: {
       type: String,
-      required: true,
+      required: false,
       default: '',
     },
     xmlColumn: {
@@ -86,6 +86,11 @@
       required: false,
       default: false,
     },
+    type: {
+      type: String,
+      required: false,
+      default: 'text',
+    }
   })
   interface Emits {
     (e: 'on-blur'): void

@@ -2,60 +2,42 @@
   <BaseScreenHome>
     <template #body>
       <div>
-        <div
-          id="gradient-card"
-          class="animate-fade-left animate-ease-out animate-delay-100 bg-gradient-to-r from-blue-100 via-blue-200 to-purple-100 p-8 md:max-w-none md:p-16 lg:p-48 rounded-xl mb-16 max-w-screen-lg mx-auto h-auto overflow-hidden"
-          ref="gradientCard"
-        >
-          <div class="absolute inset-0 pointer-events-none z-0 gradient-effect" ref="gradientEffect"></div>
-          <div class="max-w-3xl mx-auto text-center relative z-10">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4 animate-fade-up animate-duration-1000 animate-delay-500">Discover, Trade, and Collect Your Unique Accessories</h1>
-            <p class="text-lg text-gray-700 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">
-              Unlock a world of surprises with our exclusive blind boxes. Trade and collect accessories effortlessly through our seamless platform
-            </p>
-            <div>
-              <BaseControlSearch />
-            </div>
-            <div class="mt-8 flex justify-center space-x-4">
-              <button :class="className.BUTTON_GRADIENT_1">Buy Now</button>
-              <button :class="className.BUTTON_GRADIENT_2">Exchange now</button>
+        <div class="relative">
+          <div
+            id="gradient-card"
+            class="bg-gradient-to-r from-blue-100 via-blue-200 to-purple-100 p-8 md:max-w-none md:p-16 lg:p-48 rounded-xl mb-16 max-w-screen-lg mx-auto h-auto overflow-hidden"
+            ref="gradientCard"
+          >
+            <div class="absolute inset-0 pointer-events-none z-0 gradient-effect" ref="gradientEffect"></div>
+            <div class="max-w-3xl mx-auto text-center relative z-10">
+              <h1 class="text-4xl font-bold text-gray-900 mb-4">Discover, Trade, and Collect Your Unique Accessories</h1>
+              <p class="text-lg text-gray-700 mb-8">
+                Unlock a world of surprises with our exclusive blind boxes. Trade and collect accessories effortlessly through our seamless platform
+              </p>
+              <div>
+                <BaseControlSearch />
+              </div>
+              <div class="mt-8 flex justify-center space-x-4">
+                <button :class="className.BUTTON_GRADIENT_1">Buy Now</button>
+                <button :class="className.BUTTON_GRADIENT_2">Exchange now</button>
+              </div>
             </div>
           </div>
         </div>
         <!-- Featured Products -->
-        <div class="mb-16 mx-auto max-w-[1600px]">
+        <div class="mb-16 mx-auto max-w-[1600px] 3xl:max-w-[2000px]">
           <h2 class="text-2xl font-bold text-center text-gray-900 mb-8 dark:text-white">Featured Products</h2>
+          <div class="flex justify-end">
+            <SlideBar />
+          </div>
           <CardContainer>
             <template #body>
-              <CardProduct2 :product-model="store.produtList" />
+              <CardProduct2 :product-model="store.produtList" @on-buy="console.log('a')" />
             </template>
           </CardContainer>
           <div class="text-center mt-8">
             <button :class="className.BUTTON_DEFAULT_WHITE">Explore More</button>
           </div>
-        </div>
-        <!-- Description block -->
-        <div class="bg-gray-100 p-8 rounded-xl mb-16">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div class="flex flex-col justify-center text-center lg:text-left">
-              <h2 class="text-2xl font-semibold text-gray-900 mb-4">
-                Seamless and Transparent Product<br />
-                Exchange System
-              </h2>
-              <p class="text-lg text-gray-700 mb-8">
-                Connect with others to exchange products effortlessly. Simply upload the item you want to trade, browse and choose what you love from
-                others, and complete the transaction in just a few simple steps. Our platform ensures safety and transparency for every exchange!
-              </p>
-            </div>
-            <div>
-              <Carousel :image-list="store.imageList.imagesList" />
-            </div>
-          </div>
-        </div>
-        <!-- Plan -->
-        <div class="mb-16 mx-auto max-w-[1600px]">
-          <h2 class="text-2xl font-bold text-center text-gray-900 mb-8 dark:text-white">Featured Products</h2>
-          <CardPlan />
         </div>
       </div>
     </template>
@@ -69,14 +51,13 @@
   import BaseScreenHome from '@PKG_SRC/layouts/Basecreen/BaseScreenHome.vue'
   import CardProduct2 from '@PKG_SRC/components/Card/CardProduct2.vue'
   import CardContainer from '@PKG_SRC/layouts/CardContainer/CardContainer.vue'
-  import { useMypgStore } from '@PKG_SRC/stores/Modules/Mypg/Mypg'
   import { useTestStore } from '@PKG_SRC/stores/Modules/Mypg/testStore'
-  import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
-  import Carousel from '@PKG_SRC/components/Carousel/Carousel.vue'
+  import SlideBar from '@PKG_SRC/components/NavBar/SlideBar.vue'
+  import { useDisplayProductStore } from '@PKG_SRC/stores/Modules/Blind_Box/DisplayProductStore'
 
   const gradientCard = ref<HTMLElement | null>(null)
   const gradientEffect = ref<HTMLElement | null>(null)
-  const store = useMypgStore()
+  const store = useDisplayProductStore()
   const testStore = useTestStore()
 
   const onMouseMove = (e: MouseEvent) => {

@@ -1,4 +1,3 @@
-import type { TokenResponse } from '@PKG_SRC/utils/auth/define/@types'
 import { useRuntimeConfig } from 'nuxt/app'
 import { defineStore } from 'pinia'
 import { useLoginStore } from '../Modules/loginStore'
@@ -9,6 +8,7 @@ import { useUserStore } from './userStore'
 import { UserInfoGrpId } from '@PKG_SRC/types/enums/constantFrontend'
 import axios from 'axios'
 import { useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
+import type { TokenResponse } from '@PKG_SRC/utils/auth/define/@types'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -40,8 +40,8 @@ export const useAuthStore = defineStore('auth', {
       const loginStore = useLoginStore()
       const loadingStore = useLoadingStore()
       const authParams = new URLSearchParams()
-      authParams.append('grant_type', 'password') // 固定
-      authParams.append('client_id', 'default-client') // 固定
+      authParams.append('grant_type', 'password')
+      authParams.append('client_id', 'default-client')
       authParams.append('username', userId)
       authParams.append('password', password)
 

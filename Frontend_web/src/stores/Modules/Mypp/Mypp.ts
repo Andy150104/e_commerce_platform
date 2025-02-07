@@ -8,6 +8,7 @@ export const fieldsInitialize = {
   mailAddress: '',
   mailAddressConfirm: '',
   seinengappi: '',
+  passWord: ''
 }
 export type FormSchema = typeof fieldsInitialize
 

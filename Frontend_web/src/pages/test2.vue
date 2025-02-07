@@ -7,10 +7,12 @@
       <p>Chế độ: {{ isDarkMode ? 'Dark' : 'Light' }}</p>
     </div>
   </div>
+  <Loading/>
 </template>
 
 <script setup>
-  import { Theme } from '@PKG_SRC/types/enums/constantFrontend'
+  import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
+import { Theme } from '@PKG_SRC/types/enums/constantFrontend'
   import { getThemesSystem, updateThemesStorageAndSetMode } from '@PKG_SRC/utils/functions/ChangeThemes'
   import { ref } from 'vue'
 

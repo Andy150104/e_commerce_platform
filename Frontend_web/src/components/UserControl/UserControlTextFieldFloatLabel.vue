@@ -4,7 +4,7 @@
       <Field
         :id="fieldId"
         v-model="model"
-        type="text"
+        :type="inputType"
         :class="classField"
         :data-enter-move="move"
         :name="xmlColumn.id"
@@ -17,6 +17,40 @@
         @change="onChange"
         @input="onInput"
       />
+      <button v-if="props.isPasswordVisibility" type="button" class="toggle-password" @click="togglePassword">
+        <!-- Sử dụng icon tùy chỉnh, thay đổi theo trạng thái -->
+        <svg
+          v-if="showPassword"
+          class="w-6 h-6 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3.933 13.909A4.357 4.357 0 0 1 3 12c0-1 4-6 9-6m7.6 3.8A5.068 5.068 0 0 1 21 12c0 1-3 6-9 6-.314 0-.62-.014-.918-.04M5 19 19 5m-4 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+          />
+        </svg>
+        <svg
+          v-else
+          class="w-6 h-6 text-gray-800 dark:text-white"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path stroke="currentColor" stroke-width="2" d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+          <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+        </svg>
+      </button>
       <LabelItem :xml-column="xmlColumn" :class-label="classLabelField" />
     </div>
     <UAlert
@@ -27,7 +61,7 @@
       variant="outline"
       :title="errMsg"
       :close-button="{ icon: 'i-heroicons-x-mark-20-solid', color: 'gray', variant: 'link' }"
-      :ui="{ padding: 'p-1 mt-3 mb-3'}"
+      :ui="{ padding: 'p-1 mt-3 mb-3' }"
       @close="onClose"
     />
   </div>
@@ -44,7 +78,7 @@
   const props = defineProps({
     textModel: {
       type: String,
-      required: true,
+      required: false,
       default: '',
     },
     xmlColumn: {
@@ -88,6 +122,16 @@
       required: false,
       default: false,
     },
+    type: {
+      type: String,
+      required: false,
+      default: 'text',
+    },
+    isPasswordVisibility: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   })
   interface Emits {
     (e: 'on-blur'): void
@@ -102,6 +146,15 @@
 
   const model = ref(props.textModel)
   const errMessage = ref(props.errMsg)
+  const showPassword = ref(false)
+  // Hàm chuyển đổi trạng thái
+  const togglePassword = () => {
+    showPassword.value = !showPassword.value
+  }
+
+  const inputType = computed(() => {
+    return props.type === 'password' ? (showPassword.value ? 'text' : 'password') : props.type
+  })
 
   const onClose = () => {
     errMessage.value = ''
@@ -162,7 +215,29 @@
   })
 </script>
 <style scoped>
+  input[type='password']::-ms-reveal,
+  input[type='password']::-ms-clear {
+    display: none;
+  }
+
+  /* Với trình duyệt dựa trên Webkit (nếu có) */
+  input[type='password']::-webkit-textfield-decoration-container {
+    display: none;
+  }
+
   .reactive {
     position: relative;
+  }
+
+  /* Class cho nút toggle mật khẩu tùy chỉnh */
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    /* Bạn có thể tuỳ chỉnh thêm style cho nút ở đây */
   }
 </style>
