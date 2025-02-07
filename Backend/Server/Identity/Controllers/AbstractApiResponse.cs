@@ -50,16 +50,10 @@ public abstract class AbstractApiResponse<T>
 public class DetailError
 {
     private string fieldValue;
-    private string columnNameValue;
     /// <summary>
     /// Field names with errors
     /// </summary>
     public string field { get { return fieldValue; } set { fieldValue = StringUtil.ToLowerCase(value); } }
-
-    /// <summary>
-    /// Column names (list type only)
-    /// </summary>
-    public string columnName { get { return columnNameValue; } set { columnNameValue = StringUtil.ToLowerCase(value); } }
 
     /// <summary>
     /// Message ID

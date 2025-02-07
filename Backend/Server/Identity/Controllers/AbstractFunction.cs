@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +12,14 @@ using Server.Utils.Consts;
 namespace Client.Controllers;
 
 /// <summary>
-/// 
+/// Abstract function
 /// </summary>
 public class AbstractFunction<T, U, V>
     where T : AbstractApiRequest
     where U : AbstractApiResponse<V>
 {
     /// <summary>
-    /// 共通エラーレスポンス
+    /// Return value
     /// </summary>
     public static U GetReturnValue(U returnValue, Logger logger, Exception e, AppDbContext context)
     {
@@ -44,7 +45,6 @@ public class AbstractFunction<T, U, V>
                     logger.Warn($"A system error has occurred.：{e.Message} {e.StackTrace} {e.InnerException}");
                     returnValue.SetMessage(MessageId.E99999);
                 }
-
                 break;
             case SqlException:
                 var ex = e as SqlException;
@@ -78,7 +78,7 @@ public class AbstractFunction<T, U, V>
         logger.Warn(returnValue);
         return returnValue;
     }
-    
+
     /// <summary>
     /// Error check
     /// </summary>
@@ -89,7 +89,7 @@ public class AbstractFunction<T, U, V>
         var detailErrorList = new List<DetailError>();
 
         // If there is no error, return
-        if (modelState.IsValid) 
+        if (modelState.IsValid)
             return detailErrorList;
 
         foreach (var entry in modelState)
@@ -130,7 +130,7 @@ public class AbstractFunction<T, U, V>
 
             detailErrorList.Add(detailError);
         }
+
         return detailErrorList;
     }
-
 }

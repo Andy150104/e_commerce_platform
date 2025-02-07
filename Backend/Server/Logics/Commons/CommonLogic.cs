@@ -34,8 +34,11 @@ public static class CommonLogic
         // Encrypt the text
         using (Aes aes = Aes.Create())
         {
+            // Set the key and IV
             aes.Key = Encoding.UTF8.GetBytes(key);
             aes.IV = Encoding.UTF8.GetBytes(iv);
+            
+            // Encrypt
             ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
             using (MemoryStream ms = new MemoryStream())
             {
@@ -73,8 +76,10 @@ public static class CommonLogic
         // Decrypt the text
         using (Aes aes = Aes.Create())
         {
+            // Set the key and IV
             aes.Key = Encoding.UTF8.GetBytes(key);
             aes.IV = Encoding.UTF8.GetBytes(iv);
+            // Decrypt
             ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
             using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(beforeDecrypt)))
             {

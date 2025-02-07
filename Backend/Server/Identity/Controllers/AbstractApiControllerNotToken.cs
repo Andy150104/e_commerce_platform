@@ -6,6 +6,12 @@ using Server.Models.Helper;
 
 namespace Client.Controllers;
 
+/// <summary>
+/// Abstract API controller (no token)
+/// </summary>
+/// <typeparam name="T"></typeparam>
+/// <typeparam name="U"></typeparam>
+/// <typeparam name="V"></typeparam>
 public abstract class AbstractApiControllerNotToken<T, U, V> : ControllerBase
     where T : AbstractApiRequest
     where U : AbstractApiResponse<V>
