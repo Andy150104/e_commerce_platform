@@ -13,7 +13,10 @@
     <!-- Lightbox -->
     <div v-if="isLightboxOpen" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50">
       <!-- Previous Button -->
-      <button class="absolute left-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-12 h-12 flex items-center justify-center shadow-lg focus:outline-none" @click.stop="previousImage">
+      <button
+        class="absolute left-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full w-12 h-12 flex items-center justify-center shadow-lg focus:outline-none"
+        @click.stop="previousImage"
+      >
         &larr;
       </button>
 
@@ -21,12 +24,18 @@
       <img v-if="currentImageIndex !== null" :src="images[currentImageIndex]" alt="Expanded Image" class="max-w-full max-h-full" />
 
       <!-- Next Button -->
-      <button class="absolute right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full p-2 w-12 h-12 flex items-center justify-center shadow-lg focus:outline-none" @click.stop="nextImage">
+      <button
+        class="absolute right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full p-2 w-12 h-12 flex items-center justify-center shadow-lg focus:outline-none"
+        @click.stop="nextImage"
+      >
         &rarr;
       </button>
 
       <!-- Close Overlay -->
-      <button class="absolute top-4 right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full p-2 w-12 h-12 focus:outline-none" @click="closeLightbox">
+      <button
+        class="absolute top-4 right-4 text-white bg-gray-800 hover:bg-gray-700 rounded-full p-2 w-12 h-12 focus:outline-none"
+        @click="closeLightbox"
+      >
         ✕
       </button>
     </div>

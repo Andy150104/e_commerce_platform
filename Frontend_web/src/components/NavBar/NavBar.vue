@@ -77,10 +77,13 @@
   </nav>
 </template>
 <script setup lang="ts">
+  import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
   import { initFlowbite } from 'flowbite'
   import { onMounted } from 'vue'
 
   const isMobile = ref(false)
+  const authStore = useAuthStore()
+  const isLogin = ref(false)
   const router = useRouter()
 
   const handleResize = () => {
@@ -96,6 +99,7 @@
     window.addEventListener('resize', handleResize)
     handleResize()
     initFlowbite()
+    isLogin.value = true
   })
 
   onUnmounted(() => {

@@ -6,25 +6,13 @@
     "version": "1.0.0"
   },
   "host": "localhost:7094",
-  "schemes": [
-    "https"
-  ],
-  "consumes": [
-    "application/json",
-    "text/json",
-    "application/*+json"
-  ],
-  "produces": [
-    "text/plain",
-    "application/json",
-    "text/json"
-  ],
+  "schemes": ["https"],
+  "consumes": ["application/json", "text/json", "application/*+json"],
+  "produces": ["text/plain", "application/json", "text/json"],
   "paths": {
     "/api/v1/HelloWord": {
       "post": {
-        "tags": [
-          "HelloWord"
-        ],
+        "tags": ["HelloWord"],
         "operationId": "HelloWord_Post",
         "parameters": [
           {
@@ -55,9 +43,7 @@
     },
     "/api/v1/URSUserRegister": {
       "post": {
-        "tags": [
-          "URSUserRegister"
-        ],
+        "tags": ["URSUserRegister"],
         "operationId": "URSUserRegister_Post",
         "parameters": [
           {
@@ -95,9 +81,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "response"
-          ],
+          "required": ["response"],
           "properties": {
             "response": {
               "type": "string"
@@ -109,12 +93,7 @@
     "AbstractApiResponseOfString": {
       "type": "object",
       "x-abstract": true,
-      "required": [
-        "success",
-        "messageId",
-        "message",
-        "detailErrorList"
-      ],
+      "required": ["success", "messageId", "message", "detailErrorList"],
       "properties": {
         "success": {
           "type": "boolean"
@@ -138,11 +117,7 @@
     },
     "DetailError": {
       "type": "object",
-      "required": [
-        "field",
-        "messageId",
-        "errorMessage"
-      ],
+      "required": ["field", "messageId", "errorMessage"],
       "properties": {
         "field": {
           "type": "string"
@@ -162,9 +137,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "hello"
-          ],
+          "required": ["hello"],
           "properties": {
             "hello": {
               "type": "string",
@@ -177,9 +150,7 @@
     "AbstractApiRequest": {
       "type": "object",
       "x-abstract": true,
-      "required": [
-        "isOnlyValidation"
-      ],
+      "required": ["isOnlyValidation"],
       "properties": {
         "isOnlyValidation": {
           "type": "boolean"
@@ -193,9 +164,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "response"
-          ],
+          "required": ["response"],
           "properties": {
             "response": {
               "type": "string"
@@ -211,16 +180,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "userName",
-            "email",
-            "phoneNumber",
-            "birthDay",
-            "fullName",
-            "imageUrl",
-            "gender",
-            "planId"
-          ],
+          "required": ["userName", "email", "phoneNumber", "birthDay", "fullName", "imageUrl", "gender", "planId"],
           "properties": {
             "userName": {
               "type": "string",

@@ -157,7 +157,7 @@
         <h2 class="text-2xl font-semibold">Plan Supscription</h2>
         <p class="text-sm text-gray-600 dark:text-gray-400">Use a permanent address where you can receive mail.</p>
         <div class="grid grid-cols-1 animate-fade-right">
-          <CardPlan/>
+          <CardPlan />
         </div>
       </div>
       <div class="flex justify-between mt-8">
@@ -304,7 +304,7 @@
   }
 
   const onBackStep = () => {
-    if (store.createFlgAccountInfo){
+    if (store.createFlgAccountInfo) {
       window.location.href = document.referrer
     }
     stepperStore.moveToPreviousStep()

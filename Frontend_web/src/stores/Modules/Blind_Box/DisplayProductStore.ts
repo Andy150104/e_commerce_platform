@@ -44,8 +44,8 @@ export type ImageListResponse = {
 const sampleImageList: ImageList = {
   response: {
     imagesList: [
-      'https://toysfuntasy.com/cdn/shop/files/Labubu-V1-3_5efb670d-e921-42ee-aa56-cd11bc57460b.jpg?v=1688770128', 
-      'https://au.popmart.com/cdn/shop/files/2_b9ca6ef4-f32b-4956-8912-838c77889fd5_1024x1024.jpg?v=1705996646'
+      'https://toysfuntasy.com/cdn/shop/files/Labubu-V1-3_5efb670d-e921-42ee-aa56-cd11bc57460b.jpg?v=1688770128',
+      'https://au.popmart.com/cdn/shop/files/2_b9ca6ef4-f32b-4956-8912-838c77889fd5_1024x1024.jpg?v=1705996646',
     ],
   },
 }
