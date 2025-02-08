@@ -1,10 +1,10 @@
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 
-export const fieldsInitialize = { 
+export const fieldsInitialize = {
   userName: '',
   password: '',
-  email: '', 
+  email: '',
   phoneNumber: '',
   birthday: '',
   firstName: '',
@@ -72,10 +72,10 @@ export const useRegisterStore = defineStore('Register', {
 
       // const res = apiClient.api.v1.URSUserRegister.$post({
       //   body: {
-          
+
       //   },
       // })
       // res.
-    }
+    },
   },
 })

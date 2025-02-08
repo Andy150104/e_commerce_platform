@@ -32,9 +32,7 @@
   })
 </script>
 <style scoped>
-html.\30 .dark {
+  html.\30 .dark {
     background: red;
-}
-
+  }
 </style>
-

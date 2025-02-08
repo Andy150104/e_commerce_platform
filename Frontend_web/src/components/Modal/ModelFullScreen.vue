@@ -36,8 +36,7 @@
           <slot name="body"></slot>
         </div>
         <template #footer>
-          <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-          </div>
+          <div class="p-4 border-t border-gray-200 dark:border-gray-700"></div>
         </template>
       </UCard>
     </UModal>

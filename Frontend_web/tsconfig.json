@@ -7,7 +7,7 @@
     "baseUrl": ".",
     "paths": {
       "@PKG_SRC/*": ["./src/*"],
-      "@PKG_API/*": ["./api/*"],
+      "@PKG_API/*": ["./api/*"]
     }
   }
 }

@@ -34,7 +34,7 @@ export enum Locale {
 export enum StepStatus {
   currentStep = 0,
   pendingStep = 1,
-  finishStep = 2
+  finishStep = 2,
 }
 export interface selectItem {
   text: string

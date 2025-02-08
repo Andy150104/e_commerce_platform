@@ -35,7 +35,7 @@
   </div>
 
   <!-- Mobile Carousel -->
-  <div class="md:hidden justify-center items-center ">
+  <div class="md:hidden justify-center items-center">
     <swiper :slides-per-view="1" space-between="10" class="w-full flex justify-center items-center">
       <swiper-slide v-for="(plan, index) in plans" :key="index" class="flex justify-center">
         <div
@@ -106,5 +106,4 @@
   ])
 
   const selectedPlan = ref(0)
-  
 </script>

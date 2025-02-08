@@ -19,34 +19,30 @@ export const useFormMessageStore = defineStore('formMessage', {
     ResetStore() {
       this.messageId = ''
       this.formInfo = ''
-      this.formWarm =  '',
-      this.formError =  '',
-      this.errorList = [],
-      this.warmListTitle = [],
-      this.warmList = []
+      ;(this.formWarm = ''), (this.formError = ''), (this.errorList = []), (this.warmListTitle = []), (this.warmList = [])
     },
     //フロントの情報メッセージを出す場合
-    SetFormInfo( message: string) {
-      this.formInfo =message
+    SetFormInfo(message: string) {
+      this.formInfo = message
     },
     //フロントの警告メッセージを出す場合
-    SetFormWarm( message: string) {
-      this.formWarm =message
+    SetFormWarm(message: string) {
+      this.formWarm = message
     },
     //フロントのエラーメッセージを出す場合
-    SetFormError( message: string) {
-      this.formError =message
+    SetFormError(message: string) {
+      this.formError = message
     },
     //フロントのエラーリストを出す場合
-    SetErrorList( message: string) {
+    SetErrorList(message: string) {
       this.errorList.push(message)
     },
     //フロントの警告リストタイトルを出す場合
-    SetWarmListTitle( message: string) {
+    SetWarmListTitle(message: string) {
       this.warmListTitle.push(message)
     },
     //フロントの警告リストを出す場合
-    SetWarmList( message: string) {
+    SetWarmList(message: string) {
       this.warmList.push(message)
     },
     SetTableError(detail: { detailError: DetailError; name: string }) {
@@ -76,18 +72,18 @@ export const useFormMessageStore = defineStore('formMessage', {
       }
       switch (result.messageId.charAt(0)) {
         case 'I':
-          this.SetFormInfo(result.message?? '')
+          this.SetFormInfo(result.message ?? '')
           break
         case 'W':
-          this.SetFormWarm(result.message?? '')
+          this.SetFormWarm(result.message ?? '')
           break
         case 'E':
-          this.SetFormError(result.message?? '')
+          this.SetFormError(result.message ?? '')
           break
       }
     },
     SetTableMessage(detail: { detailError: DetailError; name: string }) {
-      this.SetTableError( detail )
+      this.SetTableError(detail)
     },
     SetTableMessageNoLabel(detail: { detailError: DetailError; name: string }) {
       const value = detail.detailError.errorMessage ?? ''

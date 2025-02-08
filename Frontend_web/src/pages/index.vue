@@ -44,7 +44,7 @@
     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
   >
     Default popover
-</div>
+  </div>
 
   <!-- Popover Content -->
   <div
@@ -64,67 +64,67 @@
 </template>
 
 <script setup lang="ts">
-import BaseControlTextField from '@PKG_SRC/components/Basecontrol/BaseControlTextField.vue';
-import ModelFullScreen from '@PKG_SRC/components/Modal/ModelFullScreen.vue';
-import { useMyppStore } from '@PKG_SRC/stores/Modules/Mypp/Mypp';
-import { XmlLoadColumn } from '@PKG_SRC/utils/xml';
-import { storeToRefs } from 'pinia';
-import { Field, useForm } from 'vee-validate';
+  import BaseControlTextField from '@PKG_SRC/components/Basecontrol/BaseControlTextField.vue'
+  import ModelFullScreen from '@PKG_SRC/components/Modal/ModelFullScreen.vue'
+  import { useMyppStore } from '@PKG_SRC/stores/Modules/Mypp/Mypp'
+  import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
+  import { storeToRefs } from 'pinia'
+  import { Field, useForm } from 'vee-validate'
 
-// Import Flowbite JavaScript
-import 'flowbite';
-import '@popperjs/core';
-import { initPopovers } from 'flowbite';
-import ImageCrop from '@PKG_SRC/components/CropImage/ImageCrop.vue';
+  // Import Flowbite JavaScript
+  import 'flowbite'
+  import '@popperjs/core'
+  import { initPopovers } from 'flowbite'
+  import ImageCrop from '@PKG_SRC/components/CropImage/ImageCrop.vue'
 
-const store = useMyppStore();
-const { fieldValues, fieldErrors } = storeToRefs(store);
-const formContext = useForm({ initialValues: fieldValues.value });
-store.SetFields(formContext);
-onMounted(() =>{
-  initPopovers()
-})
-const xmlColumns = {
-  mailAddress: XmlLoadColumn({
-    id: 'mailAddress',
-    name: 'メールアドレス',
-    rules: 'required',
-    visible: true,
-    option: '',
-  }),
-  mailAddressConfirm: XmlLoadColumn({
-    id: 'mailAddressConfirm',
-    name: 'メールアドレス（確認）',
-    rules: 'required',
-    visible: true,
-    option: '',
-  }),
-  passWord: XmlLoadColumn({
-    id: 'passWord',
-    name: 'Password',
-    rules: '',
-    visible: true,
-    option: ''
-  }),
-};
-const myImages = ref([
-  { original: 'https://assets.teenvogue.com/photos/624c93e41741df0bc53718a2/4:3/w_3839,h_2879,c_limit/blackpink%20rose%20phone%20case.jpg' },
-  { original: 'https://phongcachlamdep.com/wp-content/uploads/2022/04/kieu-toc-cua-rose-black-pink.jpg' },
-])
+  const store = useMyppStore()
+  const { fieldValues, fieldErrors } = storeToRefs(store)
+  const formContext = useForm({ initialValues: fieldValues.value })
+  store.SetFields(formContext)
+  onMounted(() => {
+    initPopovers()
+  })
+  const xmlColumns = {
+    mailAddress: XmlLoadColumn({
+      id: 'mailAddress',
+      name: 'メールアドレス',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    mailAddressConfirm: XmlLoadColumn({
+      id: 'mailAddressConfirm',
+      name: 'メールアドレス（確認）',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    passWord: XmlLoadColumn({
+      id: 'passWord',
+      name: 'Password',
+      rules: '',
+      visible: true,
+      option: '',
+    }),
+  }
+  const myImages = ref([
+    { original: 'https://assets.teenvogue.com/photos/624c93e41741df0bc53718a2/4:3/w_3839,h_2879,c_limit/blackpink%20rose%20phone%20case.jpg' },
+    { original: 'https://phongcachlamdep.com/wp-content/uploads/2022/04/kieu-toc-cua-rose-black-pink.jpg' },
+  ])
 </script>
 
 <style scoped>
-.video-container {
-  position: relative;
-  width: 100%;
-  max-width: 800px;
-  margin: 20px auto;
-  aspect-ratio: 16 / 9;
-}
+  .video-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    aspect-ratio: 16 / 9;
+  }
 
-.video-iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
+  .video-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
 </style>
