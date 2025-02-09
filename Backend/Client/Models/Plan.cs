@@ -3,19 +3,21 @@ using System.Collections.Generic;
 
 namespace server.Models;
 
-public partial class Voucher
+public partial class Plan
 {
-    public Guid VoucherId { get; set; }
+    public Guid PlanId { get; set; }
 
-    public int Quantity { get; set; }
+    public string PlanName { get; set; }
 
     public string? Description { get; set; }
 
-    public decimal UnitPrice { get; set; }
+    public decimal Price { get; set; }
 
-    public Guid OrderId { get; set; }
+    public int DurationMonths { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
 
     public DateTime? ExpiredAt { get; set; }
 
@@ -24,6 +26,4 @@ public partial class Voucher
     public string? CreatedBy { get; set; }
 
     public string? UpdatedBy { get; set; }
-
-    public virtual Order Order { get; set; } = null!;
 }

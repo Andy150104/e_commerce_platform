@@ -54,7 +54,10 @@ public class UserInsertVerifyController : AbstractApiControllerNotToken<UserInse
     {
         var response = new UserInsertVerifyResponse() { Success = false };
         // Decrypt
-        var userNameDecrypt = CommonLogic.DecryptText(request.Key, _context);
+        var keyDecrypt = CommonLogic.DecryptText(request.Key, _context);
+        string[] values = keyDecrypt.Split(",");
+        string userNameDecrypt = values[0];
+        
         // Check user exists
         var userExist = _context.VwUserVerifies.Any(x => x.UserName == userNameDecrypt);
         if (userExist == null)
@@ -66,7 +69,6 @@ public class UserInsertVerifyController : AbstractApiControllerNotToken<UserInse
         var userVerify = _userManager.FindByNameAsync(userNameDecrypt).Result;
         
         // Update information user
-        userVerify.IsActive = true;
         userVerify.LockoutEnd = null;
         userVerify.LockoutEnabled = false;
         userVerify.EmailConfirmed = true;

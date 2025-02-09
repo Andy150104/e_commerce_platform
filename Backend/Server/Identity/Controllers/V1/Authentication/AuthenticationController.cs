@@ -101,7 +101,7 @@ public class AuthenticationController : ControllerBase
             return Unauthorized();
         }
         // Check user is active
-        if (!user.IsActive)
+        if (user.LockoutEnabled)
         {
             return Unauthorized();
         }
@@ -144,10 +144,7 @@ public class AuthenticationController : ControllerBase
             OpenIddictConstants.Scopes.OfflineAccess, 
             OpenIddictConstants.Scopes.Profile,
         });
-        foreach (var claim in identity.Claims)
-        {
-            Console.WriteLine($"Claim Type: {claim.Type}, Value: {claim.Value}");
-        }
+        
         claimsPrincipal.SetResources(await _scopeManager.ListResourcesAsync(claimsPrincipal.GetScopes()).ToListAsync());
 
         // Set refresh token and access token

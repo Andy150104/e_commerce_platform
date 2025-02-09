@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
+using server.Logics.Commons;
 using server.Models;
 
 namespace server.Controllers.V1.UserRegisterScreen;
@@ -19,10 +20,6 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
     
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="context"></param>
     public URSUserRegisterController(AppDbContext context)
     {
         _context = context;
@@ -35,7 +32,6 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    [HttpPost]
     public override URSUserRegisterResponse Post(URSUserRegisterRequest request)
     {
         return Post(request, _context, logger, new URSUserRegisterResponse());
@@ -51,10 +47,18 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     protected override URSUserRegisterResponse Exec(URSUserRegisterRequest request, IDbContextTransaction transaction)
     {
         var response = new URSUserRegisterResponse() { Success = false };
-
+        // Decrypt Key
+        var keyDecrypt = CommonLogic.DecryptText(request.Key, _context);
+        string[] values = keyDecrypt.Split(",");
+        
+        string userName = values[0];
+        string email = values[1];
+        string firstName = values[2];
+        string lastName = values[3];
+        
         // Check if the user already exists
-        var userSelect = _context.VwUserAuthentications.AsNoTracking().FirstOrDefault(x => x.UserName == request.UserName 
-                                                                             || x.Email == request.Email);
+        var userSelect = _context.VwUserAuthentications.AsNoTracking().FirstOrDefault(x => x.UserName == userName 
+            || x.Email == email);
         
         // If the user already exists, return an error
         if (userSelect != null)
@@ -62,23 +66,43 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             response.SetMessage(MessageId.E11004);
             return response;
         }
+        
+        // Check plan
+        var planExist = _context.VwPlans.AsNoTracking().FirstOrDefault(x => x.PlanId == request.PlanId);
+        if (planExist == null)
+        {
+            response.SetMessage(MessageId.E00000, "Plan not found");
+            return response;
+        }
 
-        // Create a new user
         var newUser = new User()
         {
-            UserName = request.UserName,
-            Email = request.Email,
+            UserName = userName,
+            Email = email,
+            FullName = lastName + " " + firstName,
             PhoneNumber = request.PhoneNumber,
             Gender = request.Gender,
             BirthDate = DateOnly.Parse(request.BirthDay),
-            FullName = request.FullName,
             ImageUrl = request.ImageUrl,
-            PlanId = request.PlanId,
+            PlanId = planExist.PlanId,
         };
-        
         // Add new user
         _context.Add(newUser);
-        _context.SaveChanges();
+        
+        // Add address
+        var newAddress = new Address()
+        {
+            Username = newUser.UserName,
+            AddressLine = request.AddressLine,
+            Ward = request.Ward,
+            City = request.City,
+            Country = request.Country,
+            District = request.District,
+        };
+        _context.Add(newAddress);
+        
+        // Commit transaction
+        _context.SaveChanges(newAddress.Username);
         transaction.Commit();
         
         // True

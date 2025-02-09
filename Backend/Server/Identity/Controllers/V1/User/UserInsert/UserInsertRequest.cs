@@ -12,4 +12,12 @@ public class UserInsertRequest
     
     [Required(ErrorMessage = "Password is required")]
     public string Password { get; set; }
+    
+    [Required(ErrorMessage = "First name is required")]
+    [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "First name contains invalid characters")]
+    public string FirstName { get; set; }
+    
+    [Required(ErrorMessage = "Last name is required")]
+    [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "First name contains invalid characters")]
+    public string LastName { get; set; }
 }

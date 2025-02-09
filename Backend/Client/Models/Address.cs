@@ -7,7 +7,7 @@ public partial class Address
 {
     public Guid AddressId { get; set; }
 
-    public Guid? UserId { get; set; }
+    public string Username { get; set; } = null!;
 
     public string? AddressLine { get; set; }
 
@@ -19,15 +19,15 @@ public partial class Address
 
     public string? District { get; set; }
 
-    public DateTime? CreateAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public string? CreateBy { get; set; }
+    public string? CreatedBy { get; set; }
 
     public bool? IsActive { get; set; }
 
-    public DateTime? UpdateAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public string? UpdateBy { get; set; }
+    public string? UpdatedBy { get; set; }
 
-    public virtual User? User { get; set; }
+    public virtual User UsernameNavigation { get; set; } = null!;
 }

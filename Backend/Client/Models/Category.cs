@@ -9,13 +9,15 @@ public partial class Category
 
     public string CategoryName { get; set; } = null!;
 
-    public DateTime? CreateAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? UpdateAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public bool? IsActive { get; set; }
 
-    public string? UpdateBy { get; set; }
+    public string? CreatedBy { get; set; }
+
+    public string? UpdatedBy { get; set; }
 
     public Guid? ParentId { get; set; }
 

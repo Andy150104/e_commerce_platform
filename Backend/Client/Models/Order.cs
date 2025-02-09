@@ -7,7 +7,7 @@ public partial class Order
 {
     public Guid OrderId { get; set; }
 
-    public Guid? UserId { get; set; }
+    public string Username { get; set; } = null!;
 
     public int Quantity { get; set; }
 
@@ -17,13 +17,13 @@ public partial class Order
 
     public string? CreatedBy { get; set; }
 
-    public DateTime? UpdateAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public string? UpdateBy { get; set; }
+    public string? UpdatedBy { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-    public virtual User? User { get; set; }
+    public virtual User UsernameNavigation { get; set; } = null!;
 
     public virtual ICollection<Voucher> Vouchers { get; set; } = new List<Voucher>();
 }

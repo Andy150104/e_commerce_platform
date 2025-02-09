@@ -7,21 +7,23 @@ public partial class Message
 {
     public Guid MessageId { get; set; }
 
-    public Guid? SenderId { get; set; }
-
-    public Guid? ReceiverId { get; set; }
-
     public string? Content { get; set; }
 
     public string? Status { get; set; }
 
+    public string SenderId { get; set; } = null!;
+
+    public string ReceiverId { get; set; } = null!;
+
     public DateTime? CreatedAt { get; set; }
 
-    public string? CreateBy { get; set; }
+    public string? CreatedBy { get; set; }
 
-    public string? UpdateBy { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public virtual User? Receiver { get; set; }
+    public string? UpdatedBy { get; set; }
 
-    public virtual User? Sender { get; set; }
+    public virtual User Receiver { get; set; } = null!;
+
+    public virtual User Sender { get; set; } = null!;
 }

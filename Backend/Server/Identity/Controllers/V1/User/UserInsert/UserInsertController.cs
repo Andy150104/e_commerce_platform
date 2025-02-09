@@ -20,20 +20,17 @@ public class UserInsertController : ControllerBase
     private readonly AppDbContext _context;
     private readonly UserManager<Models.User> _userManager;
     private readonly RoleManager<Role> _roleManager;
-    private readonly IPasswordValidator<Models.User> _passwordValidator;
-    
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="context"></param>
     /// <param name="userManager"></param>
     /// <param name="signInManager"></param>
-    public UserInsertController(AppDbContext context, UserManager<Models.User> userManager, RoleManager<Role> roleManager, IPasswordValidator<Models.User> passwordValidator)
+    public UserInsertController(AppDbContext context, UserManager<Models.User> userManager, RoleManager<Role> roleManager)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
-        _passwordValidator = passwordValidator;
     }
     
     /// <summary>
@@ -47,20 +44,11 @@ public class UserInsertController : ControllerBase
         var response = new UserInsertResponse() {Success = false};
         var detailErrorList = new List<DetailError>();
 
-        var validatePassword = ValidatePassword(_passwordValidator, _userManager, request.Password, detailErrorList);
-        if (validatePassword.Any())
-        {
-            response.SetMessage(MessageId.E10000);
-            response.DetailErrorList = detailErrorList;
-            return response;
-        }
-        // Start transaction
         using (var transaction = _context.Database.BeginTransaction())
         {
             // Check user exists
             var userExist = await _userManager.FindByNameAsync(request.Username) 
                             ?? await _userManager.FindByEmailAsync(request.Email);
-            // If user exists, return error
             if (userExist != null)
             {
                 response.SetMessage(MessageId.E11004);
@@ -73,13 +61,12 @@ public class UserInsertController : ControllerBase
             {
                 UserName = request.Username,
                 Email = request.Email,
-                IsActive = false,
+                LockoutEnabled = true,
                 LockoutEnd = null,
                 EmailConfirmed = false,
                 RoleId = role.Id,
             };
         
-            // Insert user
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
             {
@@ -89,7 +76,8 @@ public class UserInsertController : ControllerBase
             await _userManager.AddToRoleAsync(user, ConstantEnum.UserRole.CUSTOMER.ToString());
 
             // Create key
-            var key = CommonLogic.EncryptText(user.UserName, _context);
+            var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";
+            key = CommonLogic.EncryptText(key, _context);
             
             // Send mail
             UserInsertSendMail.SendMailVerifyInformation(_context, user.UserName, user.Email, key, detailErrorList);
@@ -108,35 +96,4 @@ public class UserInsertController : ControllerBase
             return response;
         }
     }
-    
-    /// <summary>
-    /// Validate password
-    /// </summary>
-    /// <param name="passwordValidator"></param>
-    /// <param name="userManager"></param>
-    /// <param name="password"></param>
-    /// <param name="detailErrorList"></param>
-    /// <returns></returns>
-    public static List<DetailError> ValidatePassword(IPasswordValidator<Models.User> passwordValidator, UserManager<Models.User> userManager, string password, List<DetailError> detailErrorList)
-    {
-        var user = new Models.User();
-        var result = passwordValidator.ValidateAsync(userManager, user, password).Result;
-        // If the password is invalid, add an error
-        if (!result.Succeeded)
-        {
-            // Add error
-            foreach (var error in result.Errors)
-            {
-                detailErrorList.Add(new DetailError
-                {
-                    field = "Password",
-                    MessageId = MessageId.E10000,
-                    ErrorMessage = error.Description
-                });
-            }
-        }
-
-        return detailErrorList;
-    }
-    
 }

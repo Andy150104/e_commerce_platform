@@ -5,8 +5,6 @@ namespace Server.Models;
 
 public class User : IdentityUser
 {
-    public bool IsActive { get; set; }
-
     public string RoleId { get; set; }
     
     [ForeignKey("RoleId")]

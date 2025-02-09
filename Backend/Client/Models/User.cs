@@ -5,8 +5,6 @@ namespace server.Models;
 
 public partial class User
 {
-    public Guid UserId { get; set; }
-
     public string UserName { get; set; } = null!;
 
     public string? PhoneNumber { get; set; }
@@ -20,10 +18,22 @@ public partial class User
     public DateOnly? BirthDate { get; set; }
 
     public byte? Gender { get; set; }
+    
+    public DateTime? CreatedAt { get; set; }
 
-    public Guid? PlanId { get; set; }
+    public string? CreatedBy { get; set; }
+
+    public bool? IsActive { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public string? UpdatedBy { get; set; }
+
+    public Guid PlanId { get; set; }
 
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
+
+    public virtual ICollection<BlindBox> BlindBoxes { get; set; } = new List<BlindBox>();
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 

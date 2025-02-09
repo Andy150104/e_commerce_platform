@@ -5,8 +5,9 @@ public static partial class ConstantEnum
     public enum UserRole
     {
         CUSTOMER,
-        SELLER,
-        ADMIN,
+        SALE_EMPLOYEE,
+        PLANNED_CUSTOMER,	
+        OWNER,
     }
     
     public enum OrderStatus
