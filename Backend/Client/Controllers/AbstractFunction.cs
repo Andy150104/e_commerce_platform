@@ -17,7 +17,7 @@ public class AbstractFunction<T, U, V>
     where U : AbstractApiResponse<V>
 {
     /// <summary>
-    /// 共通エラーレスポンス
+    /// Return value
     /// </summary>
     public static U GetReturnValue(U returnValue, Logger logger, Exception e, AppDbContext context)
     {
@@ -27,16 +27,16 @@ public class AbstractFunction<T, U, V>
                 logger.Warn($"Report API connection error ：{e.Message}");
                 returnValue.SetMessage(MessageId.E99001);
                 break;
-            case DbUpdateConcurrencyException: 
+            case DbUpdateConcurrencyException:
                 logger.Error($"Exclusive error ：{e.Message}");
-                returnValue.SetMessage(MessageId.E99001);
+                returnValue.SetMessage(MessageId.E99002);
                 break;
             case InvalidOperationException:
                 if (e.InnerException?.HResult == -2146233088)
                 {
                     // Exclusive control error Another update in the transaction
                     logger.Error($"Exclusive error ：{e.Message}");
-                    returnValue.SetMessage(MessageId.E99001);
+                    returnValue.SetMessage(MessageId.E99002);
                 }
                 else
                 {
@@ -51,25 +51,26 @@ public class AbstractFunction<T, U, V>
                 {
                     // SQL timeout
                     logger.Error($"SQL timeout error ：{e.Message} {e.StackTrace} {e.InnerException}");
-                    returnValue.SetMessage(MessageId.E99001);
+                    returnValue.SetMessage(MessageId.E99003);
                 }
                 else if (ex.Number == 3961)
                 {
-                    // Error that occurs when the definition of a view or the like is changed during execution
-                    logger.Warn($"The definition of a view, etc. was changed during processing ：{e.Message} {e.StackTrace} {e.InnerException}");
-                    returnValue.SetMessage(MessageId.E99001);
+                    // View definition changed
+                    logger.Warn(
+                        $"The definition of a view, etc. was changed during processing ：{e.Message} {e.StackTrace} {e.InnerException}");
+                    returnValue.SetMessage(MessageId.E99004);
                 }
                 else
                 {
                     logger.Warn($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
-                    returnValue.SetMessage(MessageId.E99001);
+                    returnValue.SetMessage(MessageId.E99005);
                 }
 
                 break;
             case Exception:
                 // System error
                 logger.Warn($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
-                returnValue.SetMessage(MessageId.E99001);
+                returnValue.SetMessage(MessageId.E99999);
                 break;
         }
 
@@ -77,7 +78,8 @@ public class AbstractFunction<T, U, V>
         logger.Warn(returnValue);
         return returnValue;
     }
-    
+
+
     /// <summary>
     /// Error check
     /// </summary>
@@ -88,7 +90,7 @@ public class AbstractFunction<T, U, V>
         var detailErrorList = new List<DetailError>();
 
         // If there is no error, return
-        if (modelState.IsValid) 
+        if (modelState.IsValid)
             return detailErrorList;
 
         foreach (var entry in modelState)
@@ -129,7 +131,7 @@ public class AbstractFunction<T, U, V>
 
             detailErrorList.Add(detailError);
         }
+
         return detailErrorList;
     }
-
 }

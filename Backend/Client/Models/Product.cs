@@ -15,11 +15,11 @@ public partial class Product
 
     public int Quantity { get; set; }
 
-    public DateTime? CreateAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public DateTime? UpdateAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public string? UpdateBy { get; set; }
+    public string? UpdatedBy { get; set; }
 
     public bool? IsActive { get; set; }
 
@@ -27,21 +27,17 @@ public partial class Product
 
     public Guid? WishlistId { get; set; }
 
-    public Guid? UserId { get; set; }
+    public string Username { get; set; } = null!;
 
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
     public virtual Category? Category { get; set; }
 
-    public virtual ICollection<Exchange> Exchanges { get; set; } = new List<Exchange>();
-
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-
-    public virtual ICollection<Queue> Queues { get; set; } = new List<Queue>();
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    public virtual User? User { get; set; }
+    public virtual User UsernameNavigation { get; set; } = null!;
 
-    public virtual ICollection<Voucher> Vouchers { get; set; } = new List<Voucher>();
+    public virtual Wishlist? Wishlist { get; set; }
 }

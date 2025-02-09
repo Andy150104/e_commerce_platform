@@ -1,9 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
+using Client.Models.Helper;
+using Client.Utils.Consts;
 using Microsoft.EntityFrameworkCore;
-using Server.Controllers;
-using Server.Models.Helper;
-using Server.Utils.Consts;
 
 namespace server.Logics.Commons;
 
@@ -21,11 +20,12 @@ public static class CommonLogic
     /// <exception cref="ArgumentException"></exception>
     public static string EncryptText(string beforeEncrypt, AppDbContext context)
     {
+        Console.WriteLine(beforeEncrypt);
         // Check for null or empty
         ArgumentException.ThrowIfNullOrEmpty(beforeEncrypt);
         
         // Get the system config
-        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptKey).Value;
+        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv).Value;
         var iv = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv).Value;
         // Check for null
         if (key == null)

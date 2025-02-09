@@ -61,7 +61,7 @@ public class UserInsertController : ControllerBase
             {
                 UserName = request.Username,
                 Email = request.Email,
-                IsActive = false,
+                LockoutEnabled = true,
                 LockoutEnd = null,
                 EmailConfirmed = false,
                 RoleId = role.Id,
@@ -76,7 +76,8 @@ public class UserInsertController : ControllerBase
             await _userManager.AddToRoleAsync(user, ConstantEnum.UserRole.CUSTOMER.ToString());
 
             // Create key
-            var key = CommonLogic.EncryptText(user.UserName, _context);
+            var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";
+            key = CommonLogic.EncryptText(key, _context);
             
             // Send mail
             UserInsertSendMail.SendMailVerifyInformation(_context, user.UserName, user.Email, key, detailErrorList);

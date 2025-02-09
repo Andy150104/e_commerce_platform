@@ -49,7 +49,7 @@ public static class SendMailLogic
             message.Subject = title;
             message.Body = body;
             message.Bcc.Add(mailToBcc);
-            message.IsBodyHtml = false;
+            message.IsBodyHtml = true;
             client.Send(message);
         }
     }

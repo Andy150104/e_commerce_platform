@@ -1,5 +1,5 @@
 using System.Net;
-using client.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.Helper;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +10,15 @@ using Server;
 using Server.Helpers;
 using Server.Identity;
 using Server.Models;
-// using Server.Identity.Models;
 using Server.SystemClient;
-// using Role = Server.Identity.Models.Role;
 
 var builder = WebApplication.CreateBuilder(args);
+// Configuration
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
-// 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDataProtection();
@@ -36,7 +38,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     // Password settings.
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 8;
-    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireNonAlphanumeric = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireLowercase = true;
 
@@ -96,11 +98,13 @@ builder.Services.AddOpenIddict()
         options.SetIntrospectionEndpointUris("/connect/introspect");
         options.SetUserInfoEndpointUris("/connect/userinfo");
         options.SetEndSessionEndpointUris("/connect/logout");
+        options.SetAuthorizationEndpointUris("/connect/authorize");
         // Enable the client credentials flow
         options.AllowPasswordFlow();
         options.AllowRefreshTokenFlow();
         options.AllowClientCredentialsFlow();
         options.AllowCustomFlow("logout");
+        options.AllowAuthorizationCodeFlow();
         // Register the signing and encryption credentials
         options.UseReferenceAccessTokens();
         options.UseReferenceRefreshTokens();
@@ -120,6 +124,7 @@ builder.Services.AddOpenIddict()
         options.UseAspNetCore()
             .EnableTokenEndpointPassthrough()
             .EnableEndSessionEndpointPassthrough()
+            .EnableAuthorizationEndpointPassthrough()
             .DisableTransportSecurityRequirement();
     })
     .AddValidation(options =>
@@ -132,6 +137,17 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = OpenIddictConstants.Schemes.Bearer;
     options.DefaultChallengeScheme = OpenIddictConstants.Schemes.Bearer;
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
+})
+.AddCookie()
+.AddGoogle(options =>
+{
+    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+    options.CallbackPath = "/signin-google";
+    options.SaveTokens = false; 
+    options.SignInScheme = IdentityConstants.ExternalScheme;
 });
 // DB context that inherits AppDbContext
 builder.Services.AddHttpContextAccessor();
@@ -158,6 +174,8 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"Error seeding roles: {ex.Message}");
     }
 }
+
+builder.Logging.AddConsole();
 
 app.UseCors();
 app.UseRouting();

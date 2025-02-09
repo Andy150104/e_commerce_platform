@@ -7,13 +7,13 @@ public partial class Review
 {
     public Guid ReviewId { get; set; }
 
-    public Guid? UserId { get; set; }
+    public string Username { get; set; } = null!;
 
-    public Guid? ProductId { get; set; }
+    public Guid ProductId { get; set; }
 
     public string? ReviewContent { get; set; }
 
-    public bool? Rating { get; set; }
+    public int? Rating { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -21,11 +21,7 @@ public partial class Review
 
     public bool? IsActive { get; set; }
 
-    public string? Description { get; set; }
+    public virtual Product Product { get; set; } = null!;
 
-    public string? ReplyReviewContent { get; set; }
-
-    public virtual Product? Product { get; set; }
-
-    public virtual User? User { get; set; }
+    public virtual User UsernameNavigation { get; set; } = null!;
 }
