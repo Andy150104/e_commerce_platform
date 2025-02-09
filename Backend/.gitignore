@@ -15,7 +15,7 @@ obj/
 Thumbs.db
 .DS_Store
 
-appsettings.Development.json
+Backend/Server/appsettings.Development.json
 
 *.user
 *.userosscache
