@@ -58,12 +58,12 @@ public partial class BBExTradingFloorContext : DbContext
     public virtual DbSet<VwUserAuthentication> VwUserAuthentications { get; set; }
 
     public virtual DbSet<Wishlist> Wishlists { get; set; }
-    
+
     private string GetConnectionString()
     {
         IConfiguration config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json",true,true)
+            .AddJsonFile("appsettings.json", true, true)
             .Build();
         var strConn = config["ConnectionStrings:DefaultConnection"];
 
@@ -72,6 +72,7 @@ public partial class BBExTradingFloorContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
@@ -663,22 +664,6 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("phone_number");
             entity.Property(e => e.PlanId).HasColumnName("plan_id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("created_by");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("updated_by");
         });
 
         modelBuilder.Entity<Voucher>(entity =>
@@ -767,6 +752,7 @@ public partial class BBExTradingFloorContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
