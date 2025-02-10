@@ -8,7 +8,7 @@ export const fieldsInitialize = {
   mailAddress: '',
   mailAddressConfirm: '',
   seinengappi: '',
-  passWord: ''
+  passWord: '',
 }
 export type FormSchema = typeof fieldsInitialize
 
@@ -47,9 +47,9 @@ export const useMyppStore = defineStore('useMyppStore', {
     ResetStore() {
       this.fields.resetForm()
     },
-    Test(){
-      console.log('test seinengappi',this.fieldValues.seinengappi)
-      console.log('test mailAddress',this.fieldValues.mailAddress)
-    }
+    Test() {
+      console.log('test seinengappi', this.fieldValues.seinengappi)
+      console.log('test mailAddress', this.fieldValues.mailAddress)
+    },
   },
 })

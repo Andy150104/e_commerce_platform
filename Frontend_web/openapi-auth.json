@@ -6,15 +6,11 @@
     "version": "1.0.0"
   },
   "host": "localhost:7021",
-  "schemes": [
-    "https"
-  ],
+  "schemes": ["https"],
   "paths": {
     "/connect/token": {
       "post": {
-        "tags": [
-          "Authentication"
-        ],
+        "tags": ["Authentication"],
         "operationId": "Authentication_Exchange",
         "parameters": [
           {
@@ -46,22 +42,52 @@
         ]
       }
     },
+    "/LoginWithGoogle": {
+      "get": {
+        "tags": ["GoogleLoginControlller"],
+        "operationId": "GoogleLoginControlller_LoginWithGoogle",
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/GoogleResponse": {
+      "get": {
+        "tags": ["GoogleLoginControlller"],
+        "operationId": "GoogleLoginControlller_GoogleResponse",
+        "responses": {
+          "200": {
+            "x-nullable": true,
+            "description": "",
+            "schema": {
+              "type": "file"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
     "/api/v1/UserInsert": {
       "post": {
-        "tags": [
-          "UserInsert"
-        ],
+        "tags": ["UserInsert"],
         "operationId": "UserInsert_Post",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "consumes": ["application/json", "text/json", "application/*+json"],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "request",
@@ -91,20 +117,10 @@
     },
     "/api/v1/UserInsertVerify": {
       "post": {
-        "tags": [
-          "UserInsertVerify"
-        ],
+        "tags": ["UserInsertVerify"],
         "operationId": "UserInsertVerify_Post",
-        "consumes": [
-          "application/json",
-          "text/json",
-          "application/*+json"
-        ],
-        "produces": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
+        "consumes": ["application/json", "text/json", "application/*+json"],
+        "produces": ["text/plain", "application/json", "text/json"],
         "parameters": [
           {
             "name": "request",
@@ -141,9 +157,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "response"
-          ],
+          "required": ["response"],
           "properties": {
             "response": {
               "type": "string"
@@ -155,12 +169,7 @@
     "AbstractApiResponseOfString": {
       "type": "object",
       "x-abstract": true,
-      "required": [
-        "success",
-        "messageId",
-        "message",
-        "detailErrorList"
-      ],
+      "required": ["success", "messageId", "message", "detailErrorList"],
       "properties": {
         "success": {
           "type": "boolean"
@@ -184,17 +193,9 @@
     },
     "DetailError": {
       "type": "object",
-      "required": [
-        "field",
-        "columnName",
-        "messageId",
-        "errorMessage"
-      ],
+      "required": ["field", "messageId", "errorMessage"],
       "properties": {
         "field": {
-          "type": "string"
-        },
-        "columnName": {
           "type": "string"
         },
         "messageId": {
@@ -207,11 +208,7 @@
     },
     "UserInsertRequest": {
       "type": "object",
-      "required": [
-        "username",
-        "email",
-        "password"
-      ],
+      "required": ["username", "email", "password", "firstName", "lastName"],
       "properties": {
         "username": {
           "type": "string",
@@ -224,6 +221,16 @@
         "password": {
           "type": "string",
           "minLength": 1
+        },
+        "firstName": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+        },
+        "lastName": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
         }
       }
     },
@@ -234,9 +241,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "response"
-          ],
+          "required": ["response"],
           "properties": {
             "response": {
               "type": "string"
@@ -252,9 +257,7 @@
         },
         {
           "type": "object",
-          "required": [
-            "key"
-          ],
+          "required": ["key"],
           "properties": {
             "key": {
               "type": "string"
@@ -266,9 +269,7 @@
     "AbstractApiRequest": {
       "type": "object",
       "x-abstract": true,
-      "required": [
-        "isOnlyValidation"
-      ],
+      "required": ["isOnlyValidation"],
       "properties": {
         "isOnlyValidation": {
           "type": "boolean"

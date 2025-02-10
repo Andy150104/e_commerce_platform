@@ -90,7 +90,7 @@
       type: String,
       required: false,
       default: 'text',
-    }
+    },
   })
   interface Emits {
     (e: 'on-blur'): void

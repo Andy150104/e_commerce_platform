@@ -39,14 +39,14 @@ export const useApiClient = () => {
       setTimeout(function () {
         loadingStore.LoadingChange(false)
       }, 250)
-      if (error.response.status === 401){
-        if (authStore.isAuthorization){
+      if (error.response.status === 401) {
+        if (authStore.isAuthorization) {
           let accessToken = ''
-          await authStore.GetRereshToken().then(() =>{
+          await authStore.GetRereshToken().then(() => {
             accessToken = authStore.accessToken
           })
           error.config.headers.Authorization = `Bearer ${accessToken}`
-          
+
           const response = apiRetryAxios.request(error.config)
           return response
         } else {
@@ -57,7 +57,6 @@ export const useApiClient = () => {
         const message = SYSTEM_ERROR_BACKEND.message + ' ' + (error.response?.status ?? '') + ' ' + (error.message ?? '')
 
         const formMessageStore = useFormMessageStore()
-        formMessageStore.SetFormMessage({messageId: SYSTEM_ERROR_BACKEND.messageId, message: message, success: false})
 
         return null
       }
@@ -67,9 +66,9 @@ export const useApiClient = () => {
     (response) => response,
     (error) => {
       if (error.response && error.response.status === 401) {
-        router.push('/?error=timeout') 
+        router.push('/?error=timeout')
       } else {
-        router.push('/?error=systemError') 
+        router.push('/?error=systemError')
       }
     }
   )
