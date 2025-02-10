@@ -55,7 +55,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBaseUrl: process.env['NUXT_PUBLIC_API_BASE_URL'] ?? '',
-      identityBaseUrl: process.env['NUXT_PUBLIC_IDENTITY_BASE_URL'] ?? 'https://localhost:5090',
+      identityBaseUrl: process.env['NUXT_PUBLIC_IDENTITY_BASE_URL'] ?? 'https://localhost:7021',
       clientSecret: 'SWD392-LamNN15-GROUP3-SPRING2025',
     },
   },

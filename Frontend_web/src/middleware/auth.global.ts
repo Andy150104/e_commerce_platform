@@ -20,6 +20,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'Register',
     'Blind_Box',
     'Blind_Box/Cart',
+    'DashBoard',
+    'DashBoard/Account',
   ]
   if (!authStore.isAuthorization && !loginNotRequiredRoutes.includes(relativePath)) {
     return { path: '/' }

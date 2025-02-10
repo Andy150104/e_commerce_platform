@@ -47,14 +47,41 @@
             />
           </div>
           <div>
-            <LabelItem :xml-column="xmlColumns.password" />
+            <LabelItem :xml-column="xmlColumns.confirmPassword" />
             <BaseControlTextField
-              :xml-column="xmlColumns.password"
+              :xml-column="xmlColumns.confirmPassword"
               :maxlength="50"
               :disabled="false"
               :type="'password'"
-              :err-msg="fieldErrors.password"
+              :err-msg="fieldErrors.confirmPassword"
               :placeholder="'***********'"
+            />
+          </div>
+          <div>
+            <UserControlTextFieldLabel
+              :xml-column="xmlColumns.firstName"
+              :maxlength="50"
+              :disabled="false"
+              :err-msg="fieldErrors.firstName"
+              :placeholder="'John'"
+            />
+          </div>
+          <div>
+            <UserControlTextFieldLabel
+              :xml-column="xmlColumns.email"
+              :maxlength="50"
+              :disabled="false"
+              :err-msg="fieldErrors.email"
+              :placeholder="'abc@gmail.com'"
+            />
+          </div>
+          <div>
+            <UserControlTextFieldLabel
+              :xml-column="xmlColumns.lastName"
+              :maxlength="50"
+              :disabled="false"
+              :err-msg="fieldErrors.lastName"
+              :placeholder="'John'"
             />
           </div>
           <div>
@@ -67,24 +94,6 @@
         <p class="text-sm text-gray-600 dark:text-gray-400">Use a permanent address where you can receive mail.</p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-right">
           <div class="space-y-4">
-            <div>
-              <UserControlTextFieldLabel
-                :xml-column="xmlColumns.firstName"
-                :maxlength="50"
-                :disabled="false"
-                :err-msg="fieldErrors.firstName"
-                :placeholder="'John'"
-              />
-            </div>
-            <div>
-              <UserControlTextFieldLabel
-                :xml-column="xmlColumns.email"
-                :maxlength="50"
-                :disabled="false"
-                :err-msg="fieldErrors.email"
-                :placeholder="'abc@gmail.com'"
-              />
-            </div>
             <div>
               <UserControlTextFieldLabel
                 :xml-column="xmlColumns.phoneNumber"
@@ -114,15 +123,6 @@
             </div>
           </div>
           <div class="space-y-4">
-            <div>
-              <UserControlTextFieldLabel
-                :xml-column="xmlColumns.lastName"
-                :maxlength="50"
-                :disabled="false"
-                :err-msg="fieldErrors.lastName"
-                :placeholder="'John'"
-              />
-            </div>
             <div>
               <UserControlTextFieldLabel
                 :xml-column="xmlColumns.country"
@@ -162,7 +162,7 @@
       </div>
       <div class="flex justify-between mt-8">
         <button :class="className.BUTTON_DEFAULT_GRAY_1" @click="onBackStep">Back</button>
-        <button :class="className.BUTTON_DEFAULT_BLUE_2" @click="moveToNextStep">Next</button>
+        <button :class="className.BUTTON_DEFAULT_BLUE_2" @click="onMoveToNextStep">Next</button>
       </div>
     </template>
   </BaseScreenAuth>
@@ -221,6 +221,13 @@
     password: XmlLoadColumn({
       id: 'password',
       name: 'Password',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+    confirmPassword: XmlLoadColumn({
+      id: 'confirmPassword',
+      name: 'Confirm Password',
       rules: 'required',
       visible: true,
       option: '',
@@ -296,9 +303,12 @@
     store.createFlgComplete = isComplete
   }
 
-  const moveToNextStep = () => {
+  const onMoveToNextStep = async () => {
     stepperStore.moveToNextStep()
-    if (store.createFlgAccountInfo) return updateFlags(false, true, false, false)
+    if (store.createFlgAccountInfo) {
+      if (!(await store.RegisterUser())) return
+      return updateFlags(false, true, false, false)
+    }
     if (store.createFlgPersonalInfo) return updateFlags(false, false, true, false)
     if (store.createFlgPlan) return updateFlags(false, false, false, true)
   }

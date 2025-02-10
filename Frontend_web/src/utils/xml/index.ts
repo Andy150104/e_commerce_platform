@@ -18,23 +18,23 @@ export const XmlLoadColumn = (column: xmlColumn) => {
   if (!CheckFieldId(column.id)) {
     return column
   }
-  // nameがあれば上書き
+  // name
   const name = fields[column.id]?.name
   if (name != null && name !== '') {
     column.name = name
   }
-  // rulesがあれば上書き
+  // rules
   const rules = fields[column.id]?.rules
   if (rules != null && rules !== '') {
     column.rules = rules
   }
-  // visibleがあれば上書き
+  // visible
   const visible = fields[column.id]?.visible
   if (visible != null && visible !== '') {
     column.visible = visible.toString().toLowerCase() === 'true'
   }
 
-  // optionがあれば上書き
+  // option
   const option = fields[column.id]?.DefaultOption
   if (option != null && option !== '') {
     column.option = option

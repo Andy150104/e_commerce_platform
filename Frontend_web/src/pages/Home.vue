@@ -75,7 +75,7 @@
   import { useTestStore } from '@PKG_SRC/stores/Modules/Mypg/testStore'
   import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
   import Carousel from '@PKG_SRC/components/Carousel/Carousel.vue'
-import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
+  import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
   const gradientCard = ref<HTMLElement | null>(null)
   const gradientEffect = ref<HTMLElement | null>(null)

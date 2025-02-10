@@ -8,6 +8,7 @@
   const formMessageStore = useFormMessageStore()
 
   onMounted(() => {
+    if (!formMessageStore.isNotify) return
     if (formMessageStore.isAction) {
       toast.add({
         id: formMessageStore.messageId,
@@ -38,5 +39,6 @@
         },
       ],
     })
+    formMessageStore.$reset
   })
 </script>

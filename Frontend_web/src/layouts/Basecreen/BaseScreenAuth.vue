@@ -10,10 +10,15 @@
     >
       <slot name="body"></slot>
     </div>
+    <MessageToast />
   </div>
 </template>
 <script lang="ts" setup>
+  import MessageToast from '@PKG_SRC/components/Toast/MessageToast.vue'
   import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
+  import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
+
+  const formMessageStore = useFormMessageStore()
 </script>
 <style scoped>
   slot[name='body'] {

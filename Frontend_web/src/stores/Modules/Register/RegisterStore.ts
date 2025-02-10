@@ -1,9 +1,14 @@
+import type { AbstractApiResponseOfString } from '@PKG_API/@types'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
+import { AuthAPI } from '@PKG_SRC/utils/auth/authClient'
+import { useApiServer, useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 
 export const fieldsInitialize = {
   userName: '',
   password: '',
+  confirmPassword: '',
   email: '',
   phoneNumber: '',
   birthday: '',
@@ -64,18 +69,27 @@ export const useRegisterStore = defineStore('Register', {
       return this.fieldValid
     },
     async RegisterUser() {
-      const validation: any = await this.fields.validate()
-      if (validation.valid === false) return false
+      // const validation: any = await this.fields.validate()
+      // if (validation.valid === false) return false
 
-      const apiClient = useApiClient()
+      const apiServer = useApiServer()
+      const formMessage = useFormMessageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
-
-      // const res = apiClient.api.v1.URSUserRegister.$post({
-      //   body: {
-
-      //   },
-      // })
-      // res.
+      const res = await apiServer.api.v1.UserInsert.$post({
+        body: {
+          username: apiFieldValues.userName,
+          email: apiFieldValues.email,
+          password: apiFieldValues.password,
+          firstName: apiFieldValues.firstName,
+          lastName: apiFieldValues.lastName,
+        },
+      })
+      if (!res.success) {
+        formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+        return false
+      }
+      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+      return true
     },
   },
 })

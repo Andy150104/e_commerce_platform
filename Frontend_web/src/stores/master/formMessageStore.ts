@@ -11,7 +11,8 @@ export const useFormMessageStore = defineStore('formMessage', {
     errorList: [] as string[],
     warmListTitle: [] as string[],
     warmList: [] as string[],
-    isAction: false
+    isAction: false,
+    isNotify: false,
   }),
   // stateと同じgetterは宣言不要
   getters: {},
@@ -42,10 +43,10 @@ export const useFormMessageStore = defineStore('formMessage', {
     SetWarmList(message: string) {
       this.warmList.push(message)
     },
-    SetTableError(detail: { detailError: DetailError; name: string }) {
-    },
-    SetFormMessage(result: AbstractApiResponseOfString | undefined) {
+    SetTableError(detail: { detailError: DetailError; name: string }) {},
+    SetFormMessage(result: AbstractApiResponseOfString | undefined, isNotify: boolean) {
       this.ResetStore()
+      this.isNotify = isNotify
       if (result === undefined) return
       if (result.messageId == null) {
         return
