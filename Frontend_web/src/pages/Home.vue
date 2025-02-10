@@ -75,10 +75,12 @@
   import { useTestStore } from '@PKG_SRC/stores/Modules/Mypg/testStore'
   import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
   import Carousel from '@PKG_SRC/components/Carousel/Carousel.vue'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
   const gradientCard = ref<HTMLElement | null>(null)
   const gradientEffect = ref<HTMLElement | null>(null)
   const store = useMypgStore()
+  const formMessageStore = useFormMessageStore()
   const testStore = useTestStore()
 
   const onMouseMove = (e: MouseEvent) => {
@@ -95,6 +97,7 @@
   onMounted(async () => {
     store.GetImageList()
     store.GetProductList()
+    formMessageStore.SetMessageId('9000')
     await nextTick()
     if (gradientCard.value && gradientEffect.value) {
       gradientCard.value.addEventListener('mousemove', onMouseMove)

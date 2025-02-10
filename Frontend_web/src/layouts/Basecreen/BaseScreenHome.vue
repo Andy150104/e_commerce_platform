@@ -10,12 +10,17 @@
     </div>
     <FooterControl />
     <Loading />
+    <MessageToast v-if="formMessageStore.messageId"/>
     <ScrollToTopBtn />
   </div>
 </template>
 <script lang="ts" setup>
   import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
+  import MessageToast from '@PKG_SRC/components/Toast/MessageToast.vue';
   import FooterControl from '@PKG_SRC/components/Footer/FooterControl.vue'
   import ScrollToTopBtn from '../Btn/ScrollToTopBtn.vue'
   import NavBar from '@PKG_SRC/components/NavBar/NavBar.vue'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore';
+
+  const formMessageStore = useFormMessageStore()
 </script>
