@@ -1,4 +1,3 @@
-using Client.Controllers;
 using Client.Models.Helper;
 using Client.SystemClient;
 using Client.Utils.Consts;
@@ -57,6 +56,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
     /// <returns></returns>
     protected U Post(T request, AppDbContext appDbContext, Logger logger, U returnValue)
     {
+        // Get identity information 
         appDbContext.IdentityEntity = _identityApiClient?.GetIdentity(User);
         logger.Warn(request);
 
@@ -66,7 +66,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
             // Authentication error
             logger.Fatal($"Authenticated, but information is missing.");
             returnValue.Success = false;
-            returnValue.SetMessage("Failed to get user information.");
+            returnValue.SetMessage(MessageId.E11006);
             logger.Warn(returnValue);
             return returnValue;
         }

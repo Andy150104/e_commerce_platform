@@ -55,10 +55,14 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<VwPlan> VwPlans { get; set; }
 
+    public virtual DbSet<VwUserAddress> VwUserAddresses { get; set; }
+
     public virtual DbSet<VwUserAuthentication> VwUserAuthentications { get; set; }
 
+    public virtual DbSet<VwUserProfile> VwUserProfiles { get; set; }
+
     public virtual DbSet<Wishlist> Wishlists { get; set; }
-    
+
     private string GetConnectionString()
     {
         IConfiguration config = new ConfigurationBuilder()
@@ -69,9 +73,10 @@ public partial class BBExTradingFloorContext : DbContext
 
         return strConn;
     }
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
@@ -81,7 +86,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("address");
 
             entity.Property(e => e.AddressId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("address_id");
             entity.Property(e => e.AddressLine)
                 .HasMaxLength(255)
@@ -133,7 +138,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasIndex(e => e.ExchangeId, "UQ__blind_bo__FAAC5D3F45D30ACE").IsUnique();
 
             entity.Property(e => e.BlindBoxId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("blind_box_id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -165,7 +170,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("carts");
 
             entity.Property(e => e.CartId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("cart_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
@@ -214,7 +219,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("categories");
 
             entity.Property(e => e.CategoryId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("category_id");
             entity.Property(e => e.CategoryName)
                 .HasMaxLength(50)
@@ -282,7 +287,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("exchanges");
 
             entity.Property(e => e.ExchangeId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("exchange_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
@@ -296,7 +301,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("messages");
 
             entity.Property(e => e.MessageId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("message_id");
             entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.CreatedAt)
@@ -651,6 +656,13 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("userName");
             entity.Property(e => e.BirthDate).HasColumnName("birth_date");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
@@ -659,21 +671,15 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("full_name");
             entity.Property(e => e.Gender).HasColumnName("gender");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(50)
                 .HasColumnName("phone_number");
             entity.Property(e => e.PlanId).HasColumnName("plan_id");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("created_by");
-            entity.Property(e => e.IsActive)
-                .HasDefaultValue(true)
-                .HasColumnName("is_active");
             entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UpdatedBy)
@@ -738,6 +744,48 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("price");
         });
 
+        modelBuilder.Entity<VwUserAddress>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_UserAddress");
+
+            entity.Property(e => e.AddressId).HasColumnName("address_id");
+            entity.Property(e => e.AddressLine)
+                .HasMaxLength(255)
+                .HasColumnName("address_line");
+            entity.Property(e => e.City)
+                .HasMaxLength(50)
+                .HasColumnName("city");
+            entity.Property(e => e.Country)
+                .HasMaxLength(50)
+                .HasColumnName("country");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.District)
+                .HasMaxLength(50)
+                .HasColumnName("district");
+            entity.Property(e => e.FullName)
+                .HasMaxLength(100)
+                .HasColumnName("full_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+            entity.Property(e => e.Ward)
+                .HasMaxLength(50)
+                .HasColumnName("ward");
+        });
+
         modelBuilder.Entity<VwUserAuthentication>(entity =>
         {
             entity
@@ -748,6 +796,45 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.UserName).HasMaxLength(50);
         });
 
+        modelBuilder.Entity<VwUserProfile>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_UserProfile");
+
+            entity.Property(e => e.BirthDate).HasColumnName("birth_date");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .HasColumnName("email");
+            entity.Property(e => e.FullName)
+                .HasMaxLength(100)
+                .HasColumnName("full_name");
+            entity.Property(e => e.Gender)
+                .HasMaxLength(7)
+                .IsUnicode(false)
+                .HasColumnName("gender");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.PhoneNumber)
+                .HasMaxLength(50)
+                .HasColumnName("phone_number");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.UserName)
+                .HasMaxLength(50)
+                .HasColumnName("userName");
+        });
+
         modelBuilder.Entity<Wishlist>(entity =>
         {
             entity.HasKey(e => e.WishlistId).HasName("PK__wishlist__6151514E63DF3436");
@@ -755,7 +842,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("wishlists");
 
             entity.Property(e => e.WishlistId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("wishlist_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
