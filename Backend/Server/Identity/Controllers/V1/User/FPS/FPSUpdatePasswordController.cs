@@ -13,7 +13,9 @@ using Server.Utils.Consts;
 using System.ComponentModel.DataAnnotations;
 
 namespace Server.Controllers.V1.ForgetPasswordScreen;
-
+/// <summary>
+/// FPSUpdatePasswordController - Forget Password Function 
+/// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
 public class FPSUpdatePasswordController : ControllerBase
@@ -23,6 +25,12 @@ public class FPSUpdatePasswordController : ControllerBase
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private UserManager<User> _userManager;
 
+    /// <summary>
+    /// ctor
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="cache"></param>
+    /// <param name="userManager"></param>
     public FPSUpdatePasswordController(AppDbContext context, IMemoryCache cache, UserManager<User> userManager)
     {
         _context = context;
@@ -31,6 +39,11 @@ public class FPSUpdatePasswordController : ControllerBase
         _userManager = userManager;
     }
 
+    /// <summary>
+    ///    Main Processing
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<FPSUpdatePasswordResponse> Post(FPSUpdatePasswordRequest request)
     {
@@ -47,9 +60,11 @@ public class FPSUpdatePasswordController : ControllerBase
                 response.SetMessage(MessageId.E11004);
                 return response;
             }
+            // Generating OTP 
             var otp = new Random().Next(100000, 999999).ToString();
             _cache.Set(userExist.Email, otp, TimeSpan.FromMinutes(5));
 
+            // SendMail
             var result = FPSUpdatePasswordSendMail.SendMailOTPInformation(_context, userExist.UserName!, request.Email!, otp, detailErrorList);
             if (detailErrorList.Count > 0)
             {

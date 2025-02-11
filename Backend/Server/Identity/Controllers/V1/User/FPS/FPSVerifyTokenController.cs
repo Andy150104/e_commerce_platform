@@ -9,7 +9,9 @@ using Server.Models.Helper;
 using Server.Utils.Consts;
 
 namespace Server.Controllers.V1.ForgetPasswordScreen
-{
+{/// <summary>
+/// FPSVerifyTokenController - Check validate OTP
+/// </summary>
     [Route("api/v1/[controller]")]
     [ApiController]
     public class FPSVerifyTokenController : ControllerBase
@@ -18,7 +20,12 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
         private readonly IMemoryCache _cache;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private UserManager<User> _userManager;
-
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="cache"></param>
+        /// <param name="userManager"></param>
         public FPSVerifyTokenController(AppDbContext context, IMemoryCache cache, UserManager<User> userManager)
         {
             _context = context;
@@ -26,13 +33,17 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
             _context._Logger = logger;
             _userManager = userManager;
         }
-
+        /// <summary>
+        /// Main Processing
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<FPSVerifyTokenResponse> Post(FPSVerifyTokenRequest request)
         {
             var response = new FPSVerifyTokenResponse() { Success = false};
             var detailErrorList = new List<DetailError>();
-
+            // Check OTP 
             if (request.Email != null)
             {
                 if (!_cache.TryGetValue(request.Email, out string storeOTP) || storeOTP != request.OTP)
@@ -49,7 +60,7 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
                     return response;
                 }
             }
-
+            // Find User
             var userExist = await _userManager.FindByNameAsync(request.UserName)
                  ?? await _userManager.FindByEmailAsync(request.Email);
             if (userExist == null)
@@ -57,7 +68,7 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
                 response.SetMessage(MessageId.E11004);
                 return response;
             }
-
+            //Reset New Password
             var token = await _userManager.GeneratePasswordResetTokenAsync(userExist);
             var result = _userManager.ResetPasswordAsync(userExist, token,  request.NewPassWord);
             if(result == null)
@@ -65,6 +76,7 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
                 response.SetMessage(MessageId.E11004);
                 return response;
             }
+            //true
             response.Success = true;
             response.SetMessage(MessageId.I00001);
             return response;
