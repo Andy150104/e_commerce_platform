@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NLog;
 using Server.Controllers;
 using server.Logics.Commons;
@@ -21,7 +20,6 @@ public class UserInsertController : ControllerBase
     private readonly AppDbContext _context;
     private readonly UserManager<Models.User> _userManager;
     private readonly RoleManager<Role> _roleManager;
-    private readonly IPasswordValidator<Models.User> _passwordValidator;
 
     /// <summary>
     /// Constructor
@@ -29,16 +27,15 @@ public class UserInsertController : ControllerBase
     /// <param name="context"></param>
     /// <param name="userManager"></param>
     /// <param name="signInManager"></param>
-    public UserInsertController(AppDbContext context, UserManager<Models.User> userManager, RoleManager<Role> roleManager, IPasswordValidator<Models.User> passwordValidator)
+    public UserInsertController(AppDbContext context, UserManager<Models.User> userManager, RoleManager<Role> roleManager)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
-        _passwordValidator = passwordValidator;
     }
     
     /// <summary>
-    ///  Incoming Post
+    /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -49,7 +46,9 @@ public class UserInsertController : ControllerBase
         var detailErrorList = new List<DetailError>();
         
         // Validate password
-        await ValidatePasswordAsync(request.Password, _userManager, detailErrorList);
+        var passwordValidationService = new PasswordValidationService(_userManager);
+        await passwordValidationService.ValidatePasswordAsync(request.Password, detailErrorList);
+        
         if (detailErrorList.Count > 0)
         {
             response.SetMessage(detailErrorList[0].MessageId, detailErrorList[0].ErrorMessage);
@@ -110,17 +109,44 @@ public class UserInsertController : ControllerBase
             return response;
         }
     }
-    
+}
+
+/// <summary>
+/// PasswordValidationService - Validate password
+/// </summary>
+public class PasswordValidationService
+{
+    private readonly UserManager<Models.User> _userManager;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="userManager"></param>
+    public PasswordValidationService(UserManager<Models.User> userManager)
+    {
+        _userManager = userManager;
+    }
+
     /// <summary>
     /// Validate password
     /// </summary>
     /// <param name="password"></param>
-    /// <param name="userManager"></param>
+    /// <param name="detailErrorList"></param>
     /// <returns></returns>
-    public async Task<List<DetailError>> ValidatePasswordAsync(string password, UserManager<Models.User> userManager, List<DetailError> detailErrorList)
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<List<DetailError>> ValidatePasswordAsync(string password, List<DetailError> detailErrorList)
     {
         var user = new Models.User();
-        var result = await _passwordValidator.ValidateAsync(userManager, user, password);
+        var passwordValidator = _userManager.PasswordValidators.FirstOrDefault();
+
+        // Check password
+        if (passwordValidator == null)
+        {
+            throw new InvalidOperationException("No password validator found.");
+        }
+
+        // Validate password
+        var result = await passwordValidator.ValidateAsync(_userManager, user, password);
 
         if (!result.Succeeded)
         {

@@ -7,11 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
-using Server.Controllers;
 using Server.Helpers;
 using Server.Models;
 using Server.Models.Helper;
-using Server.Utils.Consts;
 
 namespace Server.Identity.Controllers;
 
