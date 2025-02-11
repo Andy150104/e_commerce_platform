@@ -84,7 +84,7 @@ public class AppDbContext : BBExTradingFloorContext
             }
         }
 
-        // 修正
+        // Set modifiedEntities
         foreach (dynamic modifiedEntity in modifiedEntities)
         {
             try
@@ -98,7 +98,7 @@ public class AppDbContext : BBExTradingFloorContext
                 else
                 {
                     // Normal
-                    modifiedEntity.IsActive = 1;
+                    modifiedEntity.IsActive = true;
                     modifiedEntity.UpdatedBy = updateUser;
                 }
                 modifiedEntity.UpdatedAt = now;

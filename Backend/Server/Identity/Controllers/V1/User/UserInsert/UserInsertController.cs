@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using NLog;
 using Server.Controllers;
 using server.Logics.Commons;
@@ -20,17 +21,20 @@ public class UserInsertController : ControllerBase
     private readonly AppDbContext _context;
     private readonly UserManager<Models.User> _userManager;
     private readonly RoleManager<Role> _roleManager;
+    private readonly IPasswordValidator<Models.User> _passwordValidator;
+
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="context"></param>
     /// <param name="userManager"></param>
     /// <param name="signInManager"></param>
-    public UserInsertController(AppDbContext context, UserManager<Models.User> userManager, RoleManager<Role> roleManager)
+    public UserInsertController(AppDbContext context, UserManager<Models.User> userManager, RoleManager<Role> roleManager, IPasswordValidator<Models.User> passwordValidator)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
+        _passwordValidator = passwordValidator;
     }
     
     /// <summary>
@@ -43,7 +47,17 @@ public class UserInsertController : ControllerBase
     {
         var response = new UserInsertResponse() {Success = false};
         var detailErrorList = new List<DetailError>();
-
+        
+        // Validate password
+        await ValidatePasswordAsync(request.Password, _userManager, detailErrorList);
+        if (detailErrorList.Count > 0)
+        {
+            response.SetMessage(detailErrorList[0].MessageId, detailErrorList[0].ErrorMessage);
+            response.DetailErrorList = detailErrorList;
+            return response;
+        }
+        
+        // Start transaction
         using (var transaction = _context.Database.BeginTransaction())
         {
             // Check user exists
@@ -95,5 +109,31 @@ public class UserInsertController : ControllerBase
             response.SetMessage(MessageId.I00001);
             return response;
         }
+    }
+    
+    /// <summary>
+    /// Validate password
+    /// </summary>
+    /// <param name="password"></param>
+    /// <param name="userManager"></param>
+    /// <returns></returns>
+    public async Task<List<DetailError>> ValidatePasswordAsync(string password, UserManager<Models.User> userManager, List<DetailError> detailErrorList)
+    {
+        var user = new Models.User();
+        var result = await _passwordValidator.ValidateAsync(userManager, user, password);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    field = "Password",
+                    MessageId = MessageId.E11005,
+                    ErrorMessage = error.Description
+                });
+            }
+        }
+        return detailErrorList;
     }
 }

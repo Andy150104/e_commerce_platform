@@ -18,7 +18,6 @@ public static class DbInitializer
                     Name = roleName,
                     NormalizedName = roleName.ToUpper(),
                 });
-                Console.WriteLine($"Role '{roleName}' created successfully.");
             }
         }
     }

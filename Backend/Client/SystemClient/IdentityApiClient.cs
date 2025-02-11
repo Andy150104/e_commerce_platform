@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using OpenIddict.Abstractions;
 
 namespace Client.SystemClient;
 
@@ -7,15 +8,13 @@ public class IdentityApiClient : IIdentityApiClient
     public IdentityEntity GetIdentity(ClaimsPrincipal user)
     {
         var identity = user.Identity as ClaimsIdentity;
-        foreach (var claim in identity.Claims)
-        {
-            Console.WriteLine($"{claim.Type}: {claim.Value}");
-        }
-        var userNm = identity.FindFirst("UserId")?.Value;
-        if (string.IsNullOrEmpty(userNm)) 
-            return null;
-        var email = identity.FindFirst(ClaimTypes.Email)?.Value ?? string.Empty;
+        // Get username
+        var userNm = identity.FindFirst("UserId")?.Value ?? string.Empty;
+        
+        // Get email
+        var email = identity.FindFirst(OpenIddictConstants.Claims.Email)?.Value ?? string.Empty;
 
+        // Create IdentityEntity
         var identityEntity = new IdentityEntity()
         {
             UserName = userNm,

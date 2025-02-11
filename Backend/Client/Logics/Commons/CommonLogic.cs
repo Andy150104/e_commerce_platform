@@ -20,7 +20,6 @@ public static class CommonLogic
     /// <exception cref="ArgumentException"></exception>
     public static string EncryptText(string beforeEncrypt, AppDbContext context)
     {
-        Console.WriteLine(beforeEncrypt);
         // Check for null or empty
         ArgumentException.ThrowIfNullOrEmpty(beforeEncrypt);
         
@@ -48,7 +47,6 @@ public static class CommonLogic
                     using (StreamWriter sw = new StreamWriter(cs))
                     {
                         sw.Write(beforeEncrypt);
-                        Console.WriteLine(beforeEncrypt);
                     }
                 }
                 return Convert.ToBase64String(ms.ToArray());
