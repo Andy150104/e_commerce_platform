@@ -73,11 +73,9 @@ public partial class BBExTradingFloorContext : DbContext
 
         return strConn;
     }
-
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
-
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -771,6 +769,9 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.District)
                 .HasMaxLength(50)
                 .HasColumnName("district");
+            entity.Property(e => e.FullName)
+                .HasMaxLength(100)
+                .HasColumnName("full_name");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");

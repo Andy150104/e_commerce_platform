@@ -9,6 +9,8 @@ public partial class VwUserAddress
 
     public string Username { get; set; } = null!;
 
+    public string FullName { get; set; }
+
     public string? AddressLine { get; set; }
 
     public string? Ward { get; set; }

@@ -64,6 +64,7 @@ public class UDSSelectUserAddressController : AbstractApiController<UDSSelectUse
             .Select(x => new UDSSelectUserAddressEntity
             {
                 AddressId = x.AddressId,
+                FullName = x.FullName,
                 AddressLine = x.AddressLine,
                 Ward = x.Ward,
                 District = x.District,

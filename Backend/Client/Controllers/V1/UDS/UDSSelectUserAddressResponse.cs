@@ -9,6 +9,7 @@ public class UDSSelectUserAddressEntity
 {
     public Guid AddressId { get; set; }
     
+    public string FullName { get; set; }
     public string? AddressLine { get; set; }
 
     public string? Ward { get; set; }
