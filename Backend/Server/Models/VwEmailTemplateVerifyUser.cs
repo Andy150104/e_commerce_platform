@@ -1,4 +1,4 @@
-namespace client.Models;
+namespace Server.Models;
 
 public partial class VwEmailTemplateVerifyUser
 {

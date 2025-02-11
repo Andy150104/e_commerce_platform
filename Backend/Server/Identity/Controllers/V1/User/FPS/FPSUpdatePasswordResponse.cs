@@ -1,6 +1,6 @@
 ﻿using Client.Controllers;
 
-namespace server.Controllers.V1.ForgetPasswordScreen;
+namespace Server.Controllers.V1.ForgetPasswordScreen;
 
     public class FPSUpdatePasswordResponse : AbstractApiResponse<string>
     {

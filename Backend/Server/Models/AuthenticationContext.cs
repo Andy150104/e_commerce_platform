@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Server.Models;
 
-namespace client.Models;
+namespace Server.Models;
 
 public partial class AuthenticationContext : DbContext
 {
@@ -23,6 +22,8 @@ public partial class AuthenticationContext : DbContext
     public virtual DbSet<SystemConfig> SystemConfigs { get; set; }
     
     public virtual DbSet<VwEmailTemplateVerifyUser> VwEmailTemplateVerifyUsers { get; set; }
+
+    public virtual DbSet<VwEmailTemplateVerifyOTP> VwEmailTemplateVerifyOTPs { get; set; }
     
     public virtual DbSet<VwUserVerify> VwUserVerifies { get; set; }
 
@@ -146,6 +147,24 @@ public partial class AuthenticationContext : DbContext
         {
             entity.HasNoKey()
                 .ToView("VW_EmailTemplate_VerifyUser");
+            entity.Property(e => e.EmailBody)
+                .HasMaxLength(256)
+                .HasColumnName("email_body");
+            entity.Property(e => e.EmailTitle)
+                .HasMaxLength(256)
+                .HasColumnName("email_title");
+            entity.Property(e => e.Id)
+                .HasMaxLength(256)
+                .HasColumnName("id");
+            entity.Property(e => e.ScreenName)
+                .HasMaxLength(256)
+                .HasColumnName("screen_name");
+        }); 
+        
+        modelBuilder.Entity<VwEmailTemplateVerifyOTP>(entity =>
+        {
+            entity.HasNoKey()
+                .ToView("VW_EmailTemplate_VerifyOTP");
             entity.Property(e => e.EmailBody)
                 .HasMaxLength(256)
                 .HasColumnName("email_body");

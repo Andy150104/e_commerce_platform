@@ -1,7 +1,7 @@
 ﻿using Client.Controllers;
 using System.ComponentModel.DataAnnotations;
 
-namespace server.Controllers.V1.ForgetPasswordScreen
+namespace Server.Controllers.V1.ForgetPasswordScreen
 {
     public class FPSVerifyTokenRequest : AbstractApiRequest
     {

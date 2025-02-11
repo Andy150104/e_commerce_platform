@@ -43,7 +43,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\V1\FPS\FPS-MailTemple\" />
       <Folder Include="Controllers\V1\UPS\" />
     </ItemGroup>
 
