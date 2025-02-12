@@ -19,7 +19,7 @@ public partial class VwUserProfile
 
     public DateOnly? BirthDate { get; set; }
 
-    public string Gender { get; set; } = null!;
+    public byte? Gender { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
