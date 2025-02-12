@@ -7,18 +7,13 @@ import { defineStore } from 'pinia'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 
 export const fieldsInitialize = {
-  userName: '',
-  password: '',
-  confirmPassword: '',
-  email: '',
   phoneNumber: '',
   birthday: '',
-  firstName: '',
-  lastName: '',
   gender: '1',
   province: '',
   district: '',
   ward: '',
+  addressLine: '',
 }
 export type FormSchema = typeof fieldsInitialize
 
@@ -39,7 +34,7 @@ export type RegisterState = {
   createFlgComplete: boolean
 }
 
-export const useRegisterStore = defineStore('Register', {
+export const useVerifyStore = defineStore('Verify', {
   state: (): RegisterState => ({
     fields,
     createFlgAccountInfo: false,
@@ -69,31 +64,6 @@ export const useRegisterStore = defineStore('Register', {
       await this.fields.validate()
       return this.fieldValid
     },
-    async RegisterUser() {
-      const validation: any = await this.fields.validate()
-      if (validation.valid === false) return false
-      const apiServer = useApiServer()
-      const formMessage = useFormMessageStore()
-      const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
-      const loadingStore = useLoadingStore()
-      loadingStore.LoadingChange(true)
-      const res = await apiServer.api.v1.UserInsert.$post({
-        body: {
-          username: apiFieldValues.userName,
-          email: apiFieldValues.email,
-          password: apiFieldValues.password,
-          firstName: apiFieldValues.firstName,
-          lastName: apiFieldValues.lastName,
-        },
-      })
-      loadingStore.LoadingChange(false)
-      if (!res.success) {
-        formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
-        return false
-      }
-      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
-      return true
-    },
     async onVerify(key: string) {
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
@@ -107,6 +77,30 @@ export const useRegisterStore = defineStore('Register', {
       loadingStore.LoadingChange(false)
       if (!res.success) return false
       return true
+    },
+    async RegisterUserClient(key: string) {
+      const formMessage = useFormMessageStore()
+      //   const validation: any = await this.fields.validate()
+      //   if (validation.valid === false) return false
+      //   const apiServer = useApiClient()
+      //   const formMessage = useFormMessageStore()
+      //   const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+      //   const loadingStore = useLoadingStore()
+      //   loadingStore.LoadingChange(true)
+      //   const res = await apiServer.api.v1.URSUserRegister.$post({
+      //     body: {
+      //         isOnlyValidation: false,
+      //         key: key,
+      //         addressLine: a
+      //     }
+      //   })
+      //   loadingStore.LoadingChange(false)
+      //   if (!res.success) {
+      //     formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+      //     return false
+      //   }
+      //   formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+      //   return true
     },
   },
 })

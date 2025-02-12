@@ -1,29 +1,21 @@
 <template>
   <div>
-    <select
-      id="countries"
-      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-    >
-      <option selected>Choose a country</option>
-      <option value="US">United States</option>
-      <option value="CA">Canada</option>
-      <option value="FR">France</option>
-      <option value="DE">Germany</option>
-    </select>
     <Field
       :id="fieldId"
-      :class="className.BUTTON_DEFAULT_BLUE_1"
-      :name="xmlColumn.id"
+      class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       as="select"
+      :name="xmlColumn.id"
       :rules="fieldRules"
       @blur="onBlur"
       @change="onChange"
     >
+      <option v-for="option in options" :key="option.value" :value="option.value">
+        {{ option.label }}
+      </option>
     </Field>
   </div>
 </template>
 <script setup lang="ts">
-  import { className } from '@PKG_SRC/utils/class/className'
   import type { xmlColumn } from '@PKG_SRC/utils/xml'
   import { Field } from 'vee-validate'
   import { uuid } from 'vue-uuid'
@@ -31,7 +23,7 @@
   const props = defineProps({
     model: {
       type: [String, Number],
-      required: true,
+      required: false,
     },
     xmlColumn: {
       type: Object as PropType<xmlColumn>,
@@ -39,7 +31,7 @@
     },
     disabled: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     params: {
       type: Object,
@@ -89,8 +81,19 @@
     await nextTick()
     options.value = await getSelectComponentData(props.masterName, {
       xmlColumn: props.xmlColumn,
-      ...props.params,
-      ...params,
+      ...(props.params as any),
     })
   }
+  const onFocus = () => {
+    const id = document.getElementById(fieldId) as HTMLInputElement
+    id.focus()
+  }
+  onMounted(async () => {
+    await nextTick()
+    await fetch()
+  })
+  defineExpose({
+    fetch,
+    onFocus,
+  })
 </script>

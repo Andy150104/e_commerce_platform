@@ -10,7 +10,9 @@
     >
       <slot name="body"></slot>
     </div>
-    <MessageToast />
+    <div v-if="formMessageStore.isNotify">
+      <MessageToast />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
