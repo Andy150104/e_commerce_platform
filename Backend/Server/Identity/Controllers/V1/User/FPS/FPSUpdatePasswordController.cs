@@ -20,6 +20,8 @@ namespace Server.Controllers.V1.ForgetPasswordScreen;
 [ApiController]
 public class FPSUpdatePasswordController : ControllerBase
 {
+    sử dụng abstract controller
+    stash code lại r mr main qua tui mới thêm class abstract 
     private readonly AppDbContext _context;
     private readonly IMemoryCache _cache;
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -39,6 +41,7 @@ public class FPSUpdatePasswordController : ControllerBase
         _userManager = userManager;
     }
 
+    dư space
     /// <summary>
     ///    Main Processing
     /// </summary>

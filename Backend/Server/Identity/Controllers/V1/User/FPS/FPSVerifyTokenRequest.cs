@@ -7,6 +7,8 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
     {
         [Required(ErrorMessage = "OTP is required")]
         public string OTP { get; set; } = string.Empty;
+        
+        required nhưng sao = tring.empty
 
         [Required(ErrorMessage = "NewPassword is required")]
         public string NewPassWord { get; set; } = string.Empty;

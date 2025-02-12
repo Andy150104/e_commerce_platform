@@ -10,6 +10,7 @@ using Server.Models.Helper;
 using Server.Utils.Consts;
 
 namespace Server.Controllers.V1.ForgetPasswordScreen
+xuống hàng
 {/// <summary>
 /// FPSVerifyTokenController - Check validate OTP
 /// </summary>
@@ -17,10 +18,12 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
     [ApiController]
     public class FPSVerifyTokenController : ControllerBase
     {
+        xài class abstract 
         private readonly AppDbContext _context;
         private readonly IMemoryCache _cache;
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private UserManager<User> _userManager;
+        đừng có viết tắt
         /// <summary>
         /// Ctor
         /// </summary>
@@ -42,10 +45,12 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
         [HttpPost]
         public async Task<FPSVerifyTokenResponse> Post(FPSVerifyTokenRequest request)
         {
+            token truyền bằng header chứ sao truyền qua body
+                
             var response = new FPSVerifyTokenResponse() { Success = false };
             var detailErrorList = new List<DetailError>();
 
-
+dư khoảng trắng nhiều v
             // Decrypt
             var keyDecrypt = CommonLogic.DecryptText(request.OTP, _context);
             string[] values = keyDecrypt.Split(",");

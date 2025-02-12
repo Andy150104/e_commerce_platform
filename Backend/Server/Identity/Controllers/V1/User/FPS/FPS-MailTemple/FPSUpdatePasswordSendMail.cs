@@ -6,6 +6,7 @@ using Server.Models.Helper;
 
 namespace Server.Identity.Controllers.V1.User;
 
+sai cmt rồi
 /// <summary>
 /// UserInsertSendMail - Send mail to verify the user registration
 /// </summary>

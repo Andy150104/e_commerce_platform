@@ -8,7 +8,7 @@ using NLog;
 using server.Models;
 
 namespace server.Controllers.V1.HomeScreen;
-
+format code lại 
     /// <summary>
     /// HSShowPlanController - Show Plans Home Screen
     /// </summary>
@@ -24,7 +24,7 @@ namespace server.Controllers.V1.HomeScreen;
             _context = context;
             _context._Logger = logger;
         }
-
+sửa lại đi Hùng
 /// <summary>
 /// Incomng Post
 /// </summary>
@@ -35,7 +35,7 @@ namespace server.Controllers.V1.HomeScreen;
             return Post(request, _context, logger, new HSShowPlanResponse());
         }
 
-       
+       Không cần cmt thêm Main processing là được r
         /// <summary>
         /// Main processing - Retrieved VwPlan table from database
         /// </summary>
@@ -47,6 +47,8 @@ namespace server.Controllers.V1.HomeScreen;
             var response = new HSShowPlanResponse() { Success = false };
 
             var plans = _context.VwPlans.AsNoTracking().ToList();
+            
+            xài !Any
             if (plans == null || plans.Count == 0)
             {
                 response.SetMessage(MessageId.E00000, "No plans found");
@@ -58,6 +60,8 @@ namespace server.Controllers.V1.HomeScreen;
             response.SetMessage(MessageId.I00001, "Plan retrieved successfully");
             return response;
         }
+        
+        viết bình thường thôi đang xài design template nên sửa lại cho giống
     /// <summary>
     /// ERROR CHECK
     /// </summary>
@@ -75,7 +79,7 @@ namespace server.Controllers.V1.HomeScreen;
                 response.DetailErrorList = detailErrorList;
                 return response;
             }
-
+//true
             response.Success=true;
             return response;    
         }
