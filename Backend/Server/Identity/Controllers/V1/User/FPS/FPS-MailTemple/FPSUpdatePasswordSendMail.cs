@@ -5,10 +5,8 @@ using Server.Models;
 using Server.Models.Helper;
 
 namespace Server.Identity.Controllers.V1.User;
-
-sai cmt rồi
 /// <summary>
-/// UserInsertSendMail - Send mail to verify the user registration
+/// FPSUpdatePasswordSendMail - Send mail to verify the user  
 /// </summary>
 public static class FPSUpdatePasswordSendMail
 {

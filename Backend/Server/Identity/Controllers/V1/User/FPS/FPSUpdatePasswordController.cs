@@ -18,17 +18,15 @@ namespace Server.Controllers.V1.ForgetPasswordScreen;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class FPSUpdatePasswordController : ControllerBase
+public class FPSUpdatePasswordController : AbstractApiControllerNotToken<FPSUpdatePasswordRequest, FPSUpdatePasswordResponse, string>
 {
-    sử dụng abstract controller
-    stash code lại r mr main qua tui mới thêm class abstract 
     private readonly AppDbContext _context;
     private readonly IMemoryCache _cache;
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private UserManager<User> _userManager;
 
     /// <summary>
-    /// ctor
+    /// Constructor
     /// </summary>
     /// <param name="context"></param>
     /// <param name="cache"></param>
@@ -41,50 +39,82 @@ public class FPSUpdatePasswordController : ControllerBase
         _userManager = userManager;
     }
 
-    dư space
     /// <summary>
-    ///    Main Processing
+    /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
+    /// <returns></returns>    
+    /// <exception cref="NotImplementedException"></exception
+    public override FPSUpdatePasswordResponse Post(FPSUpdatePasswordRequest request)
+    {
+        return Post(request, _context, logger, new FPSUpdatePasswordResponse());
+    }
+
+
+    /// <summary>
+    /// Main Processing
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="transaction"></param>
     /// <returns></returns>
-    [HttpPost]
-    public async Task<FPSUpdatePasswordResponse> Post(FPSUpdatePasswordRequest request)
+    protected override FPSUpdatePasswordResponse Exec(FPSUpdatePasswordRequest request, IDbContextTransaction transaction)
     {
         var response = new FPSUpdatePasswordResponse() { Success = false };
         var detailErrorList = new List<DetailError>();
-        using (var transaction = _context.Database.BeginTransaction())
+        // Check user exists
+        var userExist = _userManager.FindByEmailAsync(request.Email).Result;
+        if (userExist == null)
         {
-            // Check user exists
-            var userExist = await _userManager.FindByEmailAsync(request.Email);
-            if (userExist == null)
-            {
-                response.SetMessage(MessageId.E11004);
-                return response;
-            }
-
-            // Generating EncryptText 
-            var key = $"{userExist.UserName},{userExist.Email},{userExist.Id}";
-            key = CommonLogic.EncryptText(key, _context);
-
-            //Add cache 1min
-            _cache.Set(userExist.UserName!, key, TimeSpan.FromMinutes(1));
-
-            // SendMail
-            var result = FPSUpdatePasswordSendMail.SendMailOTPInformation(_context, userExist.UserName!, request.Email!, key, detailErrorList);
-            if (detailErrorList.Count > 0)
-            {
-                response.SetMessage(detailErrorList[0].MessageId, detailErrorList[0].ErrorMessage);
-                logger.Error(response.Message);
-                transaction.Rollback();
-                return response;
-            }
-
-            // True
-            transaction.Commit();
-            response.Success = true;
-            response.SetMessage(MessageId.I00001);
+            response.SetMessage(MessageId.E11004);
             return response;
         }
+
+        // Generating EncryptText 
+        var key = $"{userExist.UserName},{userExist.Email},{userExist.Id}";
+        key = CommonLogic.EncryptText(key, _context);
+
+        //Add cache 1min
+        _cache.Set(userExist.UserName!, key, TimeSpan.FromMinutes(1));
+
+        // SendMail
+        var result = FPSUpdatePasswordSendMail.SendMailOTPInformation(_context, userExist.UserName!, request.Email!, key, detailErrorList);
+        if (detailErrorList.Count > 0)
+        {
+            response.SetMessage(detailErrorList[0].MessageId, detailErrorList[0].ErrorMessage);
+            logger.Error(response.Message);
+            transaction.Rollback();
+            return response;
+        }
+
+        // True
+        transaction.Commit();
+        response.Success = true;
+        response.SetMessage(MessageId.I00001);
+        return response;
+    }
+
+    /// <summary>
+    /// Error Check
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="detailErrorList"></param>
+    /// <param name="transaction"></param>
+    /// <returns></returns>
+    protected internal override FPSUpdatePasswordResponse ErrorCheck(FPSUpdatePasswordRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
+    {
+        var response = new FPSUpdatePasswordResponse() { Success = false };
+
+
+        if (detailErrorList.Count > 0)
+        {
+            // Error
+            response.SetMessage(MessageId.E10000);
+            response.DetailErrorList = detailErrorList;
+            return response;
+        }
+        // True
+        response.Success = true;
+        return response;
     }
 }
 
