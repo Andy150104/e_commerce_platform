@@ -37,7 +37,7 @@ public class UserInsertVerifyController : AbstractApiControllerNotToken<UserInse
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    [HttpPost]
     public override UserInsertVerifyResponse Post(UserInsertVerifyRequest request)
     {
         return Post(request, _context, logger, new UserInsertVerifyResponse());

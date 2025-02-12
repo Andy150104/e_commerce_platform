@@ -1,5 +1,7 @@
+using client.Identity.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using Server.Controllers;
 using server.Logics.Commons;
@@ -10,11 +12,11 @@ using Server.Utils.Consts;
 namespace Server.Identity.Controllers.V1.User;
 
 /// <summary>
-///  UserInsertController - Insert new User
+/// UserInsertController - Insert new User
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class UserInsertController : ControllerBase
+public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInsertRequest, UserInsertResponse, string>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
@@ -26,96 +28,127 @@ public class UserInsertController : ControllerBase
     /// </summary>
     /// <param name="context"></param>
     /// <param name="userManager"></param>
-    /// <param name="signInManager"></param>
+    /// <param name="roleManager"></param>
     public UserInsertController(AppDbContext context, UserManager<Models.User> userManager, RoleManager<Role> roleManager)
     {
         _context = context;
         _userManager = userManager;
         _roleManager = roleManager;
+        _context._Logger = logger;
     }
-    
+
     /// <summary>
     /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<UserInsertResponse> Post(UserInsertRequest request)
+    public override Task<UserInsertResponse> Post(UserInsertRequest request)
     {
-        var response = new UserInsertResponse() {Success = false};
+        return Post(request, _context, logger, new UserInsertResponse());
+    }
+    
+    /// <summary>
+    /// Main processing
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="transaction"></param>
+    /// <returns></returns>
+    protected override async Task<UserInsertResponse> Exec(UserInsertRequest request, IDbContextTransaction transaction)
+    {
+        var response = new UserInsertResponse() { Success = false };
         var detailErrorList = new List<DetailError>();
         
-        // Validate password
-        var passwordValidationService = new PasswordValidationService(_userManager);
-        await passwordValidationService.ValidatePasswordAsync(request.Password, detailErrorList);
+        // Check user exists
+        var userExist = await _userManager.FindByNameAsync(request.Username) 
+                        ?? await _userManager.FindByEmailAsync(request.Email);
         
+        // If user exists
+        if (userExist != null)
+        {
+            response.SetMessage(MessageId.E11004);
+            return response;
+        }
+        
+        // Check role
+        var role = await _roleManager.FindByNameAsync(request.RoleName);
+        
+        // Insert information user
+        var user = new Models.User
+        {
+            UserName = request.Username,
+            Email = request.Email,
+            LockoutEnabled = true,
+            LockoutEnd = null,
+            EmailConfirmed = false,
+            RoleId = role.Id,
+        };
+        
+        // Create user
+        var result = await _userManager.CreateAsync(user, request.Password);
+        if (!result.Succeeded)
+        {
+            response.SetMessage(MessageId.E11005);
+            return response;
+        }
+        await _userManager.AddToRoleAsync(user, request.RoleName);
+
+        // Create key
+        var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";
+        key = CommonLogic.EncryptText(key, _context);
+            
+        // Send mail
+        UserInsertSendMail.SendMailVerifyInformation(_context, user.UserName, user.Email, key, detailErrorList);
         if (detailErrorList.Count > 0)
         {
             response.SetMessage(detailErrorList[0].MessageId, detailErrorList[0].ErrorMessage);
-            response.DetailErrorList = detailErrorList;
+            logger.Error(response.Message);
+            transaction.Rollback();
             return response;
         }
+        
+        // True
+        transaction.Commit();
+        response.Success = true;
+        response.SetMessage(MessageId.I00001);
+        return response;
+    }
 
+    /// <summary>
+    /// Error check
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="detailErrorList"></param>
+    /// <param name="transaction"></param>
+    /// <returns></returns>
+    protected internal override UserInsertResponse ErrorCheck(UserInsertRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
+    {
+        var response = new UserInsertResponse() { Success = false };
+        
+        // Validate password
+        var passwordValidationService = new PasswordValidationService(_userManager);
+        passwordValidationService.ValidatePasswordAsync(request.Password, detailErrorList);
+        
+        // Validate RoleName
         if (request.RoleName != ConstantEnum.UserRole.Customer.ToString()
-            || request.RoleName != ConstantEnum.UserRole.Owner.ToString()
-            || request.RoleName != ConstantEnum.UserRole.PlannedCustomer.ToString()
-            || request.RoleName != ConstantEnum.UserRole.SaleEmployee.ToString())
+            && request.RoleName != ConstantEnum.UserRole.Owner.ToString()
+            && request.RoleName != ConstantEnum.UserRole.PlannedCustomer.ToString()
+            && request.RoleName != ConstantEnum.UserRole.SaleEmployee.ToString())
         {
             response.SetMessage(MessageId.E00001, "RoleName is invalid");
             return response;
         }
-        // Start transaction
-        using (var transaction = _context.Database.BeginTransaction())
+        
+        if (detailErrorList.Count > 0)
         {
-            // Check user exists
-            var userExist = await _userManager.FindByNameAsync(request.Username) 
-                            ?? await _userManager.FindByEmailAsync(request.Email);
-            if (userExist != null)
-            {
-                response.SetMessage(MessageId.E11004);
-                return response;
-            }
-            // Check role
-            var role = await _roleManager.FindByNameAsync(request.RoleName);
-            // Insert information user
-            var user = new Models.User
-            {
-                UserName = request.Username,
-                Email = request.Email,
-                LockoutEnabled = true,
-                LockoutEnd = null,
-                EmailConfirmed = false,
-                RoleId = role.Id,
-            };
-        
-            var result = await _userManager.CreateAsync(user, request.Password);
-            if (!result.Succeeded)
-            {
-                response.SetMessage(MessageId.E11005);
-                return response;
-            }
-            await _userManager.AddToRoleAsync(user, request.RoleName);
-
-            // Create key
-            var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";
-            key = CommonLogic.EncryptText(key, _context);
-            
-            // Send mail
-            UserInsertSendMail.SendMailVerifyInformation(_context, user.UserName, user.Email, key, detailErrorList);
-            if (detailErrorList.Count > 0)
-            {
-                response.SetMessage(detailErrorList[0].MessageId, detailErrorList[0].ErrorMessage);
-                logger.Error(response.Message);
-                transaction.Rollback();
-                return response;
-            }
-        
-            // True
-            transaction.Commit();
-            response.Success = true;
-            response.SetMessage(MessageId.I00001);
+            // Error
+            response.SetMessage(MessageId.E10000);
+            response.DetailErrorList = detailErrorList;
             return response;
         }
+        // True
+        response.Success = true;
+        return response;
     }
 }
 
@@ -168,6 +201,7 @@ public class PasswordValidationService
                 });
             }
         }
+
         return detailErrorList;
     }
 }
