@@ -49,23 +49,25 @@ public class FPSUpdatePasswordController : ControllerBase
     {
         var response = new FPSUpdatePasswordResponse() { Success = false };
         var detailErrorList = new List<DetailError>();
-
         using (var transaction = _context.Database.BeginTransaction())
         {
             // Check user exists
-            var userExist = await _userManager.FindByNameAsync(request.UserName)
-                         ?? await _userManager.FindByEmailAsync(request.Email);
+            var userExist = await _userManager.FindByEmailAsync(request.Email);
             if (userExist == null)
             {
                 response.SetMessage(MessageId.E11004);
                 return response;
             }
-            // Generating OTP 
-            var otp = new Random().Next(100000, 999999).ToString();
-            _cache.Set(userExist.Email, otp, TimeSpan.FromMinutes(5));
+
+            // Generating EncryptText 
+            var key = $"{userExist.UserName},{userExist.Email},{userExist.Id}";
+            key = CommonLogic.EncryptText(key, _context);
+
+            //Add cache 1min
+            _cache.Set(userExist.UserName!, key, TimeSpan.FromMinutes(1));
 
             // SendMail
-            var result = FPSUpdatePasswordSendMail.SendMailOTPInformation(_context, userExist.UserName!, request.Email!, otp, detailErrorList);
+            var result = FPSUpdatePasswordSendMail.SendMailOTPInformation(_context, userExist.UserName!, request.Email!, key, detailErrorList);
             if (detailErrorList.Count > 0)
             {
                 response.SetMessage(detailErrorList[0].MessageId, detailErrorList[0].ErrorMessage);

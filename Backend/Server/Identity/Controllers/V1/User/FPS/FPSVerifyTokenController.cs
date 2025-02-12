@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Caching.Memory;
 using NLog;
+using server.Logics.Commons;
 using Server.Models;
 using Server.Models.Helper;
 using Server.Utils.Consts;
@@ -41,37 +42,36 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
         [HttpPost]
         public async Task<FPSVerifyTokenResponse> Post(FPSVerifyTokenRequest request)
         {
-            var response = new FPSVerifyTokenResponse() { Success = false};
+            var response = new FPSVerifyTokenResponse() { Success = false };
             var detailErrorList = new List<DetailError>();
-            // Check OTP 
-            if (request.Email != null)
+
+
+            // Decrypt
+            var keyDecrypt = CommonLogic.DecryptText(request.OTP, _context);
+            string[] values = keyDecrypt.Split(",");
+            string userNameDecrypt = values[0];
+            if (!_cache.TryGetValue(userNameDecrypt, out string key))
             {
-                if (!_cache.TryGetValue(request.Email, out string storeOTP) || storeOTP != request.OTP)
-                {
-                    response.SetMessage(MessageId.E11004);
-                    return response;
-                }
+                response.SetMessage(MessageId.E11004);
+                return response;
             }
-            else if (request.UserName != null)
+            _cache.Remove(userNameDecrypt);
+            if(key != request.OTP   )
             {
-                if(!_cache.TryGetValue(request.UserName, out string storeOTP) || storeOTP != request.OTP)
-                {
-                    response.SetMessage(MessageId.E11004);
-                    return response;
-                }
+                response.SetMessage(MessageId.E11004);
+                return response;
             }
             // Find User
-            var userExist = await _userManager.FindByNameAsync(request.UserName)
-                 ?? await _userManager.FindByEmailAsync(request.Email);
-            if (userExist == null)
+            var user = await _userManager.FindByNameAsync(userNameDecrypt);
+            if (user == null)
             {
                 response.SetMessage(MessageId.E11004);
                 return response;
             }
             //Reset New Password
-            var token = await _userManager.GeneratePasswordResetTokenAsync(userExist);
-            var result = _userManager.ResetPasswordAsync(userExist, token,  request.NewPassWord);
-            if(result == null)
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = _userManager.ResetPasswordAsync(user, token, request.NewPassWord);
+            if (result == null)
             {
                 response.SetMessage(MessageId.E11004);
                 return response;

@@ -3,11 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Controllers.V1.ForgetPasswordScreen;
 
-    public class FPSUpdatePasswordRequest : AbstractApiRequest
-    {
+public class FPSUpdatePasswordRequest : AbstractApiRequest
+{
+    [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid Email")]
-    public string? Email { get; set; } = string.Empty;
-
-        public string? UserName { get; set; } = string.Empty;
-    }
+    public string Email { get; set; } = string.Empty;
+}
 
