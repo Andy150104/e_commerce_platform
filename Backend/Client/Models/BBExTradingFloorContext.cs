@@ -76,6 +76,7 @@ public partial class BBExTradingFloorContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
@@ -806,10 +807,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("email");
             entity.Property(e => e.FirstName).HasColumnName("first_name");
-            entity.Property(e => e.Gender)
-                .HasMaxLength(7)
-                .IsUnicode(false)
-                .HasColumnName("gender");
+            entity.Property(e => e.Gender).HasColumnName("gender");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.LastName).HasColumnName("last_name");

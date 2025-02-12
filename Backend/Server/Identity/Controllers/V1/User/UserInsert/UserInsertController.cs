@@ -59,6 +59,8 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
         var response = new UserInsertResponse() { Success = false };
         var detailErrorList = new List<DetailError>();
         
+        var customerRole = ConstantEnum.UserRole.Customer.ToString();
+        
         // Check user exists
         var userExist = await _userManager.FindByNameAsync(request.Username) 
                         ?? await _userManager.FindByEmailAsync(request.Email);
@@ -71,7 +73,7 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
         }
         
         // Check role
-        var role = await _roleManager.FindByNameAsync(request.RoleName);
+        var role = await _roleManager.FindByNameAsync(customerRole);
         
         // Insert information user
         var user = new Models.User
@@ -91,7 +93,7 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
             response.SetMessage(MessageId.E11005);
             return response;
         }
-        await _userManager.AddToRoleAsync(user, request.RoleName);
+        await _userManager.AddToRoleAsync(user, customerRole);
 
         // Create key
         var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";
@@ -128,16 +130,6 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
         // Validate password
         var passwordValidationService = new PasswordValidationService(_userManager);
         passwordValidationService.ValidatePasswordAsync(request.Password, detailErrorList);
-        
-        // Validate RoleName
-        if (request.RoleName != ConstantEnum.UserRole.Customer.ToString()
-            && request.RoleName != ConstantEnum.UserRole.Owner.ToString()
-            && request.RoleName != ConstantEnum.UserRole.PlannedCustomer.ToString()
-            && request.RoleName != ConstantEnum.UserRole.SaleEmployee.ToString())
-        {
-            response.SetMessage(MessageId.E00001, "RoleName is invalid");
-            return response;
-        }
 
         if (detailErrorList.Count > 0)
         {
