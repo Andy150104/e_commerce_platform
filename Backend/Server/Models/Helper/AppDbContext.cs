@@ -1,6 +1,7 @@
 using client.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Server.Systemserver;
 
 namespace Server.Models.Helper;
 
@@ -12,4 +13,6 @@ public class AppDbContext : AuthenticationContext
         : base(new DbContextOptions<AuthenticationContext>(), configuration)
     {
     }
+    
+    public IdentityEntity IdentityEntity { get; set; }
 }

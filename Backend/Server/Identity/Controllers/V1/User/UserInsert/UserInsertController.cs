@@ -55,7 +55,15 @@ public class UserInsertController : ControllerBase
             response.DetailErrorList = detailErrorList;
             return response;
         }
-        
+
+        if (request.RoleName != ConstantEnum.UserRole.Customer.ToString()
+            || request.RoleName != ConstantEnum.UserRole.Owner.ToString()
+            || request.RoleName != ConstantEnum.UserRole.PlannedCustomer.ToString()
+            || request.RoleName != ConstantEnum.UserRole.SaleEmployee.ToString())
+        {
+            response.SetMessage(MessageId.E00001, "RoleName is invalid");
+            return response;
+        }
         // Start transaction
         using (var transaction = _context.Database.BeginTransaction())
         {
@@ -68,7 +76,7 @@ public class UserInsertController : ControllerBase
                 return response;
             }
             // Check role
-            var role = await _roleManager.FindByNameAsync(ConstantEnum.UserRole.CUSTOMER.ToString());
+            var role = await _roleManager.FindByNameAsync(request.RoleName);
             // Insert information user
             var user = new Models.User
             {
@@ -86,7 +94,7 @@ public class UserInsertController : ControllerBase
                 response.SetMessage(MessageId.E11005);
                 return response;
             }
-            await _userManager.AddToRoleAsync(user, ConstantEnum.UserRole.CUSTOMER.ToString());
+            await _userManager.AddToRoleAsync(user, request.RoleName);
 
             // Create key
             var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";

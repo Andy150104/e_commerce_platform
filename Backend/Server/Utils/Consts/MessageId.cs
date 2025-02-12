@@ -36,6 +36,11 @@ public class MessageId
     public readonly static string E00000 = "E00000";
     
     /// <summary>
+    /// Specific error,E00000, {0},,
+    /// </summary>
+    public readonly static string E00001 = "E00001";
+    
+    /// <summary>
     /// Api connection error,E99001, API connection error. ,,
     /// </summary>
     public readonly static string E99001 = "E99001";
