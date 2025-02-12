@@ -64,12 +64,13 @@ public class UDSSelectUserAddressController : AbstractApiController<UDSSelectUse
             .Select(x => new UDSSelectUserAddressEntity
             {
                 AddressId = x.AddressId,
-                FullName = x.FullName,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
                 AddressLine = x.AddressLine,
                 Ward = x.Ward,
                 District = x.District,
                 City = x.City,
-                Country = x.Country,
+                Province = x.Province,
             })
             .ToList();
         

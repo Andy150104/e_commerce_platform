@@ -37,8 +37,8 @@ public class UDSSelectUserProfileController : AbstractApiController<UDSSelectUse
     /// <param name="request"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    // [HttpPost]
-    // [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public override UDSSelectUserProfileResponse Post(UDSSelectUserProfileRequest request)
     {
         return Post(request, _context, logger, new UDSSelectUserProfileResponse());
@@ -64,7 +64,8 @@ public class UDSSelectUserProfileController : AbstractApiController<UDSSelectUse
             .Select(x => new UDSSelectUserProfileEntity
             {
                 Email = x.Email,
-                FullName = x.FullName,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
                 PhoneNumber = x.PhoneNumber,
                 ImageUrl = x.ImageUrl,
                 BirthDate = x.BirthDate,

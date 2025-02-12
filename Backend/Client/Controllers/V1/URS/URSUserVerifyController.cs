@@ -51,7 +51,7 @@ public class URSUserVerifyController : AbstractApiControllerNotToken<URSUserVeri
         var response = new URSUserVerifyResponse() { Success = false };
         
         // Decrypt Key
-        var keyDecrypt = CommonLogic.DecryptText(request.Key, _context);
+        var keyDecrypt = CommonLogic.DecryptText(request.Key , _context);
         
         // True
         response.Success = true;

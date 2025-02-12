@@ -13,8 +13,6 @@ public partial class User
 
     public string? ImageUrl { get; set; }
 
-    public string? FullName { get; set; }
-
     public DateOnly? BirthDate { get; set; }
 
     public byte? Gender { get; set; }
@@ -30,6 +28,10 @@ public partial class User
     public DateTime UpdatedAt { get; set; }
 
     public string UpdatedBy { get; set; } = null!;
+
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
 
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 

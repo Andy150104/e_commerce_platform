@@ -20,6 +20,10 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
     
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="context"></param>
     public URSUserRegisterController(AppDbContext context)
     {
         _context = context;
@@ -47,6 +51,7 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     protected override URSUserRegisterResponse Exec(URSUserRegisterRequest request, IDbContextTransaction transaction)
     {
         var response = new URSUserRegisterResponse() { Success = false };
+        
         // Decrypt Key
         var keyDecrypt = CommonLogic.DecryptText(request.Key, _context);
         string[] values = keyDecrypt.Split(",");
@@ -79,7 +84,8 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
         {
             UserName = userName,
             Email = email,
-            FullName = lastName + " " + firstName,
+            FirstName = firstName,
+            LastName = lastName,
             PhoneNumber = request.PhoneNumber,
             Gender = request.Gender,
             BirthDate = DateOnly.Parse(request.BirthDay),
@@ -96,7 +102,7 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             AddressLine = request.AddressLine,
             Ward = request.Ward,
             City = request.City,
-            Country = request.Country,
+            Province = request.Province,
             District = request.District,
         };
         _context.Add(newAddress);

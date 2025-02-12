@@ -60,9 +60,14 @@ public class UDSUpdateUserProfileController : AbstractApiController<UDSUpdateUse
         var user = _context.Users.FirstOrDefault(x => x.UserName == userName);
         
         // Update user information
-        if (request.LastName != null && request.FirstName != null)
+        if (request.LastName != null)
         {
-            user.FullName = request.LastName + " " + request.FirstName;
+            user.LastName = request.LastName;
+        }
+        
+        if (request.FirstName != null)
+        {
+            user.FirstName = request.FirstName;
         }
 
         if (request.PhoneNumber != null)

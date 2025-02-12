@@ -65,7 +65,7 @@ public class UDSInsertUserAddressController : AbstractApiController<UDSInsertUse
             Ward = request.Ward,
             District = request.District,
             City = request.City,
-            Country = request.Country
+            Province = request.Province
         };
         _context.Addresses.Add(userAddress);
         _context.SaveChanges(userAddress.Username);
