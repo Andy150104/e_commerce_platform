@@ -1,35 +1,37 @@
-using Client.Models.Helper;
-using Client.SystemClient;
-using Client.Utils.Consts;
+using Client.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
-using server.Models;
+using Server.Controllers;
+using Server.Models.Helper;
+using Server.SystemClient;
+using Server.Utils.Consts;
 
-namespace Client.Controllers.V1.UPS;
+namespace Server.Identity.Controllers;
 
 /// <summary>
-/// UDSInsertUserAddressController - Insert user address
+/// VerifyTokenController - Controller for verifying token
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class UDSInsertUserAddressController : AbstractApiController<UDSInsertUserAddressRequest, UDSInsertUserAddressResponse, string>
+public class VerifyTokenController : AbstractApiController<VerifyTokenRequest, VerifyTokenResponse, VerifyTokenEntity>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
-
+    
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="context"></param>
-    public UDSInsertUserAddressController(AppDbContext context, IIdentityApiClient identityApiClient)
+    /// <param name="identityApiClient"></param>
+    public VerifyTokenController(AppDbContext context, IIdentityApiClient identityApiClient)
     {
         _context = context;
         _context._Logger = logger;
         _identityApiClient = identityApiClient;
     }
-
+    
     /// <summary>
     /// Incoming Post
     /// </summary>
@@ -38,9 +40,9 @@ public class UDSInsertUserAddressController : AbstractApiController<UDSInsertUse
     /// <exception cref="NotImplementedException"></exception>
     [HttpPost]
     [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-    public override UDSInsertUserAddressResponse Post(UDSInsertUserAddressRequest request)
+    public override VerifyTokenResponse Post(VerifyTokenRequest request)
     {
-        return Post(request, _context, logger, new UDSInsertUserAddressResponse());
+        return Post(request, _context, logger, new VerifyTokenResponse());
     }
 
     /// <summary>
@@ -49,30 +51,19 @@ public class UDSInsertUserAddressController : AbstractApiController<UDSInsertUse
     /// <param name="request"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    protected override UDSInsertUserAddressResponse Exec(UDSInsertUserAddressRequest request, IDbContextTransaction transaction)
+    protected override VerifyTokenResponse Exec(VerifyTokenRequest request, IDbContextTransaction transaction)
     {
-        var response = new UDSInsertUserAddressResponse() { Success = false };
-
-        // Get userName
-        var userName = _context.IdentityEntity.UserName;
-
-        // Insert user address
-        var userAddress = new Address
+        var response = new VerifyTokenResponse() { Success = false };
+        
+        // Get role information
+        var entityResponse = new VerifyTokenEntity
         {
-            Username = userName,
-            AddressLine = request.AddressLine,
-            Ward = request.Ward,
-            District = request.District,
-            City = request.City,
-            Province = request.Province
+            RoleName = _context.IdentityEntity.RoleName,
         };
-        _context.Addresses.Add(userAddress);
-        _context.SaveChanges(userAddress.Username);
-        transaction.Commit();
-
+        
         // True
         response.Success = true;
+        response.Response = entityResponse;
         response.SetMessage(MessageId.I00001);
         return response;
     }
@@ -84,10 +75,9 @@ public class UDSInsertUserAddressController : AbstractApiController<UDSInsertUse
     /// <param name="detailErrorList"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    protected internal override UDSInsertUserAddressResponse ErrorCheck(UDSInsertUserAddressRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
+    protected internal override VerifyTokenResponse ErrorCheck(VerifyTokenRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
-        var response = new UDSInsertUserAddressResponse() { Success = false };
+        var response = new VerifyTokenResponse() { Success = false };
 
         if (detailErrorList.Count > 0)
         {

@@ -76,7 +76,6 @@ public partial class BBExTradingFloorContext : DbContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
@@ -94,9 +93,6 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.City)
                 .HasMaxLength(50)
                 .HasColumnName("city");
-            entity.Property(e => e.Country)
-                .HasMaxLength(50)
-                .HasColumnName("country");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -110,6 +106,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
+            entity.Property(e => e.Province).HasColumnName("province");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -666,14 +663,13 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
-            entity.Property(e => e.FullName)
-                .HasMaxLength(100)
-                .HasColumnName("full_name");
+            entity.Property(e => e.FirstName).HasColumnName("first_name");
             entity.Property(e => e.Gender).HasColumnName("gender");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
+            entity.Property(e => e.LastName).HasColumnName("last_name");
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(50)
                 .HasColumnName("phone_number");
@@ -757,9 +753,6 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.City)
                 .HasMaxLength(50)
                 .HasColumnName("city");
-            entity.Property(e => e.Country)
-                .HasMaxLength(50)
-                .HasColumnName("country");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
@@ -769,9 +762,9 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.District)
                 .HasMaxLength(50)
                 .HasColumnName("district");
-            entity.Property(e => e.FullName)
-                .HasMaxLength(100)
-                .HasColumnName("full_name");
+            entity.Property(e => e.FirstName).HasColumnName("first_name");
+            entity.Property(e => e.LastName).HasColumnName("last_name");
+            entity.Property(e => e.Province).HasColumnName("province");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -812,15 +805,14 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
-            entity.Property(e => e.FullName)
-                .HasMaxLength(100)
-                .HasColumnName("full_name");
+            entity.Property(e => e.FirstName).HasColumnName("first_name");
             entity.Property(e => e.Gender)
                 .HasMaxLength(7)
                 .IsUnicode(false)
                 .HasColumnName("gender");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.LastName).HasColumnName("last_name");
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(50)
                 .HasColumnName("phone_number");

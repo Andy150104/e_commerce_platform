@@ -20,4 +20,7 @@ public class UserInsertRequest
     [Required(ErrorMessage = "Last name is required")]
     [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "First name contains invalid characters")]
     public string LastName { get; set; }
+    
+    [Required(ErrorMessage = "Role name is required")]
+    public string RoleName { get; set; }
 }

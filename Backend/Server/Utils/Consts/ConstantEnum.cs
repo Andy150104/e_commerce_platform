@@ -4,26 +4,9 @@ public static partial class ConstantEnum
 {
     public enum UserRole
     {
-        CUSTOMER,
-        SALE_EMPLOYEE,
-        PLANNED_CUSTOMER,	
-        OWNER,
+        Customer,
+        SaleEmployee,
+        PlannedCustomer,	
+        Owner,
     }
-    
-    public enum OrderStatus
-    {
-        Pending,
-        Processing,
-        Completed,
-        Cancelled,
-    }
-    
-    public enum PaymentMethod
-    {
-        Cash,
-        CreditCard,
-        DebitCard,
-        BankTransfer,
-    }
-
 }

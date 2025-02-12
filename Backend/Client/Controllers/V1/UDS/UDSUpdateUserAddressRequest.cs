@@ -16,8 +16,8 @@ public class UDSUpdateUserAddressRequest : AbstractApiRequest
     [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "City contains invalid characters")]
     public string? City { get; set; }
 
-    [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Country contains invalid characters")]
-    public string? Country { get; set; }
+    [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Province contains invalid characters")]
+    public string? Province { get; set; }
 
     [RegularExpression(@"^[a-zA-Z0-9''-'\s]{1,40}$", ErrorMessage = "District contains invalid characters")]
     public string? District { get; set; }

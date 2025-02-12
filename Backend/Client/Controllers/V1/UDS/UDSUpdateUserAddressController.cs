@@ -81,9 +81,9 @@ public class UDSUpdateUserAddressController : AbstractApiController<UDSUpdateUse
             address.City = request.City;
         }
 
-        if (request.Country != null)
+        if (request.Province != null)
         {
-            address.Country = request.Country;
+            address.Province = request.Province;
         }
         
         // Save changes
