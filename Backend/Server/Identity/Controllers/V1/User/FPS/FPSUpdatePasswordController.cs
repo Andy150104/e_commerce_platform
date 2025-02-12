@@ -114,6 +114,7 @@ public class FPSUpdatePasswordController : AbstractApiControllerNotToken<FPSUpda
         }
         // True
         response.Success = true;
+        response.SetMessage(MessageId.I00001);
         return response;
     }
 }

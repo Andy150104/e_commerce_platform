@@ -100,8 +100,6 @@ namespace Server.Controllers.V1.ForgetPasswordScreen
         protected internal override FPSVerifyTokenResponse ErrorCheck(FPSVerifyTokenRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
         {
             var response = new FPSVerifyTokenResponse() { Success = false };
-
-
             if (detailErrorList.Count > 0)
             {
                 // Error
