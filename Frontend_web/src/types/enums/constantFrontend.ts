@@ -40,3 +40,10 @@ export interface selectItem {
   text: string
   value: string
 }
+
+export enum Address {
+  Province = '0',
+  District = '1',
+  Ward = '2',
+  Other = '3',
+}

@@ -22,6 +22,7 @@
           },
         },
       })
+      return
     }
     toast.add({
       id: formMessageStore.messageId,

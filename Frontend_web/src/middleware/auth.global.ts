@@ -18,6 +18,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'Login',
     'Product2',
     'Register',
+    'Register/Verify',
     'Blind_Box',
     'Blind_Box/Cart',
     'DashBoard',

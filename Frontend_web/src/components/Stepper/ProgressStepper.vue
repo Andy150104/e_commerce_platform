@@ -1,5 +1,5 @@
 <template>
-  <ol class="flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
+  <ol class="flex flex-wrap md:flex-nowrap md:items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
     <li v-for="(item, index) in items" :key="index" :class="getStepClass(item.status)">
       <span class="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
         <svg
