@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
+using server.Controllers.V1.AEPS.OpenAI;
 using server.Models;
 
 namespace server.Controllers.V1.AddExchangeProductScreen;
@@ -47,7 +48,12 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
     {
         var response = new AEPSAddExchangeProductResponse() { Success = false };
         var userName = _context.IdentityEntity.UserName;
-
+        var checkImage = ImageValidationService.ImageCheck(request.ImageUrls, _context).Result;
+        if(!checkImage)
+        {
+            response.SetMessage("Invalid Images");
+            return response;
+        }
         var exchange = new Exchange
         {
             ExchangeId = Guid.NewGuid(),

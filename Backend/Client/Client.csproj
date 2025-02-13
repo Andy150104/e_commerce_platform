@@ -25,6 +25,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="OpenAI-DotNet" Version="8.5.4" />
         <PackageReference Include="OpenIddict" Version="6.0.0" />
         <PackageReference Include="OpenIddict.AspNetCore" Version="6.0.0" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.0.0" />

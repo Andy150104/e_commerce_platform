@@ -15,8 +15,10 @@ obj/
 Thumbs.db
 .DS_Store
 
-*.appsettings.json
+# Bỏ qua các file cấu hình ứng dụng
 **/appsettings.json
+**/appsettings.*.json
+*.appsettings.json
 .appsettings.json
 
 Backend/Server/appsettings.Development.json
