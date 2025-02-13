@@ -9,7 +9,7 @@
       <DateTimePicker
         :xml-column="xmlColumn"
         :err-msg="errMsg"
-        :disabled="false"
+        :disabled="disabled"
         :maxlength="maxlength"
         :date-model="dateModel"
         :date-picker-position="datePickerPosition"

@@ -5,42 +5,11 @@
     "title": "My Title",
     "version": "1.0.0"
   },
-  "host": "localhost:7094",
+  "host": "localhost:5092",
   "schemes": ["https"],
   "consumes": ["application/json", "text/json", "application/*+json"],
   "produces": ["text/plain", "application/json", "text/json"],
   "paths": {
-    "/api/v1/HelloWord": {
-      "post": {
-        "tags": ["HelloWord"],
-        "operationId": "HelloWord_Post",
-        "parameters": [
-          {
-            "name": "request",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/HelloWordRequest"
-            },
-            "x-nullable": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "x-nullable": false,
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/HelloWordResponse"
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT Token": []
-          }
-        ]
-      }
-    },
     "/api/v1/URSUserRegister": {
       "post": {
         "tags": ["URSUserRegister"],
@@ -71,10 +40,196 @@
           }
         ]
       }
+    },
+    "/api/v1/URSUserVerify": {
+      "post": {
+        "tags": ["URSUserVerify"],
+        "operationId": "URSUserVerify_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/URSUserVerifyRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/URSUserVerifyResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSInsertUserAddress": {
+      "post": {
+        "tags": ["UDSInsertUserAddress"],
+        "operationId": "UDSInsertUserAddress_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSInsertUserAddressRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSInsertUserAddressResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSSelectUserAddress": {
+      "post": {
+        "tags": ["UDSSelectUserAddress"],
+        "operationId": "UDSSelectUserAddress_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserAddressRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserAddressResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSSelectUserProfile": {
+      "post": {
+        "tags": ["UDSSelectUserProfile"],
+        "operationId": "UDSSelectUserProfile_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserProfileRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserProfileResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSUpdateUserAddress": {
+      "post": {
+        "tags": ["UDSUpdateUserAddress"],
+        "operationId": "UDSUpdateUserAddress_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserAddressRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserAddressResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSUpdateUserProfile": {
+      "post": {
+        "tags": ["UDSUpdateUserProfile"],
+        "operationId": "UDSUpdateUserProfile_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserProfileRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserProfileReponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
     }
   },
   "definitions": {
-    "HelloWordResponse": {
+    "URSUserRegisterResponse": {
       "allOf": [
         {
           "$ref": "#/definitions/AbstractApiResponseOfString"
@@ -130,18 +285,60 @@
         }
       }
     },
-    "HelloWordRequest": {
+    "URSUserRegisterRequest": {
       "allOf": [
         {
           "$ref": "#/definitions/AbstractApiRequest"
         },
         {
           "type": "object",
-          "required": ["hello"],
+          "required": ["key", "planId"],
           "properties": {
-            "hello": {
+            "phoneNumber": {
+              "type": "string",
+              "pattern": "^\\+?[1-9]\\d{1,14}$"
+            },
+            "birthDay": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "imageUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "gender": {
+              "type": "integer",
+              "format": "byte",
+              "maximum": 3.0,
+              "minimum": 1.0
+            },
+            "addressLine": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "ward": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "city": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "country": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "district": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "key": {
               "type": "string",
               "minLength": 1
+            },
+            "planId": {
+              "type": "string",
+              "format": "guid"
             }
           }
         }
@@ -157,7 +354,7 @@
         }
       }
     },
-    "URSUserRegisterResponse": {
+    "URSUserVerifyResponse": {
       "allOf": [
         {
           "$ref": "#/definitions/AbstractApiResponseOfString"
@@ -173,24 +370,322 @@
         }
       ]
     },
-    "URSUserRegisterRequest": {
+    "URSUserVerifyRequest": {
       "allOf": [
         {
           "$ref": "#/definitions/AbstractApiRequest"
         },
         {
           "type": "object",
-          "required": ["userName", "email", "phoneNumber", "birthDay", "fullName", "imageUrl", "gender", "planId"],
+          "required": ["key"],
           "properties": {
-            "userName": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UDSInsertUserAddressResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UDSInsertUserAddressRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["addressLine", "ward", "city", "country", "district"],
+          "properties": {
+            "addressLine": {
               "type": "string",
               "minLength": 1,
-              "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
             },
-            "email": {
+            "ward": {
               "type": "string",
               "minLength": 1,
-              "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "city": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "country": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "district": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            }
+          }
+        }
+      ]
+    },
+    "UDSSelectUserAddressResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfListOfUDSSelectUserAddressEntity"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UDSSelectUserAddressEntity"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "UDSSelectUserAddressEntity": {
+      "type": "object",
+      "required": ["addressId", "fullName"],
+      "properties": {
+        "addressId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "addressLine": {
+          "type": "string"
+        },
+        "ward": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfListOfUDSSelectUserAddressEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": ["success", "messageId", "message", "detailErrorList"],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UDSSelectUserAddressEntity"
+          }
+        }
+      }
+    },
+    "UDSSelectUserAddressRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "UDSSelectUserProfileResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfUDSSelectUserProfileEntity"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "$ref": "#/definitions/UDSSelectUserProfileEntity"
+            }
+          }
+        }
+      ]
+    },
+    "UDSSelectUserProfileEntity": {
+      "type": "object",
+      "required": ["gender"],
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "birthDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "gender": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfUDSSelectUserProfileEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": ["success", "messageId", "message", "detailErrorList"],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/UDSSelectUserProfileEntity"
+        }
+      }
+    },
+    "UDSSelectUserProfileRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "UDSUpdateUserAddressResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UDSUpdateUserAddressRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["addressId"],
+          "properties": {
+            "addressId": {
+              "type": "string",
+              "format": "guid"
+            },
+            "addressLine": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "ward": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "city": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "country": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "district": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            }
+          }
+        }
+      ]
+    },
+    "UDSUpdateUserProfileReponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UDSUpdateUserProfileRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["firstName", "lastName"],
+          "properties": {
+            "firstName": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "lastName": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
             },
             "phoneNumber": {
               "type": "string",
@@ -199,11 +694,6 @@
             "birthDay": {
               "type": "string",
               "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
-            },
-            "fullName": {
-              "type": "string",
-              "maxLength": 100,
-              "minLength": 0
             },
             "imageUrl": {
               "type": "string",
@@ -214,11 +704,6 @@
               "format": "byte",
               "maximum": 3.0,
               "minimum": 1.0
-            },
-            "planId": {
-              "type": "string",
-              "format": "guid",
-              "minLength": 1
             }
           }
         }

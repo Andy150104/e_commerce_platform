@@ -65,10 +65,8 @@ export const useAuthStore = defineStore('auth', {
 
         userStore.SetGroupAuth(groupFlg)
 
-        if (groupFlg) {
-          router.push('/Home')
-          // window.location.href = 'http://localhost:3000/Home'
-        }
+        router.push('/Home')
+        // window.location.href = 'http://localhost:3000/Home'
       } catch (error) {
         console.error('Login error:', error)
       } finally {

@@ -96,5 +96,13 @@ export default defineNuxtPlugin(() => {
     }
     return true
   })
+  defineRule('confirm_password', (value: string, [target]: string) => {
+    if (value === '' || value === undefined || value === null || !useValidate(window.event?.type)) {
+      return true
+    }
+    const password = (document.getElementsByName(target as string)[0] as HTMLInputElement)?.value ?? ''
+    if (target === 'newPassword' && value !== password) return CONFIRM_NEW_PASSWORD_ERROR
+    return value === password
+  })
   setLocale('en')
 })

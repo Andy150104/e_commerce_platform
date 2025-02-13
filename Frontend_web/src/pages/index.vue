@@ -115,27 +115,22 @@
     </div>
   </nav>
 
-  <BaseControlTextField
-    :xml-column="xmlColumns.mailAddress"
-    :maxlength="50"
-    :disabled="false"
-    :err-msg="fieldErrors.mailAddress"
-    :placeholder="'00000@tsumitate.com'"
-  />
-  <BaseControlTextField
-    :xml-column="xmlColumns.mailAddressConfirm"
-    :maxlength="50"
-    :disabled="false"
-    :err-msg="fieldErrors.mailAddressConfirm"
-    :placeholder="'00000@tsumitate.com'"
-  />
-  <BaseControlTextField
-    :xml-column="xmlColumns.passWord"
-    :maxlength="50"
-    :disabled="false"
-    :type="'password'"
-    :err-msg="fieldErrors.passWord"
-    :placeholder="'******'"
+  <LocationPicker
+    :xml-column-province="xmlColumns.mailAddressConfirm"
+    :maxlength-province="50"
+    :disabled-province="false"
+    :err-msg-province="fieldErrors.mailAddressConfirm"
+    :placeholder-province="'Province'"
+    :xml-column-district="xmlColumns.mailAddress"
+    :maxlength-district="50"
+    :disabled-district="false"
+    :err-msg-district="fieldErrors.mailAddress"
+    :placeholder-district="'District'"
+    :xml-column-ward="xmlColumns.passWord"
+    :maxlength-ward="50"
+    :disabled-ward="false"
+    :err-msg-ward="fieldErrors.passWord"
+    :placeholder-ward="'Ward'"
   />
   <Field id="password" name="password" type="password" />
   <ModelFullScreen :is-open-modal="true">
@@ -143,7 +138,7 @@
       <ImageCrop :images="myImages" />
     </template>
   </ModelFullScreen>
-  <!-- Video Container -->
+  <!-- Video Container
   <div class="video-container">
     <iframe
       src="https://www.youtube.com/embed/EHyfI3c6L3A?autoplay=1&loop=1&playlist=EHyfI3c6L3A&start=10&end=20&mute=1"
@@ -152,8 +147,8 @@
       allowfullscreen
       class="video-iframe"
     ></iframe>
-  </div>
-
+  </div> -->
+  <GalleryCarousel :images="imageList" />
   <!-- Button to trigger Popover -->
   <div
     data-popover-target="popover-default"
@@ -161,7 +156,6 @@
   >
     Default popover
   </div>
-
   <!-- Popover Content -->
   <div
     data-popover
@@ -192,14 +186,25 @@
   import '@popperjs/core'
   import { initDropdowns, initPopovers } from 'flowbite'
   import ImageCrop from '@PKG_SRC/components/CropImage/ImageCrop.vue'
-
+  import DropDownSearch from '@PKG_SRC/components/DropDown/DropDownSearch.vue'
+  import { useAddressStore } from '@PKG_SRC/utils/address/store/addressStore'
+  import LocationPicker from '@PKG_SRC/components/UserControl/LocationPicker.vue'
+  import GalleryCarousel from '@PKG_SRC/components/Gallery/GalleryCarousel.vue'
+  const imageList = [
+    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg', alt: 'Ảnh 1' },
+    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg', alt: 'Ảnh 2' },
+    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg', alt: 'Ảnh 3' },
+    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg', alt: 'Ảnh 4' },
+    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg', alt: 'Ảnh 5' },
+  ]
   const store = useMyppStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
   store.SetFields(formContext)
-  onMounted(() => {
+  onMounted(async () => {
     initPopovers()
     initDropdowns()
+    const addressStore = useAddressStore()
   })
   const xmlColumns = {
     mailAddress: XmlLoadColumn({
@@ -212,7 +217,7 @@
     mailAddressConfirm: XmlLoadColumn({
       id: 'mailAddressConfirm',
       name: 'メールアドレス（確認）',
-      rules: 'required',
+      rules: '',
       visible: true,
       option: '',
     }),

@@ -72,7 +72,6 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             response.SetMessage(MessageId.E11004);
             return response;
         }
-
         var newUser = new User()
         {
             UserName = userName,

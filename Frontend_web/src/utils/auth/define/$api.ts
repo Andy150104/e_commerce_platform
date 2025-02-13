@@ -7,7 +7,7 @@ import type { Methods as Methods_1if71ls } from './api/v1/UserInsertVerify'
 import type { Methods as Methods_2j4tk2 } from './connect/token'
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
-  const prefix = (baseURL === undefined ? 'https://localhost:7021' : baseURL).replace(/\/$/, '')
+  const prefix = (baseURL === undefined ? 'https://localhost:5090' : baseURL).replace(/\/$/, '')
   const PATH0 = '/GoogleResponse'
   const PATH1 = '/LoginWithGoogle'
   const PATH2 = '/api/v1/UserInsert'

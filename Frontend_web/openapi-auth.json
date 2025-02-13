@@ -5,7 +5,7 @@
     "title": "My Title",
     "version": "1.0.0"
   },
-  "host": "localhost:7021",
+  "host": "localhost:5090",
   "schemes": ["https"],
   "paths": {
     "/connect/token": {

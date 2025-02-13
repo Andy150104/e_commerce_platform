@@ -132,7 +132,7 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
         // Validate password
         var passwordValidationService = new PasswordValidationService(_userManager);
         passwordValidationService.ValidatePasswordAsync(request.Password, detailErrorList);
-
+        
         if (detailErrorList.Count > 0)
         {
             // Error

@@ -36,5 +36,4 @@ public class URSUserRegisterRequest : AbstractApiRequest
     
     [Required(ErrorMessage = "Key not null")]
     public string Key { get; set; }
-    public Guid? PlanId { get; set; }
 }
