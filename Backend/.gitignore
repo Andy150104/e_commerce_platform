@@ -22,3 +22,6 @@ appsettings.Development.json
 *.userosscache
 *.suo
 *.sln.docstates
+
+*.appsettings.json
+**/appsettings.json

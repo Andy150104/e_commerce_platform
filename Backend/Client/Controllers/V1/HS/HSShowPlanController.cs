@@ -57,6 +57,7 @@ public class HSShowPlanController : AbstractApiControllerNotToken<HSShowPlanRequ
             DurationMonths = p.DurationMonths,
             Price = p.Price
         }).ToList();
+        transaction.Commit();
         response.Success = true;
         response.SetMessage(MessageId.I00001, "Plan retrieved successfully");
         return response;

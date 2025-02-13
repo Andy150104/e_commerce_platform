@@ -59,6 +59,10 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<Wishlist> Wishlists { get; set; }
 
+    public virtual DbSet<Images> Images { get; set; }
+
+    public virtual DbSet<ImagesBlindBox> ImagesBlindBoxes {  get; set; }
+
     private string GetConnectionString()
     {
         IConfiguration config = new ConfigurationBuilder()
@@ -748,6 +752,44 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
+        });
+
+        modelBuilder.Entity<Images>(entity =>
+        {
+            entity.HasKey(e => e.ImageId).HasName("PK_images");
+
+            entity.ToTable("images");
+
+            entity.Property(e => e.ImageId)
+                .ValueGeneratedNever()
+                .HasColumnName("image_id");
+            entity.Property(e => e.ProductId)
+                .HasColumnName("product_id");
+            entity.Property(e => e.ImageUrl)
+                .HasColumnName("image_url");
+            entity.HasOne(d => d.Product).WithMany(p => p.Images)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_images_product");
+        });
+
+        modelBuilder.Entity<ImagesBlindBox>(entity =>
+        {
+            entity.HasKey(e => e.ImageId).HasName("PK_images_blind_box");
+
+            entity.ToTable("images_blind_box");
+
+            entity.Property(e => e.ImageId)
+                .ValueGeneratedNever()
+                .HasColumnName("image_id");
+            entity.Property(e => e.BlindBoxId)
+                .HasColumnName("blind_box_id");
+            entity.Property(e => e.ImageUrl)
+                .HasColumnName("image_url");
+            entity.HasOne(d => d.BlindBox).WithMany(p => p.ImagesBlindBoxes)
+                .HasForeignKey(d => d.BlindBoxId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_images_blind_box_id_blind_boxID");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -47,7 +47,7 @@ public class AuthenticationController : ControllerBase
     [Consumes("application/x-www-form-urlencoded")]
     [Produces("application/json")]
     public async Task<IActionResult> Exchange(AuthenticationRequest request)
-    {
+        {
         var openIdRequest = HttpContext.GetOpenIddictServerRequest();
 
         // Password
