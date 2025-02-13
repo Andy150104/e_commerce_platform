@@ -19,19 +19,19 @@ public class URSUserRegisterRequest : AbstractApiRequest
     [Range(1,3, ErrorMessage = "Gender must be 1, 2 or 3")]
     public byte? Gender { get; set; }
     
-    [RegularExpression(@"^[a-zA-Z0-9''-'\s]{1,40}$", ErrorMessage = "First name contains invalid characters")]
+    [RegularExpression(@"^[\p{L}0-9''-'\s]{1,40}$", ErrorMessage = "Address contains invalid characters")]
     public string? AddressLine { get; set; }
-
-    [RegularExpression(@"^[a-zA-Z0-9''-'\s]{1,40}$", ErrorMessage = "Ward contains invalid characters")]
+    
+    [RegularExpression(@"^[\p{L}0-9''-'\s]{1,40}$", ErrorMessage = "Ward contains invalid characters")]
     public string? Ward { get; set; }
 
-    [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "City contains invalid characters")]
+    [RegularExpression(@"^[\p{L}\s]{1,40}$", ErrorMessage = "City contains invalid characters")]
     public string? City { get; set; }
 
-    [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Province contains invalid characters")]
+    [RegularExpression(@"^[\p{L}\s]{1,40}$", ErrorMessage = "Province contains invalid characters")]
     public string? Province { get; set; }
 
-    [RegularExpression(@"^[a-zA-Z0-9''-'\s]{1,40}$", ErrorMessage = "District contains invalid characters")]
+    [RegularExpression(@"^[\p{L}0-9''-'\s]{1,40}$", ErrorMessage = "District contains invalid characters")]
     public string? District { get; set; }
     
     [Required(ErrorMessage = "Key not null")]

@@ -1,7 +1,7 @@
-using client.Models;
 using Microsoft.EntityFrameworkCore;
 using Server.Controllers;
 using server.Logics.Commons;
+using Server.Models;
 using Server.Models.Helper;
 
 namespace Server.Identity.Controllers.V1.User;
