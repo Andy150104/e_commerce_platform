@@ -40,4 +40,7 @@ public partial class Product
     public virtual User UsernameNavigation { get; set; } = null!;
 
     public virtual Wishlist? Wishlist { get; set; }
+
+    public virtual ICollection<Images> Images { get; set; } = new List<Images>();
+
 }

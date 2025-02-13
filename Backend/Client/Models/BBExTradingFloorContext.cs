@@ -149,7 +149,15 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
-
+            entity.Property(e => e.IsActive)
+                 .HasDefaultValue(true)
+                 .HasColumnName("is_active");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
             entity.HasOne(d => d.Exchange).WithOne(p => p.BlindBox)
                 .HasForeignKey<BlindBox>(d => d.ExchangeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -159,6 +167,10 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__blind_box__usern__208CD6FA");
+            entity.HasOne(d => d.Exchange).WithOne(p => p.BlindBox)
+                .HasForeignKey<BlindBox>(d => d.ExchangeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_blind_boxs_exchanges");
         });
 
         modelBuilder.Entity<Cart>(entity =>
@@ -290,6 +302,22 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
         });
 
         modelBuilder.Entity<Message>(entity =>
@@ -840,6 +868,59 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
+        });
+        modelBuilder.Entity<Images>(entity =>
+        {
+            entity.HasKey(e => e.ImageId).HasName("PK_images");
+
+            entity.ToTable("images");
+
+            entity.Property(e => e.ImageId)
+                .ValueGeneratedNever()
+                .HasColumnName("image_id");
+            entity.Property(e => e.ProductId)
+                .HasColumnName("product_id");
+            entity.Property(e => e.ImageUrl)
+                .HasColumnName("image_url");
+            entity.HasOne(d => d.Product).WithMany(p => p.Images)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_images_product");
+        });
+
+        modelBuilder.Entity<ImagesBlindBox>(entity =>
+        {
+            entity.HasKey(e => e.ImageId).HasName("PK_images_blind_box");
+
+            entity.ToTable("images_blind_box");
+
+            entity.Property(e => e.ImageId)
+                .ValueGeneratedNever()
+                .HasColumnName("image_id");
+            entity.Property(e => e.BlindBoxId)
+                .HasColumnName("blind_box_id");
+            entity.Property(e => e.ImageUrl)
+                .HasColumnName("image_url");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(10)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(10)
+                .HasColumnName("updated_by");
+            entity.HasOne(d => d.BlindBox).WithMany(p => p.ImagesBlindBoxes)
+                .HasForeignKey(d => d.BlindBoxId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_images_blind_box_id_blind_boxID");
         });
 
         OnModelCreatingPartial(modelBuilder);
