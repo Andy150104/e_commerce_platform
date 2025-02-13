@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using server.Logics.Commons;
 using server.Models;
+using Server.Utils.Consts;
 
 namespace server.Controllers.V1.UserRegisterScreen;
 
@@ -15,7 +16,7 @@ namespace server.Controllers.V1.UserRegisterScreen;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRegisterRequest, URSUserRegisterResponse, string>
+public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRegisterRequest, URSUserRegisterResponse, object>
 { 
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
@@ -73,11 +74,16 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
         }
         
         // Check plan
-        var planExist = _context.VwPlans.AsNoTracking().FirstOrDefault(x => x.PlanId == request.PlanId);
-        if (planExist == null)
-        {
-            response.SetMessage(MessageId.E00000, "Plan not found");
-            return response;
+        Guid? planExist =null;
+        if (request.PlanId.HasValue && request.PlanId != Guid.Empty)
+        { 
+            var plan = _context.VwPlans.AsNoTracking().FirstOrDefault(x => x.PlanId == request.PlanId);
+            if (plan == null)
+            {
+                response.SetMessage(MessageId.E00000, "Plan not found");
+                return response;
+            }
+            planExist = plan.PlanId;
         }
 
         var newUser = new User()
@@ -90,10 +96,32 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             Gender = request.Gender,
             BirthDate = DateOnly.Parse(request.BirthDay),
             ImageUrl = request.ImageUrl,
-            PlanId = planExist.PlanId,
+            PlanId = planExist,
         };
         // Add new user
         _context.Add(newUser);
+
+        // Update role
+        var roleUpdate = new
+        {
+            UserName = newUser.UserName,
+            PlanId = planExist,
+        };
+
+        // Call API to update role
+        var httpClient = new HttpClient();
+        var apiClient = new CommonLogic.ApiClient<URSUserRegisterResponse, object>(httpClient);
+        var responseApi = apiClient.CallApiAsync<URSUserRegisterResponse>(
+            HttpMethod.Post, 
+            CommonUrl.Localhost5090UpdateRole,
+            roleUpdate
+        );
+
+        if (responseApi.Result.Success == false)
+        {
+            response.SetMessage(responseApi.Result.MessageId);
+            return response;
+        }
         
         // Add address
         var newAddress = new Address()
