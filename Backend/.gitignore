@@ -18,7 +18,7 @@ Thumbs.db
 Backend/Server/appsettings.Development.json
 appsettings.Development.json
 
-appsettings.json
+Backend/Server/appsettings.json
 
 *.user
 *.userosscache

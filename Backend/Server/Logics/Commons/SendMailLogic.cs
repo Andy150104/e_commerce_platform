@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using client.Models;
 using Microsoft.EntityFrameworkCore;
 using Server.Controllers;
 using Server.Models;

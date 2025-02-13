@@ -1,4 +1,5 @@
 using client.Identity.Controllers;
+using client.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -72,6 +73,10 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
             return response;
         }
         
+        // Create key
+        var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";
+        key = CommonLogic.EncryptText(key, _context);
+        
         // Check role
         var role = await _roleManager.FindByNameAsync(customerRole);
         
@@ -83,6 +88,7 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
             LockoutEnabled = true,
             LockoutEnd = null,
             EmailConfirmed = false,
+            Key = key,
             RoleId = role.Id,
         };
         
@@ -94,10 +100,6 @@ public class UserInsertController : AbstractApiAsyncControllerNotToken<UserInser
             return response;
         }
         await _userManager.AddToRoleAsync(user, customerRole);
-
-        // Create key
-        var key = $"{request.Username},{request.Email},{request.FirstName},{request.LastName}";
-        key = CommonLogic.EncryptText(key, _context);
             
         // Send mail
         UserInsertSendMail.SendMailVerifyInformation(_context, user.UserName, user.Email, key, detailErrorList);
