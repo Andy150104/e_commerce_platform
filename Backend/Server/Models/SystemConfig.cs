@@ -1,4 +1,7 @@
-namespace client.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace Server.Models;
 
 public partial class SystemConfig
 {

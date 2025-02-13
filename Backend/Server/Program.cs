@@ -1,4 +1,5 @@
 using System.Net;
+using client.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.Helper;
