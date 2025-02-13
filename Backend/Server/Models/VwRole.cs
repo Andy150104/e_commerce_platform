@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace client.Models;
+﻿namespace Server.Models;
 
 public partial class VwRole
 {
