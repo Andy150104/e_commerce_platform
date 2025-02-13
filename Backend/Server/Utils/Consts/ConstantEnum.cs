@@ -9,4 +9,10 @@ public static partial class ConstantEnum
         PlannedCustomer,	
         Owner,
     }
+    
+    public enum Result
+    {
+        Success = 1,
+        Failure = 0,
+    }
 }
