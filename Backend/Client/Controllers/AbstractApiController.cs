@@ -73,7 +73,9 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
         // Additional user information
         try
         {
-            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications.AsNoTracking().FirstOrDefault().UserName;
+            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications
+                .AsNoTracking()
+                .FirstOrDefault(x => x.UserName == appDbContext.IdentityEntity.UserName).UserName;
         }
         catch (Exception e)
         {
