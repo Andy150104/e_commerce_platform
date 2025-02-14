@@ -5,8 +5,9 @@ using Client.Utils.Consts;
 using Microsoft.EntityFrameworkCore;
 using server.Models;
 using SystemConfig = Client.Utils.Consts.SystemConfig;
+using Client.Models;
 
-namespace server.Logics.Commons;
+namespace Client.Logics.Commons;
 
 /// <summary>
 /// Send mail config

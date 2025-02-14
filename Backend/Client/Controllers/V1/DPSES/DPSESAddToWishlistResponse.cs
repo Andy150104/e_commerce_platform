@@ -1,7 +1,7 @@
 ﻿using Client.Controllers;
 using server.Models;
 
-namespace server.Controllers.V1.DisplayProductScreenExchange
+namespace Client.Controllers.V1.DisplayProductScreenExchange
 {
     public class DPSESAddToWishlistResponse : AbstractApiResponse<string>
     {

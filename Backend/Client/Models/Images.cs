@@ -1,4 +1,6 @@
-﻿namespace server.Models
+﻿using Client.Models;
+
+namespace Client.Models
 {
     public partial class Images
     {

@@ -1,7 +1,7 @@
 ﻿using Client.Controllers;
 using System.ComponentModel.DataAnnotations;
 
-namespace server.Controllers.V1.DisplayProductScreenExchange
+namespace Client.Controllers.V1.DisplayProductScreenExchange
 {
     public class DPSESAddToWishlistRequest : AbstractApiRequest
     {

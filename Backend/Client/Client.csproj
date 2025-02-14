@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>server</RootNamespace>
+        <RootNamespace>Client</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -32,6 +32,7 @@
         <PackageReference Include="OpenIddict.Server.AspNetCore" Version="6.0.0" />
         <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.0.0" />
         <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="6.0.0" />
+        <PackageReference Include="RestSharp" Version="112.1.0" />
     </ItemGroup>
 
     <ItemGroup>

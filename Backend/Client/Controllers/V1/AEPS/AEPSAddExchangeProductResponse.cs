@@ -1,7 +1,7 @@
 ﻿using Client.Controllers;
 using server.Models;
 
-namespace server.Controllers.V1.AddExchangeProductScreen
+namespace Client.Controllers.V1.AddExchangeProductScreen
 {
     public class AEPSAddExchangeProductResponse : AbstractApiResponse<string>
     {

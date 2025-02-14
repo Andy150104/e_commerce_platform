@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class CartItem
 {
@@ -14,6 +14,4 @@ public partial class CartItem
     public int Quantity { get; set; }
 
     public virtual Cart Cart { get; set; } = null!;
-
-    public virtual Product Product { get; set; } = null!;
 }

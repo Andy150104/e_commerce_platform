@@ -7,11 +7,16 @@ using OpenIddict.Validation.AspNetCore;
 using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
 using Client.SystemClient;
 using server.Models;
+using Client.Controllers.V1.MomoServices;
+using Client.Controllers.V1.MomoPayment.MomoServices;
+using Client.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+//Connect MOMO API (NOT CHANGE)
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>

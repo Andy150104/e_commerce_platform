@@ -11,13 +11,13 @@ namespace Client.Models.Helper;
 public class AppDbContext : BBExTradingFloorContext
 {
     public NLog.Logger _Logger;
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="options"></param>
-    public AppDbContext(DbContextOptions<AppDbContext> options) 
-        : base(new DbContextOptions<BBExTradingFloorContext>())
+    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) 
+        : base(new DbContextOptions<BBExTradingFloorContext>(), configuration)
     {
     }
     

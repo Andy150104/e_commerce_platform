@@ -1,4 +1,5 @@
 ﻿using Client.Controllers;
+using Client.Models;
 using Client.Models.Helper;
 using Client.SystemClient;
 using Client.Utils.Consts;
@@ -9,8 +10,9 @@ using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using server.Controllers.V1.AEPS.OpenAI;
 using server.Models;
+using server.Utils.Consts;
 
-namespace server.Controllers.V1.AddExchangeProductScreen;
+namespace Client.Controllers.V1.AddExchangeProductScreen;
 /// <summary>
 /// AEPSAddExchangeProductController - Add Exchange Product
 /// </summary>
@@ -54,21 +56,22 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
             response.SetMessage("Invalid Images");
             return response;
         }
-        var exchange = new Exchange
-        {
-            ExchangeId = Guid.NewGuid(),
-            Status = "Active",
-        };
 
         var blindBox = new BlindBox
         {
             BlindBoxId = Guid.NewGuid(),
             Username = userName,
-            ExchangeId = exchange.ExchangeId,
         };
         blindBox.ImagesBlindBoxes = request.ImageUrls.Select(i => new ImagesBlindBox { BlindBoxId = blindBox.BlindBoxId, ImageId = Guid.NewGuid(), ImageUrl = i }).ToList();
-        _context.Exchanges.Add(exchange);
+
+        var exchange = new Exchange
+        {
+            ExchangeId = Guid.NewGuid(),
+            Status = (byte)ExchangeEnum.pendingExchange,
+            BlindBoxId = blindBox.BlindBoxId
+        };
         _context.BlindBoxs.Add(blindBox);
+        _context.Exchanges.Add(exchange);
         _context.SaveChanges(userName);
         //True
         transaction.Commit();
