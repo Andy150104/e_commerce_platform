@@ -1,4 +1,5 @@
-﻿using Client.Controllers.V1.MomoServices;
+﻿using Azure;
+using Client.Controllers.V1.MomoServices;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -18,7 +19,7 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
         public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(MomoExecuteResponseModel model)
         {
             model.OrderId = DateTime.UtcNow.Ticks.ToString();
-            model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
+            model.OrderInfo = model.FullName + "_"+ model.OrderInfo;
             var rawData =
                 $"partnerCode={_options.Value.PartnerCode}" +
                 $"&accessKey={_options.Value.AccessKey}" +
@@ -62,13 +63,15 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
         {
             var amount = collection.First(s => s.Key == "amount").Value;
             var orderInfo = collection.First(s => s.Key == "orderInfo").Value;
-            var orderId = collection.First(s => s.Key == "orderId").Value;
+            var result = orderInfo.ToString().Split('_');
+
 
             return new MomoExecuteResponseModel()
             {
                 Amount = amount,
-                OrderId = orderId,
-                OrderInfo = orderInfo
+                OrderId = result[0],
+                OrderInfo = result[2],
+                FullName = result[1]
             };
         }
 

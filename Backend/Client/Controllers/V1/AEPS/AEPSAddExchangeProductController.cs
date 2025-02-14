@@ -25,7 +25,7 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
     public AEPSAddExchangeProductController(AppDbContext context, IIdentityApiClient identityApiClient)
     {
         _context = context;
-        _context._Logger = logger;
+        _context._Logger = logger; 
         _identityApiClient = identityApiClient;
     }
     /// <summary>
