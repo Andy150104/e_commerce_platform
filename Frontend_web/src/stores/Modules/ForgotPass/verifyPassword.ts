@@ -1,4 +1,4 @@
-import type { AbstractApiResponseOfString, FPSVerifyTokenRequest } from '@PKG_API/@types'
+import type { AbstractApiResponseOfString } from '@PKG_API/@types'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
@@ -25,7 +25,6 @@ export type VerifyPassState = {
   createFlgPersonalInfo: boolean
   createFlgPlan: boolean
   createFlgComplete: boolean
-  uFPSVerifyTokenRequest: FPSVerifyTokenRequest
 }
 
 export const useVerifyPasswordStore = defineStore('VerifyPass', {
@@ -35,7 +34,6 @@ export const useVerifyPasswordStore = defineStore('VerifyPass', {
     createFlgPlan: false,
     createFlgPersonalInfo: false,
     createFlgComplete: false,
-    uFPSVerifyTokenRequest: {} as FPSVerifyTokenRequest,
   }),
   getters: {
     fieldValues: (state) => {
@@ -68,10 +66,10 @@ export const useVerifyPasswordStore = defineStore('VerifyPass', {
       const apiClient = useApiServer()
       const formMessage = useFormMessageStore()
       const loadingStore = useLoadingStore()
-      const res = await apiClient.api.v1.FPSVerifyToken.$post({
+      const res = await apiClient.api.v1.FPSVerifyKey.$post({
         body: {
           isOnlyValidation: false,
-          otp: apiFieldValues.otp,
+          key: apiFieldValues.otp,
           newPassWord: apiFieldValues.password,
         },
       })

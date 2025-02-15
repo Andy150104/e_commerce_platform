@@ -1,4 +1,4 @@
-import type { AbstractApiResponseOfString, FPSUpdatePasswordRequest } from '@PKG_API/@types'
+import type { AbstractApiResponseOfString } from '@PKG_API/@types'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
@@ -21,20 +21,12 @@ const fields = {
 export type UpdatePassState = {
   fields: typeof fields
   createFlgUpdatePass: boolean
-  createFlgPersonalInfo: boolean
-  createFlgPlan: boolean
-  createFlgComplete: boolean
-  uFPSUpdatePasswordRequest: FPSUpdatePasswordRequest
 }
 
 export const useUpdatePassStore = defineStore('UpdatePass', {
   state: (): UpdatePassState => ({
     fields,
     createFlgUpdatePass: false,
-    createFlgPlan: false,
-    createFlgPersonalInfo: false,
-    createFlgComplete: false,
-    uFPSUpdatePasswordRequest: {} as FPSUpdatePasswordRequest,
   }),
   getters: {
     fieldValues: (state) => {
@@ -67,7 +59,7 @@ export const useUpdatePassStore = defineStore('UpdatePass', {
       const apiClient = useApiServer()
       const formMessage = useFormMessageStore()
       const loadingStore = useLoadingStore()
-      const res = await apiClient.api.v1.FPSUpdatePassword.$post({
+      const res = await apiClient.api.v1.FPSForgotPassword.$post({
         body: {
           isOnlyValidation: false,
           email: apiFieldValues.email,

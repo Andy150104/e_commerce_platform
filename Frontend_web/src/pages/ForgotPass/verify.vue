@@ -1,14 +1,15 @@
 <template>
   <BaseScreenAuth>
     <template #body>
-      <div><ProgressStepper :items="stepperStore.steppList" class="pt-14" /></div>
+      <div><ProgressStepper :items="stepperStore.steppList" class="pt-5" /></div>
       <div v-if="store.createFlgVerifyPass">
-        <div class="py-20 mx-14 text-center">
+        <div class="py-15 mx-14 text-center">
           <div class="space-y-4">
             <h2 class="text-2xl font-semibold">Reset Password</h2>
             <p class="text-sm text-gray-600 dark:text-gray-400">Please Enter your new password.</p>
           </div>
-          <div>
+        </div>
+        <div>
             <LabelItem :xml-column="xmlColumns.password" />
             <BaseControlTextField
               :xml-column="xmlColumns.password"
@@ -30,8 +31,7 @@
               :placeholder="'Confirm Password'"
             />
           </div>
-        </div>
-        <div class="flex justify-between mt-8">
+        <div class="flex justify-between mt-8 pb-5">
           <button :class="className.BUTTON_DEFAULT_GRAY_1" @click="onBackStep">Back</button>
           <button :class="className.BUTTON_DEFAULT_BLUE_2" @click="onMoveToNextStep">Next</button>
         </div>
@@ -84,7 +84,7 @@
   const store = useVerifyPasswordStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
-  formContext.setFieldValue("otp", "2Z0hy+dT6RrXE7CWSvl5V1GWnpqSR6q5dL1RyukF9rVSKSMRMLqYsU1cByYpTkZlKZLKuQLuXa/nX+2Trm55A7RgPwl/D9oH2c/++1Je+pk=");
+  formContext.setFieldValue("otp", "07fTdmW6xh9bHE9nBFFG7Q==");
   store.SetFields(formContext)
   const steppList = ref<StepItem[]>([
     {
