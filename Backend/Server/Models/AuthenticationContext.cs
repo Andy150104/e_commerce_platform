@@ -11,22 +11,28 @@ public partial class AuthenticationContext : DbContext
     {
     }
 
-    public AuthenticationContext(DbContextOptions<AuthenticationContext> options, IConfiguration configuration) : base(options)
+    public AuthenticationContext(DbContextOptions<AuthenticationContext> options, IConfiguration configuration)
+        : base(options)
     {
         _configuration = configuration;
     }
 
     public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
-    public virtual DbSet<VwUserLogin> VwUserLogins { get; set; }
-    
     public virtual DbSet<SystemConfig> SystemConfigs { get; set; }
-    
+
+    public virtual DbSet<VwEmailTemplateVerifyOtp> VwEmailTemplateVerifyOtps { get; set; }
+
     public virtual DbSet<VwEmailTemplateVerifyUser> VwEmailTemplateVerifyUsers { get; set; }
+
+    public virtual DbSet<VwRole> VwRoles { get; set; }
+
+    public virtual DbSet<VwUserLogin> VwUserLogins { get; set; }
+
 
     public virtual DbSet<VwEmailTemplateVerifyOTP> VwEmailTemplateVerifyOTPs { get; set; }
     
     public virtual DbSet<VwUserVerify> VwUserVerifies { get; set; }
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)
@@ -68,10 +74,14 @@ public partial class AuthenticationContext : DbContext
         modelBuilder.Entity<IdentityRoleClaim<string>>()
             .ToTable("RoleClaims")
             .HasKey(rc => rc.Id);
+
         modelBuilder.Entity<EmailTemplate>(entity =>
         {
-            entity.ToTable("EmailTemplate");
+            entity.HasKey(e => e.Id).HasName("PK__email_te__3213E83F83E83DA0");
 
+            entity.ToTable("email_template");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Body).HasColumnName("body");
             entity.Property(e => e.CreateAt)
                 .HasPrecision(6)
@@ -80,9 +90,6 @@ public partial class AuthenticationContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("create_by");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.ScreenName)
                 .HasMaxLength(255)
@@ -129,7 +136,51 @@ public partial class AuthenticationContext : DbContext
                 .HasColumnName("updated_by");
             entity.Property(e => e.Value).HasColumnName("value");
         });
-        
+
+        modelBuilder.Entity<VwEmailTemplateVerifyOtp>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_EmailTemplate_VerifyOTP");
+
+            entity.Property(e => e.EmailBody).HasColumnName("email_body");
+            entity.Property(e => e.EmailTitle).HasColumnName("email_title");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
+            entity.Property(e => e.ScreenName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("screen_name");
+        });
+
+        modelBuilder.Entity<VwEmailTemplateVerifyUser>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_EmailTemplate_VerifyUser");
+
+            entity.Property(e => e.EmailBody).HasColumnName("email_body");
+            entity.Property(e => e.EmailTitle).HasColumnName("email_title");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
+            entity.Property(e => e.ScreenName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("screen_name");
+        });
+
+        modelBuilder.Entity<VwRole>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Role");
+
+            entity.Property(e => e.Name).HasMaxLength(256);
+            entity.Property(e => e.NormalizedName).HasMaxLength(256);
+        });
+
         modelBuilder.Entity<VwUserLogin>(entity =>
         {
             entity
@@ -142,23 +193,14 @@ public partial class AuthenticationContext : DbContext
             entity.Property(e => e.UserId).HasMaxLength(450);
             entity.Property(e => e.UserName).HasMaxLength(256);
         });
-        
-        modelBuilder.Entity<VwEmailTemplateVerifyUser>(entity =>
+
+        modelBuilder.Entity<VwUserVerify>(entity =>
         {
-            entity.HasNoKey()
-                .ToView("VW_EmailTemplate_VerifyUser");
-            entity.Property(e => e.EmailBody)
-                .HasMaxLength(256)
-                .HasColumnName("email_body");
-            entity.Property(e => e.EmailTitle)
-                .HasMaxLength(256)
-                .HasColumnName("email_title");
-            entity.Property(e => e.Id)
-                .HasMaxLength(256)
-                .HasColumnName("id");
-            entity.Property(e => e.ScreenName)
-                .HasMaxLength(256)
-                .HasColumnName("screen_name");
+            entity
+                .HasNoKey()
+                .ToView("VW_UserVerify");
+
+            entity.Property(e => e.Key).HasColumnName("key");
         }); 
         
         modelBuilder.Entity<VwEmailTemplateVerifyOTP>(entity =>
@@ -177,14 +219,8 @@ public partial class AuthenticationContext : DbContext
             entity.Property(e => e.ScreenName)
                 .HasMaxLength(256)
                 .HasColumnName("screen_name");
+            entity.Property(e => e.UserName).HasMaxLength(256);
         });
-
-        modelBuilder.Entity<VwUserVerify>(entity =>
-            entity.HasNoKey()
-                .ToView("VW_UserVerify")
-                .Property(e => e.UserName)
-                .HasMaxLength(256)
-                .HasColumnName("UserName"));
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

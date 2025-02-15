@@ -19,7 +19,6 @@
   import { Field } from 'vee-validate'
   import type { xmlColumn } from '@PKG_SRC/utils/xml'
 
-
   const props = defineProps({
     model: {
       type: [String, Number],

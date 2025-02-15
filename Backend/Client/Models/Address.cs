@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace server.Models;
@@ -15,8 +15,6 @@ public partial class Address
 
     public string? City { get; set; }
 
-    public string? Country { get; set; }
-
     public string? District { get; set; }
 
     public DateTime? CreatedAt { get; set; }
@@ -28,6 +26,8 @@ public partial class Address
     public DateTime? UpdatedAt { get; set; }
 
     public string? UpdatedBy { get; set; }
+
+    public string? Province { get; set; }
 
     public virtual User UsernameNavigation { get; set; } = null!;
 }

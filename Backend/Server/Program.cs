@@ -1,4 +1,5 @@
 using System.Net;
+using client.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.Helper;
@@ -13,6 +14,7 @@ using Server.Models;
 using Server.SystemClient;
 
 var builder = WebApplication.CreateBuilder(args);
+
 // Configuration
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -58,6 +60,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
+
 // Add services to the container.
 builder.Services.AddControllers();
 // Swagger configuration to output API type definitions
@@ -174,8 +177,6 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"Error seeding roles: {ex.Message}");
     }
 }
-
-builder.Logging.AddConsole();
 
 app.UseCors();
 app.UseRouting();

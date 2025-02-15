@@ -1,10 +1,10 @@
-import { Gender } from "@PKG_SRC/types/enums/constantBackend"
-import type { selectItem } from "@PKG_SRC/types/enums/constantFrontend"
+import { Gender } from '@PKG_SRC/types/enums/constantBackend'
+import type { selectItem } from '@PKG_SRC/types/enums/constantFrontend'
 
 export function sleepByPromise(millisecond: number) {
   return new Promise((resolve) => setTimeout(resolve, millisecond))
 }
-export function splitText(text: string){
+export function splitText(text: string) {
   return text.split(' ')
 }
 
@@ -54,7 +54,7 @@ export function createErrorFields<T extends object>(fieldsInitialize: T): Record
 
   return result as Record<keyof T, string>
 }
-export type MasterName = "Gender"
+export type MasterName = 'Gender'
 
 export async function getSelectComponentData(masterName: MasterName, _params: any) {
   switch (masterName) {

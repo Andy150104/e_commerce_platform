@@ -8,6 +8,7 @@ public partial class Plan
     public Guid PlanId { get; set; }
 
     public string PlanName { get; set; } = null!;
+    public string PlanName { get; set; } = null!;
 
     public string? Description { get; set; }
 

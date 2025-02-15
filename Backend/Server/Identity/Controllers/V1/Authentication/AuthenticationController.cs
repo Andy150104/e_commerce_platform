@@ -82,7 +82,11 @@ public class AuthenticationController : ControllerBase
         var userExist = _context.VwUserLogins.AsNoTracking().FirstOrDefault(x => x.UserName == request.UserNameOrEmail || x.Email == request.UserNameOrEmail);
         if (userExist == null)
         {
-            return Unauthorized();
+            return BadRequest(new OpenIddictResponse
+            {
+                Error = OpenIddictConstants.Errors.InvalidGrant,
+                ErrorDescription = "The username or password is incorrect."
+            });
         }
         // If user exists
         var user = await _userManager.FindByIdAsync(userExist.UserId);
@@ -94,11 +98,20 @@ public class AuthenticationController : ControllerBase
             {
                 user.LockoutEnd = DateTime.UtcNow.AddMinutes(30);
             }
+            await _userManager.UpdateAsync(user);
+            return BadRequest(new OpenIddictResponse
+            {
+                Error = OpenIddictConstants.Errors.InvalidGrant,
+                ErrorDescription = "The username or password is incorrect."
+            });
         }
         // Check lockout
         if (user.LockoutEnd != null && user.LockoutEnd > DateTime.UtcNow)
         {
-            return Unauthorized();
+            return Unauthorized(new OpenIddictResponse
+            {
+                ErrorDescription = "Your account has been locked."
+            });
         }
         // Check user is active
         if (user.LockoutEnabled)

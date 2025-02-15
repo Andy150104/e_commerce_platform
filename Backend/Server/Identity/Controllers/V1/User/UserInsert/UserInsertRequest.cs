@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Client.Controllers;
 
 namespace Server.Identity.Controllers.V1.User;
 
-public class UserInsertRequest
+public class UserInsertRequest : AbstractApiRequest
 {
     [Required(ErrorMessage = "Username is required")]
     public string Username { get; set; }

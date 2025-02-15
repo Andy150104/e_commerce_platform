@@ -42,8 +42,4 @@
       </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers\V1\UPS\" />
-    </ItemGroup>
-
 </Project>

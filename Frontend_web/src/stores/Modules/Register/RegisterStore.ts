@@ -1,17 +1,23 @@
+import type { AbstractApiResponseOfString } from '@PKG_API/@types'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
+import { AuthAPI } from '@PKG_SRC/utils/auth/authClient'
+import { useApiServer, useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
+import { useLoadingStore } from '../usercontrol/loadingStore'
 
-export const fieldsInitialize = { 
+export const fieldsInitialize = {
   userName: '',
   password: '',
-  email: '', 
+  confirmPassword: '',
+  email: '',
   phoneNumber: '',
   birthday: '',
   firstName: '',
   lastName: '',
   gender: '1',
-  city: '',
-  country: '',
+  province: '',
+  district: '',
   ward: '',
 }
 export type FormSchema = typeof fieldsInitialize
@@ -66,16 +72,41 @@ export const useRegisterStore = defineStore('Register', {
     async RegisterUser() {
       const validation: any = await this.fields.validate()
       if (validation.valid === false) return false
-
-      const apiClient = useApiClient()
+      const apiServer = useApiServer()
+      const formMessage = useFormMessageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
-
-      // const res = apiClient.api.v1.URSUserRegister.$post({
-      //   body: {
-          
-      //   },
-      // })
-      // res.
-    }
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
+      const res = await apiServer.api.v1.UserInsert.$post({
+        body: {
+          username: apiFieldValues.userName,
+          email: apiFieldValues.email,
+          password: apiFieldValues.password,
+          firstName: apiFieldValues.firstName,
+          lastName: apiFieldValues.lastName,
+        },
+      })
+      loadingStore.LoadingChange(false)
+      if (!res.success) {
+        formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+        return false
+      }
+      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+      return true
+    },
+    async onVerify(key: string) {
+      const apiClient = useApiClient()
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
+      const res = await apiClient.api.v1.URSUserVerify.$post({
+        body: {
+          isOnlyValidation: true,
+          key: key,
+        },
+      })
+      loadingStore.LoadingChange(false)
+      if (!res.success) return false
+      return true
+    },
   },
 })

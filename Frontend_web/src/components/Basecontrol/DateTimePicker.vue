@@ -109,8 +109,8 @@
     datePickerPosition: {
       type: String,
       required: false,
-      default: 'bottom left'
-    }
+      default: 'bottom left',
+    },
   })
   interface Emits {
     (e: 'on-blur'): void

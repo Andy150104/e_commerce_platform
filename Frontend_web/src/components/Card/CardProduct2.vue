@@ -62,7 +62,10 @@
         <button class="flex-1 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100">
           Wishlist
         </button>
-        <button class="flex-1 py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700" @click="emit('on-buy')">
+        <button
+          class="flex-1 py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700"
+          @click="emit('on-buy')"
+        >
           Buy now
         </button>
       </div>

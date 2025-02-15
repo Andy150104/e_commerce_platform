@@ -10,13 +10,13 @@ export const useTestStore = defineStore('testStore', {
   getters: {},
   actions: {
     TestAuth() {
-        const auth = useAuthStore()
-        auth.isAuthorization = true
+      const auth = useAuthStore()
+      auth.isAuthorization = true
     },
-    ResetStore(){
-        const auth = useAuthStore()
-        auth.ResetStore()
-        console.log('auth',auth.isAuthorization)
+    ResetStore() {
+      const auth = useAuthStore()
+      auth.ResetStore()
+      console.log('auth', auth.isAuthorization)
     },
     persist: true, // 永続化
   },

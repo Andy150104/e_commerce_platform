@@ -1,59 +1,46 @@
 <script setup>
-import { ref } from 'vue';
+  import { ref } from 'vue'
 
-const isDarkMode = ref(false);
-const refThumb = ref(null);
+  const isDarkMode = ref(false)
+  const refThumb = ref(null)
 
-const toggleDarkMode = async (darkMode) => {
-  if (
-    !refThumb.value ||
-    !document.startViewTransition ||
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  ) {
-    isDarkMode.value = darkMode;
-    document.documentElement.classList.toggle('dark', darkMode);
-    return;
-  }
-
-  // Lấy vị trí và bán kính cho hiệu ứng tròn
-  const { top, left, width, height } = refThumb.value.getBoundingClientRect();
-  const x = left + width / 2;
-  const y = top + height / 2;
-  const right = window.innerWidth - left;
-  const bottom = window.innerHeight - top;
-  const maxRadius = Math.hypot(
-    Math.max(left, right),
-    Math.max(top, bottom)
-  );
-
-  // Thực hiện hiệu ứng View Transition
-  await document.startViewTransition(() => {
-    isDarkMode.value = darkMode;
-  }).ready;
-
-  // Áp dụng hiệu ứng clipPath
-  const animation = document.documentElement.animate(
-    {
-      clipPath: darkMode
-        ? [
-            `circle(0px at ${x}px ${y}px)`,
-            `circle(${maxRadius}px at ${x}px ${y}px)`,
-          ]
-        : [
-            `circle(${maxRadius}px at ${x}px ${y}px)`,
-            `circle(0px at ${x}px ${y}px)`,
-          ],
-    },
-    {
-      duration: 1000,
-      easing: 'ease-in-out',
+  const toggleDarkMode = async (darkMode) => {
+    if (!refThumb.value || !document.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      isDarkMode.value = darkMode
+      document.documentElement.classList.toggle('dark', darkMode)
+      return
     }
-  );
 
-  // Chờ hiệu ứng kết thúc trước khi thay đổi class
-  await animation.finished;
-  document.documentElement.classList.toggle('dark', darkMode);
-};
+    // Lấy vị trí và bán kính cho hiệu ứng tròn
+    const { top, left, width, height } = refThumb.value.getBoundingClientRect()
+    const x = left + width / 2
+    const y = top + height / 2
+    const right = window.innerWidth - left
+    const bottom = window.innerHeight - top
+    const maxRadius = Math.hypot(Math.max(left, right), Math.max(top, bottom))
+
+    // Thực hiện hiệu ứng View Transition
+    await document.startViewTransition(() => {
+      isDarkMode.value = darkMode
+    }).ready
+
+    // Áp dụng hiệu ứng clipPath
+    const animation = document.documentElement.animate(
+      {
+        clipPath: darkMode
+          ? [`circle(0px at ${x}px ${y}px)`, `circle(${maxRadius}px at ${x}px ${y}px)`]
+          : [`circle(${maxRadius}px at ${x}px ${y}px)`, `circle(0px at ${x}px ${y}px)`],
+      },
+      {
+        duration: 1000,
+        easing: 'ease-in-out',
+      }
+    )
+
+    // Chờ hiệu ứng kết thúc trước khi thay đổi class
+    await animation.finished
+    document.documentElement.classList.toggle('dark', darkMode)
+  }
 </script>
 
 <template>
@@ -68,7 +55,7 @@ const toggleDarkMode = async (darkMode) => {
         <div
           ref="refThumb"
           class="absolute top-1 left-1 w-4 h-4 bg-white dark:bg-black rounded-full transition-transform"
-          :class="{'translate-x-6': isDarkMode}"
+          :class="{ 'translate-x-6': isDarkMode }"
         >
           <span v-if="isDarkMode" class="hidden">🌙</span>
           <span v-else class="hidden">☀️</span>
@@ -79,10 +66,10 @@ const toggleDarkMode = async (darkMode) => {
 </template>
 
 <style scoped>
-/* Đảm bảo hiệu ứng View Transition được tắt mặc định */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
+  /* Đảm bảo hiệu ứng View Transition được tắt mặc định */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
 </style>

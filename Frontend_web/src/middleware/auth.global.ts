@@ -1,6 +1,6 @@
-import { useAuthStore } from "@PKG_SRC/stores/master/authStore"
-import { useUserStore } from "@PKG_SRC/stores/master/userStore"
-import { defineNuxtRouteMiddleware } from "nuxt/app"
+import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
+import { useUserStore } from '@PKG_SRC/stores/master/userStore'
+import { defineNuxtRouteMiddleware } from 'nuxt/app'
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore()
@@ -18,8 +18,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'Login',
     'Product2',
     'Register',
+    'Register/Verify',
     'Blind_Box',
-    'Blind_Box/Cart'
+    'Blind_Box/Cart',
+    'DashBoard',
+    'DashBoard/Account',
   ]
   if (!authStore.isAuthorization && !loginNotRequiredRoutes.includes(relativePath)) {
     return { path: '/' }

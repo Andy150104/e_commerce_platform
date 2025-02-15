@@ -34,9 +34,16 @@ export enum Locale {
 export enum StepStatus {
   currentStep = 0,
   pendingStep = 1,
-  finishStep = 2
+  finishStep = 2,
 }
 export interface selectItem {
   text: string
   value: string
+}
+
+export enum Address {
+  Province = '0',
+  District = '1',
+  Ward = '2',
+  Other = '3',
 }

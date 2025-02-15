@@ -8,8 +8,55 @@
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
       </a>
-      <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse gap-2">
+      <div v-show="isLogin" class="relative md:order-2">
+        <button
+          @click="toggleDropdown"
+          class="flex items-center text-sm font-medium text-gray-900 rounded-full dark:text-white focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+        >
+          <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" />
+          <span class="ml-2 text-sm text-gray-900 dark:text-white">Bonnie Green</span>
+        </button>
+
+        <!-- Dropdown -->
+        <div v-show="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg dark:bg-gray-700">
+          <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-600">
+            <span class="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
+            <span class="block text-sm text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+          </div>
+          <ul class="py-2">
+            <li>
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                >Dashboard</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                >Settings</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                >Earnings</a
+              >
+            </li>
+            <li>
+              <a
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+                >Sign out</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div v-show="isLogin" class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse gap-2">
         <a
+          v-if="!isLogin"
           href="/Register"
           type="button"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -17,6 +64,7 @@
           Get started
         </a>
         <a
+          v-if="!isLogin"
           href="/Login"
           class="text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-purple-500 dark:hover:bg-purple-600 dark:focus:ring-purple-800"
         >
@@ -77,11 +125,19 @@
   </nav>
 </template>
 <script setup lang="ts">
-  import { initFlowbite } from 'flowbite'
+  import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
+  import { initDropdowns, initFlowbite } from 'flowbite'
   import { onMounted } from 'vue'
 
   const isMobile = ref(false)
+  const authStore = useAuthStore()
+  const isLogin = ref(false)
   const router = useRouter()
+  const isDropdownOpen = ref(false)
+
+  const toggleDropdown = () => {
+    isDropdownOpen.value = !isDropdownOpen.value
+  }
 
   const handleResize = () => {
     if (window.innerWidth < 768) {
@@ -89,13 +145,14 @@
     } else {
       isMobile.value = false
     }
-    console.log(isMobile.value)
   }
 
   onMounted(() => {
     window.addEventListener('resize', handleResize)
     handleResize()
     initFlowbite()
+    initDropdowns()
+    isLogin.value = true
   })
 
   onUnmounted(() => {

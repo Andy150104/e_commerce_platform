@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using OpenIddict.Abstractions;
 using Server.Identity;
 using Server.Systemserver;
 
@@ -15,13 +16,19 @@ public class IdentityApiClient : IIdentityApiClient
     {
         // Get the identity
         var identity = user.Identity as ClaimsIdentity;
+        
         // Get the user id
-        var userId = identity.FindFirst("UserId")?.Value;
-        if (String.IsNullOrEmpty(userId)) return null;
+        var userNm = identity.FindFirst("UserId")?.Value ?? identity.FindFirst(OpenIddictConstants.Claims.Name)?.Value;
+        
+        // Get role name
+        var roleName = identity.FindFirst(OpenIddictConstants.Claims.Role)?.Value;
+        
+        if (String.IsNullOrEmpty(userNm)) return null;
         // Create the identity entity
         var identityEntity = new IdentityEntity()
         {
-            UserName = userId,
+            UserName = userNm,
+            RoleName = roleName,
         };
         return identityEntity;
     }

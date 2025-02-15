@@ -240,4 +240,18 @@
     cursor: pointer;
     /* Bạn có thể tuỳ chỉnh thêm style cho nút ở đây */
   }
+  input:-webkit-autofill {
+    background-color: transparent !important; /* Hoặc màu bạn muốn */
+    color: inherit !important; /* Giữ màu chữ theo thiết kế */
+    box-shadow: 0 0 0px 1000px white inset !important; /* Màu nền field */
+    -webkit-text-fill-color: black !important; /* Màu chữ */
+    transition: background-color 5000s ease-in-out 0s; /* Để tránh đổi màu */
+  }
+
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    background-color: transparent !important;
+    box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: black !important;
+  }
 </style>
