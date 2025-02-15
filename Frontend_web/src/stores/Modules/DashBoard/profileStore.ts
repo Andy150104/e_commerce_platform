@@ -14,7 +14,7 @@ export const fieldsInitialize = {
   birthDate: '',
   firstName: '',
   lastName: '',
-  gender: '1',
+  gender: 1,
 }
 export type FormSchema = typeof fieldsInitialize
 
@@ -73,7 +73,7 @@ export const useProfileStore = defineStore('Register', {
       this.fields.setFieldValue('imageUrl', this.uDSSelectUserProfileEntity.imageUrl)
       this.fields.setFieldValue('phoneNumber', this.uDSSelectUserProfileEntity.phoneNumber)
       this.fields.setFieldValue('birthDate', this.uDSSelectUserProfileEntity.birthDate)
-      this.fields.setFieldValue('gender', this.uDSSelectUserProfileEntity.gender)
+      this.fields.setFieldValue('gender', this.uDSSelectUserProfileEntity.gender?.toString())
       this.fields.setFieldValue('firstName', this.uDSSelectUserProfileEntity.firstName)
       this.fields.setFieldValue('lastName', this.uDSSelectUserProfileEntity.lastName)
     },
@@ -91,9 +91,11 @@ export const useProfileStore = defineStore('Register', {
           firstName: apiFieldValues.firstName,
           lastName: apiFieldValues.lastName,
           phoneNumber: apiFieldValues.phoneNumber,
-          birthDay: apiFieldValues.birthDate ? apiFieldValues.birthDate.split('-').reverse().join('-') : '',
+          birthDay: apiFieldValues.birthDate && /^\d{2}-\d{2}-\d{4}$/.test(apiFieldValues.birthDate) 
+    ? apiFieldValues.birthDate.split('-').reverse().join('-') 
+    : apiFieldValues.birthDate || '',
           imageUrl: 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jp',
-          gender: Number(apiFieldValues.gender),
+          gender: apiFieldValues.gender,
         },
       })
       loadingStore.LoadingChange(false)
