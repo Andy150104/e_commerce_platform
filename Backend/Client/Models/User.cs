@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class User
 {
@@ -33,6 +33,8 @@ public partial class User
 
     public string? LastName { get; set; }
 
+    public DateTime? PlanExpired { get; set; }
+
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
     public virtual ICollection<BlindBox> BlindBoxes { get; set; } = new List<BlindBox>();
@@ -43,7 +45,11 @@ public partial class User
 
     public virtual ICollection<Message> MessageSenders { get; set; } = new List<Message>();
 
+    public virtual ICollection<OrderPlan> OrderPlans { get; set; } = new List<OrderPlan>();
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual Plan? Plan { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 

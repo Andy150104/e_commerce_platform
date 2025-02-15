@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace Client.Models;
 
-public partial class Exchange
+public partial class ImagesBlindBox
 {
-    public Guid ExchangeId { get; set; }
+    public Guid ImageId { get; set; }
+
+    public string ImageUrl { get; set; } = null!;
 
     public Guid BlindBoxId { get; set; }
-
-    public byte? Status { get; set; }
 
     public bool? IsActive { get; set; }
 
@@ -22,8 +22,4 @@ public partial class Exchange
     public string? UpdatedBy { get; set; }
 
     public virtual BlindBox BlindBox { get; set; } = null!;
-
-    public virtual ICollection<OrdersExchange> OrdersExchanges { get; set; } = new List<OrdersExchange>();
-
-    public virtual ICollection<Queue> Queues { get; set; } = new List<Queue>();
 }

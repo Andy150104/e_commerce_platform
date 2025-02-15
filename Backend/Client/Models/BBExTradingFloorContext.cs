@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class BBExTradingFloorContext : DbContext
 {
@@ -29,11 +29,17 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<Exchange> Exchanges { get; set; }
 
+    public virtual DbSet<Image> Images { get; set; }
+
+    public virtual DbSet<ImagesBlindBox> ImagesBlindBoxes { get; set; }
+
     public virtual DbSet<Message> Messages { get; set; }
 
     public virtual DbSet<Order> Orders { get; set; }
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+
+    public virtual DbSet<OrderPlan> OrderPlans { get; set; }
 
     public virtual DbSet<OrdersExchange> OrdersExchanges { get; set; }
 
@@ -53,7 +59,17 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<Voucher> Vouchers { get; set; }
 
+    public virtual DbSet<VwBlindBoxDisplay> VwBlindBoxDisplays { get; set; }
+
+    public virtual DbSet<VwCartDisplay> VwCartDisplays { get; set; }
+
+    public virtual DbSet<VwImageBlindBox> VwImageBlindBoxes { get; set; }
+
+    public virtual DbSet<VwImageProduct> VwImageProducts { get; set; }
+
     public virtual DbSet<VwPlan> VwPlans { get; set; }
+
+    public virtual DbSet<VwProductDisplay> VwProductDisplays { get; set; }
 
     public virtual DbSet<VwUserAddress> VwUserAddresses { get; set; }
 
@@ -73,7 +89,7 @@ public partial class BBExTradingFloorContext : DbContext
 
         return strConn;
     }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
 
@@ -81,7 +97,7 @@ public partial class BBExTradingFloorContext : DbContext
     {
         modelBuilder.Entity<Address>(entity =>
         {
-            entity.HasKey(e => e.AddressId).HasName("PK__address__CAA247C836677D7F");
+            entity.HasKey(e => e.AddressId).HasName("PK__address__CAA247C882F1A788");
 
             entity.ToTable("address");
 
@@ -124,16 +140,14 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Addresses)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__address__usernam__04E4BC85");
+                .HasConstraintName("FK__address__usernam__3F466844");
         });
 
         modelBuilder.Entity<BlindBox>(entity =>
         {
-            entity.HasKey(e => e.BlindBoxId).HasName("PK__blind_bo__3FDA04D34F48BF95");
+            entity.HasKey(e => e.BlindBoxId).HasName("PK__blind_bo__3FDA04D3C5141325");
 
             entity.ToTable("blind_boxs");
-
-            entity.HasIndex(e => e.ExchangeId, "UQ__blind_bo__FAAC5D3F45D30ACE").IsUnique();
 
             entity.Property(e => e.BlindBoxId)
                 .HasDefaultValueSql("(newid())")
@@ -142,28 +156,34 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
-            entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
-
-            entity.HasOne(d => d.Exchange).WithOne(p => p.BlindBox)
-                .HasForeignKey<BlindBox>(d => d.ExchangeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_blind_boxs_exchanges");
+            entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.BlindBoxes)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__blind_box__usern__208CD6FA");
+                .HasConstraintName("FK__blind_box__usern__440B1D61");
+
+            entity.HasOne(d => d.Wishlist).WithMany(p => p.BlindBoxes)
+                .HasForeignKey(d => d.WishlistId)
+                .HasConstraintName("FK_blind_boxs_wishlists");
         });
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.CartId).HasName("PK__carts__2EF52A271C4B7D69");
+            entity.HasKey(e => e.CartId).HasName("PK__carts__2EF52A278E3236E1");
 
             entity.ToTable("carts");
 
@@ -183,12 +203,12 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__carts__username__74AE54BC");
+                .HasConstraintName("FK__carts__username__48CFD27E");
         });
 
         modelBuilder.Entity<CartItem>(entity =>
         {
-            entity.HasKey(e => e.CartItemId).HasName("PK__cart_ite__5D9A6C6E40C5156D");
+            entity.HasKey(e => e.CartItemId).HasName("PK__cart_ite__5D9A6C6E1E61CAF4");
 
             entity.ToTable("cart_items");
 
@@ -202,17 +222,12 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.Cart).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.CartId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__cart_item__cart___07C12930");
-
-            entity.HasOne(d => d.Product).WithMany(p => p.CartItems)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__cart_item__produ__08B54D69");
+                .HasConstraintName("FK__cart_item__cart___74AE54BC");
         });
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__categori__D54EE9B4663D3B24");
+            entity.HasKey(e => e.CategoryId).HasName("PK__categori__D54EE9B489947131");
 
             entity.ToTable("categories");
 
@@ -243,15 +258,16 @@ public partial class BBExTradingFloorContext : DbContext
 
             entity.HasOne(d => d.Parent).WithMany(p => p.InverseParent)
                 .HasForeignKey(d => d.ParentId)
-                .HasConstraintName("FK__categorie__paren__440B1D61");
+                .HasConstraintName("FK__categorie__paren__4E88ABD4");
         });
 
         modelBuilder.Entity<EmailTemplate>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("email_template");
+            entity.HasKey(e => e.Id).HasName("PK__email_te__3213E83F4FC8C6C4");
 
+            entity.ToTable("email_template");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Body).HasColumnName("body");
             entity.Property(e => e.CreateAt)
                 .HasPrecision(6)
@@ -260,9 +276,6 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("create_by");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.ScreenName)
                 .HasMaxLength(255)
@@ -280,21 +293,89 @@ public partial class BBExTradingFloorContext : DbContext
 
         modelBuilder.Entity<Exchange>(entity =>
         {
-            entity.HasKey(e => e.ExchangeId).HasName("PK__exchange__FAAC5D3EF231397C");
+            entity.HasKey(e => e.ExchangeId).HasName("PK__exchange__FAAC5D3E5E11D9EF");
 
             entity.ToTable("exchanges");
 
             entity.Property(e => e.ExchangeId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("exchange_id");
-            entity.Property(e => e.Status)
+            entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
-                .HasColumnName("status");
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.HasOne(d => d.BlindBox).WithMany(p => p.Exchanges)
+                .HasForeignKey(d => d.BlindBoxId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_exchanges_blind_boxs");
+        });
+
+        modelBuilder.Entity<Image>(entity =>
+        {
+            entity.HasKey(e => e.ImageId).HasName("PK__images__DC9AC955E6CBC3D9");
+
+            entity.ToTable("images");
+
+            entity.Property(e => e.ImageId)
+                .ValueGeneratedNever()
+                .HasColumnName("image_id");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.ProductId)
+                .HasMaxLength(255)
+                .HasColumnName("product_id");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.Images)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__images__product___17F790F9");
+        });
+
+        modelBuilder.Entity<ImagesBlindBox>(entity =>
+        {
+            entity.HasKey(e => e.ImageId);
+
+            entity.ToTable("images_blind_box");
+
+            entity.Property(e => e.ImageId)
+                .ValueGeneratedNever()
+                .HasColumnName("image_id");
+            entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.HasOne(d => d.BlindBox).WithMany(p => p.ImagesBlindBoxes)
+                .HasForeignKey(d => d.BlindBoxId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_images_blind_box_blind_boxs");
         });
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__messages__0BBF6EE66988BD7A");
+            entity.HasKey(e => e.MessageId).HasName("PK__messages__0BBF6EE68BCA50AD");
 
             entity.ToTable("messages");
 
@@ -328,17 +409,17 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.Receiver).WithMany(p => p.MessageReceivers)
                 .HasForeignKey(d => d.ReceiverId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__messages__receiv__00200768");
+                .HasConstraintName("FK__messages__receiv__534D60F1");
 
             entity.HasOne(d => d.Sender).WithMany(p => p.MessageSenders)
                 .HasForeignKey(d => d.SenderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__messages__sender__7F2BE32F");
+                .HasConstraintName("FK__messages__sender__5441852A");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__orders__465962295A756E20");
+            entity.HasKey(e => e.OrderId).HasName("PK__orders__465962296E5F179F");
 
             entity.ToTable("orders");
 
@@ -369,12 +450,12 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__orders__username__0C85DE4D");
+                .HasConstraintName("FK__orders__username__5812160E");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__order_de__3C5A408044F5685F");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__order_de__3C5A40808A9AA725");
 
             entity.ToTable("order_details");
 
@@ -382,7 +463,9 @@ public partial class BBExTradingFloorContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("order_detail_id");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
-            entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.ProductId)
+                .HasMaxLength(255)
+                .HasColumnName("product_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.UnitPrice)
                 .HasColumnType("decimal(10, 2)")
@@ -391,17 +474,64 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__order_det__order__0F624AF8");
+                .HasConstraintName("FK__order_det__order__787EE5A0");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__order_det__produ__10566F31");
+                .HasConstraintName("FK_order_details_product");
+        });
+
+        modelBuilder.Entity<OrderPlan>(entity =>
+        {
+            entity.HasKey(e => e.OrderId);
+
+            entity.ToTable("order_plans");
+
+            entity.Property(e => e.OrderId)
+                .ValueGeneratedNever()
+                .HasColumnName("order_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.PlanId).HasColumnName("plan_id");
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("price");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+            entity.Property(e => e.VoucherId).HasColumnName("voucher_id");
+
+            entity.HasOne(d => d.Plan).WithMany(p => p.OrderPlans)
+                .HasForeignKey(d => d.PlanId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_order_plans_plans");
+
+            entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.OrderPlans)
+                .HasForeignKey(d => d.Username)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_order_plans_userNm");
+
+            entity.HasOne(d => d.Voucher).WithMany(p => p.OrderPlans)
+                .HasForeignKey(d => d.VoucherId)
+                .HasConstraintName("FK_order_plans_vouchers");
         });
 
         modelBuilder.Entity<OrdersExchange>(entity =>
         {
-            entity.HasKey(e => e.OrderExchangeId).HasName("PK__orders_e__46B9A428B9F6A7C2");
+            entity.HasKey(e => e.OrderExchangeId).HasName("PK__orders_e__46B9A428FE3A157E");
 
             entity.ToTable("orders_exchanges");
 
@@ -414,17 +544,17 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.Exchange).WithMany(p => p.OrdersExchanges)
                 .HasForeignKey(d => d.ExchangeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__orders_ex__excha__282DF8C2");
+                .HasConstraintName("FK__orders_ex__excha__7C4F7684");
 
             entity.HasOne(d => d.Queue).WithMany(p => p.OrdersExchanges)
                 .HasForeignKey(d => d.QueueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__orders_ex__queue__29221CFB");
+                .HasConstraintName("FK__orders_ex__queue__7D439ABD");
         });
 
         modelBuilder.Entity<Plan>(entity =>
         {
-            entity.HasKey(e => e.PlanId).HasName("PK__plans__BE9F8F1D51020946");
+            entity.HasKey(e => e.PlanId).HasName("PK__plans__BE9F8F1DF40B90D0");
 
             entity.ToTable("plans");
 
@@ -463,18 +593,19 @@ public partial class BBExTradingFloorContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__products__47027DF5EFFA67E0");
-
             entity.ToTable("products");
 
             entity.Property(e => e.ProductId)
-                .ValueGeneratedNever()
+                .HasMaxLength(255)
                 .HasColumnName("product_id");
             entity.Property(e => e.CategoryId).HasColumnName("category_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Discount)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("discount");
             entity.Property(e => e.IsActive)
                 .HasDefaultValue(true)
                 .HasColumnName("is_active");
@@ -485,6 +616,9 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.ShortDescription)
+                .HasMaxLength(500)
+                .HasColumnName("short_description");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -498,21 +632,21 @@ public partial class BBExTradingFloorContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("FK__products__catego__6FE99F9F");
+                .HasConstraintName("FK__products__catego__5BE2A6F2");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Products)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__products__userna__71D1E811");
+                .HasConstraintName("FK__products__userna__5CD6CB2B");
 
             entity.HasOne(d => d.Wishlist).WithMany(p => p.Products)
                 .HasForeignKey(d => d.WishlistId)
-                .HasConstraintName("FK__products__wishli__70DDC3D8");
+                .HasConstraintName("FK__products__wishli__5DCAEF64");
         });
 
         modelBuilder.Entity<Queue>(entity =>
         {
-            entity.HasKey(e => e.QueueId).HasName("PK__queues__2294FA6ED3FD717A");
+            entity.HasKey(e => e.QueueId).HasName("PK__queues__2294FA6E701A1821");
 
             entity.ToTable("queues");
 
@@ -528,16 +662,16 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.BlindBox).WithMany(p => p.Queues)
                 .HasForeignKey(d => d.BlindBoxId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__queues__blind_bo__25518C17");
+                .HasConstraintName("FK__queues__blind_bo__60A75C0F");
 
             entity.HasOne(d => d.Exchange).WithMany(p => p.Queues)
                 .HasForeignKey(d => d.ExchangeId)
-                .HasConstraintName("FK__queues__exchange__245D67DE");
+                .HasConstraintName("FK__queues__exchange__619B8048");
         });
 
         modelBuilder.Entity<Report>(entity =>
         {
-            entity.HasKey(e => e.ReportId).HasName("PK__reports__779B7C587BD23CFE");
+            entity.HasKey(e => e.ReportId).HasName("PK__reports__779B7C58DE93213A");
 
             entity.ToTable("reports");
 
@@ -570,12 +704,12 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Reports)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__reports__usernam__6A30C649");
+                .HasConstraintName("FK__reports__usernam__66603565");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__reviews__60883D9010C2352E");
+            entity.HasKey(e => e.ReviewId).HasName("PK__reviews__60883D904A75BBC5");
 
             entity.ToTable("reviews");
 
@@ -599,20 +733,15 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("username");
 
-            entity.HasOne(d => d.Product).WithMany(p => p.Reviews)
-                .HasForeignKey(d => d.ProductId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__reviews__product__7B5B524B");
-
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.Username)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__reviews__usernam__7A672E12");
+                .HasConstraintName("FK__reviews__usernam__6C190EBB");
         });
 
         modelBuilder.Entity<SystemConfig>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__system_c__3213E83FD2A9EC83");
+            entity.HasKey(e => e.Id).HasName("PK__system_c__3213E83FE4E8673E");
 
             entity.ToTable("system_config");
 
@@ -644,11 +773,9 @@ public partial class BBExTradingFloorContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserName).HasName("PK__users__66DCF95D5CE3CAF5");
+            entity.HasKey(e => e.UserName).HasName("PK__users__66DCF95D9C3A1FBE");
 
             entity.ToTable("users");
-
-            entity.HasIndex(e => e.Email, "UQ_users_email").IsUnique();
 
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
@@ -674,6 +801,9 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(50)
                 .HasColumnName("phone_number");
+            entity.Property(e => e.PlanExpired)
+                .HasColumnType("datetime")
+                .HasColumnName("plan_expired");
             entity.Property(e => e.PlanId).HasColumnName("plan_id");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -682,11 +812,15 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("updated_by");
+
+            entity.HasOne(d => d.Plan).WithMany(p => p.Users)
+                .HasForeignKey(d => d.PlanId)
+                .HasConstraintName("FK__users__plan_id__35BCFE0A");
         });
 
         modelBuilder.Entity<Voucher>(entity =>
         {
-            entity.HasKey(e => e.VoucherId).HasName("PK__vouchers__80B6FFA8C03C01F7");
+            entity.HasKey(e => e.VoucherId).HasName("PK__vouchers__80B6FFA85A5E5723");
 
             entity.ToTable("vouchers");
 
@@ -721,7 +855,88 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.Vouchers)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__vouchers__order___160F4887");
+                .HasConstraintName("FK__vouchers__order___71D1E811");
+        });
+
+        modelBuilder.Entity<VwBlindBoxDisplay>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_BlindBox_Display");
+
+            entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
+            entity.Property(e => e.FirstName).HasColumnName("first_name");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.LastName).HasColumnName("last_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
+        });
+
+        modelBuilder.Entity<VwCartDisplay>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Cart_Display");
+
+            entity.Property(e => e.CartCreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("cart_created_at");
+            entity.Property(e => e.CartId).HasColumnName("cart_id");
+            entity.Property(e => e.CartUpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("cart_updated_at");
+            entity.Property(e => e.CustomerUsername)
+                .HasMaxLength(50)
+                .HasColumnName("customer_username");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("price");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.ProductName)
+                .HasMaxLength(255)
+                .HasColumnName("product_name");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.TotalPrice)
+                .HasColumnType("decimal(21, 2)")
+                .HasColumnName("total_price");
+        });
+
+        modelBuilder.Entity<VwImageBlindBox>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Image_BlindBox");
+
+            entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
+            entity.Property(e => e.ImageId).HasColumnName("image_id");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+        });
+
+        modelBuilder.Entity<VwImageProduct>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Image_Product");
+
+            entity.Property(e => e.ImageId).HasColumnName("image_id");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.ProductId)
+                .HasMaxLength(255)
+                .HasColumnName("product_id");
         });
 
         modelBuilder.Entity<VwPlan>(entity =>
@@ -739,6 +954,50 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
+        });
+
+        modelBuilder.Entity<VwProductDisplay>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Product_Display");
+
+            entity.Property(e => e.AverageRating).HasColumnName("average_rating");
+            entity.Property(e => e.ChildCategoryName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("child_category_name");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Discount)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("discount");
+            entity.Property(e => e.ParentCategoryName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("parent_category_name");
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("price");
+            entity.Property(e => e.ProductId)
+                .HasMaxLength(255)
+                .HasColumnName("product_id");
+            entity.Property(e => e.ProductName)
+                .HasMaxLength(255)
+                .HasColumnName("product_name");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.ShortDescription)
+                .HasMaxLength(500)
+                .HasColumnName("short_description");
+            entity.Property(e => e.TotalOrders).HasColumnName("total_orders");
+            entity.Property(e => e.TotalReviews).HasColumnName("total_reviews");
+            entity.Property(e => e.TotalSold).HasColumnName("total_sold");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
         });
 
         modelBuilder.Entity<VwUserAddress>(entity =>
@@ -827,7 +1086,7 @@ public partial class BBExTradingFloorContext : DbContext
 
         modelBuilder.Entity<Wishlist>(entity =>
         {
-            entity.HasKey(e => e.WishlistId).HasName("PK__wishlist__6151514E63DF3436");
+            entity.HasKey(e => e.WishlistId).HasName("PK__wishlist__6151514E2D8B046E");
 
             entity.ToTable("wishlists");
 

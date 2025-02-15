@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class Review
 {
@@ -20,8 +20,6 @@ public partial class Review
     public DateTime? UpdatedAt { get; set; }
 
     public bool? IsActive { get; set; }
-
-    public virtual Product Product { get; set; } = null!;
 
     public virtual User UsernameNavigation { get; set; } = null!;
 }

@@ -3,31 +3,33 @@ using System.Collections.Generic;
 
 namespace Client.Models;
 
-public partial class Address
+public partial class OrderPlan
 {
-    public Guid AddressId { get; set; }
+    public Guid OrderId { get; set; }
 
     public string Username { get; set; } = null!;
 
-    public string? AddressLine { get; set; }
+    public Guid PlanId { get; set; }
 
-    public string? Ward { get; set; }
-
-    public string? City { get; set; }
-
-    public string? District { get; set; }
+    public byte Status { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
     public string? CreatedBy { get; set; }
 
-    public bool? IsActive { get; set; }
-
     public DateTime? UpdatedAt { get; set; }
 
     public string? UpdatedBy { get; set; }
 
-    public string? Province { get; set; }
+    public bool? IsActive { get; set; }
+
+    public decimal Price { get; set; }
+
+    public Guid? VoucherId { get; set; }
+
+    public virtual Plan Plan { get; set; } = null!;
 
     public virtual User UsernameNavigation { get; set; } = null!;
+
+    public virtual Voucher? Voucher { get; set; }
 }

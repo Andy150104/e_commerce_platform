@@ -1,4 +1,5 @@
 using Client.Controllers;
+using Client.Models;
 using Client.Models.Helper;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using server.Logics.Commons;
-using server.Models;
-using Server.Utils.Consts;
 
 namespace server.Controllers.V1.UserRegisterScreen;
 

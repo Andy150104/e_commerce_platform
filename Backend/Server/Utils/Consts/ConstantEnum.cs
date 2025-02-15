@@ -15,4 +15,16 @@ public static partial class ConstantEnum
         Success = 1,
         Failure = 0,
     }
+    
+    public enum MoneyUnit
+    {
+        VNĐ,
+        USD,
+        EUR,
+        JPY,
+        GBP,
+        CNY,
+        KRW,
+        AUD,
+    }
 }
