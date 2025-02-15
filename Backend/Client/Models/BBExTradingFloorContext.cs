@@ -801,7 +801,10 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("updated_at");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
-                .HasColumnName("updated_by");
+                .HasColumnName("updated_by");       
+            entity.Property(e => e.PlanExpired)
+                .HasColumnType("datetime")
+                .HasColumnName("plan_expired");
 
             entity.HasOne(d => d.Plan).WithMany(p => p.Users)
                 .HasForeignKey(d => d.PlanId)

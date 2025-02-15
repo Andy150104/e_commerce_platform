@@ -33,6 +33,8 @@ public partial class User
 
     public string? LastName { get; set; }
 
+    public DateTime? PlanExpired { get; set; }
+
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
     public virtual ICollection<BlindBox> BlindBoxes { get; set; } = new List<BlindBox>();

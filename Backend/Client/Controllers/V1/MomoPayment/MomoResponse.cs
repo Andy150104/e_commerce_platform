@@ -8,6 +8,7 @@ namespace Client.Controllers.V1.MomoServices
 
     public class MomoExecuteResponseModel
     {
+        public string ErrorCode { get; set; }
         public string OrderId { get; set; }
         public string Amount { get; set; }
         public string FullName { get; set; }

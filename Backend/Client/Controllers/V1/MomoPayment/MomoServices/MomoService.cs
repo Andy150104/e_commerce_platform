@@ -18,7 +18,7 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
         public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(MomoExecuteResponseModel model)
         {
             model.OrderId = DateTime.UtcNow.Ticks.ToString();
-            model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
+            model.OrderInfo = model.FullName + "_" + model.OrderInfo;
             var rawData =
                 $"partnerCode={_options.Value.PartnerCode}" +
                 $"&accessKey={_options.Value.AccessKey}" +
@@ -60,15 +60,18 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
 
         public MomoExecuteResponseModel PaymentExecuteAsync(IQueryCollection collection)
         {
+            var errorCode = collection.First(s => s.Key == "errorCode").Value;
             var amount = collection.First(s => s.Key == "amount").Value;
             var orderInfo = collection.First(s => s.Key == "orderInfo").Value;
             var orderId = collection.First(s => s.Key == "orderId").Value;
-
+            var res = orderInfo.ToString().Split('_');
             return new MomoExecuteResponseModel()
             {
+                ErrorCode = errorCode,
+                FullName = res[1],
                 Amount = amount,
-                OrderId = orderId,
-                OrderInfo = orderInfo
+                OrderId = res[0],
+                OrderInfo = res[2]
             };
         }
 
