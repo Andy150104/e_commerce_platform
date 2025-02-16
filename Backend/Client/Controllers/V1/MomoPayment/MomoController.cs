@@ -1,5 +1,6 @@
 ﻿using Client.Controllers.V1.MomoPayment.MomoServices;
 using Client.Models.Helper;
+using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,13 +40,17 @@ namespace Client.Controllers.V1.MomoServices
                 {
                     _appDbContext.OrderPlans.Remove(orderPlan);
                     _appDbContext.SaveChanges();
+                    return BadRequest();
                 }
             }
             using (var transaction = _appDbContext.Database.BeginTransaction())
             {
+                orderPlan.Status = (byte)OrderPlansEnum.Success;
+                orderPlan.Description = response.TransactionId;
                 userName.PlanId = orderPlan.PlanId;
                 userName.PlanExpired = DateTime.Now.AddMonths(plan.DurationMonths);
                 _appDbContext.Users.Update(userName);
+                _appDbContext.OrderPlans.Update(orderPlan);
                 _appDbContext.SaveChanges();
                 transaction.Commit();   
             }

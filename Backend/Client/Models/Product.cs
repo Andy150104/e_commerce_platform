@@ -31,6 +31,8 @@ public partial class Product
 
     public decimal? Discount { get; set; }
 
+    public string? ShortDescription { get; set; }
+
     public virtual Category? Category { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();

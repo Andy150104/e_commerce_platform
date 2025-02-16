@@ -100,7 +100,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
                 if (returnValue.Success && !request.IsOnlyValidation) returnValue = Exec(request, transaction);
             }
         }
-        catch (Exception e)
+            catch (Exception e)
         {
             return AbstractFunction<T, U, V>.GetReturnValue(returnValue, logger, e, appDbContext);
         }

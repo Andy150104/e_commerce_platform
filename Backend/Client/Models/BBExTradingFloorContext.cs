@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Client.Models;
 
 public partial class BBExTradingFloorContext : DbContext
 {
     private readonly IConfiguration _configuration;
-
     public BBExTradingFloorContext()
     {
     }
@@ -53,6 +51,8 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<Queue> Queues { get; set; }
 
+    public virtual DbSet<RefundPlanRequest> RefundPlanRequests { get; set; }
+
     public virtual DbSet<Report> Reports { get; set; }
 
     public virtual DbSet<Review> Reviews { get; set; }
@@ -66,6 +66,8 @@ public partial class BBExTradingFloorContext : DbContext
     public virtual DbSet<VwBlindBoxDisplay> VwBlindBoxDisplays { get; set; }
 
     public virtual DbSet<VwCartDisplay> VwCartDisplays { get; set; }
+
+    public virtual DbSet<VwImageBlindBox> VwImageBlindBoxes { get; set; }
 
     public virtual DbSet<VwImageProduct> VwImageProducts { get; set; }
 
@@ -82,12 +84,8 @@ public partial class BBExTradingFloorContext : DbContext
     public virtual DbSet<Wishlist> Wishlists { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=database.techtheworld.id.vn;Database=BlindBagEcommerce;User Id=abc;Password=B82E3D33-F7B4-46F7-AAF8-6F84B826524A;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -493,6 +491,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
+            entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.PlanId).HasColumnName("plan_id");
             entity.Property(e => e.Price)
@@ -612,6 +611,9 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.ShortDescription)
+                .HasMaxLength(500)
+                .HasColumnName("short_description");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -646,20 +648,68 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.QueueId)
                 .ValueGeneratedNever()
                 .HasColumnName("queue_id");
-            entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
+            entity.Property(e => e.Description).HasMaxLength(255).HasColumnName("description");
             entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
-
-            entity.HasOne(d => d.BlindBox).WithMany(p => p.Queues)
-                .HasForeignKey(d => d.BlindBoxId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__queues__blind_bo__60A75C0F");
-
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
             entity.HasOne(d => d.Exchange).WithMany(p => p.Queues)
                 .HasForeignKey(d => d.ExchangeId)
                 .HasConstraintName("FK__queues__exchange__619B8048");
+        });
+
+        modelBuilder.Entity<RefundPlanRequest>(entity =>
+        {
+            entity.HasKey(e => e.RefundRequests);
+
+            entity.ToTable("refundPlanRequests");
+
+            entity.Property(e => e.RefundRequests)
+                .ValueGeneratedNever()
+                .HasColumnName("refundRequests");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.OrderPlanId).HasColumnName("order_Plan_Id");
+            entity.Property(e => e.Reason)
+                .HasMaxLength(255)
+                .HasColumnName("reason");
+            entity.Property(e => e.ResultCode).HasColumnName("result_code");
+            entity.Property(e => e.ResultResponse)
+                .HasMaxLength(255)
+                .HasColumnName("result_response");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.HasOne(d => d.OrderPlan).WithMany(p => p.RefundPlanRequests)
+                .HasForeignKey(d => d.OrderPlanId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_refundPlanRequests_order_plans");
         });
 
         modelBuilder.Entity<Report>(entity =>
@@ -794,6 +844,9 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(50)
                 .HasColumnName("phone_number");
+            entity.Property(e => e.PlanExpired)
+                .HasColumnType("datetime")
+                .HasColumnName("plan_expired");
             entity.Property(e => e.PlanId).HasColumnName("plan_id");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -801,10 +854,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("updated_at");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
-                .HasColumnName("updated_by");       
-            entity.Property(e => e.PlanExpired)
-                .HasColumnType("datetime")
-                .HasColumnName("plan_expired");
+                .HasColumnName("updated_by");
 
             entity.HasOne(d => d.Plan).WithMany(p => p.Users)
                 .HasForeignKey(d => d.PlanId)
@@ -864,12 +914,11 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
-            entity.Property(e => e.CreatorUsername)
-                .HasMaxLength(50)
-                .HasColumnName("creator_username");
             entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
+            entity.Property(e => e.FirstName).HasColumnName("first_name");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.LastName).HasColumnName("last_name");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -907,6 +956,17 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.TotalPrice)
                 .HasColumnType("decimal(21, 2)")
                 .HasColumnName("total_price");
+        });
+
+        modelBuilder.Entity<VwImageBlindBox>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Image_BlindBox");
+
+            entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
+            entity.Property(e => e.ImageId).HasColumnName("image_id");
+            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
         });
 
         modelBuilder.Entity<VwImageProduct>(entity =>
@@ -954,7 +1014,9 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.Discount)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("discount");
             entity.Property(e => e.ParentCategoryName)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -969,7 +1031,12 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("product_name");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.ShortDescription)
+                .HasMaxLength(500)
+                .HasColumnName("short_description");
+            entity.Property(e => e.TotalOrders).HasColumnName("total_orders");
             entity.Property(e => e.TotalReviews).HasColumnName("total_reviews");
+            entity.Property(e => e.TotalSold).HasColumnName("total_sold");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");

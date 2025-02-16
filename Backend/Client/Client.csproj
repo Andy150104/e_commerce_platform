@@ -39,6 +39,7 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <None Include="Controllers\V1\OPS\OPSAddPlanRefundResponse.cs" />
       <Content Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

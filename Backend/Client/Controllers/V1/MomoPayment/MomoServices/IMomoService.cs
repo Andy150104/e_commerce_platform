@@ -6,5 +6,6 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
     {
         Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(MomoExecuteResponseModel model);
         MomoExecuteResponseModel PaymentExecuteAsync(IQueryCollection collection);
+        Task<MomoRefundResponse> CreateRefundAsync(MomoRefundRequest model);
     }
 }
