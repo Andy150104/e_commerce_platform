@@ -14,7 +14,7 @@
         <button
           data-carousel-prev
           type="button"
-          class="absolute left-2 top-1/2 -translate-y-1/2 p-3 bg-white/50 rounded-full shadow-md hover:bg-white transition z-50"
+          class="absolute left-2 top-1/2 -translate-y-1/2 p-3 bg-white/50 rounded-full shadow-md hover:bg-white transition z-30"
           @click="handlePrev"
         >
           <svg class="h-6 w-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
@@ -24,7 +24,7 @@
         <button
           data-carousel-next
           type="button"
-          class="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-white/50 rounded-full shadow-md hover:bg-white transition z-50"
+          class="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-white/50 rounded-full shadow-md hover:bg-white transition z-30"
           @click="handleNext"
         >
           <svg class="h-6 w-6 text-gray-800" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">

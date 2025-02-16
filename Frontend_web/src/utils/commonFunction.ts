@@ -77,3 +77,11 @@ function getEnums(enumType: { [key: string]: string }) {
     value: option.value,
   }))
 }
+
+export function formatPhoneNumber(phoneNumber: string): string | null {
+  const cleanedNumber = phoneNumber.replace(/\D/g, '')
+  if (!/^0\d{9}$/.test(cleanedNumber)) {
+    return null
+  }
+  return '+84' + cleanedNumber.slice(1)
+}

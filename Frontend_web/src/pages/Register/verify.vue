@@ -32,7 +32,7 @@
                   <UserControlTextFieldLabel
                     :xml-column="xmlColumns.phoneNumber"
                     :maxlength="50"
-                    :disabled="true"
+                    :disabled="false"
                     :err-msg="fieldErrors.phoneNumber"
                     :placeholder="'123456789'"
                   />
@@ -230,6 +230,8 @@
   }
 
   onMounted(async () => {
+    const $router = useRouter();
+    await $router.isReady();
     if (await store.onVerify(String(route.query.key))) {
       isVerify.value = true
       updateFlags(false, true, false, false)
