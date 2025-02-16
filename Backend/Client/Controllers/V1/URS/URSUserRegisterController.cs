@@ -1,4 +1,5 @@
 using Client.Controllers;
+using Client.Models;
 using Client.Models.Helper;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using server.Logics.Commons;
-using server.Models;
 
 namespace server.Controllers.V1.UserRegisterScreen;
 
@@ -15,11 +15,15 @@ namespace server.Controllers.V1.UserRegisterScreen;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRegisterRequest, URSUserRegisterResponse, string>
+public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRegisterRequest, URSUserRegisterResponse, object>
 { 
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
     
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="context"></param>
     public URSUserRegisterController(AppDbContext context)
     {
         _context = context;
@@ -47,6 +51,7 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     protected override URSUserRegisterResponse Exec(URSUserRegisterRequest request, IDbContextTransaction transaction)
     {
         var response = new URSUserRegisterResponse() { Success = false };
+        
         // Decrypt Key
         var keyDecrypt = CommonLogic.DecryptText(request.Key, _context);
         string[] values = keyDecrypt.Split(",");
@@ -66,25 +71,16 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             response.SetMessage(MessageId.E11004);
             return response;
         }
-        
-        // Check plan
-        var planExist = _context.VwPlans.AsNoTracking().FirstOrDefault(x => x.PlanId == request.PlanId);
-        if (planExist == null)
-        {
-            response.SetMessage(MessageId.E00000, "Plan not found");
-            return response;
-        }
-
         var newUser = new User()
         {
             UserName = userName,
             Email = email,
-            FullName = lastName + " " + firstName,
+            FirstName = firstName,
+            LastName = lastName,
             PhoneNumber = request.PhoneNumber,
             Gender = request.Gender,
             BirthDate = DateOnly.Parse(request.BirthDay),
             ImageUrl = request.ImageUrl,
-            PlanId = planExist.PlanId,
         };
         // Add new user
         _context.Add(newUser);
@@ -96,7 +92,7 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             AddressLine = request.AddressLine,
             Ward = request.Ward,
             City = request.City,
-            Country = request.Country,
+            Province = request.Province,
             District = request.District,
         };
         _context.Add(newAddress);

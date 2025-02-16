@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class Plan
 {
     public Guid PlanId { get; set; }
 
-    public string PlanName { get; set; }
+    public string PlanName { get; set; } = null!;
 
     public string? Description { get; set; }
 
@@ -26,4 +26,8 @@ public partial class Plan
     public string? CreatedBy { get; set; }
 
     public string? UpdatedBy { get; set; }
+
+    public virtual ICollection<OrderPlan> OrderPlans { get; set; } = new List<OrderPlan>();
+
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

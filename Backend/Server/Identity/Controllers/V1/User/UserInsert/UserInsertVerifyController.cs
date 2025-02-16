@@ -1,6 +1,7 @@
 using Client.Controllers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using Server.Controllers;
@@ -37,7 +38,7 @@ public class UserInsertVerifyController : AbstractApiControllerNotToken<UserInse
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
+    [HttpPost]
     public override UserInsertVerifyResponse Post(UserInsertVerifyRequest request)
     {
         return Post(request, _context, logger, new UserInsertVerifyResponse());
@@ -59,7 +60,7 @@ public class UserInsertVerifyController : AbstractApiControllerNotToken<UserInse
         string userNameDecrypt = values[0];
         
         // Check user exists
-        var userExist = _context.VwUserVerifies.Any(x => x.UserName == userNameDecrypt);
+        var userExist = _context.VwUserVerifies.FirstOrDefault(x => x.UserName == userNameDecrypt);
         if (userExist == null)
         {
             response.SetMessage(MessageId.E11001);
@@ -69,6 +70,7 @@ public class UserInsertVerifyController : AbstractApiControllerNotToken<UserInse
         var userVerify = _userManager.FindByNameAsync(userNameDecrypt).Result;
         
         // Update information user
+        userVerify.Key = null;
         userVerify.LockoutEnd = null;
         userVerify.LockoutEnabled = false;
         userVerify.EmailConfirmed = true;

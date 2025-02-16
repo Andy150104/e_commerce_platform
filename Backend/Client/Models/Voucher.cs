@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class Voucher
 {
@@ -26,4 +26,6 @@ public partial class Voucher
     public string? UpdatedBy { get; set; }
 
     public virtual Order Order { get; set; } = null!;
+
+    public virtual ICollection<OrderPlan> OrderPlans { get; set; } = new List<OrderPlan>();
 }

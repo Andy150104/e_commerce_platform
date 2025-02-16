@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class OrderDetail
 {
@@ -9,7 +9,7 @@ public partial class OrderDetail
 
     public Guid OrderId { get; set; }
 
-    public Guid ProductId { get; set; }
+    public string ProductId { get; set; } = null!;
 
     public int Quantity { get; set; }
 

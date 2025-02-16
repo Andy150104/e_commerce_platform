@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class User
 {
@@ -13,23 +13,27 @@ public partial class User
 
     public string? ImageUrl { get; set; }
 
-    public string? FullName { get; set; }
-
     public DateOnly? BirthDate { get; set; }
 
     public byte? Gender { get; set; }
-    
-    public DateTime? CreatedAt { get; set; }
 
-    public string? CreatedBy { get; set; }
+    public Guid? PlanId { get; set; }
 
-    public bool? IsActive { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-    public DateTime? UpdatedAt { get; set; }
+    public string CreatedBy { get; set; } = null!;
 
-    public string? UpdatedBy { get; set; }
+    public bool IsActive { get; set; }
 
-    public Guid PlanId { get; set; }
+    public DateTime UpdatedAt { get; set; }
+
+    public string UpdatedBy { get; set; } = null!;
+
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
+
+    public DateTime? PlanExpired { get; set; }
 
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
@@ -41,7 +45,11 @@ public partial class User
 
     public virtual ICollection<Message> MessageSenders { get; set; } = new List<Message>();
 
+    public virtual ICollection<OrderPlan> OrderPlans { get; set; } = new List<OrderPlan>();
+
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual Plan? Plan { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
