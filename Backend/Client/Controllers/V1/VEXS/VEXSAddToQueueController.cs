@@ -1,4 +1,4 @@
-﻿ using Client.Controllers;
+﻿using Client.Controllers;
 using Client.Models.Helper;
 using Client.SystemClient;
 using Client.Utils.Consts;
@@ -49,14 +49,8 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
     {
         var response = new VEXSAddToQueueResponse() { Success = false };
         var userName = _context.IdentityEntity.UserName;
-        var checkImage = ImageValidationService.ImageCheck(request.ImageUrls, _context).Result;
-        if(!checkImage)
-        {
-            response.SetMessage("Invalid Images");
-            return response;
-        }
         var blindBoxPost = _context.Exchanges.FirstOrDefault(b => b.BlindBoxId == request.BlindBoxId);
-        if(blindBoxPost == null)
+        if (blindBoxPost == null)
         {
             response.SetMessage(MessageId.E11004);
             return response;
@@ -66,11 +60,9 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
             BlindBoxId = Guid.NewGuid(),
             Username = userName,
         };
-        blindBox.ImagesBlindBoxes = request.ImageUrls.Select(i => new Client.Models.ImagesBlindBox { BlindBoxId = blindBox.BlindBoxId, ImageId = Guid.NewGuid(), ImageUrl = i }).ToList();
-
-        var Queue = new Client.Models.Queue
+        var Queue = new Models.Queue
         {
-            BlindBoxId = blindBox.BlindBoxId,
+            Description = request.Message,
             ExchangeId = blindBoxPost.ExchangeId,
             QueueId = Guid.NewGuid(),
             Status = "Active"
