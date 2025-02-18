@@ -13,6 +13,12 @@ public partial class Cart
 
     public DateTime? UpdatedAt { get; set; }
 
+    public string CreatedBy { get; set; } = null!;
+
+    public string UpdatedBy { get; set; } = null!;
+
+    public bool IsActive { get; set; }
+
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
     public virtual User UsernameNavigation { get; set; } = null!;

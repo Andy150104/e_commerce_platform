@@ -140,12 +140,12 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
         var productDisplays = _context.VwProductDisplays.AsNoTracking();
         
         // Find by minimum price
-        if (minPrice.HasValue)
+        if (minPrice >= 0)
         {
             productDisplays = productDisplays.Where(p => p.Price >= minPrice);
         }
         // Find by maximum price
-        if (maxPrice.HasValue)
+        if (maxPrice > 0)
         {
             productDisplays = productDisplays.Where(p => p.Price <= maxPrice);
         }

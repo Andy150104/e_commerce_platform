@@ -3,13 +3,11 @@ using System.Collections.Generic;
 
 namespace Client.Models;
 
-public partial class CartItem
+public partial class WishlistItem
 {
-    public Guid CartItemId { get; set; }
+    public Guid WishlistItemId { get; set; }
 
-    public Guid CartId { get; set; }
-
-    public int Quantity { get; set; }
+    public Guid WishlistId { get; set; }
 
     public string ProductId { get; set; } = null!;
 
@@ -23,7 +21,7 @@ public partial class CartItem
 
     public string UpdatedBy { get; set; } = null!;
 
-    public virtual Cart Cart { get; set; } = null!;
-
     public virtual Product Product { get; set; } = null!;
+
+    public virtual Wishlist Wishlist { get; set; } = null!;
 }

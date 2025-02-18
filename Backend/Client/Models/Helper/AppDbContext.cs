@@ -43,7 +43,7 @@ public class AppDbContext : BBExTradingFloorContext
     /// <param name="updateFunctionId"></param>
     /// <param name="updateUser"></param>
     /// <param name="needLogicalDelete"></param>
-    private void SetCommonValue(string updateUser, bool needLogicalDelete = false)
+    private void SetCommonValue(string updateUser, bool needLogicalDelete = false, bool needUpdate = false)
     {
 
         // Register
@@ -97,6 +97,11 @@ public class AppDbContext : BBExTradingFloorContext
                 {
                     // Normal
                     modifiedEntity.IsActive = true;
+                    modifiedEntity.UpdatedBy = updateUser;
+                }
+
+                if (needUpdate)
+                {
                     modifiedEntity.UpdatedBy = updateUser;
                 }
                 modifiedEntity.UpdatedAt = now;

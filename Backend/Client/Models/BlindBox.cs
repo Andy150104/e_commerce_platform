@@ -25,8 +25,6 @@ public partial class BlindBox
 
     public virtual ICollection<ImagesBlindBox> ImagesBlindBoxes { get; set; } = new List<ImagesBlindBox>();
 
-    public virtual ICollection<Queue> Queues { get; set; } = new List<Queue>();
-
     public virtual User UsernameNavigation { get; set; } = null!;
 
     public virtual Wishlist? Wishlist { get; set; }
