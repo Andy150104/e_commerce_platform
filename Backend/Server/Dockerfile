@@ -1,29 +1,42 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
+﻿# ==============================
+# Stage 1: base (runtime)
+# ==============================
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
 WORKDIR /app
-EXPOSE 5090
-EXPOSE 7090
+
+# Lắng nghe tất cả địa chỉ IP trên cổng được chỉ định
+ENV ASPNETCORE_URLS=http://+:${PORT}
 
 
-# This stage is used to build the service project
+EXPOSE 8080
+EXPOSE 8081
+
+# ==============================
+# Stage 2: build (SDK)
+# ==============================
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Server/Server.csproj", "Server/"]
-RUN dotnet restore "./Server/Server.csproj"
-COPY . .
-WORKDIR "/src/Server"
-RUN dotnet build "./Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Copy file .csproj
+COPY ["Server.csproj", "."]
+RUN dotnet restore "Server.csproj"
+
+# Copy toàn bộ code
+COPY . .
+WORKDIR "/src"
+RUN dotnet build "Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+# ==============================
+# Stage 3: publish
+# ==============================
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# ==============================
+# Stage 4: final (runtime)
+# ==============================
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

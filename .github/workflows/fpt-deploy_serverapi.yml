@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy container app to Azure Web App - serverapi
 
 on:
@@ -14,24 +11,38 @@ jobs:
     runs-on: 'ubuntu-latest'
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v2
 
-    - name: Log in to registry
+    # Đăng nhập vào Azure Container Registry
+    - name: Log in to Azure Container Registry
       uses: docker/login-action@v2
       with:
-        registry: https://serverapi.azurecr.io/
-        username: ${{ secrets.AzureAppService_ContainerUsername_bcbd60fc0021497d8b870a5a950ce4a4 }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_b56244e33b804c4080ba1d3dab154af6 }}
+        registry: serverapi.azurecr.io
+        username: ${{ secrets.AzureAppService_ContainerUsername_b704e560923e49959ba6d54dd558dd73 }}
+        password: ${{ secrets.AzureAppService_ContainerPassword_677b46820c40450d8bc31d1c68ddd29c }}
 
+    # Chuyển toàn bộ repository name thành chữ thường
+    - name: Normalize Repository Name (Lowercase)
+      run: |
+        echo "LOWERCASE_USERNAME=$(echo '${{ secrets.AzureAppService_ContainerUsername_b704e560923e49959ba6d54dd558dd73 }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+    - name: Check file Server.csproj
+      run: ls -lR Backend
+    # Build và đẩy image lên Azure Container Registry
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
+        context: ./Backend/Server
+        file: ./Backend/Server/Dockerfile
         push: true
-        tags: serverapi.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_bcbd60fc0021497d8b870a5a950ce4a4 }}/server:${{ github.sha }}
-        file: ./Dockerfile
+        tags: serverapi.azurecr.io/${{ env.LOWERCASE_USERNAME }}/server:${{ github.sha }}
+        build-args: |
+          GIT_AUTH_TOKEN=${{ secrets.GIT_AUTH_TOKEN }}
+        secrets: |
+          id=GIT_AUTH_TOKEN,src=/tmp/docker-build-push-${{ github.run_id }}/git-auth-token
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,11 +52,14 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Deploy to Azure Web App
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'serverapi'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_452bfccf514a486b90cc2627de59af9f }}
-        images: 'serverapi.azurecr.io/${{ secrets.AzureAppService_ContainerUsername_bcbd60fc0021497d8b870a5a950ce4a4 }}/server:${{ github.sha }}'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_dc3745e8c8ea4e5c87aa98563f2ecf77 }}
+        images: serverapi.azurecr.io/${{ env.LOWERCASE_USERNAME }}/server:${{ github.sha }}
