@@ -1,24 +1,12 @@
-import type { AbstractApiResponseOfString } from '@PKG_API/@types'
+import type { AbstractApiResponseOfString, FPSUpdatePasswordRequest } from '@PKG_API/@types'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
-import { AuthAPI } from '@PKG_SRC/utils/auth/authClient'
-import { useApiServer, useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 import { useLoadingStore } from '../usercontrol/loadingStore'
+import { useApiServer } from '@PKG_SRC/utils/auth/authHttp'
 
 export const fieldsInitialize = {
-  userName: '',
-  password: '',
-  confirmPassword: '',
   email: '',
-  phoneNumber: '',
-  birthday: '',
-  firstName: '',
-  lastName: '',
-  gender: '1',
-  province: '',
-  district: '',
-  ward: '',
 }
 export type FormSchema = typeof fieldsInitialize
 
@@ -30,22 +18,23 @@ const fields = {
   ...veeValidateStateInitialize,
 }
 
-export type RegisterState = {
+export type UpdatePassState = {
   fields: typeof fields
-} & {
-  createFlgAccountInfo: boolean
+  createFlgUpdatePass: boolean
   createFlgPersonalInfo: boolean
   createFlgPlan: boolean
   createFlgComplete: boolean
+  uFPSUpdatePasswordRequest: FPSUpdatePasswordRequest
 }
 
-export const useRegisterStore = defineStore('Register', {
-  state: (): RegisterState => ({
+export const useUpdatePassStore = defineStore('UpdatePass', {
+  state: (): UpdatePassState => ({
     fields,
-    createFlgAccountInfo: false,
+    createFlgUpdatePass: false,
     createFlgPlan: false,
     createFlgPersonalInfo: false,
     createFlgComplete: false,
+    uFPSUpdatePasswordRequest: {} as FPSUpdatePasswordRequest,
   }),
   getters: {
     fieldValues: (state) => {
@@ -69,22 +58,19 @@ export const useRegisterStore = defineStore('Register', {
       await this.fields.validate()
       return this.fieldValid
     },
-    async RegisterUser() {
+    async updatePassword() {
+      // const validation: any = await this.fields.validate()
+      // if (validation.valid === false) return false
       const validation: any = await this.fields.validate()
       if (validation.valid === false) return false
-      const apiServer = useApiServer()
-      const formMessage = useFormMessageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+      const apiClient = useApiServer()
+      const formMessage = useFormMessageStore()
       const loadingStore = useLoadingStore()
-      loadingStore.LoadingChange(true)
-      const res = await apiServer.api.v1.UserInsert.$post({
+      const res = await apiClient.api.v1.FPSUpdatePassword.$post({
         body: {
           isOnlyValidation: false,
-          username: apiFieldValues.userName,
           email: apiFieldValues.email,
-          password: apiFieldValues.password,
-          firstName: apiFieldValues.firstName,
-          lastName: apiFieldValues.lastName,
         },
       })
       loadingStore.LoadingChange(false)
@@ -93,20 +79,6 @@ export const useRegisterStore = defineStore('Register', {
         return false
       }
       formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
-      return true
-    },
-    async onVerify(key: string) {
-      const apiServer = useApiServer()
-      const loadingStore = useLoadingStore()
-      loadingStore.LoadingChange(true)
-      const res = await apiServer.api.v1.UserVerifyKey.$post({
-        body: {
-          isOnlyValidation: true,
-          key: key,
-        },
-      })
-      loadingStore.LoadingChange(false)
-      if (!res.success) return false
       return true
     },
   },
