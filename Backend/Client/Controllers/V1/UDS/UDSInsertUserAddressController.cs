@@ -50,6 +50,8 @@ public class UDSInsertUserAddressController : AbstractApiController<UDSInsertUse
     /// <param name="transaction"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     protected override UDSInsertUserAddressResponse Exec(UDSInsertUserAddressRequest request, IDbContextTransaction transaction)
     {
         var response = new UDSInsertUserAddressResponse() { Success = false };

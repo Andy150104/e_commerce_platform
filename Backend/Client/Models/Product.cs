@@ -33,6 +33,8 @@ public partial class Product
 
     public string? ShortDescription { get; set; }
 
+    public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
     public virtual Category? Category { get; set; }
 
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
@@ -42,4 +44,6 @@ public partial class Product
     public virtual User UsernameNavigation { get; set; } = null!;
 
     public virtual Wishlist? Wishlist { get; set; }
+
+    public virtual ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
 }

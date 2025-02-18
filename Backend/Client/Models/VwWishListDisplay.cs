@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Client.Models;
 
-public partial class VwCartDisplay
+public partial class VwWishListDisplay
 {
-    public Guid CartId { get; set; }
+    public Guid WishlistId { get; set; }
 
     public string CustomerUsername { get; set; } = null!;
 
@@ -13,15 +13,9 @@ public partial class VwCartDisplay
 
     public string ProductName { get; set; } = null!;
 
-    public decimal Price { get; set; }
-
     public string? ShortDescription { get; set; }
 
-    public int Quantity { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
-    public decimal? TotalPrice { get; set; }
-
-    public DateTime? CartCreatedAt { get; set; }
-
-    public DateTime? CartUpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }
