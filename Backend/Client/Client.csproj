@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>server</RootNamespace>
+        <RootNamespace>Client</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -40,10 +40,6 @@
       <Content Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers\V1\UPS\" />
     </ItemGroup>
 
 </Project>

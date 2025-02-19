@@ -50,12 +50,13 @@ export default defineNuxtConfig({
 
   alias: {
     '@PKG_SRC': resolve(__dirname, './src'),
-    "@PKG_API": resolve(__dirname, './api'),
+    '@PKG_API': resolve(__dirname, './api'),
   },
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env['NUXT_PUBLIC_API_BASE_URL'] ?? '',
-      identityBaseUrl: process.env['NUXT_PUBLIC_IDENTITY_BASE_URL'] ?? '',
+      apiBaseUrl: process.env['NUXT_PUBLIC_API_BASE_URL'] ?? 'https://localhost:5092',
+      identityBaseUrl: process.env['NUXT_PUBLIC_IDENTITY_BASE_URL'] ?? 'https://localhost:5090',
+      clientSecret: 'SWD392-LamNN15-GROUP3-SPRING2025',
     },
   },
   compatibilityDate: '2025-01-09',

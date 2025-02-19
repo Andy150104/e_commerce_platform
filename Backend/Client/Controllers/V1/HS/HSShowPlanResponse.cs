@@ -1,7 +1,6 @@
-﻿using Client.Controllers;
-using server.Models;
+﻿using Client.Models;
 
-namespace server.Controllers.V1.HomeScreen
+namespace Client.Controllers.V1.HomeScreen
 {
     public class HSShowPlanResponse : AbstractApiResponse<List<VwPlan>>
     {

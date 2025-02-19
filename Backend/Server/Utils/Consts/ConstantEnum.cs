@@ -4,26 +4,27 @@ public static partial class ConstantEnum
 {
     public enum UserRole
     {
-        CUSTOMER,
-        SALE_EMPLOYEE,
-        PLANNED_CUSTOMER,	
-        OWNER,
+        Customer,
+        SaleEmployee,
+        PlannedCustomer,	
+        Owner,
     }
     
-    public enum OrderStatus
+    public enum Result
     {
-        Pending,
-        Processing,
-        Completed,
-        Cancelled,
+        Success = 1,
+        Failure = 0,
     }
     
-    public enum PaymentMethod
+    public enum MoneyUnit
     {
-        Cash,
-        CreditCard,
-        DebitCard,
-        BankTransfer,
+        VNĐ,
+        USD,
+        EUR,
+        JPY,
+        GBP,
+        CNY,
+        KRW,
+        AUD,
     }
-
 }

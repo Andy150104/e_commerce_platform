@@ -58,7 +58,7 @@ export const FIXED_LENGTH_ERROR = '0:{fixedLength}文字で入力してくださ
 export const CONFIRM_EMAIL = 'メールアドレス(確認)にはメールアドレスと同じ値を入力して下さい。'
 export const HALF_STRING_ERROR = '半角で入力してください。'
 export const CONFIRM_PASSWORD = 'パスワード(確認)にはパスワードと同じ値を入力して下さい。'
-export const CONFIRM_NEW_PASSWORD_ERROR = '「新しいパスワード（確認）」に誤りがあります。入力内容を確認してください。'
+export const CONFIRM_NEW_PASSWORD_ERROR = 'Password does not match'
 export const PASSWORD_SYMBOL_ERROR =
   'パスワードに使用できない文字が含まれています。\nパスワードは半角英数字と半角記号!@#$%&*+:?;/.のみを使用してください。'
 export const PASSWORD_COMBINE_ERROR = '	パスワードには半角英字(大文字)、半角英字(小文字)、半角数字のうち2つ以上を組み合わせてください。'

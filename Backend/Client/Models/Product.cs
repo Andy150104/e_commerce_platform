@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace server.Models;
+namespace Client.Models;
 
 public partial class Product
 {
-    public Guid ProductId { get; set; }
+    public string ProductId { get; set; } = null!;
 
     public string? Description { get; set; }
 
@@ -29,15 +29,21 @@ public partial class Product
 
     public string Username { get; set; } = null!;
 
+    public decimal? Discount { get; set; }
+
+    public string? ShortDescription { get; set; }
+
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
     public virtual Category? Category { get; set; }
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+    public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
-    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual User UsernameNavigation { get; set; } = null!;
 
     public virtual Wishlist? Wishlist { get; set; }
+
+    public virtual ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
 }

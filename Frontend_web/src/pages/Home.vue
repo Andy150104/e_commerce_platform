@@ -9,7 +9,9 @@
         >
           <div class="absolute inset-0 pointer-events-none z-0 gradient-effect" ref="gradientEffect"></div>
           <div class="max-w-3xl mx-auto text-center relative z-10">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4 animate-fade-up animate-duration-1000 animate-delay-500">Discover, Trade, and Collect Your Unique Accessories</h1>
+            <h1 class="text-4xl font-bold text-gray-900 mb-4 animate-fade-up animate-duration-1000 animate-delay-500">
+              Discover, Trade, and Collect Your Unique Accessories
+            </h1>
             <p class="text-lg text-gray-700 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">
               Unlock a world of surprises with our exclusive blind boxes. Trade and collect accessories effortlessly through our seamless platform
             </p>
@@ -73,10 +75,12 @@
   import { useTestStore } from '@PKG_SRC/stores/Modules/Mypg/testStore'
   import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
   import Carousel from '@PKG_SRC/components/Carousel/Carousel.vue'
+  import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
   const gradientCard = ref<HTMLElement | null>(null)
   const gradientEffect = ref<HTMLElement | null>(null)
   const store = useMypgStore()
+  const formMessageStore = useFormMessageStore()
   const testStore = useTestStore()
 
   const onMouseMove = (e: MouseEvent) => {
@@ -93,6 +97,7 @@
   onMounted(async () => {
     store.GetImageList()
     store.GetProductList()
+    formMessageStore.SetMessageId('9000')
     await nextTick()
     if (gradientCard.value && gradientEffect.value) {
       gradientCard.value.addEventListener('mousemove', onMouseMove)

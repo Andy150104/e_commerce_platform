@@ -1,10 +1,10 @@
-import { Gender } from "@PKG_SRC/types/enums/constantBackend"
-import type { selectItem } from "@PKG_SRC/types/enums/constantFrontend"
+import { Gender } from '@PKG_SRC/types/enums/constantBackend'
+import type { selectItem } from '@PKG_SRC/types/enums/constantFrontend'
 
 export function sleepByPromise(millisecond: number) {
   return new Promise((resolve) => setTimeout(resolve, millisecond))
 }
-export function splitText(text: string){
+export function splitText(text: string) {
   return text.split(' ')
 }
 
@@ -54,7 +54,7 @@ export function createErrorFields<T extends object>(fieldsInitialize: T): Record
 
   return result as Record<keyof T, string>
 }
-export type MasterName = "Gender"
+export type MasterName = 'Gender'
 
 export async function getSelectComponentData(masterName: MasterName, _params: any) {
   switch (masterName) {
@@ -76,4 +76,12 @@ function getEnums(enumType: { [key: string]: string }) {
     label: option.text.replace(/^_/, ''),
     value: option.value,
   }))
+}
+
+export function formatPhoneNumber(phoneNumber: string): string | null {
+  const cleanedNumber = phoneNumber.replace(/\D/g, '')
+  if (!/^0\d{9}$/.test(cleanedNumber)) {
+    return null
+  }
+  return '+84' + cleanedNumber.slice(1)
 }

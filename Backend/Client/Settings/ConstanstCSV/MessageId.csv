@@ -1,4 +1,5 @@
 Message content, MessageId, Message, Example message,
+Information error,I00000, {0},,
 Processing successful,I00001,{0} Processing completed successfully. {1},,
 Input error,I10000, No data exists that matches the entered conditions. ,,
 Processing successful (for Select controller), I99999, Processing completed successfully. ,,

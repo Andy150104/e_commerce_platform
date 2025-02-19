@@ -20,7 +20,7 @@
   import { _padding } from '#tailwind-config/theme'
   import { className } from '@PKG_SRC/utils/class/className'
   import LabelItem from '../Basecontrol/LabelItem.vue'
-import BaseControlTextField from '../Basecontrol/BaseControlTextField.vue'
+  import BaseControlTextField from '../Basecontrol/BaseControlTextField.vue'
   const props = defineProps({
     textModel: {
       type: String,
@@ -72,7 +72,7 @@ import BaseControlTextField from '../Basecontrol/BaseControlTextField.vue'
       type: String,
       required: false,
       default: 'text',
-    }
+    },
   })
   interface Emits {
     (e: 'on-blur'): void

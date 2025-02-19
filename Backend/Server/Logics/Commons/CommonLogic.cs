@@ -1,7 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Server.Controllers;
 using Server.Models.Helper;
 using Server.Utils.Consts;
 
@@ -48,7 +47,6 @@ public static class CommonLogic
                     using (StreamWriter sw = new StreamWriter(cs))
                     {
                         sw.Write(beforeEncrypt);
-                        Console.WriteLine(beforeEncrypt);
                     }
                 }
                 return Convert.ToBase64String(ms.ToArray());

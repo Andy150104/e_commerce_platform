@@ -1,6 +1,6 @@
 ﻿using Client.Controllers;
 
-namespace server.Controllers.V1.HomeScreen
+namespace Client.Controllers.V1.HomeScreen
 {
     public class HSShowPlanRequest : AbstractApiRequest
     {

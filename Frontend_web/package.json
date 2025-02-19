@@ -10,8 +10,9 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .ts,.js,.vue .",
     "format": "prettier --write .",
-    "generate-api": "openapi2aspida",
+    "generate-api": "npx openapi2aspida -i=./openapi.json",
     "generate-api-auth": "npx openapi2aspida -i=./openapi-auth.json -o=src/utils/auth/define",
+    "generate-api-address": "npx openapi2aspida -i=./openapi-address.json -o=src/utils/address/define",
     "start": "nuxt start"
   },
   "dependencies": {
