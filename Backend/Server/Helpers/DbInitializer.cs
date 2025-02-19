@@ -1,4 +1,3 @@
-using client.Models;
 using Microsoft.AspNetCore.Identity;
 using Server.Models;
 using Server.Utils.Consts;

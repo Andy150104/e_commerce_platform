@@ -54,16 +54,17 @@ public class FPSVerifyKeyController: AbstractApiAsyncControllerNotToken<FPSVerif
         protected override async Task<FPSVerifyKeyResponse> Exec(FPSVerifyKeyRequest request, IDbContextTransaction transaction)
         {
             var response = new FPSVerifyKeyResponse() { Success = false };
-            
-            // Decrypt
-            var userName = CommonLogic.DecryptText(request.Key, _context);
+
+        var encodedKey = Uri.UnescapeDataString(request.Key);
+
+        // Decrypt
+        var userName = CommonLogic.DecryptText(encodedKey, _context);
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null)
             {
                 response.SetMessage(MessageId.E11004);
                 return response;
             }
-
             // Key Check
             if (user.Key == null)
             {

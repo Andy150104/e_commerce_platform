@@ -1,8 +1,7 @@
 using System.Data;
-using client.Models;
+using Server.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Server.Systemserver;
 using Server.Utils.Consts;
 

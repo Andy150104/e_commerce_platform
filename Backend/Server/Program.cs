@@ -1,5 +1,4 @@
 using System.Net;
-using client.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Server.Models.Helper;
@@ -56,7 +55,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     // User settings.
     options.User.AllowedUserNameCharacters =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-    options.User.RequireUniqueEmail = false;
+    //options.User.RequireUniqueEmail = false;
 });
 
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();

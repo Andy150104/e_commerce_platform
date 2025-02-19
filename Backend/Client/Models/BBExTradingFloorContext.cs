@@ -89,7 +89,7 @@ public partial class BBExTradingFloorContext : DbContext
     {
         IConfiguration config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json",true,true)
+            .AddJsonFile("appsettings.json", true, true)
             .Build();
         var strConn = config["ConnectionStrings:DefaultConnection"];
 
@@ -718,7 +718,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasForeignKey(d => d.ExchangeId)
                 .HasConstraintName("FK__queues__exchange__619B8048");
         });
-
+    
         modelBuilder.Entity<RefundPlanRequest>(entity =>
         {
             entity.HasKey(e => e.RefundRequests);
@@ -1281,6 +1281,7 @@ public partial class BBExTradingFloorContext : DbContext
 
         OnModelCreatingPartial(modelBuilder);
     }
+
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

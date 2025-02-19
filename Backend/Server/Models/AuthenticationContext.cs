@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Server.Models;
 
-namespace client.Models;
+namespace Server.Models;
 
 public partial class AuthenticationContext : DbContext
 {

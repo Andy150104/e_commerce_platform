@@ -9,7 +9,7 @@ using Server.Models.Helper;
 
 #nullable disable
 
-namespace client.Migrations
+namespace Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20250129170501_InitialCreate")]

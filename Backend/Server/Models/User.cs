@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using client.Models;
+
 using Microsoft.AspNetCore.Identity;
 
 namespace Server.Models;

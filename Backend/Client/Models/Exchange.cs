@@ -7,9 +7,9 @@ public partial class Exchange
 {
     public Guid ExchangeId { get; set; }
 
-    public Guid BlindBoxId { get; set; }
+    public string? Status { get; set; }
 
-    public byte? Status { get; set; }
+    public Guid BlindBoxId { get; set; }
 
     public bool? IsActive { get; set; }
 

@@ -25,11 +25,12 @@ public static class FPSUpdatePasswordSendMail
         // Get the mail template
         var mailTemplate = context.VwEmailTemplateVerifyOtps.AsNoTracking().FirstOrDefault(e => e.ScreenName  == "OTP");
         var mailTitle = mailTemplate.EmailTitle.Replace("${title}", mailTemplate.EmailTitle);
-        
+
         // Replace the variables in the mail template
+        var encodedKey = Uri.EscapeDataString(key);
         var replacements = new Dictionary<string, string>
         {
-            { "${key}", key },
+            { "${key}", $"http://localhost:3000/ForgotPass/verify?key={encodedKey}" },
         };
 
         // Replace the variables in the mail template
