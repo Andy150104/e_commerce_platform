@@ -7,7 +7,7 @@ import { useApiServer } from '@PKG_SRC/utils/auth/authHttp'
 
 export const fieldsInitialize = {
   password: '',
-  otp : '',
+  key : '',
 }
 export type FormSchema = typeof fieldsInitialize
 
@@ -22,18 +22,12 @@ const fields = {
 export type VerifyPassState = {
   fields: typeof fields
   createFlgVerifyPass: boolean
-  createFlgPersonalInfo: boolean
-  createFlgPlan: boolean
-  createFlgComplete: boolean
 }
 
 export const useVerifyPasswordStore = defineStore('VerifyPass', {
   state: (): VerifyPassState => ({
     fields,
     createFlgVerifyPass: false,
-    createFlgPlan: false,
-    createFlgPersonalInfo: false,
-    createFlgComplete: false,
   }),
   getters: {
     fieldValues: (state) => {
@@ -69,7 +63,7 @@ export const useVerifyPasswordStore = defineStore('VerifyPass', {
       const res = await apiClient.api.v1.FPSVerifyKey.$post({
         body: {
           isOnlyValidation: false,
-          key: apiFieldValues.otp,
+          key: apiFieldValues.key,
           newPassWord: apiFieldValues.password,
         },
       })

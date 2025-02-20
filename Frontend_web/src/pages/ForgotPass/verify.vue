@@ -38,7 +38,7 @@
       </div>
       <div v-else>
         <section class="bg-white dark:bg-gray-900">
-          <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid lg:grid-cols-2 gap-8 lg:gap-16">
+          <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 grid gap-8 lg:gap-16">
             <div class="flex flex-col justify-center">
               <h1 class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
                 Password changed successfully!!!!
@@ -78,13 +78,14 @@
   import { useRoute } from 'vue-router'
 
   const route = useRoute()
-  // const key = route.query.key
+  // const key = Array.isArray(route.query.key) ? route.query.key[0] : route.query.key ?? '';
+
   const stepperStore = useStepperStore()
   const successMessage = ref(false)
   const store = useVerifyPasswordStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
-  formContext.setFieldValue("otp", "07fTdmW6xh9bHE9nBFFG7Q==");
+  
   store.SetFields(formContext)
   const steppList = ref<StepItem[]>([
     {
@@ -111,9 +112,9 @@
       visible: true,
       option: '',
     }),
-    otp: XmlLoadColumn({
-      id: 'otp',
-      name: 'otp',
+    key: XmlLoadColumn({
+      id: 'key',
+      name: 'key',
       rules: '',
       visible: true,
       option: '',
@@ -123,6 +124,7 @@
     if (store.createFlgVerifyPass) {
       if (!(await store.verifyPassword())) return
       stepperStore.moveToNextStep()
+      sessionStorage.removeItem("key");
       store.createFlgVerifyPass = false
     }
   }
@@ -140,6 +142,15 @@
   //   }, 3000)
   // }
   onMounted(() => {
+    
+    let key = route.query.key ?? sessionStorage.getItem("key") ?? "";
+  if (Array.isArray(key)) key = key[0] ?? "";
+  
+  if (key) {
+    sessionStorage.setItem("key", key);
+    formContext.setFieldValue("key", key);
+  }
+  console.log("Key GOT: "+ key);
     store.createFlgVerifyPass = true
     stepperStore.SetValues(steppList)
     // console.log(key)
