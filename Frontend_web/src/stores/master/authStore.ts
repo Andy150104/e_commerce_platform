@@ -50,7 +50,6 @@ export const useAuthStore = defineStore('auth', {
       loadingStore.LoadingChange(true)
       try {
         const res = await AuthAPI.Token.post(authParams)
-        console.log('Login', res)
         this.SetTokens(res)
         const userStore = useUserStore()
         await userStore.SetMypm730(userStore.UserInfo.grpId, false)

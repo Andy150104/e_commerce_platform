@@ -5,6 +5,7 @@ import { defineStore } from 'pinia'
 export const useFormMessageStore = defineStore('formMessage', {
   state: () => ({
     messageId: '',
+    message: '',
     formInfo: '',
     formWarm: '',
     formError: '',
@@ -14,36 +15,21 @@ export const useFormMessageStore = defineStore('formMessage', {
     isAction: false,
     isNotify: false,
   }),
-  // stateと同じgetterは宣言不要
   getters: {},
   actions: {
     ResetStore() {
       this.messageId = ''
       this.formInfo = ''
-      ;(this.formWarm = ''), (this.formError = ''), (this.errorList = []), (this.warmListTitle = []), (this.warmList = [])
+      this.isAction = false,
+      this.isNotify = false
     },
     SetMessageId(message: string) {
       this.messageId = message
     },
-    SetFormInfo(message: string) {
-      this.formInfo = message
+    SetMessageShow(message: string) {
+      this.isNotify = true
+      this.message = message
     },
-    SetFormWarm(message: string) {
-      this.formWarm = message
-    },
-    SetFormError(message: string) {
-      this.formError = message
-    },
-    SetErrorList(message: string) {
-      this.errorList.push(message)
-    },
-    SetWarmListTitle(message: string) {
-      this.warmListTitle.push(message)
-    },
-    SetWarmList(message: string) {
-      this.warmList.push(message)
-    },
-    SetTableError(detail: { detailError: DetailError; name: string }) {},
     SetFormMessage(result: AbstractApiResponseOfString | undefined, isNotify: boolean) {
       this.ResetStore()
       this.isNotify = isNotify
@@ -57,22 +43,15 @@ export const useFormMessageStore = defineStore('formMessage', {
       }
       switch (result.messageId.charAt(0)) {
         case 'I':
-          this.SetFormInfo(result.message ?? '')
+          this.SetMessageShow(result.message ?? '')
           break
         case 'W':
-          this.SetFormWarm(result.message ?? '')
+          this.SetMessageShow(result.message ?? '')
           break
         case 'E':
-          this.SetFormError(result.message ?? '')
+          this.SetMessageShow(result.message ?? '')
           break
       }
-    },
-    SetTableMessage(detail: { detailError: DetailError; name: string }) {
-      this.SetTableError(detail)
-    },
-    SetTableMessageNoLabel(detail: { detailError: DetailError; name: string }) {
-      const value = detail.detailError.errorMessage ?? ''
-      this.errorList.push(value)
     },
   },
 })

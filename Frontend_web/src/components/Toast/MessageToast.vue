@@ -2,6 +2,7 @@
   <UNotifications :ui="{ base: 'absolute top-0 end-0 start-0 h-1' }" />
 </template>
 <script setup lang="ts">
+  import { onMounted } from 'vue'
   import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
   const toast = useToast()
@@ -9,37 +10,30 @@
 
   onMounted(() => {
     if (!formMessageStore.isNotify) return
-    if (formMessageStore.isAction) {
-      toast.add({
-        id: formMessageStore.messageId,
-        title: 'Message',
-        description: 'It will be installed on restart. Restart now?',
-        icon: 'i-heroicons-check-badge',
-        timeout: 1200,
-        ui: {
-          process: {
-            base: 'absolute top-0 end-0',
-          },
-        },
-      })
-      return
-    }
-    toast.add({
+
+    const timeout = 1400 // Thời gian hiển thị
+    const isError = formMessageStore.messageId.startsWith('E')
+
+    // Cấu hình chung
+    const baseOptions = {
       id: formMessageStore.messageId,
-      title: 'Message',
-      description: 'It will be installed on restart. Restart now?',
-      icon: 'i-heroicons-check-badge',
-      timeout: 1200,
-      ui: {
-        base: 'absolute top-0 end-0',
-      },
-      actions: [
-        {
-          label: 'Restart',
-          click: () => {},
-        },
-      ],
+      title: isError ? 'Error' : 'Message',
+      description: formMessageStore.message,
+      icon: isError ? 'i-heroicons-exclamation-circle' : 'i-heroicons-check-badge',
+      timeout,
+      color: isError ? 'error' : 'success',
+      ui: { base: 'absolute top-0 end-0' },
+    }
+
+    // Thêm toast (dùng spread để gọn)
+    toast.add({
+      ...baseOptions,
+      ...(formMessageStore.isAction && {
+        actions: [{ label: 'Retry', click: () => {} }],
+      }),
     })
-    formMessageStore.$reset
+
+    // Reset sau khi thông báo biến mất
+    setTimeout(formMessageStore.ResetStore, timeout)
   })
 </script>

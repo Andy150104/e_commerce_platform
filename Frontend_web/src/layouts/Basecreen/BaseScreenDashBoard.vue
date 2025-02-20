@@ -12,13 +12,19 @@
         <FooterControl />
         <Loading />
         <ScrollToTopBtn />
+        <MessageToast v-if="formMessageStore.isNotify" />
       </template>
     </SlideBarUserNavigation>
   </div>
 </template>
 <script setup lang="ts">
   import FooterControl from '@PKG_SRC/components/Footer/FooterControl.vue'
+  import MessageToast from '@PKG_SRC/components/Toast/MessageToast.vue'
   import ScrollToTopBtn from '../Btn/ScrollToTopBtn.vue'
   import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
   import SlideBarUserNavigation from '@PKG_SRC/components/NavBar/SlideBarUserNavigation.vue'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
+
+
+  const formMessageStore = useFormMessageStore()
 </script>

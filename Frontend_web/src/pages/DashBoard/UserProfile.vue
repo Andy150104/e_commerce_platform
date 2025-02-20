@@ -20,16 +20,16 @@
       >
         <div class="absolute inset-0 pointer-events-none z-0 gradient-effect" ref="gradientEffect"></div>
         <div class="max-w-3xl mx-auto text-center relative z-10 mt-0 pt-0">
-          <h1 class="text-4xl font-bold text-gray-100 mb-4 animate-fade-up animate-duration-1000 animate-delay-500">User Profile</h1>
+          <h1 class="text-4xl font-bold text-black dark:text-white mb-4 animate-fade-up animate-duration-1000 animate-delay-500">User Profile</h1>
           <p class="text-lg text-gray-700 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">Edit Your Own Personal Informations!</p>
           <div></div>
           <div class="mt-8 flex justify-center space-x-4"></div>
         </div>
-        <div class="animate-fade-right grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="animate-fade-right grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           <!-- Column 1: Profile Picture -->
-          <div class="space-y-4">
-            <h2 class="text-2xl text-gray-100 font-semibold">Profile</h2>
-            <p class="text-sm text-gray-200 dark:text-gray-300">This information will be displayed publicly so be careful what you share.</p>
+          <div class="space-y-4 xl:col-span-1">
+            <h2 class="text-2xl text-black dark:text-white font-semibold">Profile</h2>
+            <p class="text-sm text-black dark:text-white">This information will be displayed publicly so be careful what you share.</p>
             <div class="w-full">
               <img
                 v-if="uploadImageStore.uploadImage.length > 0"
@@ -47,12 +47,12 @@
           </div>
 
           <!-- Column 2: Input Fields -->
-          <div class="space-y-4">
+          <div class="space-y-4 xl:col-span-2">
             <div>
               <UserControlTextFieldLabel
                 :xml-column="xmlColumns.email"
                 :maxlength="50"
-                :disabled="!isActive"
+                :disabled="true"
                 :err-msg="fieldErrors.email"
                 :placeholder="'abc@gmail.com'"
               />
@@ -208,7 +208,7 @@
     }, 3000)
   }
 
-  onMounted(() => {
-    store.GetProfile()
+  onMounted( async () => {
+    await store.GetProfile()
   })
 </script>

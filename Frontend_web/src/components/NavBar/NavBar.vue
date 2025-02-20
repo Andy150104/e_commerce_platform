@@ -13,7 +13,7 @@
       <!-- CỘT GIỮA: Menu (ẩn trên mobile) -->
       <div class="hidden md:flex flex-grow justify-center space-x-8">
         <!-- Home -->
-        <a href="#" class="text-gray-900 font-semibold dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"> Home </a>
+        <a href="/Home" class="text-gray-900 font-semibold dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"> Home </a>
         <!-- About -->
         <a href="#" class="text-gray-900 font-semibold dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"> About </a>
         <!-- Services (dropdown) -->
@@ -37,9 +37,8 @@
             ref="servicesDropdown"
             class="absolute top-full left-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow py-2 z-50"
           >
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Service 1 </a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Service 2 </a>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Service 3 </a>
+            <a href="/Service/Buying" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Buying</a>
+            <a href="/Service/Exchange" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Exchange </a>
           </div>
         </div>
         <!-- Contact -->

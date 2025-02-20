@@ -31,8 +31,3 @@
     }
   })
 </script>
-<style scoped>
-  html.\30 .dark {
-    background: red;
-  }
-</style>

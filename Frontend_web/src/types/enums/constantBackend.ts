@@ -3,3 +3,17 @@ export enum Gender {
   Female = '2',
   Other = '3',
 }
+
+
+export enum SearchService {
+  Product = 1,
+  BlindBox = 2
+}
+
+export enum SortBy {
+  MostPopular = 1,
+  DecreasingPrice = 2,
+  IncreasingPrice = 3,	
+  Newest = 4,
+  Oldest = 5,
+}

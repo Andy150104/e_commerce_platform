@@ -138,6 +138,13 @@
       <ImageCrop :images="myImages" />
     </template>
   </ModelFullScreen>
+  <div>aaaaaaaaaaa</div>
+  <Loading />
+  <ModalPartScreen :is-show-modal="true" :onOkClick="handleOkClick">
+    <template #body>
+      <TableComponent />
+    </template>
+  </ModalPartScreen>
   <!-- Video Container
   <div class="video-container">
     <iframe
@@ -149,8 +156,25 @@
     ></iframe>
   </div> -->
   <GalleryCarousel :images="imageList" />
+  <ModalPopupScreen
+    @ok-click="
+      () => {
+        const loadingStore =useLoadingStore()
+        loadingStore.LoadingChange(true)
+        for (let i = 1; i <= 100000; i++) {
+          console.log(i)
+        }
+        loadingStore.LoadingChange(false)
+      }
+    "
+    cancel-button-name="No, Cancel It"
+    label-name="Delete"
+    ok-button-name="Yes, let delete!!"
+  />
   <UserControlUploadImage :max-number-image="1" :is-show-popover="false" :label="'Upload avatar image'" />
   <TableComponent />
+  <!-- <BaseControlQuantityInput/> -->
+   <TableNuxtUIComponent/>
   <!-- Button to trigger Popover -->
   <div
     data-popover-target="popover-default"
@@ -195,6 +219,13 @@
   import TableComponent from '@PKG_SRC/components/Table/TableComponent.vue'
   import UserControlUploadImage from '@PKG_SRC/components/UserControl/UserControlUploadImage.vue'
   import { useUploadImageStore } from '@PKG_SRC/stores/Modules/usercontrol/uploadImageStore'
+  import ModalPartScreen from '@PKG_SRC/components/Modal/ModalPartScreen.vue'
+  import { useProfileStore } from '@PKG_SRC/stores/Modules/DashBoard/profileStore'
+  import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
+  import ModalPopupScreen from '@PKG_SRC/components/Modal/ModalPopupScreen.vue'
+import { useLoadingStore } from '@PKG_SRC/stores/Modules/usercontrol/loadingStore'
+import BaseControlQuantityInput from '@PKG_SRC/components/Basecontrol/BaseControlQuantityInput.vue'
+import TableNuxtUIComponent from '@PKG_SRC/components/Table/TableNuxtUIComponent.vue'
   const imageStore = useUploadImageStore()
   imageStore.SetUploadImage('a', 1024, 'https://res.cloudinary.com/dbfokyruf/image/upload/v1739683116/fehfhddpzfgcpfrkkfoj.jpg')
   const imageList = [
@@ -204,8 +235,13 @@
     { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg', alt: 'Ảnh 4' },
     { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg', alt: 'Ảnh 5' },
   ]
+  const handleOkClick = () => {
+    return false
+  }
   const store = useMyppStore()
+  const storeProfile = useProfileStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
+  const isOpen = ref(false)
   const formContext = useForm({ initialValues: fieldValues.value })
   store.SetFields(formContext)
   onMounted(async () => {

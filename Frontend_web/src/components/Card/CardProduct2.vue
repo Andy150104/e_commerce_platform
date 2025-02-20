@@ -9,7 +9,7 @@
       <div class="relative overflow-hidden h-full">
         <!-- Carousel Items -->
         <div v-for="(image, index) in product.imageUrl" :key="index" class="hidden duration-700 ease-in-out" data-carousel-item>
-          <img :src="image" :alt="'Image ' + (index + 1)" class="block w-full h-full object-cover" />
+          <img :src="'https://cdn.vuahanghieu.com/unsafe/0x900/left/top/smart/filters:quality(90)/https://admin.vuahanghieu.com/upload/product/2024/07/bup-be-pop-mart-labubu-time-to-chill-vinyl-plush-mau-xanh-6696302216ff5-16072024153234.jpg'" :alt="'Image ' + (index + 1)" class="block w-full h-full object-cover" />
         </div>
       </div>
       <!-- Carousel Controls -->
@@ -46,16 +46,19 @@
       <h5 class="mb-2 text-xl font-semibold tracking-tight text-gray-800">{{ product.nameProduct }}</h5>
       <p class="mb-4 text-sm text-gray-600">{{ product.shortDescription }}</p>
       <div v-if="product.salePrice">
-        <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.price)) }}</p>
-        <p class="text-sm text-gray-500 line-through">{{ moneyFormatter(Number(product.salePrice)) }}</p>
+        <!-- <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.price)) }}</p> -->
+        <p class="text-2xl font-bold text-gray-800 mb-1">{{ product.price }}</p>
+        <!-- <p class="text-sm text-gray-500 line-through">{{ moneyFormatter(Number(product.salePrice)) }}</p> -->
+        <p class="text-sm text-gray-500 line-through">{{ product.salePrice }}</p>
       </div>
       <div v-else>
-        <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.price)) }}</p>
+        <p class="text-2xl font-bold text-gray-800 mb-1">{{ product.price }}</p>
+        <!-- <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.price)) }}</p> -->
       </div>
       <div class="flex items-center mb-4">
         <div class="flex items-center mt-3 mb-2">
-          <RatingStar :rating="product.rating" />
-          <span class="text-gray-600 text-sm ml-2">{{ '(' + formatRating(product.rating) + '/5.0)' }}</span>
+          <RatingStar :rating="product.averageRating" />
+          <span class="text-gray-600 text-sm ml-2">{{ '(' + formatRating(product.averageRating ?? 0) + '/5.0)' }}</span>
         </div>
       </div>
       <div class="flex items-center space-x-4">
@@ -78,6 +81,7 @@
   import type { ProductMypp111 } from '@PKG_SRC/stores/Modules/Mypg/Mypg'
   import { initCarousels } from 'flowbite'
   import { Currency, Locale } from '@PKG_SRC/types/enums/constantFrontend'
+import type { ItemEntity } from '@PKG_API/@types'
   const props = defineProps({
     productModel: {
       type: Object as PropType<any[]>,
@@ -103,6 +107,5 @@
 
   onMounted(async () => {
     await nextTick()
-    initCarousels()
   })
 </script>
