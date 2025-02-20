@@ -78,8 +78,6 @@
   import { useRoute } from 'vue-router'
 
   const route = useRoute()
-  // const key = Array.isArray(route.query.key) ? route.query.key[0] : route.query.key ?? '';
-
   const stepperStore = useStepperStore()
   const successMessage = ref(false)
   const store = useVerifyPasswordStore()
@@ -134,13 +132,7 @@
       window.location.href = document.referrer
     }
   }
-  // const UpdatePass = async () => {
-  //   if (!(await store.updatePassword())) return
-  //   successMessage.value = true
-  //   setTimeout(() => {
-  //     successMessage.value = false
-  //   }, 3000)
-  // }
+
   onMounted(() => {
     
     let key = route.query.key ?? sessionStorage.getItem("key") ?? "";
@@ -153,6 +145,5 @@
   console.log("Key GOT: "+ key);
     store.createFlgVerifyPass = true
     stepperStore.SetValues(steppList)
-    // console.log(key)
   })
 </script>
