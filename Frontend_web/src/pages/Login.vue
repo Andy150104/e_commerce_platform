@@ -91,7 +91,7 @@
   const Login = async () => {
     if (await store.Validate()) {
       const authStore = useAuthStore()
-      await authStore.Login(store.fieldValues.userId, store.fieldValues.password, 'duyanh15104', true, router)
+      await authStore.Login(store.fieldValues.userId, store.fieldValues.password, store.fieldValues.userId, true, router)
     }
   }
 

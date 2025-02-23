@@ -3,7 +3,7 @@ using System.Net.Mail;
 using Client.Controllers;
 using Client.Utils.Consts;
 using Microsoft.EntityFrameworkCore;
-using server.Models;
+using Client.Models;
 using SystemConfig = Client.Utils.Consts.SystemConfig;
 using Client.Models;
 

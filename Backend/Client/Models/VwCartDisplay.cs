@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Client.Models;
@@ -9,17 +9,17 @@ public partial class VwCartDisplay
 
     public string CustomerUsername { get; set; } = null!;
 
-    public Guid ProductId { get; set; }
+    public string ProductId { get; set; } = null!;
 
     public string ProductName { get; set; } = null!;
 
     public decimal Price { get; set; }
 
+    public string? ShortDescription { get; set; }
+
     public int Quantity { get; set; }
 
     public decimal? TotalPrice { get; set; }
-
-    public string? ImageUrl { get; set; }
 
     public DateTime? CartCreatedAt { get; set; }
 

@@ -1,10 +1,11 @@
 using Client.Controllers;
-using Client.Models.Helper;
-using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
-using server.Logics.Commons;
+using Server.Controllers;
+using Server.Models.Helper;
+using Server.Utils.Consts;
 
 namespace server.Controllers.V1.UserRegisterScreen;
 
@@ -13,7 +14,7 @@ namespace server.Controllers.V1.UserRegisterScreen;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class URSUserVerifyController : AbstractApiControllerNotToken<URSUserVerifyRequest, URSUserVerifyResponse, string>
+public class UserVerifyKeyController : AbstractApiControllerNotToken<UserVerifyKeyRequest, UserVerifyKeyResponse, string>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
@@ -22,7 +23,7 @@ public class URSUserVerifyController : AbstractApiControllerNotToken<URSUserVeri
     /// Constructor
     /// </summary>
     /// <param name="context"></param>
-    public URSUserVerifyController(AppDbContext context)
+    public UserVerifyKeyController(AppDbContext context)
     {
         _context = context;
         _context._Logger = logger;
@@ -31,27 +32,33 @@ public class URSUserVerifyController : AbstractApiControllerNotToken<URSUserVeri
     /// <summary>
     /// Incoming Post
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="keyRequest"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public override URSUserVerifyResponse Post(URSUserVerifyRequest request)
+    public override UserVerifyKeyResponse Post(UserVerifyKeyRequest keyRequest)
     {
-        return Post(request, _context, logger, new URSUserVerifyResponse());
+        return Post(keyRequest, _context, logger, new UserVerifyKeyResponse());
     }
 
     /// <summary>
     /// Main processing
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="keyRequest"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    protected override URSUserVerifyResponse Exec(URSUserVerifyRequest request, IDbContextTransaction transaction)
+    protected override UserVerifyKeyResponse Exec(UserVerifyKeyRequest keyRequest, IDbContextTransaction transaction)
     {
-        var response = new URSUserVerifyResponse() { Success = false };
+        var response = new UserVerifyKeyResponse() { Success = false };
+
+        // Check key exist
+        var keyExist = _context.VwUserVerifies.AsNoTracking().FirstOrDefault(x => x.Key == keyRequest.Key);
         
-        // Decrypt Key
-        var keyDecrypt = CommonLogic.DecryptText(request.Key , _context);
+        if (keyExist == null)
+        {
+            response.SetMessage(MessageId.E00000, "Verify error. Check the key of the error item.");
+            return response;
+        }
         
         // True
         response.Success = true;
@@ -62,14 +69,14 @@ public class URSUserVerifyController : AbstractApiControllerNotToken<URSUserVeri
     /// <summary>
     /// Error check
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="keyRequest"></param>
     /// <param name="detailErrorList"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    protected internal override URSUserVerifyResponse ErrorCheck(URSUserVerifyRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
+    protected internal override UserVerifyKeyResponse ErrorCheck(UserVerifyKeyRequest keyRequest, List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
-        var response = new URSUserVerifyResponse() { Success = false };
+        var response = new UserVerifyKeyResponse() { Success = false };
 
         if (detailErrorList.Count > 0)
         {

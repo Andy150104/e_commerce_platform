@@ -70,7 +70,6 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
 
         var Queue = new Client.Models.Queue
         {
-            BlindBoxId = blindBox.BlindBoxId,
             ExchangeId = blindBoxPost.ExchangeId,
             QueueId = Guid.NewGuid(),
             Status = "Active"

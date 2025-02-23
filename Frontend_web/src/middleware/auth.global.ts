@@ -23,9 +23,16 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'Blind_Box/Cart',
     'DashBoard',
     'DashBoard/Account',
+    'Service/Buying',
+    'Service/Blind_Box',
   ]
-  if (!authStore.isAuthorization && !loginNotRequiredRoutes.includes(relativePath)) {
+
+  // Kiểm tra nếu không đăng nhập và không thuộc danh sách route cho phép
+  if (
+    !authStore.isAuthorization &&
+    !loginNotRequiredRoutes.includes(relativePath) &&
+    !relativePath.startsWith('Service/Buying/Product')
+  ) {
     return { path: '/' }
   }
-  if (!authStore.isAuthorization) return
 })

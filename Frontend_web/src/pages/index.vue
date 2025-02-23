@@ -141,14 +141,16 @@
   <!-- Video Container
   <div class="video-container">
     <iframe
-      src="https://www.youtube.com/embed/EHyfI3c6L3A?autoplay=1&loop=1&playlist=EHyfI3c6L3A&start=10&end=20&mute=1"
-      frameborder="0"
-      allow="autoplay; encrypted-media; picture-in-picture"
-      allowfullscreen
-      class="video-iframe"
+    src="https://www.youtube.com/embed/EHyfI3c6L3A?autoplay=1&loop=1&playlist=EHyfI3c6L3A&start=10&end=20&mute=1"
+    frameborder="0"
+    allow="autoplay; encrypted-media; picture-in-picture"
+    allowfullscreen
+    class="video-iframe"
     ></iframe>
   </div> -->
   <GalleryCarousel :images="imageList" />
+  <UserControlUploadImage :max-number-image="1" :is-show-popover="false" :label="'Upload avatar image'" />
+  <TableComponent />
   <!-- Button to trigger Popover -->
   <div
     data-popover-target="popover-default"
@@ -190,6 +192,11 @@
   import { useAddressStore } from '@PKG_SRC/utils/address/store/addressStore'
   import LocationPicker from '@PKG_SRC/components/UserControl/LocationPicker.vue'
   import GalleryCarousel from '@PKG_SRC/components/Gallery/GalleryCarousel.vue'
+  import TableComponent from '@PKG_SRC/components/Table/TableComponent.vue'
+  import UserControlUploadImage from '@PKG_SRC/components/UserControl/UserControlUploadImage.vue'
+  import { useUploadImageStore } from '@PKG_SRC/stores/Modules/usercontrol/uploadImageStore'
+  const imageStore = useUploadImageStore()
+  imageStore.SetUploadImage('a', 1024, 'https://res.cloudinary.com/dbfokyruf/image/upload/v1739683116/fehfhddpzfgcpfrkkfoj.jpg')
   const imageList = [
     { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg', alt: 'Ảnh 1' },
     { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg', alt: 'Ảnh 2' },

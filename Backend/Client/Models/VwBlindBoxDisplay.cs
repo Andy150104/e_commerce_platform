@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Client.Models;
@@ -7,13 +7,15 @@ public partial class VwBlindBoxDisplay
 {
     public Guid BlindBoxId { get; set; }
 
-    public Guid ExchangeId { get; set; }
+    public Guid? ExchangeId { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
 
-    public string CreatorUsername { get; set; } = null!;
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
 
     public string? CreatedBy { get; set; }
 

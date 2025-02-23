@@ -2,13 +2,13 @@
   <!-- drawer init and show -->
   <div class="text-center">
     <button
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      class="flex items-center gap-2 text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
       type="button"
       data-drawer-target="drawer-navigation"
       data-drawer-show="drawer-navigation"
       aria-controls="drawer-navigation"
     >
-      Show navigation
+      <slot name="button_ui"></slot>
     </button>
   </div>
 
@@ -19,103 +19,137 @@
     tabindex="-1"
     aria-labelledby="drawer-navigation-label"
   >
-    <h5 id="drawer-navigation-label" class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Menu</h5>
-    <div className="flex justify-between items-center mb-4">
-      <h2 className="text-lg font-bold">Filters</h2>
-      <button className="text-gray-500 hover:text-red-500">✕</button>
-    </div>
+    <h2 class="text-lg font-semibold mb-4">FILTERS</h2>
 
-    {/* Product Brand and Model */}
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Product Brand</label>
-      <select className="w-full p-2 border rounded">
-        <option>Samsung</option>
-        <option>Apple</option>
-        <option>LG</option>
-      </select>
-    </div>
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Product Model</label>
-      <select className="w-full p-2 border rounded">
-        <option>iMac 27"</option>
-        <option>MacBook Pro</option>
-        <option>Galaxy S21</option>
+    <!-- Product Brand & Model -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Product Brand</label>
+      <select v-model="filters.brand" class="w-full p-2 border rounded-md">
+        <option value="Apple">Apple</option>
+        <option value="Samsung">Samsung</option>
       </select>
     </div>
 
-    {/* Manufacture Year */}
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Manufacture Year</label>
-      <div className="flex gap-2">
-        <input type="date" className="w-1/2 p-2 border rounded" />
-        <input type="date" className="w-1/2 p-2 border rounded" />
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Product Model</label>
+      <select v-model="filters.model" class="w-full p-2 border rounded-md">
+        <option value="iMac 27">iMac 27"</option>
+        <option value="MacBook Pro">MacBook Pro</option>
+      </select>
+    </div>
+
+    <!-- Manufacture Year -->
+    <div class="mb-4 flex gap-2">
+      <input type="date" class="w-full p-2 border rounded-md" />
+      <input type="date" class="w-full p-2 border rounded-md" />
+    </div>
+
+    <!-- Price Range -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Price Range</label>
+      <input type="range" min="0" max="5000" v-model="filters.priceFrom" class="w-full" />
+      <div class="flex justify-between text-sm">
+        <input v-model="filters.priceFrom" class="w-20 p-1 border rounded-md" />
+        <input v-model="filters.priceTo" class="w-20 p-1 border rounded-md" />
       </div>
     </div>
 
-    {/* Price Range */}
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Price Range</label>
-      <div className="flex justify-between text-sm">
-        <span>300</span>
-        <span>3500</span>
-      </div>
-      <input type="range" className="w-full" min="300" max="3500" />
-      <div className="flex justify-between mt-2">
-        <input type="number" className="w-1/2 p-2 border rounded" placeholder="From" />
-        <input type="number" className="w-1/2 p-2 border rounded" placeholder="To" />
+    <!-- Condition -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Condition</label>
+      <div class="flex gap-2">
+        <input type="radio" v-model="filters.condition" value="All" /> All <input type="radio" v-model="filters.condition" value="New" /> New
+        <input type="radio" v-model="filters.condition" value="Used" /> Used
       </div>
     </div>
 
-    {/* Condition */}
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Condition</label>
-      <div className="flex gap-2">
-        <label> <input type="radio" name="condition" className="mr-1" /> All </label>
-        <label> <input type="radio" name="condition" className="mr-1" /> New </label>
-        <label> <input type="radio" name="condition" className="mr-1" /> Used </label>
-      </div>
-    </div>
-
-    {/* Colour */}
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Colour</label>
-      <div className="flex gap-2">
-        <label> <input type="checkbox" className="mr-1" /> Blue </label>
-        <label> <input type="checkbox" className="mr-1" /> Gray </label>
-        <label> <input type="checkbox" className="mr-1" checked /> Green </label>
-        <label> <input type="checkbox" className="mr-1" /> Pink </label>
-        <label> <input type="checkbox" className="mr-1" /> Red </label>
-      </div>
-    </div>
-
-    {/* Rating */}
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Rating</label>
-      <div className="flex items-center gap-2">
-        {[5, 4, 3, 2, 1].map((star) => (
-        <label key="{star}" className="flex items-center">
-          <input type="radio" name="rating" className="mr-1" />
-          {'★'.repeat(star)}{'☆'.repeat(5 - star)}
+    <!-- Colour Selection -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Colour</label>
+      <div class="flex flex-wrap gap-2">
+        <label v-for="color in colors" :key="color.name" class="flex items-center gap-1">
+          <input type="checkbox" v-model="filters.colours" :value="color.name" />
+          <span :style="{ backgroundColor: color.hex }" class="w-4 h-4 rounded-full border"></span>
+          {{ color.name }}
         </label>
-        ))}
       </div>
     </div>
 
-    {/* Delivery */}
-    <div className="mb-4">
-      <label className="block text-sm font-medium mb-1">Delivery</label>
-      <div className="grid grid-cols-2 gap-2">
-        <button className="p-2 border rounded text-center">USA</button>
-        <button className="p-2 border rounded text-center">Europe</button>
-        <button className="p-2 border rounded text-center">Asia</button>
-        <button className="p-2 border rounded text-center">Australia</button>
+    <!-- Rating -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Rating</label>
+      <div class="flex flex-col gap-1">
+        <label v-for="rating in 5" :key="rating" class="flex items-center gap-1">
+          <input type="radio" v-model="filters.rating" :value="rating" />
+          <span v-html="renderStars(rating)"></span>
+        </label>
       </div>
     </div>
 
-    {/* Action Buttons */}
-    <div className="flex gap-2">
-      <button className="w-1/2 bg-blue-500 text-white p-2 rounded">Apply filters</button>
-      <button className="w-1/2 bg-gray-300 p-2 rounded">Clear all</button>
+    <!-- Delivery -->
+    <div class="mb-4">
+      <label class="block text-sm font-medium">Delivery</label>
+      <div class="grid grid-cols-2 gap-2">
+        <button
+          v-for="region in deliveryRegions"
+          :key="region"
+          :class="{ 'border-blue-500': filters.delivery === region }"
+          class="border p-2 rounded-md text-center"
+          @click="filters.delivery = region"
+        >
+          {{ region }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex gap-2 mt-4">
+      <button class="bg-blue-600 text-white p-2 rounded-md w-full">Apply filters</button>
+      <button class="border p-2 rounded-md w-full" @click="clearFilters">Clear all</button>
     </div>
   </div>
 </template>
+<script setup lang="ts">
+  import { initFlowbite } from 'flowbite'
+
+  onMounted(() => {
+    initFlowbite()
+  })
+  const filters = ref({
+    brand: 'Apple',
+    model: 'iMac 27',
+    priceFrom: 300,
+    priceTo: 3500,
+    condition: 'All',
+    colours: ['Green', 'Red'],
+    rating: 3,
+    delivery: 'Asia',
+  })
+
+  const colors = ref([
+    { name: 'Blue', hex: '#007BFF' },
+    { name: 'Gray', hex: '#6C757D' },
+    { name: 'Green', hex: '#28A745' },
+    { name: 'Pink', hex: '#E83E8C' },
+    { name: 'Red', hex: '#DC3545' },
+  ])
+
+  const deliveryRegions = ref(['USA', 'Europe', 'Asia', 'Australia'])
+
+  const renderStars = (count: number) => {
+    return '★'.repeat(count) + '☆'.repeat(5 - count)
+  }
+
+  const clearFilters = () => {
+    filters.value = {
+      brand: 'Apple',
+      model: 'iMac 27',
+      priceFrom: 300,
+      priceTo: 3500,
+      condition: 'All',
+      colours: [],
+      rating: 0,
+      delivery: 'Asia',
+    }
+  }
+</script>

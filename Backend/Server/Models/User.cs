@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+
 using Microsoft.AspNetCore.Identity;
 
 namespace Server.Models;
 
 public class User : IdentityUser
 {
+    public string? Key { get; set; }
     public string RoleId { get; set; }
     
     [ForeignKey("RoleId")]
