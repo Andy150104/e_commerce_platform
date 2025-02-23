@@ -26,12 +26,13 @@ public static class UserInsertSendMail
         var mailTemplate = context.VwEmailTemplateVerifyUsers.AsNoTracking().FirstOrDefault();
         var mailTitle = mailTemplate.EmailTitle.Replace("${title}", mailTemplate.EmailTitle);
         
+        var encodedKey = Uri.EscapeDataString(key);
         // Replace the variables in the mail template
         var replacements = new Dictionary<string, string>
         {
             { "${user_name}", userName },
             { "${email}", email },
-            { "${verification_link}", key }
+            { "${verification_link}", encodedKey }
         };
 
         // Replace the variables in the mail template

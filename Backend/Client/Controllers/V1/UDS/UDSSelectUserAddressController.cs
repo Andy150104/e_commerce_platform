@@ -50,6 +50,8 @@ public class UDSSelectUserAddressController : AbstractApiController<UDSSelectUse
     /// <param name="transaction"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     protected override UDSSelectUserAddressResponse Exec(UDSSelectUserAddressRequest request, IDbContextTransaction transaction)
     {
         var response = new UDSSelectUserAddressResponse() { Success = false };

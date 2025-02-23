@@ -33,10 +33,9 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns
-    [HttpPost]
-    [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+   
     public override AEPSAddExchangeProductResponse Post(AEPSAddExchangeProductRequest request)
-    {
+        {
         return Post(request, _context, logger, new AEPSAddExchangeProductResponse());
     }
 
@@ -51,25 +50,26 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
         var response = new AEPSAddExchangeProductResponse() { Success = false };
         var userName = _context.IdentityEntity.UserName;
         var checkImage = ImageValidationService.ImageCheck(request.ImageUrls, _context).Result;
-        if(!checkImage)
-        {
-            response.SetMessage("Invalid Images");
-            return response;
-        }
 
         var blindBox = new BlindBox
         {
             BlindBoxId = Guid.NewGuid(),
-            Username = userName,
+            Username = userName
         };
+
         blindBox.ImagesBlindBoxes = request.ImageUrls.Select(i => new ImagesBlindBox { BlindBoxId = blindBox.BlindBoxId, ImageId = Guid.NewGuid(), ImageUrl = i }).ToList();
 
         var exchange = new Exchange
         {
             ExchangeId = Guid.NewGuid(),
-            Status = (byte)ExchangeEnum.pendingExchange,
             BlindBoxId = blindBox.BlindBoxId
         };
+
+        if (!checkImage)
+        {
+            exchange.Status = (byte)ExchangeEnum.fail;
+        }else 
+            exchange.Status = (byte)(ExchangeEnum.pendingExchange);
         _context.BlindBoxs.Add(blindBox);
         _context.Exchanges.Add(exchange);
         _context.SaveChanges(userName);
@@ -77,6 +77,10 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
         transaction.Commit();
         response.Success = true;
         response.SetMessage(MessageId.I00003);
+        if (!checkImage)
+        {
+            response.SetMessage("Invalid Images");
+        }
         return response;
     }
     /// <summary>

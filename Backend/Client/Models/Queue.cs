@@ -7,11 +7,11 @@ public partial class Queue
 {
     public Guid QueueId { get; set; }
 
+    public string Description { get; set; } = null!;
+
     public Guid? ExchangeId { get; set; }
 
     public string? Status { get; set; }
-
-    public string Description { get; set; }
 
     public bool? IsActive { get; set; }
 

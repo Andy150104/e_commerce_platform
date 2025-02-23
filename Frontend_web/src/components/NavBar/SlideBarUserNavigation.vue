@@ -112,11 +112,11 @@
             :item-name="'User'"
             :option="[
               {
-                link: '#',
+                link: 'http://localhost:3000/DashBoard/UserProfile',
                 childItemName: 'Profile',
               },
               {
-                link: '#',
+                link: 'http://localhost:3000/DashBoard/UserAddress',
                 childItemName: 'Address',
               },
               {
