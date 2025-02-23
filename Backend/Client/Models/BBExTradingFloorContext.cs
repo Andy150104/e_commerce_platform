@@ -97,7 +97,7 @@ public partial class BBExTradingFloorContext : DbContext
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(GetConnectionString());
+        => optionsBuilder.UseSqlServer(GetConnectionString());  
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

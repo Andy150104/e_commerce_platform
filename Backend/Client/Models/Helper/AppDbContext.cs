@@ -9,7 +9,7 @@ namespace Client.Models.Helper;
 public class AppDbContext : BBExTradingFloorContext
 {
     public NLog.Logger _Logger;
-    
+
     /// <summary>
     /// Constructor
     /// </summary>

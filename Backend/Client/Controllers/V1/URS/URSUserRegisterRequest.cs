@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Client.Controllers;
 using Client.Utils.Consts;
 
-namespace server.Controllers.V1.UserRegisterScreen;
+namespace Client.Controllers.V1.UserRegisterScreen;
 
 public class URSUserRegisterRequest : AbstractApiRequest
 {

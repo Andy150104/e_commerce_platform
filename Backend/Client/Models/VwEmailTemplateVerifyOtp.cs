@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Server.Models;
+namespace server.Models;
 
 public partial class VwEmailTemplateVerifyOtp
 {

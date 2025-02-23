@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 using server.Logics.Commons;
 
-namespace server.Controllers.V1.UserRegisterScreen;
+namespace Client.Controllers.V1.UserRegisterScreen;
 
 /// <summary>
 /// UserRegisterController - Register new User
@@ -16,10 +16,10 @@ namespace server.Controllers.V1.UserRegisterScreen;
 [Route("api/v1/[controller]")]
 [ApiController]
 public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRegisterRequest, URSUserRegisterResponse, object>
-{ 
+{
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -51,20 +51,20 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
     protected override URSUserRegisterResponse Exec(URSUserRegisterRequest request, IDbContextTransaction transaction)
     {
         var response = new URSUserRegisterResponse() { Success = false };
-        
+
         // Decrypt Key
         var keyDecrypt = CommonLogic.DecryptText(request.Key, _context);
         string[] values = keyDecrypt.Split(",");
-        
+
         string userName = values[0];
         string email = values[1];
         string firstName = values[2];
         string lastName = values[3];
-        
+
         // Check if the user already exists
-        var userSelect = _context.VwUserAuthentications.AsNoTracking().FirstOrDefault(x => x.UserName == userName 
+        var userSelect = _context.VwUserAuthentications.AsNoTracking().FirstOrDefault(x => x.UserName == userName
             || x.Email == email);
-        
+
         // If the user already exists, return an error
         if (userSelect != null)
         {
@@ -82,9 +82,9 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             BirthDate = DateOnly.Parse(request.BirthDay),
             ImageUrl = request.ImageUrl,
         };
-        // Add new user
+        //Add new user
         _context.Add(newUser);
-        
+
         // Add address
         var newAddress = new Address()
         {
@@ -96,11 +96,11 @@ public class URSUserRegisterController : AbstractApiControllerNotToken<URSUserRe
             District = request.District,
         };
         _context.Add(newAddress);
-        
+
         // Commit transaction
         _context.SaveChanges(newAddress.Username);
         transaction.Commit();
-        
+
         // True
         response.Success = true;
         response.SetMessage(MessageId.I00001, "User registration");
