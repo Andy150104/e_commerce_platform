@@ -56,4 +56,6 @@ public partial class User
     public virtual ICollection<Report> Reports { get; set; } = new List<Report>();
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+    public virtual ICollection<Wishlist> Wishlists { get; set; } = new List<Wishlist>();
 }

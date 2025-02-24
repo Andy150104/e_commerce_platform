@@ -1,7 +1,5 @@
-using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Client.SystemClient;
-using server.Models;
 
 namespace Client.Models.Helper;
 
@@ -16,8 +14,8 @@ public class AppDbContext : BBExTradingFloorContext
     /// Constructor
     /// </summary>
     /// <param name="options"></param>
-    public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) 
-        : base(new DbContextOptions<BBExTradingFloorContext>(), configuration)
+    public AppDbContext(DbContextOptions<AppDbContext> options) 
+        : base(new DbContextOptions<BBExTradingFloorContext>())
     {
     }
     
@@ -45,7 +43,7 @@ public class AppDbContext : BBExTradingFloorContext
     /// <param name="updateFunctionId"></param>
     /// <param name="updateUser"></param>
     /// <param name="needLogicalDelete"></param>
-    private void SetCommonValue(string updateUser, bool needLogicalDelete = false)
+    private void SetCommonValue(string updateUser, bool needLogicalDelete = false, bool needUpdate = false)
     {
 
         // Register
@@ -99,6 +97,11 @@ public class AppDbContext : BBExTradingFloorContext
                 {
                     // Normal
                     modifiedEntity.IsActive = true;
+                    modifiedEntity.UpdatedBy = updateUser;
+                }
+
+                if (needUpdate)
+                {
                     modifiedEntity.UpdatedBy = updateUser;
                 }
                 modifiedEntity.UpdatedAt = now;

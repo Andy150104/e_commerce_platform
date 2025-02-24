@@ -1,4 +1,5 @@
 using System.Net;
+using Client.Models;
 using Client.Models.Helper;
 using Microsoft.EntityFrameworkCore;
 using NSwag;
@@ -9,7 +10,6 @@ using Client.SystemClient;
 using server.Models;
 using Client.Controllers.V1.MomoServices;
 using Client.Controllers.V1.MomoPayment.MomoServices;
-using Client.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,15 +72,15 @@ builder.Services.AddAuthentication(options =>
 // Configure the OpenIddict server
 builder.Services.AddOpenIddict()
     .AddValidation(options =>
-    {       
+    {
         options.SetIssuer("https://localhost:5090/");
         options.AddAudiences("service_client");
-        
+
         options.UseIntrospection()
             .AddAudiences("service_client")
             .SetClientId("service_client")
             .SetClientSecret("SWD392-LamNN15-GROUP3-SPRING2025");
-        
+
         options.UseSystemNetHttp();
         options.UseAspNetCore();
     });

@@ -45,7 +45,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
     /// Default SNAPSHOT Change it in the constructor
     /// </remarks>
     protected System.Data.IsolationLevel _isolationLevel = System.Data.IsolationLevel.Snapshot;
-    
+
     /// <summary>
     /// TemplateMethod
     /// </summary>
@@ -73,7 +73,9 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
         // Additional user information
         try
         {
-            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications.AsNoTracking().FirstOrDefault().UserName;
+            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications
+                .AsNoTracking()
+                .FirstOrDefault(x => x.UserName == appDbContext.IdentityEntity.UserName).UserName;
         }
         catch (Exception e)
         {
@@ -87,7 +89,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
 
         try
         {
-            appDbContext. _Logger = logger;
+            appDbContext._Logger = logger;
 
             // Start transaction
             using (var transaction = appDbContext.Database.BeginTransaction())
@@ -100,7 +102,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
                 if (returnValue.Success && !request.IsOnlyValidation) returnValue = Exec(request, transaction);
             }
         }
-            catch (Exception e)
+        catch (Exception e)
         {
             return AbstractFunction<T, U, V>.GetReturnValue(returnValue, logger, e, appDbContext);
         }

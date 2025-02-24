@@ -1,4 +1,5 @@
-﻿using Client.Controllers.V1.MomoServices;
+﻿using Azure;
+using Client.Controllers.V1.MomoServices;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
@@ -66,6 +67,7 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
             var orderId = collection.First(s => s.Key == "orderId").Value;
             var transId = collection.First(s => s.Key == "transId").Value;
             var res = orderInfo.ToString().Split('_');
+
             return new MomoExecuteResponseModel()
             {
                 ErrorCode = errorCode,

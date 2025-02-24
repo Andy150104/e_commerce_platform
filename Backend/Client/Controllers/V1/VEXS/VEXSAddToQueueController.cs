@@ -1,4 +1,4 @@
-﻿ using Client.Controllers;
+﻿using Client.Controllers;
 using Client.Models.Helper;
 using Client.SystemClient;
 using Client.Utils.Consts;
@@ -50,7 +50,7 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
         var response = new VEXSAddToQueueResponse() { Success = false };
         var userName = _context.IdentityEntity.UserName;
         var blindBoxPost = _context.Exchanges.FirstOrDefault(b => b.BlindBoxId == request.BlindBoxId);
-        if(blindBoxPost == null)
+        if (blindBoxPost == null)
         {
             response.SetMessage(MessageId.E11004);
             return response;
@@ -60,7 +60,7 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
             BlindBoxId = Guid.NewGuid(),
             Username = userName,
         };
-        var Queue = new Client.Models.Queue
+        var Queue = new Models.Queue
         {
             Description = request.Message,
             ExchangeId = blindBoxPost.ExchangeId,

@@ -5,6 +5,8 @@ import { useApiServer, useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 import { useLoadingStore } from '../usercontrol/loadingStore'
+import { useUploadImageStore } from '../usercontrol/uploadImageStore'
+import { DateFormat } from '@PKG_SRC/types/enums/constantFrontend'
 
 export const fieldsInitialize = {
   phoneNumber: '',
@@ -65,12 +67,12 @@ export const useVerifyStore = defineStore('Verify', {
       return this.fieldValid
     },
     async onVerify(key: string) {
-      const apiClient = useApiClient()
+      const apiServer = useApiServer()
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
-      const res = await apiClient.api.v1.URSUserVerify.$post({
+      const res = await apiServer.api.v1.UserVerifyKey.$post({
         body: {
-          isOnlyValidation: true,
+          isOnlyValidation: false,
           key: key,
         },
       })
@@ -79,28 +81,61 @@ export const useVerifyStore = defineStore('Verify', {
       return true
     },
     async RegisterUserClient(key: string) {
+      const validation: any = await this.fields.validate()
+      if (validation.valid === false) return false
+      const apiServer = useApiClient()
       const formMessage = useFormMessageStore()
-      //   const validation: any = await this.fields.validate()
-      //   if (validation.valid === false) return false
-      //   const apiServer = useApiClient()
-      //   const formMessage = useFormMessageStore()
-      //   const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
-      //   const loadingStore = useLoadingStore()
-      //   loadingStore.LoadingChange(true)
-      //   const res = await apiServer.api.v1.URSUserRegister.$post({
-      //     body: {
-      //         isOnlyValidation: false,
-      //         key: key,
-      //         addressLine: a
-      //     }
-      //   })
-      //   loadingStore.LoadingChange(false)
-      //   if (!res.success) {
-      //     formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
-      //     return false
-      //   }
-      //   formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
-      //   return true
+      const useImageStore = useUploadImageStore()
+      const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
+      const res = await apiServer.api.v1.URSUserRegister.$post({
+        body: {
+          isOnlyValidation: false,
+          key: key,
+          addressLine: apiFieldValues.addressLine,
+          birthDay: convertDateFormat(apiFieldValues.birthday, DateFormat.YYYYMMDD),
+          city: apiFieldValues.district,
+          district: apiFieldValues.district,
+          gender: Number(apiFieldValues.gender),
+          imageUrl:
+            'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
+          phoneNumber: formatPhoneNumber(apiFieldValues.phoneNumber)?.toString(),
+          planId: '',
+          province: apiFieldValues.province,
+          ward: apiFieldValues.ward,
+        },
+      })
+      loadingStore.LoadingChange(false)
+      if (!res.success) {
+        formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+        return false
+      }
+      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+      this.activeAccount(key)
+      return true
+    },
+    async activeAccount(key: string) {
+      const validation: any = await this.fields.validate()
+      if (validation.valid === false) return false
+      const apiServer = useApiServer()
+      const formMessage = useFormMessageStore()
+      const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
+      const res = await apiServer.api.v1.UserInsertVerify.$post({
+        body: {
+          isOnlyValidation: false,
+          key: key
+        },
+      })
+      loadingStore.LoadingChange(false)
+      if (!res.success) {
+        formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+        return false
+      }
+      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+      return true
     },
   },
 })

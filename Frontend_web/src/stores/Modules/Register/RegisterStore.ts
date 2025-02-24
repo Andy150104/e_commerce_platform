@@ -79,6 +79,7 @@ export const useRegisterStore = defineStore('Register', {
       loadingStore.LoadingChange(true)
       const res = await apiServer.api.v1.UserInsert.$post({
         body: {
+          isOnlyValidation: false,
           username: apiFieldValues.userName,
           email: apiFieldValues.email,
           password: apiFieldValues.password,
@@ -95,10 +96,10 @@ export const useRegisterStore = defineStore('Register', {
       return true
     },
     async onVerify(key: string) {
-      const apiClient = useApiClient()
+      const apiServer = useApiServer()
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
-      const res = await apiClient.api.v1.URSUserVerify.$post({
+      const res = await apiServer.api.v1.UserVerifyKey.$post({
         body: {
           isOnlyValidation: true,
           key: key,
