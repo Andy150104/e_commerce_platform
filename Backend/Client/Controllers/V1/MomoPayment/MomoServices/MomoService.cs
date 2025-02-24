@@ -19,7 +19,7 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
         public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(MomoExecuteResponseModel model)
         {
             model.OrderId = DateTime.UtcNow.Ticks.ToString();
-            model.OrderInfo = model.FullName + "_"+ model.OrderInfo;
+            model.OrderInfo = model.FullName + "_" + model.OrderInfo;
             var rawData =
                 $"partnerCode={_options.Value.PartnerCode}" +
                 $"&accessKey={_options.Value.AccessKey}" +
@@ -61,17 +61,21 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
 
         public MomoExecuteResponseModel PaymentExecuteAsync(IQueryCollection collection)
         {
+            var errorCode = collection.First(s => s.Key == "errorCode").Value;
             var amount = collection.First(s => s.Key == "amount").Value;
             var orderInfo = collection.First(s => s.Key == "orderInfo").Value;
-            var result = orderInfo.ToString().Split('_');
-
+            var orderId = collection.First(s => s.Key == "orderId").Value;
+            var transId = collection.First(s => s.Key == "transId").Value;
+            var res = orderInfo.ToString().Split('_');
 
             return new MomoExecuteResponseModel()
             {
+                ErrorCode = errorCode,
+                FullName = res[1],
                 Amount = amount,
-                OrderId = result[0],
-                OrderInfo = result[2],
-                FullName = result[1]
+                OrderId = res[0],
+                OrderInfo = res[2],
+                TransactionId = transId
             };
         }
 
@@ -90,6 +94,39 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
             var hashString = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
 
             return hashString;
+        }
+
+    public async Task<MomoRefundResponse> CreateRefundAsync(MomoRefundRequest model)
+        {
+            model.OrderId = DateTime.UtcNow.Ticks.ToString();
+            var rawData =
+      $"accessKey={_options.Value.AccessKey}" +
+      $"&amount={model.Amount}" +
+      $"&description={model.Description}" +
+      $"&orderId={model.OrderId}" +
+      $"&partnerCode={model.PartnerCode}" +
+      $"&requestId={model.RequestId}" +
+      $"&transId={model.TransId}";
+            var signature = ComputeHmacSha256(rawData, _options.Value.SecretKey);
+            var client = new RestClient("https://test-payment.momo.vn/v2/gateway/api/refund");
+            var request = new RestRequest() { Method = Method.Post };
+            request.AddHeader("Content-Type", "application/json; charset=UTF-8");
+            var requestData = new
+            {
+                partnerCode = _options.Value.PartnerCode,
+                orderId = model.OrderId,   
+                requestId = model.RequestId, 
+                amount = model.Amount,
+                transId = model.TransId,
+                lang = model.Lang,
+                description = model.Description,
+                signature = signature
+            };
+            request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
+
+            var response = await client.ExecuteAsync(request);
+            var momoResponse = JsonConvert.DeserializeObject<MomoRefundResponse>(response.Content);
+            return momoResponse;
         }
     }
 }

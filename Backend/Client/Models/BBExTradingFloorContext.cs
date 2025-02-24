@@ -7,7 +7,6 @@ namespace Client.Models;
 
 public partial class BBExTradingFloorContext : DbContext
 {
-
     public BBExTradingFloorContext()
     {
     }
@@ -87,7 +86,7 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<WishlistItem> WishlistItems { get; set; }
 
-    private string GetConnectionString()
+    private string GetConnectionString()    
     {
         IConfiguration config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -721,6 +720,44 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasConstraintName("FK__queues__exchange__619B8048");
         });
     
+        modelBuilder.Entity<RefundPlanRequest>(entity =>
+        {
+            entity.HasKey(e => e.RefundRequests);
+
+            entity.ToTable("refundPlanRequests");
+
+            entity.Property(e => e.RefundRequests)
+                .ValueGeneratedNever()
+                .HasColumnName("refundRequests");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.OrderPlanId).HasColumnName("order_Plan_Id");
+            entity.Property(e => e.Reason)
+                .HasMaxLength(255)
+                .HasColumnName("reason");
+            entity.Property(e => e.ResultCode).HasColumnName("result_code");
+            entity.Property(e => e.ResultResponse)
+                .HasMaxLength(255)
+                .HasColumnName("result_response");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.HasOne(d => d.OrderPlan).WithMany(p => p.RefundPlanRequests)
+                .HasForeignKey(d => d.OrderPlanId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_refundPlanRequests_order_plans");
+        });
+
         modelBuilder.Entity<RefundPlanRequest>(entity =>
         {
             entity.HasKey(e => e.RefundRequests);

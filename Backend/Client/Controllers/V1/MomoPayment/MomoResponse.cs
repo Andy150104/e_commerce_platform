@@ -8,11 +8,12 @@ namespace Client.Controllers.V1.MomoServices
 
     public class MomoExecuteResponseModel
     {
-        public string ResultCode { get; set; }
+        public string ErrorCode { get; set; }
         public string OrderId { get; set; }
         public string Amount { get; set; }
         public string FullName { get; set; }
         public string OrderInfo { get; set; }
+        public string TransactionId { get; set; }
     }
 
     public class MomoCreatePaymentResponseModel
@@ -81,6 +82,30 @@ public class MomoIPNModel
 
         [JsonProperty("orderInfo")]
         public string OrderInfo { get; set; }
+    }
+    public class MomoRefundRequest
+    {
+        public string PartnerCode { get; set; }
+        public string OrderId { get; set; }     
+        public string RequestId { get; set; }   
+        public long Amount { get; set; }
+        public long TransId { get; set; }      
+        public string Lang { get; set; }        
+        public string Description { get; set; }
+        public string Signature { get; set; }
+    }
+
+    public class MomoRefundResponse
+    {
+        public string PartnerCode { get; set; }
+        public string OrderId { get; set; }
+        public string RequestId { get; set; }
+        public string ExtraData { get; set; }
+        public long Amount { get; set; }
+        public long TransId { get; set; }
+        public int ResultCode { get; set; }
+        public string Message { get; set; }
+        public long ResponseTime { get; set; }
     }
 
 
