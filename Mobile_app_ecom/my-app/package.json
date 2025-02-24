@@ -6,17 +6,31 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "generate-api": "swagger-typescript-api --path ./openapi.json --output ./src/api/ClientApi --name clientApi.ts --axios",
+    "generate-api-auth": "swagger-typescript-api --path ./openapi-auth.json --output ./src/api/ServerApi --name authApi.ts --axios"
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^7.2.0",
+    "@react-navigation/drawer": "^7.1.1",
+    "@react-navigation/native-stack": "^7.2.0",
+    "@reduxjs/toolkit": "^2.5.1",
+    "axios": "^1.7.9",
     "expo": "~52.0.35",
+    "expo-linear-gradient": "~14.0.2",
     "expo-status-bar": "~2.0.1",
-    "react": "18.3.1",
-    "react-native": "0.76.7"
+    "react-native": "0.76.7",
+    "react-redux": "^9.2.0",
+    "tailwind-react-native-classnames": "^3.0.1",
+    "twrnc": "^4.6.1",
+    "zustand": "^5.0.3",
+    "@react-native-async-storage/async-storage": "1.23.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@types/react": "~18.3.12",
+    "@types/react-native-snap-carousel": "^3.8.11",
+    "swagger-typescript-api": "^13.0.23",
     "typescript": "^5.3.3"
   },
   "private": true

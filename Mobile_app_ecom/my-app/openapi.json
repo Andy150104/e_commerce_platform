@@ -1,0 +1,1808 @@
+{
+  "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "swagger": "2.0",
+  "info": {
+    "title": "My Title",
+    "version": "1.0.0"
+  },
+  "host": "192.168.50.199:5092",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json",
+    "text/json",
+    "application/*+json"
+  ],
+  "produces": [
+    "text/plain",
+    "application/json",
+    "text/json"
+  ],
+  "paths": {
+    "/api/v1/URSUserRegister": {
+      "post": {
+        "tags": [
+          "URSUserRegister"
+        ],
+        "operationId": "URSUserRegister_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/URSUserRegisterRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/URSUserRegisterResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSInsertUserAddress": {
+      "post": {
+        "tags": [
+          "UDSInsertUserAddress"
+        ],
+        "operationId": "UDSInsertUserAddress_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSInsertUserAddressRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSInsertUserAddressResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSSelectUserAddress": {
+      "post": {
+        "tags": [
+          "UDSSelectUserAddress"
+        ],
+        "operationId": "UDSSelectUserAddress_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserAddressRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserAddressResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSSelectUserProfile": {
+      "post": {
+        "tags": [
+          "UDSSelectUserProfile"
+        ],
+        "operationId": "UDSSelectUserProfile_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserProfileRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSSelectUserProfileResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSUpdateUserAddress": {
+      "post": {
+        "tags": [
+          "UDSUpdateUserAddress"
+        ],
+        "operationId": "UDSUpdateUserAddress_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserAddressRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserAddressResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSUpdateUserProfile": {
+      "post": {
+        "tags": [
+          "UDSUpdateUserProfile"
+        ],
+        "operationId": "UDSUpdateUserProfile_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserProfileRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UDSUpdateUserProfileReponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSDeleteCartItem": {
+      "post": {
+        "tags": [
+          "DPSDeleteCartItem"
+        ],
+        "operationId": "DPSDeleteCartItem_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSDeleteCartItemRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSDeleteCartItemReponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSDeleteWishList": {
+      "post": {
+        "tags": [
+          "DPSDeleteWishList"
+        ],
+        "operationId": "DPSDeleteWishList_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSDeleteWishListRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSDeleteWishListResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSInsertCart": {
+      "post": {
+        "tags": [
+          "DPSInsertCart"
+        ],
+        "operationId": "DPSInsertCart_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSInsertCartRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSInsertCartResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSInsertWishList": {
+      "post": {
+        "tags": [
+          "DPSInsertWishList"
+        ],
+        "operationId": "DPSInsertWishList_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSInsertWishListRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSInsertWishListResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSSelectCartItem": {
+      "post": {
+        "tags": [
+          "DPSSelectCartItem"
+        ],
+        "operationId": "DPSSelectCartItem_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSSelectCartItemRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSSelectCartItemResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSSelectItem": {
+      "post": {
+        "tags": [
+          "DPSSelectItem"
+        ],
+        "operationId": "DPSSelectItem_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSSelectItemRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSSelectItemResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSSelectProduct": {
+      "post": {
+        "tags": [
+          "DPSSelectProduct"
+        ],
+        "operationId": "DPSSelectProduct_Post",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSSelectProductRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSSelectProductResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSSelectWishList": {
+      "post": {
+        "tags": [
+          "DPSSelectWishList"
+        ],
+        "operationId": "DPSSelectWishList_Post",
+        "parameters": [
+          {
+            "name": "itemRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSSelectWishListRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSSelectWishListResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/DPSUpdateCartItem": {
+      "post": {
+        "tags": [
+          "DPSUpdateCartItem"
+        ],
+        "operationId": "DPSUpdateCartItem_Post",
+        "parameters": [
+          {
+            "name": "itemRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DPSUpdateCartItemRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/DPSUpdateCartItemResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "URSUserRegisterResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfObject"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {}
+          }
+        }
+      ]
+    },
+    "AbstractApiResponseOfObject": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {}
+      }
+    },
+    "DetailError": {
+      "type": "object",
+      "required": [
+        "field",
+        "messageId",
+        "errorMessage"
+      ],
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "URSUserRegisterRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "key"
+          ],
+          "properties": {
+            "phoneNumber": {
+              "type": "string",
+              "pattern": "^\\+?[1-9]\\d{1,14}$"
+            },
+            "birthDay": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "imageUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "gender": {
+              "type": "integer",
+              "format": "byte",
+              "maximum": 3.0,
+              "minimum": 1.0
+            },
+            "addressLine": {
+              "type": "string",
+              "pattern": "^[\\p{L}0-9''-'\\s]{1,40}$"
+            },
+            "ward": {
+              "type": "string",
+              "pattern": "^[\\p{L}0-9''-'\\s]{1,40}$"
+            },
+            "city": {
+              "type": "string",
+              "pattern": "^[\\p{L}\\s]{1,40}$"
+            },
+            "province": {
+              "type": "string",
+              "pattern": "^[\\p{L}\\s]{1,40}$"
+            },
+            "district": {
+              "type": "string",
+              "pattern": "^[\\p{L}0-9''-'\\s]{1,40}$"
+            },
+            "key": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "AbstractApiRequest": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "isOnlyValidation"
+      ],
+      "properties": {
+        "isOnlyValidation": {
+          "type": "boolean"
+        }
+      }
+    },
+    "UDSInsertUserAddressResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AbstractApiResponseOfString": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "type": "string"
+        }
+      }
+    },
+    "UDSInsertUserAddressRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "addressLine",
+            "ward",
+            "city",
+            "province",
+            "district"
+          ],
+          "properties": {
+            "addressLine": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "ward": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "city": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "province": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "district": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            }
+          }
+        }
+      ]
+    },
+    "UDSSelectUserAddressResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfListOfUDSSelectUserAddressEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UDSSelectUserAddressEntity"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "UDSSelectUserAddressEntity": {
+      "type": "object",
+      "required": [
+        "addressId",
+        "firstName",
+        "lastName"
+      ],
+      "properties": {
+        "addressId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "addressLine": {
+          "type": "string"
+        },
+        "ward": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "province": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfListOfUDSSelectUserAddressEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UDSSelectUserAddressEntity"
+          }
+        }
+      }
+    },
+    "UDSSelectUserAddressRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "UDSSelectUserProfileResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfUDSSelectUserProfileEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "$ref": "#/definitions/UDSSelectUserProfileEntity"
+            }
+          }
+        }
+      ]
+    },
+    "UDSSelectUserProfileEntity": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "birthDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "gender": {
+          "type": "integer",
+          "format": "byte"
+        }
+      }
+    },
+    "AbstractApiResponseOfUDSSelectUserProfileEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/UDSSelectUserProfileEntity"
+        }
+      }
+    },
+    "UDSSelectUserProfileRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "UDSUpdateUserAddressResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UDSUpdateUserAddressRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "addressId"
+          ],
+          "properties": {
+            "addressId": {
+              "type": "string",
+              "format": "guid"
+            },
+            "addressLine": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "ward": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            },
+            "city": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "province": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "district": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9''-'\\s]{1,40}$"
+            }
+          }
+        }
+      ]
+    },
+    "UDSUpdateUserProfileReponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UDSUpdateUserProfileRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "firstName",
+            "lastName"
+          ],
+          "properties": {
+            "firstName": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "lastName": {
+              "type": "string",
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "phoneNumber": {
+              "type": "string",
+              "pattern": "^\\+?[1-9]\\d{1,14}$"
+            },
+            "birthDay": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "imageUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "gender": {
+              "type": "integer",
+              "format": "byte",
+              "maximum": 3.0,
+              "minimum": 1.0
+            }
+          }
+        }
+      ]
+    },
+    "DPSDeleteCartItemReponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSDeleteCartItemRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "codeProduct"
+          ],
+          "properties": {
+            "codeProduct": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSDeleteWishListResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSDeleteWishListRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "codeProduct"
+          ],
+          "properties": {
+            "codeProduct": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSInsertCartResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSInsertCartRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "codeProduct",
+            "quantity"
+          ],
+          "properties": {
+            "codeProduct": {
+              "type": "string"
+            },
+            "quantity": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "DPSInsertWishListResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSInsertWishListRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "codeProduct"
+          ],
+          "properties": {
+            "codeProduct": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSSelectCartItemResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfListOfDPSSelectCartItemEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DPSSelectCartItemEntity"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "DPSSelectCartItemEntity": {
+      "type": "object",
+      "required": [
+        "productId",
+        "productName",
+        "price",
+        "quantity",
+        "shortDescription",
+        "images"
+      ],
+      "properties": {
+        "productId": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPrice": {
+          "type": "number",
+          "format": "decimal"
+        },
+        "shortDescription": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DPSSelectCartItemImages"
+          }
+        }
+      }
+    },
+    "DPSSelectCartItemImages": {
+      "type": "object",
+      "required": [
+        "imageUrl"
+      ],
+      "properties": {
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfListOfDPSSelectCartItemEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DPSSelectCartItemEntity"
+          }
+        }
+      }
+    },
+    "DPSSelectCartItemRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "DPSSelectItemResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfDPSSelectItemEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "$ref": "#/definitions/DPSSelectItemEntity"
+            }
+          }
+        }
+      ]
+    },
+    "DPSSelectItemEntity": {
+      "type": "object",
+      "required": [
+        "totalRecords",
+        "totalPages",
+        "items"
+      ],
+      "properties": {
+        "totalRecords": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalPages": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ItemEntity"
+          }
+        }
+      }
+    },
+    "ItemEntity": {
+      "type": "object",
+      "required": [
+        "codeProduct",
+        "nameProduct",
+        "price",
+        "discount",
+        "salePrice",
+        "imageUrl",
+        "firstNameCreator",
+        "lastNameCreator"
+      ],
+      "properties": {
+        "codeProduct": {
+          "type": "string"
+        },
+        "nameProduct": {
+          "type": "string"
+        },
+        "shortDescription": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string"
+        },
+        "discount": {
+          "type": "string"
+        },
+        "salePrice": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "childCategoryName": {
+          "type": "string"
+        },
+        "parentCategoryName": {
+          "type": "string"
+        },
+        "wishlistId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "imageUrl": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DpsSelectItemListImageUrl"
+          }
+        },
+        "averageRating": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalReviews": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "exchangeId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "firstNameCreator": {
+          "type": "string"
+        },
+        "lastNameCreator": {
+          "type": "string"
+        }
+      }
+    },
+    "DpsSelectItemListImageUrl": {
+      "type": "object",
+      "required": [
+        "imageUrl"
+      ],
+      "properties": {
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfDPSSelectItemEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/DPSSelectItemEntity"
+        }
+      }
+    },
+    "DPSSelectItemRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "searchBy",
+            "currentPage",
+            "pageSize"
+          ],
+          "properties": {
+            "searchBy": {
+              "type": "integer",
+              "format": "byte"
+            },
+            "sortBy": {
+              "type": "integer",
+              "format": "byte"
+            },
+            "minimumPrice": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "maximumPrice": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "childCategoryName": {
+              "type": "string"
+            },
+            "parentCategoryName": {
+              "type": "string"
+            },
+            "currentPage": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "pageSize": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      ]
+    },
+    "DPSSelectProductResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfDPSSelectProductEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "$ref": "#/definitions/DPSSelectProductEntity"
+            }
+          }
+        }
+      ]
+    },
+    "DPSSelectProductEntity": {
+      "type": "object",
+      "required": [
+        "codeProduct",
+        "nameProduct",
+        "price",
+        "discount",
+        "salePrice",
+        "imageUrls"
+      ],
+      "properties": {
+        "codeProduct": {
+          "type": "string"
+        },
+        "nameProduct": {
+          "type": "string"
+        },
+        "shortDescription": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string"
+        },
+        "discount": {
+          "type": "string"
+        },
+        "salePrice": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "childCategoryName": {
+          "type": "string"
+        },
+        "parentCategoryName": {
+          "type": "string"
+        },
+        "wishlistId": {
+          "type": "string",
+          "format": "guid"
+        },
+        "imageUrls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DpsSelectProductListImageUrl"
+          }
+        },
+        "averageRating": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalReviews": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "DpsSelectProductListImageUrl": {
+      "type": "object",
+      "required": [
+        "imageUrl"
+      ],
+      "properties": {
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfDPSSelectProductEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/DPSSelectProductEntity"
+        }
+      }
+    },
+    "DPSSelectProductRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "codeProduct"
+          ],
+          "properties": {
+            "codeProduct": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSSelectWishListResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfListOfDPSSelectWishListEntity"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DPSSelectWishListEntity"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "DPSSelectWishListEntity": {
+      "type": "object",
+      "required": [
+        "productId",
+        "productName",
+        "images"
+      ],
+      "properties": {
+        "productId": {
+          "type": "string"
+        },
+        "productName": {
+          "type": "string"
+        },
+        "shortDescription": {
+          "type": "string"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DPSSelectWishListImages"
+          }
+        }
+      }
+    },
+    "DPSSelectWishListImages": {
+      "type": "object",
+      "required": [
+        "imageUrl"
+      ],
+      "properties": {
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfListOfDPSSelectWishListEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": [
+        "success",
+        "messageId",
+        "message",
+        "detailErrorList"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DPSSelectWishListEntity"
+          }
+        }
+      }
+    },
+    "DPSSelectWishListRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "DPSUpdateCartItemResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": [
+            "response"
+          ],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "DPSUpdateCartItemRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": [
+            "quantity",
+            "productId"
+          ],
+          "properties": {
+            "quantity": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "productId": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "JWT Token": {
+      "type": "apiKey",
+      "description": "Copy this into the value field: Bearer {token}",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "JWT Token": []
+    }
+  ]
+}
