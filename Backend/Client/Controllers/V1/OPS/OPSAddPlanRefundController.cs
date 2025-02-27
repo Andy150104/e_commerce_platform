@@ -1,17 +1,15 @@
-﻿using Client.Controllers;
-using Client.Controllers.V1.MomoPayment.MomoServices;
-using Client.Controllers.V1.OnlinePaymentScreen;
+﻿using Client.Controllers.V1.OnlinePaymentScreen;
 using Client.Models;
 using Client.Models.Helper;
 using Client.SystemClient;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 
-namespace Client.controllers.v1.OnlinePaymentScreen;
+namespace Client.Controllers.V1.OPS;
+
 /// <summary>
 /// OPSAddPlanRefundController - buying plan
 /// </summary>
@@ -21,40 +19,54 @@ public class OPSAddPlanRefundController : AbstractApiController<OPSAddPlanRefund
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="identityapiclient"></param>
     public OPSAddPlanRefundController(AppDbContext context, IIdentityApiClient identityapiclient)
     {
         _context = context;
         _context._Logger = logger;
         _identityApiClient = identityapiclient;
     }
+
     /// <summary>
-    /// coming posh
+    /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns
     [HttpPost]
-    [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes =
+        OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public override OPSAddPlanRefundResponse Post(OPSAddPlanRefundRequest request)
     {
         return Post(request, _context, logger, new OPSAddPlanRefundResponse());
     }
+
     /// <summary>
-    /// main processing
+    /// Main processing
     /// </summary>
     /// <param name="request"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
     protected override OPSAddPlanRefundResponse Exec(OPSAddPlanRefundRequest request, IDbContextTransaction transaction)
     {
-        var response = new OPSAddPlanRefundResponse
-            () { Success = false };
+        var response = new OPSAddPlanRefundResponse() { Success = false };
+
+        // Get userName
         var username = _context.IdentityEntity.UserName;
+
+        // Get OrderPlan
         var orderPlan = _context.OrderPlans.FirstOrDefault(op => op.OrderId == request.OrderPlanId);
         if (orderPlan == null)
         {
             response.SetMessage(MessageId.E11004);
             return response;
         }
+
+        // Get RefundPlanRequest
         var refundRequest = new RefundPlanRequest
         {
             RefundRequests = Guid.NewGuid(),
@@ -62,16 +74,20 @@ public class OPSAddPlanRefundController : AbstractApiController<OPSAddPlanRefund
             OrderPlanId = orderPlan.OrderId,
             Reason = request.Reason,
         };
+
+        // Add RefundPlanRequest
         _context.RefundPlanRequests.Add(refundRequest);
         _context.SaveChanges(username);
-        //true
         transaction.Commit();
+
+        // True
         response.Success = true;
         response.SetMessage(MessageId.I00001);
         return response;
     }
+
     /// <summary>
-    /// error check
+    /// Error Check
     /// </summary>
     /// <param name="request"></param>
     /// <param name="detailerrorlist"></param>
@@ -86,9 +102,9 @@ public class OPSAddPlanRefundController : AbstractApiController<OPSAddPlanRefund
             response.DetailErrorList = detailerrorlist;
             return response;
         }
-        //true
+
+        // True
         response.Success = true;
         return response;
     }
 }
-

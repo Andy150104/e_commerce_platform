@@ -4,7 +4,7 @@ using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Client.Controllers.V1.MomoServices
+namespace Client.Controllers.V1.MomoPayment
 {
     [Route("api/v1/[controller]")]
     [ApiController]
@@ -45,7 +45,7 @@ namespace Client.Controllers.V1.MomoServices
             }
             using (var transaction = _appDbContext.Database.BeginTransaction())
             {
-                orderPlan.Status = (byte)OrderPlansEnum.Success;
+                orderPlan.Status = (byte) ConstantEnum.OrderPlans.Success;
                 orderPlan.Description = response.TransactionId;
                 userName.PlanId = orderPlan.PlanId;
                 userName.PlanExpired = DateTime.Now.AddMonths(plan.DurationMonths);

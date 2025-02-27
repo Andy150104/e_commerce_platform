@@ -1,13 +1,13 @@
-﻿using Client.Controllers;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Client.Controllers.V1.ViewQueueExchangeScreen
+namespace Client.Controllers.V1.VEXS
 {
     public class VEXSAddToQueueRequest : AbstractApiRequest
     {
         [Required(ErrorMessage = "BlindBoxId is required")]
         public Guid BlindBoxId { get; set; }
-        [Required(ErrorMessage = "Message is required")]
-        public string Message { get; set; }
+        
+        [Required(ErrorMessage = "Description is required")]
+        public string Description { get; set; }
     }
 }

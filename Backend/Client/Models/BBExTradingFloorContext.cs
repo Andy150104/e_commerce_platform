@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
@@ -86,11 +85,13 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<WishlistItem> WishlistItems { get; set; }
 
-    private string GetConnectionString()    
+    public virtual DbSet<WishlistItemBlindBox> WishlistItemBlindBoxes { get; set; }
+
+    private string GetConnectionString()
     {
         IConfiguration config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
+            .AddJsonFile("appsettings.json",true,true)
             .Build();
         var strConn = config["ConnectionStrings:DefaultConnection"];
 
@@ -99,6 +100,7 @@ public partial class BBExTradingFloorContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -369,7 +371,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("images");
 
             entity.Property(e => e.ImageId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("image_id");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.ProductId)
@@ -389,7 +391,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("images_blind_box");
 
             entity.Property(e => e.ImageId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("image_id");
             entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
             entity.Property(e => e.CreatedAt)
@@ -464,7 +466,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("orders");
 
             entity.Property(e => e.OrderId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -500,7 +502,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("order_details");
 
             entity.Property(e => e.OrderDetailId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_detail_id");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductId)
@@ -529,7 +531,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("order_plans");
 
             entity.Property(e => e.OrderId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
@@ -577,7 +579,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("orders_exchanges");
 
             entity.Property(e => e.OrderExchangeId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_exchange_id");
             entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
             entity.Property(e => e.QueueId).HasColumnName("queue_id");
@@ -692,7 +694,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("queues");
 
             entity.Property(e => e.QueueId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("queue_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
@@ -705,9 +707,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("description");
             entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .HasColumnName("status");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -718,82 +718,6 @@ public partial class BBExTradingFloorContext : DbContext
             entity.HasOne(d => d.Exchange).WithMany(p => p.Queues)
                 .HasForeignKey(d => d.ExchangeId)
                 .HasConstraintName("FK__queues__exchange__619B8048");
-        });
-    
-        modelBuilder.Entity<RefundPlanRequest>(entity =>
-        {
-            entity.HasKey(e => e.RefundRequests);
-
-            entity.ToTable("refundPlanRequests");
-
-            entity.Property(e => e.RefundRequests)
-                .ValueGeneratedNever()
-                .HasColumnName("refundRequests");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("created_by");
-            entity.Property(e => e.IsActive).HasColumnName("is_active");
-            entity.Property(e => e.OrderPlanId).HasColumnName("order_Plan_Id");
-            entity.Property(e => e.Reason)
-                .HasMaxLength(255)
-                .HasColumnName("reason");
-            entity.Property(e => e.ResultCode).HasColumnName("result_code");
-            entity.Property(e => e.ResultResponse)
-                .HasMaxLength(255)
-                .HasColumnName("result_response");
-            entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("updated_by");
-
-            entity.HasOne(d => d.OrderPlan).WithMany(p => p.RefundPlanRequests)
-                .HasForeignKey(d => d.OrderPlanId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_refundPlanRequests_order_plans");
-        });
-
-        modelBuilder.Entity<RefundPlanRequest>(entity =>
-        {
-            entity.HasKey(e => e.RefundRequests);
-
-            entity.ToTable("refundPlanRequests");
-
-            entity.Property(e => e.RefundRequests)
-                .ValueGeneratedNever()
-                .HasColumnName("refundRequests");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("created_by");
-            entity.Property(e => e.IsActive).HasColumnName("is_active");
-            entity.Property(e => e.OrderPlanId).HasColumnName("order_Plan_Id");
-            entity.Property(e => e.Reason)
-                .HasMaxLength(255)
-                .HasColumnName("reason");
-            entity.Property(e => e.ResultCode).HasColumnName("result_code");
-            entity.Property(e => e.ResultResponse)
-                .HasMaxLength(255)
-                .HasColumnName("result_response");
-            entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("updated_by");
-
-            entity.HasOne(d => d.OrderPlan).WithMany(p => p.RefundPlanRequests)
-                .HasForeignKey(d => d.OrderPlanId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_refundPlanRequests_order_plans");
         });
 
         modelBuilder.Entity<RefundPlanRequest>(entity =>
@@ -841,7 +765,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("reports");
 
             entity.Property(e => e.ReportId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("report_id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(NULL)")
@@ -879,7 +803,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("reviews");
 
             entity.Property(e => e.ReviewId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("review_id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -1356,9 +1280,44 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasConstraintName("FK__wishlist___wishl__0B5CAFEA");
         });
 
+        modelBuilder.Entity<WishlistItemBlindBox>(entity =>
+        {
+            entity.HasKey(e => e.WishlistItemId);
+
+            entity.ToTable("wishlist_item_blind_box");
+
+            entity.Property(e => e.WishlistItemId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("wishlist_item_id");
+            entity.Property(e => e.BlindboxId).HasColumnName("blindbox_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
+
+            entity.HasOne(d => d.Blindbox).WithMany(p => p.WishlistItemBlindBoxes)
+                .HasForeignKey(d => d.BlindboxId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_wishlist_blind_box_blinx_box");
+
+            entity.HasOne(d => d.Wishlist).WithMany(p => p.WishlistItemBlindBoxes)
+                .HasForeignKey(d => d.WishlistId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_wishlist_blind_box__wishlists");
+        });
+
         OnModelCreatingPartial(modelBuilder);
     }
-
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

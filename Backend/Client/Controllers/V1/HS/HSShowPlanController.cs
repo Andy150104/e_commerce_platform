@@ -1,5 +1,4 @@
-﻿using Client.Controllers;
-using Client.Models;
+﻿using Client.Models;
 using Client.Models.Helper;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
@@ -7,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 
-namespace Client.Controllers.V1.HomeScreen;
+namespace Client.Controllers.V1.HS;
 
 /// <summary>
 /// HSShowPlanController - Show Plans Home Screen
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class HSShowPlanController : AbstractApiControllerNotToken<HSShowPlanRequest, HSShowPlanResponse, List<VwPlan>>
+public class HSShowPlanController : AbstractApiControllerNotToken<HSShowPlanRequest, HSShowPlanResponse, List<HSShowPlanEntity>>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
@@ -26,7 +25,7 @@ public class HSShowPlanController : AbstractApiControllerNotToken<HSShowPlanRequ
     }
 
     /// <summary>
-    /// Incomng Post
+    /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -34,10 +33,9 @@ public class HSShowPlanController : AbstractApiControllerNotToken<HSShowPlanRequ
     {
         return Post(request, _context, logger, new HSShowPlanResponse());
     }
-
-
+    
     /// <summary>
-    /// Main processing - Retrieved VwPlan table from database
+    /// Main processing
     /// </summary>
     /// <param name="request"></param>
     /// <param name="transaction"></param>
@@ -46,16 +44,22 @@ public class HSShowPlanController : AbstractApiControllerNotToken<HSShowPlanRequ
     {
         var response = new HSShowPlanResponse() { Success = false };
 
-        var plans = _context.VwPlans.AsNoTracking().ToList();
-        if (plans == null || plans.Count == 0)
-        {
-            response.SetMessage(MessageId.E00000, "No plans found");
-            return response;
-        }
-
-        response.Response = plans;
+        // Get plans
+        var plans = _context.VwPlans.AsNoTracking()
+            .Select(x => new HSShowPlanEntity
+            {
+                PlanId = x.PlanId,
+                PlanName = x.PlanName,
+                Description = x.Description,
+                Price = x.Price,
+                DurationMonths = x.DurationMonths
+            })
+            .ToList();
+        
+        // True
         response.Success = true;
-        response.SetMessage(MessageId.I00001, "Plan retrieved successfully");
+        response.Response = plans;
+        response.SetMessage(MessageId.I00001);
         return response;
     }
     /// <summary>

@@ -1,7 +1,4 @@
-﻿using Client.Controllers;
-using server.Models;
-
-namespace Client.Controllers.V1.ViewQueueExchangeScreen
+﻿namespace Client.Controllers.V1.VEXS
 {
     public class VEXSAddToQueueResponse : AbstractApiResponse<string>
     {

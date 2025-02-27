@@ -1,7 +1,4 @@
-﻿using Client.Controllers;
-using server.Models;
-
-namespace Client.Controllers.V1.OnlinePaymentScreen
+﻿namespace Client.Controllers.V1.OPS
 {
     public class OPSBuyingPlanResponse : AbstractApiResponse<string>
     {

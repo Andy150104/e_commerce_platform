@@ -1,17 +1,14 @@
-﻿using Client.Controllers;
+﻿using Client.Models;
 using Client.Models.Helper;
 using Client.SystemClient;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
-using server.Controllers.V1.AEPS.OpenAI;
-using server.Models;
-using server.Utils.Consts;
 
-namespace Client.Controllers.V1.ViewQueueExchangeScreen;
+namespace Client.Controllers.V1.VEXS;
+
 /// <summary>
 /// AEPSAddExchangeProductController - Add Exchange Product
 /// </summary>
@@ -21,17 +18,23 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
+    
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="identityApiClient"></param>
     public VEXSAddToQueueController(AppDbContext context, IIdentityApiClient identityApiClient)
     {
         _context = context;
         _context._Logger = logger;
         _identityApiClient = identityApiClient;
     }
+
     /// <summary>
-    /// Coming Posh
+    /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
-    /// <returns></returns
     [HttpPost]
     [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public override VEXSAddToQueueResponse Post(VEXSAddToQueueRequest request)
@@ -48,32 +51,38 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
     protected override VEXSAddToQueueResponse Exec(VEXSAddToQueueRequest request, IDbContextTransaction transaction)
     {
         var response = new VEXSAddToQueueResponse() { Success = false };
+        
+        // Get userName
         var userName = _context.IdentityEntity.UserName;
+        
+        // Get blindBoxPost
         var blindBoxPost = _context.Exchanges.FirstOrDefault(b => b.BlindBoxId == request.BlindBoxId);
         if (blindBoxPost == null)
         {
-            response.SetMessage(MessageId.E11004);
+            response.SetMessage(MessageId.I00000, CommonMessages.BlindBoxNotFound);
             return response;
         }
-        var blindBox = new Client.Models.BlindBox
+        
+        var blindBox = new BlindBox
         {
-            BlindBoxId = Guid.NewGuid(),
             Username = userName,
         };
-        var Queue = new Models.Queue
-        {
-            Description = request.Message,
-            ExchangeId = blindBoxPost.ExchangeId,
-            QueueId = Guid.NewGuid(),
-            Status = "Active"
-        };
         _context.BlindBoxs.Add(blindBox);
-        _context.Queues.Add(Queue);
+        var queue = new Queue
+        {
+            Description = request.Description,
+            ExchangeId = blindBoxPost.ExchangeId,
+            Status = (byte) ConstantEnum.ExchangeStatus.PendingExchange,
+        };
+        _context.Queues.Add(queue);
+        
+        // Save
         _context.SaveChanges(userName);
-        //True
         transaction.Commit();
+
+        // True
         response.Success = true;
-        response.SetMessage(MessageId.I00003);
+        response.SetMessage(MessageId.I00001);
         return response;
     }
     /// <summary>
@@ -92,7 +101,8 @@ public class VEXSAddToQueueController : AbstractApiController<VEXSAddToQueueRequ
             response.DetailErrorList = detailErrorList;
             return response;
         }
-        //true
+        
+        // True
         response.Success = true;
         return response;
     }

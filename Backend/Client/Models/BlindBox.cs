@@ -28,4 +28,6 @@ public partial class BlindBox
     public virtual User UsernameNavigation { get; set; } = null!;
 
     public virtual Wishlist? Wishlist { get; set; }
+
+    public virtual ICollection<WishlistItemBlindBox> WishlistItemBlindBoxes { get; set; } = new List<WishlistItemBlindBox>();
 }

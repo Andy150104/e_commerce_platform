@@ -1,41 +1,38 @@
-﻿using Client.Controllers;
-using Client.Models;
+﻿using Client.Models;
 using Client.Models.Helper;
 using Client.SystemClient;
 using Client.Utils.Consts;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
-using server.Controllers.V1.AEPS.OpenAI;
-using server.Models;
-using server.Utils.Consts;
 
-namespace Client.Controllers.V1.AddExchangeProductScreen;
+namespace Client.Controllers.V1.AEPS;
+
 /// <summary>
 /// AEPSAddExchangeProductController - Add Exchange Product
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExchangeProductRequest, AEPSAddExchangeProductResponse, string>
+public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExchangeProductRequest,
+    AEPSAddExchangeProductResponse, string>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
+
     public AEPSAddExchangeProductController(AppDbContext context, IIdentityApiClient identityApiClient)
     {
         _context = context;
-        _context._Logger = logger; 
+        _context._Logger = logger;
         _identityApiClient = identityApiClient;
     }
+
     /// <summary>
     /// Coming Posh
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns
-   
     public override AEPSAddExchangeProductResponse Post(AEPSAddExchangeProductRequest request)
-        {
+    {
         return Post(request, _context, logger, new AEPSAddExchangeProductResponse());
     }
 
@@ -53,24 +50,32 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
 
         var blindBox = new BlindBox
         {
-            BlindBoxId = Guid.NewGuid(),
             Username = userName
         };
-
-        blindBox.ImagesBlindBoxes = request.ImageUrls.Select(i => new ImagesBlindBox { BlindBoxId = blindBox.BlindBoxId, ImageId = Guid.NewGuid(), ImageUrl = i }).ToList();
-
+        _context.BlindBoxs.Add(blindBox);
+        _context.SaveChanges(userName);
+        
+        blindBox.ImagesBlindBoxes = request.ImageUrls
+            .Select(i => new ImagesBlindBox
+                { 
+                    BlindBoxId = blindBox.BlindBoxId, 
+                    ImageUrl = i 
+                }).ToList();
+        _context.ImagesBlindBoxes.AddRange(blindBox.ImagesBlindBoxes);
+        _context.SaveChanges(userName);
+        
         var exchange = new Exchange
         {
-            ExchangeId = Guid.NewGuid(),
             BlindBoxId = blindBox.BlindBoxId
         };
 
         if (!checkImage)
         {
-            exchange.Status = (byte)ExchangeEnum.fail;
-        }else 
-            exchange.Status = (byte)(ExchangeEnum.pendingExchange);
-        _context.BlindBoxs.Add(blindBox);
+            exchange.Status = (byte) ConstantEnum.PostingStatus.Fail;
+        }
+        else
+            exchange.Status = (byte) ConstantEnum.PostingStatus.PendingExchange;
+
         _context.Exchanges.Add(exchange);
         _context.SaveChanges(userName);
         //True
@@ -81,8 +86,10 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
         {
             response.SetMessage("Invalid Images");
         }
+
         return response;
     }
+
     /// <summary>
     /// Error check
     /// </summary>
@@ -90,7 +97,8 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
     /// <param name="detailErrorList"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
-    protected internal override AEPSAddExchangeProductResponse ErrorCheck(AEPSAddExchangeProductRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
+    protected internal override AEPSAddExchangeProductResponse ErrorCheck(AEPSAddExchangeProductRequest request,
+        List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
         var response = new AEPSAddExchangeProductResponse() { Success = false };
         if (detailErrorList.Count > 0)
@@ -99,9 +107,9 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
             response.DetailErrorList = detailErrorList;
             return response;
         }
+
         //true
         response.Success = true;
         return response;
     }
 }
-

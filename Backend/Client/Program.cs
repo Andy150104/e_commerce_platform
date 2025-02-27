@@ -1,4 +1,5 @@
 using System.Net;
+using Client.Controllers.V1.MomoPayment;
 using Client.Models;
 using Client.Models.Helper;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,6 @@ using NSwag.Generation.Processors.Security;
 using OpenIddict.Validation.AspNetCore;
 using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
 using Client.SystemClient;
-using server.Models;
-using Client.Controllers.V1.MomoServices;
 using Client.Controllers.V1.MomoPayment.MomoServices;
 
 var builder = WebApplication.CreateBuilder(args);

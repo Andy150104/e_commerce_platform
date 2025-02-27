@@ -1,4 +1,4 @@
-﻿using Client.Controllers;
+﻿using Client.Controllers.V1.MomoPayment;
 using Client.Controllers.V1.MomoPayment.MomoServices;
 using Client.Controllers.V1.OnlinePaymentScreen;
 using Client.Models;
@@ -11,9 +11,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 
-namespace Client.controllers.v1.onlinepaymentscreen;
+namespace Client.Controllers.V1.OPS;
+
 /// <summary>
-/// opsbuyingplancontroller - buying plan
+/// OPSBuyingPlanController - Buying Plan
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
@@ -21,19 +22,25 @@ public class OPSBuyingPlanController : AbstractApiController<OPSBuyingPlanReques
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
-    private readonly IMomoService _momoservice;
-    public OPSBuyingPlanController(AppDbContext context, IIdentityApiClient identityapiclient, IMomoService momoservice)
+    private readonly IMomoService _momoService;
+
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="identityApiClient"></param>
+    /// <param name="momoService"></param>
+    public OPSBuyingPlanController(AppDbContext context, IIdentityApiClient identityApiClient, IMomoService momoService)
     {
         _context = context;
         _context._Logger = logger;
-        _identityApiClient = identityapiclient;
-        _momoservice = momoservice;
+        _identityApiClient = identityApiClient;
+        _momoService = momoService;
     }
     /// <summary>
-    /// coming posh
+    /// Incoming Post
     /// </summary>
     /// <param name="request"></param>
-    /// <returns></returns
     [HttpPost]
     [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public override OPSBuyingPlanResponse Post(OPSBuyingPlanRequest request)
@@ -42,7 +49,7 @@ public class OPSBuyingPlanController : AbstractApiController<OPSBuyingPlanReques
     }
 
     /// <summary>
-    /// main processing
+    /// Main processing
     /// </summary>
     /// <param name="request"></param>
     /// <param name="transaction"></param>
@@ -50,51 +57,62 @@ public class OPSBuyingPlanController : AbstractApiController<OPSBuyingPlanReques
     protected override OPSBuyingPlanResponse Exec(OPSBuyingPlanRequest request, IDbContextTransaction transaction)
     {
         var response = new OPSBuyingPlanResponse() { Success = false };
+        
+        // Get userName
         var username = _context.IdentityEntity.UserName;
+        
         Voucher voucher;
-        Plan plan = _context.Plans.AsNoTracking().FirstOrDefault(p => p.PlanId == request.PlanId);
+        
+        // Get Plan
+        var plan = _context.Plans.AsNoTracking().FirstOrDefault(p => p.PlanId == request.PlanId);
         if (plan == null)
         {
-            response.SetMessage(MessageId.E11004);
+            response.SetMessage(MessageId.I00000, CommonMessages.PlanNotFound);
             return response;
         }
-        var orderplan = new OrderPlan
+        
+        var orderPlan = new OrderPlan
         {
-            OrderId = Guid.NewGuid(),
             PlanId = request.PlanId,
             Username = username,
             Price = plan.Price,
-            Status = (byte)OrderPlansEnum.Pending
+            Status = (byte) ConstantEnum.OrderPlans.Pending
         };
+        
         if (request.VoucherId != null)
         {
             voucher = _context.Vouchers.AsNoTracking().FirstOrDefault(v => v.VoucherId == request.VoucherId);
             if (voucher == null)
             {
-                response.SetMessage(MessageId.E11004);
+                response.SetMessage(MessageId.I00000, CommonMessages.VoucherNotFound);
                 return response;
             }
-            orderplan.VoucherId = voucher.VoucherId;
-            orderplan.Price = plan.Price - voucher.UnitPrice;
+            orderPlan.VoucherId = voucher.VoucherId;
+            orderPlan.Price = plan.Price - voucher.UnitPrice;
         }
-        var res = _momoservice.CreatePaymentAsync(new Controllers.V1.MomoServices.MomoExecuteResponseModel
+        
+        // Create Payment
+        var res = _momoService.CreatePaymentAsync(new MomoExecuteResponseModel
         {
-            FullName = $"{orderplan.OrderId}_{username}",
-            Amount = Math.Round(orderplan.Price * 100, 0).ToString(),
-            OrderId = orderplan.OrderId.ToString(),
+            FullName = $"{orderPlan.OrderId}_{username}",
+            Amount = Math.Round(orderPlan.Price * 100, 0).ToString(),
+            OrderId = orderPlan.OrderId.ToString(),
             OrderInfo = plan.Description
         }).Result;
 
-        _context.OrderPlans.Add(orderplan);
+        // Add OrderPlan
+        _context.OrderPlans.Add(orderPlan);
         _context.SaveChanges(username);
-        //true
         transaction.Commit();
+
+        // True
         response.Success = true;
         response.Response = res.PayUrl;
         return response;
     }
+    
     /// <summary>
-    /// error check
+    /// Error check
     /// </summary>
     /// <param name="request"></param>
     /// <param name="detailerrorlist"></param>
@@ -109,7 +127,8 @@ public class OPSBuyingPlanController : AbstractApiController<OPSBuyingPlanReques
             response.DetailErrorList = detailerrorlist;
             return response;
         }
-        //true
+        
+        // True
         response.Success = true;
         return response;
     }

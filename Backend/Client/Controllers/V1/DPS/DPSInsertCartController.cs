@@ -72,13 +72,6 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
         
         // Get Product
         var productSelect = _context.VwProductDisplays.FirstOrDefault(x => x.ProductId == request.CodeProduct);
-        
-        if (productSelect == null)
-        {
-            response.SetMessage(MessageId.I00000, "Product not found");
-            return response;
-        }
-
         if (request.Quantity > productSelect.Quantity)
         {
             response.SetMessage(MessageId.I00000, "Quantity is greater than stock");
@@ -89,7 +82,21 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
 
         if (cartItem != null)
         {
-            cartItem.Quantity += request.Quantity;
+            cartItem.Quantity = request.Quantity;
+            if (cartItem.Quantity == 0)
+            {
+                // Delete CartItem
+                cartItem.IsActive = false;
+                
+                // Save
+                _context.CartItems.Update(cartItem);
+                _context.SaveChanges(userName);
+                transaction.Commit();
+                
+                response.Success = true;
+                response.SetMessage(MessageId.I00001, "Delete CartItem");
+                return response;
+            }
             if (!cartItem.IsActive)
             {
                 cartItem.IsActive = true;
