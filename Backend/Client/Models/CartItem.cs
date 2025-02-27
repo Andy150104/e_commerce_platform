@@ -9,9 +9,9 @@ public partial class CartItem
 
     public Guid CartId { get; set; }
 
-    public string ProductId { get; set; }
-
     public int Quantity { get; set; }
+
+    public string ProductId { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 

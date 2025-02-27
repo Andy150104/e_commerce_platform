@@ -11,8 +11,6 @@ public partial class Queue
 
     public Guid? ExchangeId { get; set; }
 
-    public string? Status { get; set; }
-
     public bool? IsActive { get; set; }
 
     public DateTime? CreatedAt { get; set; }
@@ -22,6 +20,8 @@ public partial class Queue
     public DateTime? UpdatedAt { get; set; }
 
     public string? UpdatedBy { get; set; }
+
+    public byte Status { get; set; }
 
     public virtual Exchange? Exchange { get; set; }
 

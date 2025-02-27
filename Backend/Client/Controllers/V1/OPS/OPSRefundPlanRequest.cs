@@ -1,11 +1,9 @@
-﻿using Client.Controllers;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Client.Controllers.V1.OnlinePaymentScreen
+namespace Client.Controllers.V1.OPS;
+
+public class OPSRefundPlanRequest : AbstractApiRequest
 {
-    public class OPSRefundPlanRequest : AbstractApiRequest
-    {
-        [Required(ErrorMessage = "Refund Request Id is required")]
-        public Guid RefundRequestId { get; set; }
-    }
+    [Required(ErrorMessage = "Refund Request Id is required")]
+    public Guid RefundRequestId { get; set; }
 }

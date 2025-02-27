@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Client.Controllers.V1.MomoServices
+namespace Client.Controllers.V1.MomoPayment
 {
     public class MomoResponse
     {

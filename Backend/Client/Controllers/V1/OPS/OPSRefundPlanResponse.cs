@@ -1,9 +1,6 @@
-﻿using Client.Controllers;
-using server.Models;
-
-namespace Client.Controllers.V1.OnlinePaymentScreen
+﻿namespace Client.Controllers.V1.OPS
 {
-    public class OPSRefundPlanResponse: AbstractApiResponse<string>
+    public class OPSRefundPlanResponse : AbstractApiResponse<string>
     {
         public override string Response { get; set; }
     }

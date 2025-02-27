@@ -25,5 +25,7 @@ public partial class Wishlist
 
     public virtual User UserNameNavigation { get; set; } = null!;
 
+    public virtual ICollection<WishlistItemBlindBox> WishlistItemBlindBoxes { get; set; } = new List<WishlistItemBlindBox>();
+
     public virtual ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
 }
