@@ -371,7 +371,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("images");
 
             entity.Property(e => e.ImageId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("image_id");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.ProductId)
@@ -391,7 +391,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("images_blind_box");
 
             entity.Property(e => e.ImageId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("image_id");
             entity.Property(e => e.BlindBoxId).HasColumnName("blind_box_id");
             entity.Property(e => e.CreatedAt)
@@ -502,7 +502,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("order_details");
 
             entity.Property(e => e.OrderDetailId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_detail_id");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.ProductId)
@@ -531,7 +531,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("order_plans");
 
             entity.Property(e => e.OrderId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
@@ -1287,7 +1287,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.ToTable("wishlist_item_blind_box");
 
             entity.Property(e => e.WishlistItemId)
-                .ValueGeneratedNever()
+                .HasDefaultValueSql("(newid())")
                 .HasColumnName("wishlist_item_id");
             entity.Property(e => e.BlindboxId).HasColumnName("blindbox_id");
             entity.Property(e => e.CreatedAt)

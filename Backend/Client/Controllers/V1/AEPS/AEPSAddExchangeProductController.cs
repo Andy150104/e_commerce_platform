@@ -52,14 +52,18 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
         {
             Username = userName
         };
-
+        _context.BlindBoxs.Add(blindBox);
+        _context.SaveChanges(userName);
+        
         blindBox.ImagesBlindBoxes = request.ImageUrls
             .Select(i => new ImagesBlindBox
                 { 
                     BlindBoxId = blindBox.BlindBoxId, 
                     ImageUrl = i 
                 }).ToList();
-
+        _context.ImagesBlindBoxes.AddRange(blindBox.ImagesBlindBoxes);
+        _context.SaveChanges(userName);
+        
         var exchange = new Exchange
         {
             BlindBoxId = blindBox.BlindBoxId
@@ -67,12 +71,11 @@ public class AEPSAddExchangeProductController : AbstractApiController<AEPSAddExc
 
         if (!checkImage)
         {
-            exchange.Status = (byte) ConstantEnum.ExchangeStatus.Fail;
+            exchange.Status = (byte) ConstantEnum.PostingStatus.Fail;
         }
         else
-            exchange.Status = (byte) ConstantEnum.ExchangeStatus.PendingExchange;
+            exchange.Status = (byte) ConstantEnum.PostingStatus.PendingExchange;
 
-        _context.BlindBoxs.Add(blindBox);
         _context.Exchanges.Add(exchange);
         _context.SaveChanges(userName);
         //True
