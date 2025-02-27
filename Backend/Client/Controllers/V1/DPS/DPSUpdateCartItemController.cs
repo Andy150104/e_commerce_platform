@@ -62,7 +62,12 @@ public class DPSUpdateCartItemController : AbstractApiController<DPSUpdateCartIt
         var cartItemSelect = _context.CartItems.FirstOrDefault(x => x.CartId == cartSelect.CartId && x.ProductId == itemRequest.ProductId);
         
         // Update CartItem
-        cartItemSelect.Quantity += itemRequest.Quantity;
+        cartItemSelect.Quantity = itemRequest.Quantity;
+        if (itemRequest.Quantity <= 0)
+        {
+            cartItemSelect.Quantity = 0;
+            cartItemSelect.IsActive = false;
+        }
         _context.CartItems.Update(cartItemSelect);
         _context.SaveChanges(userName);
         
