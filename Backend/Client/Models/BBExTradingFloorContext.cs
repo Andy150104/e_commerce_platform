@@ -85,6 +85,8 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<WishlistItem> WishlistItems { get; set; }
 
+    public virtual DbSet<WishlistItemBlindBox> WishlistItemBlindBoxs { get; set; }
+
     private string GetConnectionString()
     {
         IConfiguration config = new ConfigurationBuilder()
@@ -97,7 +99,7 @@ public partial class BBExTradingFloorContext : DbContext
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer(GetConnectionString());  
+        => optionsBuilder.UseSqlServer(GetConnectionString());
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -718,7 +720,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasForeignKey(d => d.ExchangeId)
                 .HasConstraintName("FK__queues__exchange__619B8048");
         });
-    
+
         modelBuilder.Entity<RefundPlanRequest>(entity =>
         {
             entity.HasKey(e => e.RefundRequests);
@@ -1278,9 +1280,50 @@ public partial class BBExTradingFloorContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__wishlist___wishl__0B5CAFEA");
         });
+            modelBuilder.Entity<WishlistItemBlindBox>(entity =>
+            {
+                entity.HasKey(e => e.WishlistItemId).HasName("PK_wishlist_item_blind_box");
 
-        OnModelCreatingPartial(modelBuilder);
-    }
+                entity.ToTable("wishlist_item_blind_box");
+
+                entity.Property(e => e.WishlistItemId)
+                    .HasDefaultValueSql("(newid())")
+                    .HasColumnName("wishlist_item_id");
+                entity.Property(e => e.CreatedAt)
+                    .HasDefaultValueSql("(getdate())")
+                    .HasColumnType("datetime")
+                    .HasColumnName("created_at");
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(50)
+                    .HasColumnName("created_by");
+                entity.Property(e => e.IsActive)
+                    .HasDefaultValue(true)
+                    .HasColumnName("is_active");
+                entity.Property(e => e.BlindBoxId)
+                    .HasColumnName("blindbox_id");
+                entity.Property(e => e.UpdatedAt)
+                    .HasDefaultValueSql("(getdate())")
+                    .HasColumnType("datetime")
+                    .HasColumnName("updated_at");
+                entity.Property(e => e.UpdatedBy)
+                    .HasMaxLength(50)
+                    .HasColumnName("updated_by");
+                entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
+
+                entity.HasOne(d => d.BlindBox).WithMany(p => p.WishlistItems)
+                    .HasForeignKey(d => d.BlindBoxId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__wishlist___produ__0C50D423");
+
+                entity.HasOne(d => d.Wishlist).WithMany(p => p.WishlistItemsBlindBox)
+                    .HasForeignKey(d => d.WishlistId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__wishlist___wishl__0B5CAFEA");
+            });
+
+
+            OnModelCreatingPartial(modelBuilder);
+        }
 
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

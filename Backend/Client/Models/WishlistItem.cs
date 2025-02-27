@@ -24,4 +24,4 @@ public partial class WishlistItem
     public virtual Product Product { get; set; } = null!;
 
     public virtual Wishlist Wishlist { get; set; } = null!;
-}
+} 

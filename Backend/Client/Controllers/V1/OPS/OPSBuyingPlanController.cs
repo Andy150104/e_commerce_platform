@@ -30,7 +30,7 @@ public class OPSBuyingPlanController : AbstractApiController<OPSBuyingPlanReques
         _momoservice = momoservice;
     }
     /// <summary>
-    /// coming posh
+    /// coming post
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns
