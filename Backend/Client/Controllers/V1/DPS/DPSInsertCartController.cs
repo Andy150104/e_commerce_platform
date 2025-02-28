@@ -82,21 +82,7 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
 
         if (cartItem != null)
         {
-            cartItem.Quantity = request.Quantity;
-            if (cartItem.Quantity == 0)
-            {
-                // Delete CartItem
-                cartItem.IsActive = false;
-                
-                // Save
-                _context.CartItems.Update(cartItem);
-                _context.SaveChanges(userName);
-                transaction.Commit();
-                
-                response.Success = true;
-                response.SetMessage(MessageId.I00001, "Delete CartItem");
-                return response;
-            }
+            cartItem.Quantity += request.Quantity;
             if (!cartItem.IsActive)
             {
                 cartItem.IsActive = true;
