@@ -95,6 +95,8 @@ builder.Services.AddOpenIddict()
     })
     .AddServer(options =>
     {
+        options.DisableAccessTokenEncryption();
+        options.AcceptAnonymousClients();
         // Enable the required endpoints
         options.SetTokenEndpointUris("/connect/token");
         options.SetIntrospectionEndpointUris("/connect/introspect");
@@ -118,7 +120,8 @@ builder.Services.AddOpenIddict()
                 OpenIddictConstants.Permissions.Scopes.Roles);
         // Register the encryption credentials
         options.AddDevelopmentEncryptionCertificate()
-               .AddDevelopmentSigningCertificate();      
+               .AddDevelopmentSigningCertificate();  
+        
         // Set the lifetime of the tokens
         options.SetAccessTokenLifetime(TimeSpan.FromMinutes(60));
         options.SetRefreshTokenLifetime(TimeSpan.FromMinutes(120));

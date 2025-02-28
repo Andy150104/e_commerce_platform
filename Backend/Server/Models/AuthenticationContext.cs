@@ -21,7 +21,7 @@ public partial class AuthenticationContext : DbContext
     public virtual DbSet<EmailTemplate> EmailTemplates { get; set; }
     public virtual DbSet<SystemConfig> SystemConfigs { get; set; }
 
-    public virtual DbSet<VwEmailTemplateVerifyOtp> VwEmailTemplateVerifyOtps { get; set; }
+    public virtual DbSet<VwEmailTemplateVerifyOTP> VwEmailTemplateVerifyOtps { get; set; }
 
     public virtual DbSet<VwEmailTemplateVerifyUser> VwEmailTemplateVerifyUsers { get; set; }
 
@@ -135,7 +135,7 @@ public partial class AuthenticationContext : DbContext
             entity.Property(e => e.Value).HasColumnName("value");
         });
 
-        modelBuilder.Entity<VwEmailTemplateVerifyOtp>(entity =>
+        modelBuilder.Entity<VwEmailTemplateVerifyOTP>(entity =>
         {
             entity
                 .HasNoKey()

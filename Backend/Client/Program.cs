@@ -9,15 +9,25 @@ using OpenIddict.Validation.AspNetCore;
 using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
 using Client.SystemClient;
 using Client.Controllers.V1.MomoPayment.MomoServices;
+using Client.Logics.Commons;
+using Client.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 //Connect MOMO API (NOT CHANGE)
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
 
+// Connect Cloudinary API
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("Cloudinary"));
+builder.Services.AddSingleton<CommonLogic.CloudinaryService>();
+
+
+// Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
@@ -67,6 +77,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
 });
+
 
 // Configure the OpenIddict server
 builder.Services.AddOpenIddict()
