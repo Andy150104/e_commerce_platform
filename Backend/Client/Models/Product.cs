@@ -25,13 +25,11 @@ public partial class Product
 
     public Guid? CategoryId { get; set; }
 
-    public Guid? WishlistId { get; set; }
-
-    public string Username { get; set; } = null!;
-
     public decimal? Discount { get; set; }
 
     public string? ShortDescription { get; set; }
+
+    public string? CreatedBy { get; set; }
 
     public virtual ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
 
@@ -40,10 +38,6 @@ public partial class Product
     public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-
-    public virtual User UsernameNavigation { get; set; } = null!;
-
-    public virtual Wishlist? Wishlist { get; set; }
 
     public virtual ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
 }

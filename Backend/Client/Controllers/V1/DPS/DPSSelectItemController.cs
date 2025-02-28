@@ -189,7 +189,6 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
                 CreatedAt = productDisplay.UpdatedAt,
                 ParentCategoryName = productDisplay.ParentCategoryName,
                 ChildCategoryName = productDisplay.ChildCategoryName,
-                WishlistId = productDisplay.WishlistId,
                 ImageUrl = imageUrls,
                 AverageRating = productDisplay.AverageRating,
                 TotalReviews = productDisplay.TotalReviews,
@@ -234,7 +233,6 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
                 CreatedAt = blindBox.CreatedAt,
                 FirstNameCreator = blindBox.FirstName,
                 LastNameCreator = blindBox.LastName,
-                WishlistId = blindBox.WishlistId, 
                 ImageUrl = imageUrls,
                 ExchangeId = blindBox.ExchangeId
             };

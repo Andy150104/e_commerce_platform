@@ -3,12 +3,17 @@ using System.Text;
 using System.Text.Json;
 using Client.Controllers;
 using Client.Models.Helper;
+using Client.Settings;
 using Client.Utils.Consts;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using HttpMethod = System.Net.Http.HttpMethod;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-namespace server.Logics.Commons;
+namespace Client.Logics.Commons;
 
 /// <summary>
 /// Common logic
@@ -28,8 +33,8 @@ public static class CommonLogic
         ArgumentException.ThrowIfNullOrEmpty(beforeEncrypt);
 
         // Get the system config
-        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv).Value;
-        var iv = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv).Value;
+        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv)?.Value;
+        var iv = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv)?.Value;
         // Check for null
         if (key == null)
         {
@@ -41,7 +46,7 @@ public static class CommonLogic
         {
             // Set the key and IV
             aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
+            if (iv != null) aes.IV = Encoding.UTF8.GetBytes(iv);
 
             // Encrypt
             ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
@@ -72,8 +77,8 @@ public static class CommonLogic
         // Check for null or empty
         ArgumentException.ThrowIfNullOrEmpty(beforeDecrypt);
         // Get the system config
-        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptKey).Value;
-        var iv = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv).Value;
+        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptKey)?.Value;
+        var iv = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv)?.Value;
         // Check for null
         if (key == null)
         {
@@ -85,7 +90,7 @@ public static class CommonLogic
         {
             // Set the key and IV
             aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
+            if (iv != null) aes.IV = Encoding.UTF8.GetBytes(iv);
             // Decrypt
             ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
             using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(beforeDecrypt)))
@@ -224,5 +229,48 @@ public static class CommonLogic
     public class ApiResponse<T, V> : AbstractApiResponse<V>
     {
         public override V Response { get; set; }
+    }
+    
+    
+    public class CloudinaryService
+    {
+        private readonly Cloudinary _cloudinary;
+
+        public CloudinaryService(IOptions<CloudinarySettings> options)
+        {
+
+            var settings = options.Value;
+            var account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
+            _cloudinary = new Cloudinary(account);
+        }
+
+        public async Task<string> UploadImageAsync(IFormFile file)
+        {
+            var uploadResult = new ImageUploadResult();
+
+            if (file == null || file.Length == 0)
+            {
+                throw new ArgumentException("File không hợp lệ.");
+            }
+
+            using (var stream = file.OpenReadStream())
+            {
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, stream)
+                };
+
+                uploadResult = await _cloudinary.UploadAsync(uploadParams);
+            }
+
+            // Check for error
+            if (uploadResult.Error != null)
+            {
+                throw new Exception($"Cloudinary upload failed: {uploadResult.Error.Message}");
+            }
+
+            // Return the URL
+            return uploadResult.SecureUrl?.ToString() ?? throw new Exception("Upload không trả về URL.");
+        }
     }
 }

@@ -27,8 +27,6 @@ public partial class VwProductDisplay
 
     public string? ParentCategoryName { get; set; }
 
-    public Guid? WishlistId { get; set; }
-
     public int? AverageRating { get; set; }
 
     public int? TotalReviews { get; set; }

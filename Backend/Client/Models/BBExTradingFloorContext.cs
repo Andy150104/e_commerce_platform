@@ -101,7 +101,6 @@ public partial class BBExTradingFloorContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString());
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Address>(entity =>
@@ -373,10 +372,23 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.ImageId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("image_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.ProductId)
                 .HasMaxLength(255)
                 .HasColumnName("product_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Images)
                 .HasForeignKey(d => d.ProductId)
@@ -645,6 +657,9 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Discount)
                 .HasColumnType("decimal(5, 2)")
@@ -668,23 +683,10 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("updated_by");
-            entity.Property(e => e.Username)
-                .HasMaxLength(50)
-                .HasColumnName("username");
-            entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
                 .HasConstraintName("FK__products__catego__5BE2A6F2");
-
-            entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Products)
-                .HasForeignKey(d => d.Username)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__products__userna__5CD6CB2B");
-
-            entity.HasOne(d => d.Wishlist).WithMany(p => p.Products)
-                .HasForeignKey(d => d.WishlistId)
-                .HasConstraintName("FK__products__wishli__5DCAEF64");
         });
 
         modelBuilder.Entity<Queue>(entity =>
@@ -1090,7 +1092,6 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
-            entity.Property(e => e.WishlistId).HasColumnName("wishlist_id");
         });
 
         modelBuilder.Entity<VwUserAddress>(entity =>

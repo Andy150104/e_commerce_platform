@@ -66,6 +66,7 @@ public class DPSInsertWishListController : AbstractApiController<DPSInsertWishLi
             };
             _context.Wishlists.Add(wishList);
             _context.SaveChanges(userName);
+            wishListSelect = wishList;
         }
 
         // WishListItem Select

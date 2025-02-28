@@ -84,7 +84,6 @@ public class DPSSelectProductController : AbstractApiControllerNotToken<DPSSelec
             CreatedAt = productSelect.CreatedAt,
             AverageRating = productSelect.AverageRating,
             TotalReviews = productSelect.TotalReviews,
-            WishlistId = productSelect.WishlistId,
             ChildCategoryName = productSelect.ChildCategoryName,
             ParentCategoryName = productSelect.ParentCategoryName,
             ImageUrls = imageList,

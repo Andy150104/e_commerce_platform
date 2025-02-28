@@ -1,14 +1,12 @@
-using Client.Controllers;
+using Client.Models.Helper;
+using Client.SystemClient;
+using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
-using Server.Controllers;
-using Server.Identity;
-using Server.Models.Helper;
-using Server.Utils.Consts;
 
-namespace client.Identity.Controllers;
+namespace Client.Controllers;
 
 public abstract class AbstractApiAsyncController<T, U, V> : ControllerBase
     where T : AbstractApiRequest
@@ -41,7 +39,7 @@ public abstract class AbstractApiAsyncController<T, U, V> : ControllerBase
     /// Default SNAPSHOT Change it in the constructor
     /// </remarks>
     protected System.Data.IsolationLevel _isolationLevel = System.Data.IsolationLevel.Snapshot;
-    
+
     /// <summary>
     /// TemplateMethod
     /// </summary>
@@ -69,7 +67,7 @@ public abstract class AbstractApiAsyncController<T, U, V> : ControllerBase
         // Additional user information
         try
         {
-            appDbContext.IdentityEntity.UserName = appDbContext.VwUserLogins
+            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications
                 .AsNoTracking()
                 .FirstOrDefault(x => x.UserName == appDbContext.IdentityEntity.UserName).UserName;
         }
