@@ -9,13 +9,13 @@ public partial class OrderDetail
 
     public Guid OrderId { get; set; }
 
-    public string ProductId { get; set; } = null!;
+    public string AccessoryId { get; set; } = null!;
 
     public int Quantity { get; set; }
 
     public decimal UnitPrice { get; set; }
 
-    public virtual Order Order { get; set; } = null!;
+    public virtual Accessory Accessory { get; set; } = null!;
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Order Order { get; set; } = null!;
 }

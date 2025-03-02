@@ -66,9 +66,9 @@ public class DPSSelectWishListController : AbstractApiController<DPSSelectWishLi
         var wishListResponse = new List<DPSSelectWishListEntity>();
         foreach (var wishList in wishListSelects)
         {
-            var imageSelects = _context.VwImageProducts
+            var imageSelects = _context.VwImageAccessories
                 .AsNoTracking()
-                .Where(x => x.ProductId == wishList.ProductId)
+                .Where(x => x.AccessoryId == wishList.AccessoryId)
                 .Select(x => new DPSSelectWishListImages
                 {
                     ImageUrl = x.ImageUrl
@@ -77,8 +77,8 @@ public class DPSSelectWishListController : AbstractApiController<DPSSelectWishLi
             
             var wishListEntity = new DPSSelectWishListEntity
             {
-                ProductId = wishList.ProductId,
-                ProductName = wishList.ProductName,
+                AccessoryId = wishList.AccessoryId,
+                AccessoryName = wishList.AccessoryName,
                 ShortDescription = wishList.ShortDescription,
                 Images = imageSelects,
             };
@@ -102,6 +102,19 @@ public class DPSSelectWishListController : AbstractApiController<DPSSelectWishLi
     protected internal override DPSSelectWishListResponse ErrorCheck(DPSSelectWishListRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
         var response = new DPSSelectWishListResponse() { Success = false };
+        var userName = _context.IdentityEntity.UserName;
+        
+        // Get WishList
+        var wishListSelects = _context.VwWishListDisplays
+            .AsNoTracking()
+            .Where(x => x.CustomerUsername == userName)
+            .ToList();
+        if (!wishListSelects.Any())
+        {
+            response.SetMessage(MessageId.I00000, CommonMessages.WishListItemNotFound);
+            return response;
+        }
+        
         if (detailErrorList.Count > 0)
         {
             // Error

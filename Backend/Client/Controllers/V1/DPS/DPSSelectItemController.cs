@@ -58,6 +58,7 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
         decimal? maxPrice = request.MaximumPrice.HasValue ? request.MaximumPrice.Value : null;
         string parentCategory = request.ParentCategoryName?.Trim().ToLower();
         string childCategory = request.ChildCategoryName?.Trim().ToLower();
+        string nameAccessory = request.NameAccessory?.Trim().ToLower();
         
         request.CurrentPage = Math.Max(1, request.CurrentPage);
         request.PageSize = Math.Max(1, request.PageSize);
@@ -66,7 +67,7 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
         if (request.SearchBy == (byte) ConstantEnum.ProductType.Product)
         {
             // Select products
-           responseEntity = SelectByProduct( minPrice, maxPrice, parentCategory, childCategory, request.SortBy);
+           responseEntity = SelectByAccessory( minPrice, maxPrice, nameAccessory, parentCategory, childCategory, request.SortBy);
         }
         
         // If search by blind box
@@ -131,13 +132,13 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
     /// <param name="maxPrice"></param>
     /// <param name="sortBy"></param>
     /// <returns></returns>
-    private List<ItemEntity> SelectByProduct(decimal? minPrice, decimal? maxPrice, 
+    private List<ItemEntity> SelectByAccessory(decimal? minPrice, decimal? maxPrice, string nameAccessory,
         string parentCategory, string childCategory, byte? sortBy)
     {
         var responseEntity = new List<ItemEntity>();
         
-        // Select Products
-        var productDisplays = _context.VwProductDisplays.AsNoTracking();
+        // Select Accessories
+        var productDisplays = _context.VwAccessoryDisplays.AsNoTracking();
         
         // Find by minimum price
         if (minPrice >= 0)
@@ -148,6 +149,11 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
         if (maxPrice > 0)
         {
             productDisplays = productDisplays.Where(p => p.Price <= maxPrice);
+        }
+        // Find by name
+        if (!string.IsNullOrEmpty(nameAccessory))
+        {
+            productDisplays = productDisplays.Where(p => p.AccessoryName.ToLower().Contains(nameAccessory));
         }
         // Find by category
         if (!string.IsNullOrEmpty(parentCategory))
@@ -167,9 +173,9 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
         foreach (var productDisplay in productList)
         {
             // Get image urls
-            var imageUrls = _context.VwImageProducts
+            var imageUrls = _context.VwImageAccessories
                 .AsNoTracking()
-                .Where(x => x.ProductId == productDisplay.ProductId)
+                .Where(x => x.AccessoryId == productDisplay.AccessoryId)
                 .Select(x => new DpsSelectItemListImageUrl
                 {
                     ImageUrl = x.ImageUrl
@@ -179,8 +185,8 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
             // Create entity
             var entity = new ItemEntity
             {
-                CodeProduct = productDisplay.ProductId,
-                NameProduct = productDisplay.ProductName,
+                CodeAccessory = productDisplay.AccessoryId,
+                NameAccessory = productDisplay.AccessoryName,
                 Description = productDisplay.Description,
                 ShortDescription = productDisplay.ShortDescription,
                 Price = StringUtil.ConvertToVND(productDisplay.Price),
@@ -208,7 +214,7 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
     {
         var responseEntity = new List<ItemEntity>();
 
-        // Select Products
+        // Select Accessories
         var blindBoxDisplays = _context.VwBlindBoxDisplays.AsNoTracking();
         
         blindBoxDisplays = ApplySorting(blindBoxDisplays, sortBy);
@@ -229,7 +235,7 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
             // Create entity
             var entity = new ItemEntity
             {
-                CodeProduct = blindBox.BlindBoxId.ToString(),
+                CodeAccessory = blindBox.BlindBoxId.ToString(),
                 CreatedAt = blindBox.CreatedAt,
                 FirstNameCreator = blindBox.FirstName,
                 LastNameCreator = blindBox.LastName,

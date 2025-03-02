@@ -1,4 +1,4 @@
-namespace Client.Controllers.V1.UPS;
+namespace Client.Controllers.V1.UDS;
 
 public class UDSSelectUserAddressResponse : AbstractApiResponse<List<UDSSelectUserAddressEntity>>
 {

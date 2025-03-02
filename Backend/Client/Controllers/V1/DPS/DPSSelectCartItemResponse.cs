@@ -7,9 +7,9 @@ public class DPSSelectCartItemResponse : AbstractApiResponse<List<DPSSelectCartI
 
 public class DPSSelectCartItemEntity
 {
-    public string ProductId { get; set; }
+    public string AccessoryId { get; set; }
 
-    public string ProductName { get; set; } = null!;
+    public string AccessoryName { get; set; } = null!;
 
     public decimal Price { get; set; }
 

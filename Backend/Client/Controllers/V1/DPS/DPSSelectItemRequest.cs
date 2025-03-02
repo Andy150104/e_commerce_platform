@@ -10,6 +10,8 @@ public class DPSSelectItemRequest : AbstractApiRequest
     
     public decimal? MaximumPrice { get; set; }
     
+    public string? NameAccessory { get; set; }
+    
     public string? ChildCategoryName { get; set; }
 
     public string? ParentCategoryName { get; set; }

@@ -4,5 +4,5 @@ public class DPSUpdateCartItemRequest : AbstractApiRequest
 {
     public int Quantity { get; set; }
 
-    public string ProductId { get; set; }
+    public string AccessoryId { get; set; }
 }

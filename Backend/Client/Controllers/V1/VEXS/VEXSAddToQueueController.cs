@@ -10,7 +10,7 @@ using NLog;
 namespace Client.Controllers.V1.VEXS;
 
 /// <summary>
-/// AEPSAddExchangeProductController - Add Exchange Product
+/// AEPSAddExchangeAccessoryController - Add Exchange Accessory
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]

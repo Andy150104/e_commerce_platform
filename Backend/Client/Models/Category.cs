@@ -21,9 +21,9 @@ public partial class Category
 
     public Guid? ParentId { get; set; }
 
+    public virtual ICollection<Accessory> Accessories { get; set; } = new List<Accessory>();
+
     public virtual ICollection<Category> InverseParent { get; set; } = new List<Category>();
 
     public virtual Category? Parent { get; set; }
-
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

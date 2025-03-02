@@ -9,9 +9,9 @@ public partial class VwCartDisplay
 
     public string CustomerUsername { get; set; } = null!;
 
-    public string ProductId { get; set; } = null!;
+    public string AccessoryId { get; set; } = null!;
 
-    public string ProductName { get; set; } = null!;
+    public string AccessoryName { get; set; } = null!;
 
     public decimal Price { get; set; }
 
