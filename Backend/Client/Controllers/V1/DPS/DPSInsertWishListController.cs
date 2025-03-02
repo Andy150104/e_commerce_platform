@@ -70,13 +70,13 @@ public class DPSInsertWishListController : AbstractApiController<DPSInsertWishLi
         }
 
         // WishListItem Select
-        var wishListItem = _context.WishlistItems.FirstOrDefault(item => item.ProductId == request.CodeProduct);
+        var wishListItem = _context.WishlistItems.FirstOrDefault(item => item.AccessoryId == request.CodeAccessory);
 
         if (wishListItem == null)
         {
             var newWishListItem = new WishlistItem
             {
-                ProductId = request.CodeProduct,
+                AccessoryId = request.CodeAccessory,
                 WishlistId = wishListSelect.WishlistId,
             };
             _context.WishlistItems.Add(newWishListItem);
@@ -109,11 +109,12 @@ public class DPSInsertWishListController : AbstractApiController<DPSInsertWishLi
     {
         var response = new DPSInsertWishListResponse() { Success = false };
         
-        // Get Product
-        var productSelect = _context.VwProductDisplays.FirstOrDefault(x => x.ProductId == request.CodeProduct);
-        if (productSelect == null)
+        // Get Accessory
+        var accessory = _context.Accessories.FirstOrDefault(x => x.AccessoryId == request.CodeAccessory && x.IsActive == true);
+        if (accessory == null)
         {
             response.SetMessage(MessageId.I00000, CommonMessages.ProductNotFound);
+            response.DetailErrorList = detailErrorList;
             return response;
         }
 

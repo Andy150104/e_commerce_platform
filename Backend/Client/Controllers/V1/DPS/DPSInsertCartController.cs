@@ -57,7 +57,7 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
         var userName = _context.IdentityEntity.UserName;
         
         // Get Cart
-        var cartSelect = _context.Carts.FirstOrDefault(x => x.Username == userName);
+        var cartSelect = _context.Carts.FirstOrDefault(x => x.Username == userName && x.IsActive == true);
         
         if (cartSelect == null)
         {
@@ -70,15 +70,17 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
             cartSelect = cart;
         }
         
-        // Get Product
-        var productSelect = _context.VwProductDisplays.FirstOrDefault(x => x.ProductId == request.CodeProduct);
-        if (request.Quantity > productSelect.Quantity)
+        // Get Accessory
+        var productSelect = _context.Accessories.FirstOrDefault(x => x.AccessoryId == request.CodeAccessory && x.IsActive == true);
+        if (request.Quantity > productSelect?.Quantity)
         {
-            response.SetMessage(MessageId.I00000, "Quantity is greater than stock");
+            response.SetMessage(MessageId.I00000, CommonMessages.QuantityIsGreaterStock);
             return response;
         }
         // Get CartItem
-        var cartItem = _context.CartItems.FirstOrDefault(item => item.ProductId == productSelect.ProductId && item.CartId == cartSelect.CartId);
+        var cartItem = _context.CartItems.FirstOrDefault(item => item.AccessoryId == productSelect.AccessoryId 
+                                                                 && item.CartId == cartSelect.CartId
+                                                                 && item.IsActive == true);
 
         if (cartItem != null)
         {
@@ -95,7 +97,7 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
             cartItem = new CartItem
             {
                 CartId = cartSelect.CartId,
-                ProductId = productSelect.ProductId,
+                AccessoryId = productSelect.AccessoryId,
                 Quantity = request.Quantity
             };
             _context.CartItems.Add(cartItem);
@@ -122,14 +124,15 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
     {
         var response = new DPSInsertCartResponse() { Success = false };
         
-        // Get Product
-        var productSelect = _context.VwProductDisplays.FirstOrDefault(x => x.ProductId == request.CodeProduct);
+        // Get Accessory
+        var productSelect = _context.Accessories.FirstOrDefault(x => x.AccessoryId == request.CodeAccessory && x.IsActive == true);
         if (productSelect == null)
         {
             response.SetMessage(MessageId.I00000, CommonMessages.ProductNotFound);
+            response.DetailErrorList = detailErrorList;
             return response;
         }
-
+        
         if (detailErrorList.Count > 0)
         {
             // Error
@@ -137,7 +140,6 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
             response.DetailErrorList = detailErrorList;
             return response;
         }
-        
         // True
         response.Success = true;
         return response;

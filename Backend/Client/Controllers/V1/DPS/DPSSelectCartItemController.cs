@@ -66,9 +66,9 @@ public class DPSSelectCartItemController : AbstractApiController<DPSSelectCartIt
         var cartItemResponse = new List<DPSSelectCartItemEntity>();
         foreach (var cart in cartSelects)
         {
-            var imageSelect = _context.VwImageProducts
+            var imageSelect = _context.VwImageAccessories
                 .AsNoTracking()
-                .Where(x => x.ProductId == cart.ProductId)
+                .Where(x => x.AccessoryId == cart.AccessoryId)
                 .Select(x => new DPSSelectCartItemImages
                 {
                     ImageUrl = x.ImageUrl
@@ -77,10 +77,10 @@ public class DPSSelectCartItemController : AbstractApiController<DPSSelectCartIt
 
             var cartEntity = new DPSSelectCartItemEntity
             {
-                ProductId = cart.ProductId,
+                AccessoryId = cart.AccessoryId,
                 Price = cart.Price,
                 Quantity = cart.Quantity,
-                ProductName = cart.ProductName,
+                AccessoryName = cart.AccessoryName,
                 TotalPrice = cart.TotalPrice,
                 Images = imageSelect,
                 ShortDescription = cart.ShortDescription

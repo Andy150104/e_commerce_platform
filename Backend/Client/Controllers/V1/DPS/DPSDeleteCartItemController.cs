@@ -57,18 +57,18 @@ public class DPSDeleteCartItemController : AbstractApiController<DPSDeleteCartIt
         var userName = _context.IdentityEntity.UserName;
         
         // Get Cart
-        var cartSelect = _context.Carts.FirstOrDefault(x => x.Username == userName);
+        var cartSelect = _context.Carts.FirstOrDefault(x => x.Username == userName && x.IsActive == true);
         
         // Get CartItem
         var cartItemSelect = _context.CartItems.FirstOrDefault(x => x.CartId == cartSelect.CartId 
-                                                                    && x.ProductId == request.CodeProduct
+                                                                    && x.AccessoryId == request.CodeAccessory
                                                                     && x.IsActive == true);
         
         // Delete CartItem
-        cartItemSelect.IsActive = false;
         cartItemSelect.Quantity = 0;
         _context.CartItems.Update(cartItemSelect);
-        _context.SaveChanges(userName);
+        _context.SaveChanges(userName, true);
+        transaction.Commit();
         
         // True
         response.Success = true;
@@ -86,6 +86,7 @@ public class DPSDeleteCartItemController : AbstractApiController<DPSDeleteCartIt
     protected internal override DPSDeleteCartItemReponse ErrorCheck(DPSDeleteCartItemRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
         var response = new DPSDeleteCartItemReponse() { Success = false };
+        var userName = _context.IdentityEntity.UserName;
 
         if (detailErrorList.Count > 0)
         {

@@ -7,7 +7,7 @@ public partial class Image
 {
     public Guid ImageId { get; set; }
 
-    public string ProductId { get; set; } = null!;
+    public string AccessoryId { get; set; } = null!;
 
     public string ImageUrl { get; set; } = null!;
 
@@ -21,5 +21,5 @@ public partial class Image
 
     public string? UpdatedBy { get; set; }
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Accessory Accessory { get; set; } = null!;
 }

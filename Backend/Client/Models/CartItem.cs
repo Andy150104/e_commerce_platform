@@ -11,7 +11,7 @@ public partial class CartItem
 
     public int Quantity { get; set; }
 
-    public string ProductId { get; set; } = null!;
+    public string AccessoryId { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 
@@ -23,7 +23,7 @@ public partial class CartItem
 
     public string UpdatedBy { get; set; } = null!;
 
-    public virtual Cart Cart { get; set; } = null!;
+    public virtual Accessory Accessory { get; set; } = null!;
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Cart Cart { get; set; } = null!;
 }

@@ -59,7 +59,7 @@ public class DPSUpdateCartItemController : AbstractApiController<DPSUpdateCartIt
         var cartSelect = _context.Carts.FirstOrDefault(x => x.Username == userName);
         
         // Get CartItem
-        var cartItemSelect = _context.CartItems.FirstOrDefault(x => x.CartId == cartSelect.CartId && x.ProductId == itemRequest.ProductId);
+        var cartItemSelect = _context.CartItems.FirstOrDefault(x => x.CartId == cartSelect.CartId && x.AccessoryId == itemRequest.AccessoryId);
         
         // Update CartItem
         cartItemSelect.Quantity = itemRequest.Quantity;
@@ -70,6 +70,7 @@ public class DPSUpdateCartItemController : AbstractApiController<DPSUpdateCartIt
         }
         _context.CartItems.Update(cartItemSelect);
         _context.SaveChanges(userName);
+        transaction.Commit();
         
         // True
         response.Success = true;

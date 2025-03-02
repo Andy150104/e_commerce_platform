@@ -9,7 +9,7 @@ public partial class WishlistItem
 
     public Guid WishlistId { get; set; }
 
-    public string ProductId { get; set; } = null!;
+    public string AccessoryId { get; set; } = null!;
 
     public DateTime CreatedAt { get; set; }
 
@@ -21,7 +21,7 @@ public partial class WishlistItem
 
     public string UpdatedBy { get; set; } = null!;
 
-    public virtual Product Product { get; set; } = null!;
+    public virtual Accessory Accessory { get; set; } = null!;
 
     public virtual Wishlist Wishlist { get; set; } = null!;
 }

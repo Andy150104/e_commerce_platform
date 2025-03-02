@@ -57,16 +57,16 @@ public class DPSDeleteWishListController : AbstractApiController<DPSDeleteWishLi
         var userName = _context.IdentityEntity.UserName;
         
         // Get WishList
-        var wishListSelect = _context.Wishlists.FirstOrDefault(x => x.UserName == userName);
+        var wishListSelect = _context.Wishlists.FirstOrDefault(x => x.UserName == userName && x.IsActive == true);
         
         // Get WishListItem
         var wishListItemSelect = _context.WishlistItems.FirstOrDefault(x => x.WishlistId == wishListSelect.WishlistId 
-                                                                                    && x.ProductId == request.CodeProduct
+                                                                                    && x.AccessoryId == request.CodeAccessory
                                                                                     && x.IsActive == true);
 
-        wishListItemSelect.IsActive = false;
         _context.WishlistItems.Update(wishListItemSelect);
-        _context.SaveChanges(userName);
+        _context.SaveChanges(userName, true);
+        transaction.Commit();
         
         // True
         response.Success = true;
@@ -84,7 +84,31 @@ public class DPSDeleteWishListController : AbstractApiController<DPSDeleteWishLi
     protected internal override DPSDeleteWishListResponse ErrorCheck(DPSDeleteWishListRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
         var response = new DPSDeleteWishListResponse() { Success = false };
+        var userName = _context.IdentityEntity.UserName;
 
+        // Get WishList
+        var wishListSelect = _context.Wishlists.FirstOrDefault(x => x.UserName == userName && x.IsActive == true);
+        if(wishListSelect == null)
+        {
+            // Error
+            response.SetMessage(MessageId.I00000, CommonMessages.WishListNotFound);
+            response.DetailErrorList = detailErrorList;
+            return response;
+        }
+        
+        // Get WishListItem
+        var wishListItemSelect = _context.WishlistItems.FirstOrDefault(x => x.WishlistId == wishListSelect.WishlistId 
+                                                                            && x.AccessoryId == request.CodeAccessory
+                                                                            && x.IsActive == true);
+
+        if (wishListItemSelect == null)
+        {
+            // Error
+            response.SetMessage(MessageId.I00000, CommonMessages.WishListItemNotFound);
+            response.DetailErrorList = detailErrorList;
+            return response;
+        }
+        
         if (detailErrorList.Count > 0)
         {
             // Error

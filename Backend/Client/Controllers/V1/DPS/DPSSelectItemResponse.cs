@@ -16,9 +16,9 @@ public class DPSSelectItemEntity
 
 public class ItemEntity
 {
-    public string CodeProduct { get; set; }
+    public string CodeAccessory { get; set; }
 
-    public string NameProduct { get; set; }
+    public string NameAccessory { get; set; }
     
     public string? ShortDescription { get; set; }
 

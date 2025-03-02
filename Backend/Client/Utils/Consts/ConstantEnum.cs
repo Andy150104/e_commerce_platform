@@ -3,7 +3,7 @@ namespace Client.Utils.Consts;
 public static class ConstantEnum
 {
     /// <summary>
-    /// Type of product. BlindBox or Product
+    /// Type of product. BlindBox or Accessory
     /// </summary>
     public enum ProductType
     {

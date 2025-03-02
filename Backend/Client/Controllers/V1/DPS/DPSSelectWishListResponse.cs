@@ -7,9 +7,9 @@ public class DPSSelectWishListResponse : AbstractApiResponse<List<DPSSelectWishL
 
 public class DPSSelectWishListEntity
 {
-    public string ProductId { get; set; } = null!;
+    public string AccessoryId { get; set; } = null!;
 
-    public string ProductName { get; set; } = null!;
+    public string AccessoryName { get; set; } = null!;
 
     public string? ShortDescription { get; set; }
     
