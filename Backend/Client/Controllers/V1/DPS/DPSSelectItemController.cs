@@ -185,7 +185,7 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
             // Create entity
             var entity = new ItemEntity
             {
-                CodeAccessory = productDisplay.AccessoryId,
+                CodeProduct = productDisplay.AccessoryId,
                 NameAccessory = productDisplay.AccessoryName,
                 Description = productDisplay.Description,
                 ShortDescription = productDisplay.ShortDescription,
@@ -235,7 +235,7 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
             // Create entity
             var entity = new ItemEntity
             {
-                CodeAccessory = blindBox.BlindBoxId.ToString(),
+                CodeProduct = blindBox.BlindBoxId.ToString(),
                 CreatedAt = blindBox.CreatedAt,
                 FirstNameCreator = blindBox.FirstName,
                 LastNameCreator = blindBox.LastName,
