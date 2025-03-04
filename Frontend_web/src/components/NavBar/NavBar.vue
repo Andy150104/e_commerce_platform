@@ -37,8 +37,12 @@
             ref="servicesDropdown"
             class="absolute top-full left-0 mt-2 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow py-2 z-50"
           >
-            <a href="/Service/Buying" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Buying</a>
-            <a href="/Service/Exchange" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Exchange </a>
+            <a href="/Service/Buying" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+              Buying</a
+            >
+            <a href="/Service/Exchange" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700">
+              Exchange
+            </a>
           </div>
         </div>
         <!-- Contact -->
@@ -48,9 +52,19 @@
       <!-- CỘT PHẢI: User hoặc Register/Login (ẩn trên mobile) -->
       <div class="hidden md:flex items-center space-x-4 shrink-0 ml-4">
         <!-- Nếu chưa login => Hiển thị nút Register / Login -->
-        <div v-if="!isLogin" class="space-x-2">
-          <a href="/Register" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> Get Started </a>
-          <a href="/Login" class="text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-purple-500 dark:hover:bg-purple-600 dark:focus:ring-purple-800"> Login </a>
+        <div v-if="!authStore.isAuthorization" class="space-x-2">
+          <a
+            href="/Register"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Get Started
+          </a>
+          <a
+            href="/Login"
+            class="text-white bg-purple-600 hover:bg-purple-700 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-purple-500 dark:hover:bg-purple-600 dark:focus:ring-purple-800"
+          >
+            Login
+          </a>
         </div>
 
         <!-- Nếu đã login => Dropdown user -->
@@ -60,7 +74,18 @@
             class="inline-flex items-center text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"
           >
             <img src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo" class="w-8 h-8 rounded-full" />
-            <span class="ml-2">Bonnie Green</span>
+            <span class="ml-2">{{ profileUser.firstName + ' ' + profileUser.lastName }}</span>
+            <span class="ml-4">
+              <Button
+                type="button"
+                label="My cart"
+                icon="pi-shopping-cart"
+                :badge="cartLength.toString()"
+                badgeSeverity="info"
+                severity="contrast"
+                @click.stop=""
+              />
+            </span>
           </button>
           <!-- Dropdown user -->
           <div
@@ -69,14 +94,15 @@
             class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow py-2 z-50"
           >
             <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-600">
-              <span class="block text-sm text-gray-900 dark:text-white"> Bonnie Green </span>
-              <span class="block text-sm text-gray-500 truncate dark:text-gray-400"> name@flowbite.com </span>
+              <span class="block text-sm text-gray-900 dark:text-white"> {{ profileUser.firstName + ' ' + profileUser.lastName }} </span>
+              <span class="block text-sm text-gray-500 truncate dark:text-gray-400"> {{ profileUser.email }}</span>
             </div>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Dashboard </a>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Settings </a>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Earnings </a>
             <a
-              class="block px-4 py-2 text-sm text-gray-700 text-right hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+              class="block px-4 py-2 text-sm text-gray-700 text-left hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+              @click="authStore.Logout()"
             >
               Sign out
             </a>
@@ -135,7 +161,10 @@
         </ul>
 
         <!-- Nếu chưa login => Hiển thị nút Register/Login -->
-        <div v-if="!isLogin" class="px-4 py-2 flex space-x-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <div
+          v-if="!authStore.isAuthorization"
+          class="px-4 py-2 flex space-x-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+        >
           <a href="#" class="flex-1 text-center py-2 bg-blue-600 text-white rounded hover:bg-blue-700"> Register </a>
           <a href="#" class="flex-1 text-center py-2 bg-purple-600 text-white rounded hover:bg-purple-700"> Login </a>
         </div>
@@ -159,7 +188,10 @@
             <a href="#" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
               Earnings
             </a>
-            <a href="#" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-200 text-right rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+            <a
+              class="block px-4 py-2 text-sm text-gray-700 text-left hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200 dark:hover:text-white cursor-pointer"
+              @click="authStore.Logout()"
+            >
               Sign out
             </a>
           </div>
@@ -170,10 +202,18 @@
 </template>
 
 <script setup lang="ts">
+  import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
+  import { useCartStore } from '@PKG_SRC/stores/Modules/Blind_Box/CartStore'
+  import { useProfileStore } from '@PKG_SRC/stores/Modules/DashBoard/profileStore'
   import { ref, onMounted, onUnmounted } from 'vue'
 
   /** Giả lập trạng thái đăng nhập */
-  const isLogin = ref(false)
+  const authStore = useAuthStore()
+  const profileStore = useProfileStore()
+  const cartStore = useCartStore()
+  const count = ref(0)
+
+  const profileUser = computed(() => profileStore.uDSSelectUserProfileEntity)
 
   /** Mở/đóng menu mobile */
   const mobileOpen = ref(false)
@@ -204,6 +244,14 @@
       }
     }
   }
+
+  const cartLength = computed(() => {
+    if (count.value === 0) {
+      cartStore.GetAllCart()
+      count.value++
+    }
+    return cartStore.cartList.length
+  })
 
   /** Toggle dropdown desktop */
   function toggleServices() {

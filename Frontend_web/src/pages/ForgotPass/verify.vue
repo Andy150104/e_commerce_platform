@@ -84,7 +84,7 @@
   const store = useVerifyPasswordStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
-  formContext.setFieldValue("otp", "2Z0hy+dT6RrXE7CWSvl5V1GWnpqSR6q5dL1RyukF9rVSKSMRMLqYsU1cByYpTkZlKZLKuQLuXa/nX+2Trm55A7RgPwl/D9oH2c/++1Je+pk=");
+  formContext.setFieldValue('otp', '2Z0hy+dT6RrXE7CWSvl5V1GWnpqSR6q5dL1RyukF9rVSKSMRMLqYsU1cByYpTkZlKZLKuQLuXa/nX+2Trm55A7RgPwl/D9oH2c/++1Je+pk=')
   store.SetFields(formContext)
   const steppList = ref<StepItem[]>([
     {

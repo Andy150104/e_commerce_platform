@@ -23,7 +23,11 @@
       isMobile.value = window.innerWidth <= 768
     })
   })
-
+  onUnmounted(() => {
+    window.removeEventListener('resize', () => {
+      isMobile.value = window.innerWidth <= 768
+    })
+  })
   const props = defineProps({
     imageList: {
       type: Array as PropType<string[]>, // Chuyển từ Object sang Array vì imageList là danh sách hình ảnh

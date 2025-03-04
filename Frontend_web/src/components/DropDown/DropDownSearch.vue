@@ -24,7 +24,7 @@
     </div>
     <ul
       v-if="isDropdownOpen && filteredOptions.length"
-      class="absolute w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg z-10 max-h-48 overflow-y-auto list-none"
+      class="absolute w-full bg-white text-black border border-gray-300 rounded-lg mt-1 shadow-lg z-10 max-h-48 overflow-y-auto list-none dark:text-white dark:bg-slate-900"
     >
       <li
         v-for="option in filteredOptions"
@@ -177,6 +177,13 @@
     if (e.target && !(e.target as HTMLElement).closest('.relative')) {
       isDropdownOpen.value = false
     }
+  })
+  onUnmounted(() => {
+    window.removeEventListener('click', (e) => {
+      if (e.target && !(e.target as HTMLElement).closest('.relative')) {
+        isDropdownOpen.value = false
+      }
+    })
   })
   onMounted(() => {})
   defineExpose({

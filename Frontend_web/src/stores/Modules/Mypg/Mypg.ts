@@ -61,9 +61,8 @@ const sampleData: ProductMypp111[] = [
     shortDescription: 'Up to 120fps with 120Hz output, 1TB HDD, 2 Controllers, Ray Tracing',
     isWishlist: 0,
     imageUrl: [
-      'https://www.apple.com/newsroom/images/2024/09/apple-debuts-iphone-16-pro-and-iphone-16-pro-max/tile/Apple-iPhone-16-Pro-hero-geo-240909-lp.jpg.landing-big_2x.jpg',
-      'https://www.zdnet.com/a/img/resize/9f3fcf92f17d47c88823e7f2c0f1454ecd3e5140/2024/09/19/8da68e24-08b1-467a-9062-a90a96c1d879/dsc02198.jpg?auto=webp&fit=crop&height=900&width=1200',
-      'https://cdn.mos.cms.futurecdn.net/AVEcca7TuDmt8wjaFZPkzj.jpg',
+      'http://res.cloudinary.com/ddptplhtu/image/upload/v1739961101/u7bd49rcdhe3xzyd1v1z.jpg',
+      'http://res.cloudinary.com/ddptplhtu/image/upload/v1739957201/bpdqdqmojjnm7yrakhwq.jpg',
     ],
   },
   {

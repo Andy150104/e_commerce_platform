@@ -208,7 +208,7 @@
     }, 3000)
   }
 
-  onMounted( async () => {
+  onMounted(async () => {
     await store.GetProfile()
   })
 </script>

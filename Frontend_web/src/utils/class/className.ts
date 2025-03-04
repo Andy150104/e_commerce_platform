@@ -20,8 +20,9 @@ interface ClassNames {
   BUTTON_DEFAULT_WHITE: String
   BUTTON_DEFAULT_BLUE_1: String
   BUTTON_DEFAULT_BLUE_2: String
+  BUTTON_GRADIENT_BLUE_1: String
   BUTTON_DEFAULT_GRAY_1: String
-  BUTTON_RED_1: string,
+  BUTTON_RED_1: string
   SELECT_INPUT: String
 }
 
@@ -30,7 +31,7 @@ export const className: ClassNames = {
   LIGHT_THEME: 'light',
   SYSTEM_THEME: 'system',
   INPUT:
-    'w-full bg-transparent placeholder:text-slate-400 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-3 mt-3 mb-3 transition duration-300 ease focus:outline-none focus:border-blue-500 hover:border-blue-300 shadow-sm focus:shadow disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200',
+    'w-full bg-white placeholder:text-slate-600 text-slate-700 text-sm border border-slate-200 rounded-md px-3 py-3 mt-3 mb-3 transition duration-300 ease focus:outline-none focus:border-blue-500 hover:border-blue-300 shadow-sm focus:shadow disabled:bg-slate-100 disabled:text-slate-400 disabled:border-slate-200 dark:bg-gray-900 dark:text-white',
   INPUT_ERROR:
     'w-full bg-transparent placeholder:text-red-400 text-red-700 text-sm border border-red-500 rounded-md px-3 py-3 mt-3 mb-3 transition duration-300 ease focus:outline-none focus:border-red-500 hover:border-red-500 shadow-sm focus:shadow',
   INPUT_LABEL_FLOAT:
@@ -60,7 +61,10 @@ export const className: ClassNames = {
   BUTTON_DEFAULT_BLUE_2:
     'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
   BUTTON_DEFAULT_GRAY_1: 'bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600',
-  BUTTON_RED_1: 'focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900',
+  BUTTON_GRADIENT_BLUE_1:
+    'text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2',
+  BUTTON_RED_1:
+    'focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900',
   SELECT_INPUT:
     'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
 }

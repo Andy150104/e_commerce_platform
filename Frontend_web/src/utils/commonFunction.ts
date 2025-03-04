@@ -1,4 +1,5 @@
-import { Gender } from '@PKG_SRC/types/enums/constantBackend'
+import type { DPSSelectCartItemEntity } from '@PKG_API/@types'
+import { Gender, SortBy } from '@PKG_SRC/types/enums/constantBackend'
 import type { selectItem } from '@PKG_SRC/types/enums/constantFrontend'
 
 export function sleepByPromise(millisecond: number) {
@@ -6,6 +7,10 @@ export function sleepByPromise(millisecond: number) {
 }
 export function splitText(text: string) {
   return text.split(' ')
+}
+
+export function convertImagesToUrls(cartItem: any): string[] {
+  return cartItem?.images?.map((image: any) => image.imageUrl) || []
 }
 
 export function ConvertCastValue<T>(input: { [key: string]: any }, schemaType: T): T {
@@ -54,13 +59,24 @@ export function createErrorFields<T extends object>(fieldsInitialize: T): Record
 
   return result as Record<keyof T, string>
 }
-export type MasterName = 'Gender'
+export type MasterName = 'Gender' | 'SortBy'
 
 export async function getSelectComponentData(masterName: MasterName, _params: any) {
   switch (masterName) {
     case 'Gender':
       return getEnums(Gender)
+    case 'SortBy':
+      return getEnumsNumber(SortBy)
   }
+}
+
+function getEnumsNumber(enumType: { [key: number]: string }) {
+  return Object.entries(enumType)
+    .filter(([key]) => isNaN(Number(key)))
+    .map(([key, value]) => ({
+      label: key,
+      value: value,
+    }))
 }
 
 function getEnums(enumType: { [key: string]: string }) {

@@ -19,6 +19,7 @@
           <!-- Password -->
           <div class="mb-4">
             <UserControlTextFieldFloatLabel
+              ref="passwordInputRef"
               :xml-column="xmlColumns.password"
               :maxlength="50"
               :disabled="false"
@@ -61,15 +62,18 @@
   import BaseScreenAuth from '@PKG_SRC/layouts/Basecreen/BaseScreenAuth.vue'
   import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
   import { useLoginStore } from '@PKG_SRC/stores/Modules/loginStore'
+  import { useLoadingStore } from '@PKG_SRC/stores/Modules/usercontrol/loadingStore'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import { useForm } from 'vee-validate'
 
   const store = useLoginStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
+  const loadingStore = useLoadingStore()
   const formContext = useForm({ initialValues: fieldValues.value })
   store.SetFields(formContext)
   const router = useRouter()
   const userIdInputRef = ref()
+  const passwordInputRef = ref()
 
   const xmlColumns = {
     userId: XmlLoadColumn({
@@ -96,6 +100,13 @@
   }
 
   onMounted(() => {
-    userIdInputRef.value.onFocus()
+    loadingStore.LoadingChange(true)
+    passwordInputRef.value.onFocus()
+    setTimeout(() => {
+      userIdInputRef.value.onFocus()
+      setTimeout(() => {
+        loadingStore.LoadingChange(false)
+      }, 500)
+    }, 500)
   })
 </script>

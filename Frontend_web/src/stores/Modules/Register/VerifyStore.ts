@@ -125,7 +125,7 @@ export const useVerifyStore = defineStore('Verify', {
       const res = await apiServer.api.v1.UserInsertVerify.$post({
         body: {
           isOnlyValidation: false,
-          key: key
+          key: key,
         },
       })
       loadingStore.LoadingChange(false)

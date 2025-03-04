@@ -5,12 +5,7 @@ import { SearchService } from '@PKG_SRC/types/enums/constantBackend'
 import type { DPSSelectItemEntity, ItemEntity } from '@PKG_API/@types'
 
 export const fieldsInitialize = {
-  dantaiBangou: '',
-  ryokouBangou: '',
-  ninsyoKey: '',
-  mailAddress: '',
-  mailAddressConfirm: '',
-  seinengappi: '',
+  sortBy: 0,
 }
 export type FormSchema = typeof fieldsInitialize
 
@@ -30,18 +25,21 @@ export type ImageListResponse = {
   imagesList: string[]
 }
 
-
-export type Mypg020MailState = {
+export type DisplayProductState = {
   fields: typeof fields
   produtList: ItemEntity[]
+  totalRecords: Number
   imageList: ImageListResponse
+  isLoadingSkeletonCard: boolean
 }
 
 export const useDisplayProductStore = defineStore('Product', {
-  state: (): Mypg020MailState => ({
+  state: (): DisplayProductState => ({
     fields,
     produtList: [],
+    totalRecords: 0,
     imageList: {} as ImageListResponse,
+    isLoadingSkeletonCard: false,
   }),
   // state
 
@@ -59,27 +57,31 @@ export const useDisplayProductStore = defineStore('Product', {
     },
     ResetStore() {
       this.fields.resetForm()
+      this.produtList = []
     },
     async GetProductList(searchServiceNum: number, maxPrice: number, minPrice: number, sortBy: number, pageSize: number) {
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
+      this.isLoadingSkeletonCard = true
       const res = await apiClient.api.v1.DPSSelectItem.$post({
         body: {
           isOnlyValidation: false,
           currentPage: 1,
           pageSize: pageSize,
           searchBy: searchServiceNum,
-          childCategoryName: "",
+          childCategoryName: '',
           maximumPrice: maxPrice,
           minimumPrice: minPrice,
-          parentCategoryName: "",
-          sortBy: sortBy
+          parentCategoryName: '',
+          sortBy: sortBy,
         },
       })
       loadingStore.LoadingChange(false)
+      this.isLoadingSkeletonCard = false
       if (!res.success) return false
-      this.produtList = res.response.items
+      this.totalRecords = res.response?.totalRecords ?? 0
+      if (res.response?.items) this.produtList = res.response.items
       return true
     },
   },

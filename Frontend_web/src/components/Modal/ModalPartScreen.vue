@@ -1,5 +1,4 @@
 <template>
-  <!-- Nút mở modal -->
   <button
     data-modal-target="default-modal"
     data-modal-toggle="default-modal"
@@ -9,7 +8,6 @@
     {{ labelName }}
   </button>
 
-  <!-- Modal chính -->
   <div
     id="default-modal"
     tabindex="-1"
@@ -21,8 +19,7 @@
       <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
         <!-- Header modal -->
         <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Terms of Service</h3>
-          <!-- Nút đóng modal (Flowbite sẽ xử lý nhờ data-modal-hide) -->
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ headerName }}</h3>
           <button
             type="button"
             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -36,15 +33,7 @@
         </div>
         <!-- Nội dung modal -->
         <div class="p-4 md:p-5 space-y-4">
-          <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-            With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are
-            updating their terms of service agreements to comply.
-          </p>
-          <p class="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-            The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data
-            rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could
-            personally affect them.
-          </p>
+          <slot name="body"></slot>
         </div>
         <!-- Footer modal -->
         <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -77,6 +66,11 @@
     onOkClick: {
       type: Function as PropType<() => Promise<boolean> | boolean>,
       required: true,
+    },
+    headerName: {
+      type: String,
+      required: false,
+      default: 'Add',
     },
     labelName: {
       type: String,

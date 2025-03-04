@@ -9,8 +9,6 @@ export const useSearchStore = defineStore('search', {
   }),
   getters: {},
   actions: {
-    ResetStore() {
-
-    },
+    ResetStore() {},
   },
 })

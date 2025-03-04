@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen dark:bg-gray-900">
+  <div class="bg-white flex flex-col min-h-screen dark:bg-gray-900">
     <!-- Header -->
     <header class="sticky top-0 z-40 w-full"></header>
     <SlideBarUserNavigation>
@@ -12,7 +12,7 @@
         <FooterControl />
         <Loading />
         <ScrollToTopBtn />
-        <MessageToast v-if="formMessageStore.isNotify" />
+        <MessageToast />
       </template>
     </SlideBarUserNavigation>
   </div>
@@ -23,8 +23,7 @@
   import ScrollToTopBtn from '../Btn/ScrollToTopBtn.vue'
   import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
   import SlideBarUserNavigation from '@PKG_SRC/components/NavBar/SlideBarUserNavigation.vue'
-import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
-
+  import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
   const formMessageStore = useFormMessageStore()
 </script>
