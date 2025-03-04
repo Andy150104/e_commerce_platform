@@ -1,10 +1,10 @@
 import type { AbstractApiResponseOfString, DetailError } from '@PKG_API/@types'
 import { defineStore } from 'pinia'
 
-/** 認証 */
 export const useFormMessageStore = defineStore('formMessage', {
   state: () => ({
     messageId: '',
+    message: '',
     formInfo: '',
     formWarm: '',
     formError: '',
@@ -13,37 +13,25 @@ export const useFormMessageStore = defineStore('formMessage', {
     warmList: [] as string[],
     isAction: false,
     isNotify: false,
+    actionName: 'Retry',
+    actionCallBack: null as (() => void) | null,
   }),
-  // stateと同じgetterは宣言不要
   getters: {},
   actions: {
     ResetStore() {
       this.messageId = ''
       this.formInfo = ''
-      ;(this.formWarm = ''), (this.formError = ''), (this.errorList = []), (this.warmListTitle = []), (this.warmList = [])
+      this.isAction = false
+      this.isNotify = false
+      this.actionCallBack = null
     },
     SetMessageId(message: string) {
       this.messageId = message
     },
-    SetFormInfo(message: string) {
-      this.formInfo = message
+    SetMessageShow(message: string) {
+      this.isNotify = true
+      this.message = message
     },
-    SetFormWarm(message: string) {
-      this.formWarm = message
-    },
-    SetFormError(message: string) {
-      this.formError = message
-    },
-    SetErrorList(message: string) {
-      this.errorList.push(message)
-    },
-    SetWarmListTitle(message: string) {
-      this.warmListTitle.push(message)
-    },
-    SetWarmList(message: string) {
-      this.warmList.push(message)
-    },
-    SetTableError(detail: { detailError: DetailError; name: string }) {},
     SetFormMessage(result: AbstractApiResponseOfString | undefined, isNotify: boolean) {
       this.ResetStore()
       this.isNotify = isNotify
@@ -57,22 +45,28 @@ export const useFormMessageStore = defineStore('formMessage', {
       }
       switch (result.messageId.charAt(0)) {
         case 'I':
-          this.SetFormInfo(result.message ?? '')
-          break
-        case 'W':
-          this.SetFormWarm(result.message ?? '')
+          this.SetMessageShow(result.message ?? '')
           break
         case 'E':
-          this.SetFormError(result.message ?? '')
+          this.SetMessageShow(result.message ?? '')
           break
       }
     },
-    SetTableMessage(detail: { detailError: DetailError; name: string }) {
-      this.SetTableError(detail)
-    },
-    SetTableMessageNoLabel(detail: { detailError: DetailError; name: string }) {
-      const value = detail.detailError.errorMessage ?? ''
-      this.errorList.push(value)
+    SetFormMessageNotApiRes(messageId: string | undefined, isNotify: boolean, message: string) {
+      this.ResetStore()
+      this.isNotify = isNotify
+      this.messageId = messageId ?? ''
+      if (messageId === 'I99999') {
+        return
+      }
+      switch (this.messageId.charAt(0)) {
+        case 'I':
+          this.SetMessageShow(message ?? '')
+          break
+        case 'E':
+          this.SetMessageShow(message ?? '')
+          break
+      }
     },
   },
 })

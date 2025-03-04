@@ -47,7 +47,7 @@ export const useApiClient = () => {
           })
           error.config.headers.Authorization = `Bearer ${accessToken}`
 
-          const response = apiRetryAxios.request(error.config)
+          const response = await apiRetryAxios.request(error.config)
           return response
         } else {
           router.push('/?error=timeout')

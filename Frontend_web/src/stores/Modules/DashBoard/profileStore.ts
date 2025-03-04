@@ -31,7 +31,7 @@ export type ProfileState = {
   uDSSelectUserProfileEntity: UDSSelectUserProfileEntity
 }
 
-export const useProfileStore = defineStore('Register', {
+export const useProfileStore = defineStore('Profile', {
   state: (): ProfileState => ({
     fields,
     uDSSelectUserProfileEntity: {} as UDSSelectUserProfileEntity,
@@ -61,7 +61,8 @@ export const useProfileStore = defineStore('Register', {
     async GetProfile() {
       // const validation: any = await this.fields.validate()
       // if (validation.valid === false) return false
-
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
       const apiClient = useApiClient()
       const res = await apiClient.api.v1.UDSSelectUserProfile.$post({
         body: {
@@ -76,6 +77,7 @@ export const useProfileStore = defineStore('Register', {
       this.fields.setFieldValue('gender', this.uDSSelectUserProfileEntity.gender?.toString())
       this.fields.setFieldValue('firstName', this.uDSSelectUserProfileEntity.firstName)
       this.fields.setFieldValue('lastName', this.uDSSelectUserProfileEntity.lastName)
+      loadingStore.LoadingChange(false)
     },
     async UpdateUser() {
       const validation: any = await this.fields.validate()
@@ -91,9 +93,10 @@ export const useProfileStore = defineStore('Register', {
           firstName: apiFieldValues.firstName,
           lastName: apiFieldValues.lastName,
           phoneNumber: apiFieldValues.phoneNumber,
-          birthDay: apiFieldValues.birthDate && /^\d{2}-\d{2}-\d{4}$/.test(apiFieldValues.birthDate) 
-    ? apiFieldValues.birthDate.split('-').reverse().join('-') 
-    : apiFieldValues.birthDate || '',
+          birthDay:
+            apiFieldValues.birthDate && /^\d{2}-\d{2}-\d{4}$/.test(apiFieldValues.birthDate)
+              ? apiFieldValues.birthDate.split('-').reverse().join('-')
+              : apiFieldValues.birthDate || '',
           imageUrl: 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jp',
           gender: apiFieldValues.gender,
         },
@@ -107,4 +110,5 @@ export const useProfileStore = defineStore('Register', {
       return true
     },
   },
+  persist: true,
 })

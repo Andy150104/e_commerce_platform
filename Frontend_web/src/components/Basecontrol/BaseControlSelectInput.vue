@@ -1,13 +1,14 @@
 <template>
-  <div>
+  <!-- flex justify-center sẽ giúp canh giữa phần tử bên trong -->
+  <div class="flex justify-center">
     <Field
       :id="fieldId"
-      class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       as="select"
       :name="xmlColumn.id"
       :rules="fieldRules"
       @blur="onBlur"
       @change="onChange"
+      class="w-full text-center items-center hover:bg-gray-100 font-medium bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 px-4 py-2"
     >
       <option v-for="option in options" :key="option.value" :value="option.value">
         {{ option.label }}
@@ -15,6 +16,7 @@
     </Field>
   </div>
 </template>
+
 <script setup lang="ts">
   import type { xmlColumn } from '@PKG_SRC/utils/xml'
   import { Field } from 'vee-validate'
@@ -41,10 +43,6 @@
     masterName: {
       type: String as () => MasterName,
       required: true,
-    },
-    errMsg: {
-      type: String,
-      default: '',
     },
     isDisable: {
       type: Boolean,

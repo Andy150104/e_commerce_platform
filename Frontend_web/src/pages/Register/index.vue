@@ -193,5 +193,6 @@
   onMounted(() => {
     store.createFlgAccountInfo = true
     stepperStore.SetValues(steppList)
+    localStorage.setItem('urlBack', document.referrer)
   })
 </script>

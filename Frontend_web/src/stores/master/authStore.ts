@@ -9,6 +9,8 @@ import { UserInfoGrpId } from '@PKG_SRC/types/enums/constantFrontend'
 import axios from 'axios'
 import { useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
 import type { TokenResponse } from '@PKG_SRC/utils/auth/define/@types'
+import { useProfileStore } from '../Modules/DashBoard/profileStore'
+import { useFormMessageStore } from './formMessageStore'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -38,6 +40,7 @@ export const useAuthStore = defineStore('auth', {
     async Login(userId: string, password: string, userNameOrEmail: string, groupFlg: boolean, router: Router) {
       const runtimeConfig = useRuntimeConfig()
       const loginStore = useLoginStore()
+      const profileStore = useProfileStore()
       const loadingStore = useLoadingStore()
       const authParams = new URLSearchParams()
       authParams.append('grant_type', 'password')
@@ -46,15 +49,16 @@ export const useAuthStore = defineStore('auth', {
       authParams.append('username', userId)
       authParams.append('password', password)
       authParams.append('UserNameOrEmail', userNameOrEmail)
-
+      const formMessageStore = useFormMessageStore()
       loadingStore.LoadingChange(true)
       try {
         const res = await AuthAPI.Token.post(authParams)
-        console.log('Login', res)
         this.SetTokens(res)
         const userStore = useUserStore()
         await userStore.SetMypm730(userStore.UserInfo.grpId, false)
+        profileStore.GetProfile()
         userStore.UserInfo.usrId = userId
+        formMessageStore.SetFormMessageNotApiRes('I00001', true, 'Login Successfully')
 
         // if (
         //   (userStore.UserInfo.grpId === UserInfoGrpId.personal && groupFlg === true) ||
@@ -69,6 +73,10 @@ export const useAuthStore = defineStore('auth', {
         // window.location.href = 'http://localhost:3000/Home'
       } catch (error) {
         console.error('Login error:', error)
+        if (axios.isAxiosError(error) && error.response) {
+          const errorDescription = error.response.data?.error_description || 'Unknown error'
+          formMessageStore.SetFormMessageNotApiRes('E00001', true, errorDescription)
+        }
       } finally {
         loadingStore.LoadingChange(false)
       }
@@ -95,21 +103,16 @@ export const useAuthStore = defineStore('auth', {
       }
       if (apiResult === false) this.ResetStore()
     },
-    async Logout(groupFlg: boolean) {
-      //   const loadingStore = useLoadingStore()
-      //   loadingStore.LoadingChange(true)
-      //   const logoutClient = useLogoutClient()
-      //   const res = logoutClient.api.v1.Logout.$get()
-      //   await res.finally(() => {
-      //     loadingStore.LoadingChange(false)
-      //     this.ResetStore()
-      //     const router = useRouter()
-      //     if (groupFlg) {
-      //       router.push('/Mypg010')
-      //     } else {
-      //       router.push('/Mypp010')
-      //     }
-      //   })
+    async Logout() {
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
+      const logoutClient = useLogoutClient()
+      this.ResetStore()
+      setTimeout(() => {
+        loadingStore.LoadingChange(false)
+        const router = useRouter()
+        router.push('/Home')
+      }, 1000)
     },
   },
   persist: true,

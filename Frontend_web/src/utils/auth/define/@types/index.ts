@@ -1,5 +1,5 @@
 /* eslint-disable */
-export type UserInsertResponse = AbstractApiResponseOfString & {
+export type UserVerifyKeyResponse = AbstractApiResponseOfString & {
   response: string
 }
 
@@ -17,7 +17,55 @@ export type DetailError = {
   errorMessage: string
 }
 
-export type UserInsertRequest = {
+export type UserVerifyKeyRequest = AbstractApiRequest & {
+  key: string
+}
+
+export type AbstractApiRequest = {
+  isOnlyValidation: boolean
+}
+
+export type UpdateRoleResponse = AbstractApiResponseOfString & {
+  response: string
+}
+
+export type UpdateRoleRequest = AbstractApiRequest & {
+  userName: string
+  planId?: string | undefined
+}
+
+export type FPSVerifyKeyResponse = AbstractApiResponseOfString & {
+  response: string
+}
+
+export type FPSVerifyKeyRequest = AbstractApiRequest & {
+  key: string
+  newPassWord: string
+}
+
+export type VerifyTokenResponse = AbstractApiResponseOfVerifyTokenEntity & {
+  response: VerifyTokenEntity
+}
+
+export type VerifyTokenEntity = {
+  roleName: string
+}
+
+export type AbstractApiResponseOfVerifyTokenEntity = {
+  success: boolean
+  messageId: string
+  message: string
+  detailErrorList: DetailError[]
+  response?: VerifyTokenEntity | undefined
+}
+
+export type VerifyTokenRequest = AbstractApiRequest
+
+export type UserInsertResponse = AbstractApiResponseOfString & {
+  response: string
+}
+
+export type UserInsertRequest = AbstractApiRequest & {
   username: string
   email: string
   password: string
@@ -33,8 +81,12 @@ export type UserInsertVerifyRequest = AbstractApiRequest & {
   key: string
 }
 
-export type AbstractApiRequest = {
-  isOnlyValidation: boolean
+export type FPSForgotPasswordResponse = AbstractApiResponseOfString & {
+  response: string
+}
+
+export type FPSForgotPasswordRequest = AbstractApiRequest & {
+  email: string
 }
 export type TokenResponse = {
   access_token: string

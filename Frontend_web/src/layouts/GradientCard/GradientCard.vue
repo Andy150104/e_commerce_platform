@@ -12,7 +12,7 @@
           Unlock a world of surprises with our exclusive blind boxes. Trade and collect accessories effortlessly through our seamless platform
         </p>
         <div>
-          <BaseControlSearch/>
+          <slot name="search"></slot>
         </div>
         <div class="mt-8 flex justify-center space-x-4">
           <button :class="className.BUTTON_GRADIENT_1">Buy Now</button>
@@ -23,7 +23,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  import BaseControlSearch from '@PKG_SRC/components/Basecontrol/BaseControlSearch.vue'
+  import BaseControlSearchOneField from '@PKG_SRC/components/Basecontrol/BaseControlSearchOneField.vue'
   import { className } from '@PKG_SRC/utils/class/className'
 
   const gradientCard = ref<HTMLElement | null>(null)

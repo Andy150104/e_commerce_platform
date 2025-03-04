@@ -21,14 +21,14 @@ export const useUploadImageStore = defineStore('Upload Image', {
         imagePreview: imagePreview,
       })
     },
-    SetImage(imageList: string[]){
-      imageList.forEach(image => {
+    SetImage(imageList: string[]) {
+      imageList.forEach((image) => {
         this.uploadImage.push({
           name: '',
           size: 0,
           imagePreview: image,
         })
-      });
+      })
     },
     async uploadCloudinaryBase64(base64: string): Promise<void> {
       const cloudName = 'dbfokyruf'

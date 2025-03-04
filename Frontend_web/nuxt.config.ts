@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { resolve } from 'path'
-
+import Aura from '@primeuix/themes/aura'
 export default defineNuxtConfig({
   devtools: { enabled: false },
 
@@ -11,10 +11,25 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@pinia/nuxt', '@nuxthq/ui', '@pinia/nuxt', 'pinia-plugin-persistedstate/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxthq/ui', 'pinia-plugin-persistedstate/nuxt', '@primevue/nuxt-module'],
+  primevue: {
+    options: {
+      ripple: true,
+      inputVariant: 'filled',
+      theme: {
+        preset: Aura,
+        options: {
+          prefix: 'p',
+          darkModeSelector: '.dark',
+          cssLayer: false,
+        },
+      },
+    },
+  },
   ui: {
     global: true,
   },
+
   css: ['./src/assets/styles/main.css'],
 
   ssr: false,

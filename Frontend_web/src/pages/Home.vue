@@ -29,11 +29,11 @@
           <h2 class="text-2xl font-bold text-center text-gray-900 mb-8 dark:text-white">Featured Products</h2>
           <CardContainer>
             <template #body>
-              <CardProduct2 :product-model="store.produtList" />
+              <CardProduct2 :product-model="displayProductStore.produtList" />
             </template>
           </CardContainer>
           <div class="text-center mt-8">
-            <button :class="className.BUTTON_DEFAULT_WHITE">Explore More</button>
+            <button :class="className.BUTTON_DEFAULT_WHITE" @click="onMoveToBuyService">Explore More</button>
           </div>
         </div>
         <!-- Description block -->
@@ -76,10 +76,13 @@
   import CardPlan from '@PKG_SRC/components/Card/CardPlan.vue'
   import Carousel from '@PKG_SRC/components/Carousel/Carousel.vue'
   import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
+  import { useDisplayProductStore } from '@PKG_SRC/stores/Modules/Blind_Box/DisplayProductStore'
+  import { SearchService, SortBy } from '@PKG_SRC/types/enums/constantBackend'
 
   const gradientCard = ref<HTMLElement | null>(null)
   const gradientEffect = ref<HTMLElement | null>(null)
   const store = useMypgStore()
+  const displayProductStore = useDisplayProductStore()
   const formMessageStore = useFormMessageStore()
   const testStore = useTestStore()
 
@@ -91,12 +94,24 @@
     gradientEffect.value!.style.transform = `translate(${x - 500}px, ${y - 500}px)` // Điều chỉnh tâm gradient
     gradientEffect.value!.style.opacity = '1'
   }
+
+  const fetchProducts = async () => {
+    await displayProductStore.GetProductList(SearchService.Product, 0, 0, SortBy.MostPopular, 5)
+    await nextTick()
+  }
+
+  const onMoveToBuyService = () => {
+    const router = useRouter()
+    router.push('Service/Buying')
+  }
+
   const onMouseLeave = () => {
     gradientEffect.value!.style.opacity = '0'
   }
+
   onMounted(async () => {
     store.GetImageList()
-    store.GetProductList()
+    await fetchProducts()
     formMessageStore.SetMessageId('9000')
     await nextTick()
     if (gradientCard.value && gradientEffect.value) {
@@ -104,6 +119,7 @@
       gradientCard.value.addEventListener('mouseleave', onMouseLeave)
     }
   })
+
   onUnmounted(() => {
     gradientCard.value?.removeEventListener('mousemove', onMouseMove)
     gradientCard.value?.removeEventListener('mouseleave', onMouseLeave)
