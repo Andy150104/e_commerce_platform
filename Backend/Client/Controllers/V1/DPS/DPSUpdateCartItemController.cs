@@ -56,20 +56,25 @@ public class DPSUpdateCartItemController : AbstractApiController<DPSUpdateCartIt
         var userName = _context.IdentityEntity.UserName;
         
         // Get Cart
-        var cartSelect = _context.Carts.FirstOrDefault(x => x.Username == userName);
+        var cartSelect = _context.Carts.FirstOrDefault(x => x.Username == userName && x.IsActive == true);
         
         // Get CartItem
-        var cartItemSelect = _context.CartItems.FirstOrDefault(x => x.CartId == cartSelect.CartId && x.AccessoryId == itemRequest.AccessoryId);
+        var cartItemSelect = _context.CartItems.FirstOrDefault(x => x.CartId == cartSelect.CartId 
+                                                                    && x.IsActive == true
+                                                                    && x.AccessoryId == itemRequest.AccessoryId);
         
         // Update CartItem
         cartItemSelect.Quantity = itemRequest.Quantity;
+        _context.CartItems.Update(cartItemSelect);
+        _context.SaveChanges(userName);
+        
         if (itemRequest.Quantity <= 0)
         {
             cartItemSelect.Quantity = 0;
-            cartItemSelect.IsActive = false;
+            _context.CartItems.Update(cartItemSelect);
+            _context.SaveChanges(userName, true);
         }
-        _context.CartItems.Update(cartItemSelect);
-        _context.SaveChanges(userName);
+        
         transaction.Commit();
         
         // True

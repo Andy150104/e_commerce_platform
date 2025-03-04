@@ -123,6 +123,13 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
     protected internal override DPSInsertCartResponse ErrorCheck(DPSInsertCartRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
         var response = new DPSInsertCartResponse() { Success = false };
+        if (detailErrorList.Count > 0)
+        {
+            // Error
+            response.SetMessage(MessageId.E10000);
+            response.DetailErrorList = detailErrorList;
+            return response;
+        }
         
         // Get Accessory
         var productSelect = _context.Accessories.FirstOrDefault(x => x.AccessoryId == request.CodeAccessory && x.IsActive == true);
@@ -133,13 +140,6 @@ public class DPSInsertCartController : AbstractApiController<DPSInsertCartReques
             return response;
         }
         
-        if (detailErrorList.Count > 0)
-        {
-            // Error
-            response.SetMessage(MessageId.E10000);
-            response.DetailErrorList = detailErrorList;
-            return response;
-        }
         // True
         response.Success = true;
         return response;

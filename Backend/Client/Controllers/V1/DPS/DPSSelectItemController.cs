@@ -240,7 +240,7 @@ public class DPSSelectItemController : AbstractApiControllerNotToken<DPSSelectIt
                 FirstNameCreator = blindBox.FirstName,
                 LastNameCreator = blindBox.LastName,
                 ImageUrl = imageUrls,
-                ExchangeId = blindBox.ExchangeId
+                ExchangeId = blindBox.ExchangeId,
             };
             responseEntity.Add(entity);
         }
