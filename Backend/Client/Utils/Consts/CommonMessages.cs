@@ -23,4 +23,6 @@ public class CommonMessages
     public static readonly string WishListItemNotFound = "Wish list item not found";
 
     public static readonly string QuantityIsGreaterStock = "Quantity is greater than stock";
+    
+    public static readonly string ImageNotFound = "Image not found";
 }

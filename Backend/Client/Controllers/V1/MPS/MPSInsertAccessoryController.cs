@@ -40,6 +40,7 @@ public class MPSInsertAccessoryController : AbstractApiAsyncController<MPSInsert
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    [HttpPost]
     [Authorize(Roles = ConstRole.SaleEmployee + "," + ConstRole.Owner, 
         AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public override async Task<MPSInsertAccessoryResponse> Post(MPSInsertAccessoryRequest request)
@@ -73,8 +74,8 @@ public class MPSInsertAccessoryController : AbstractApiAsyncController<MPSInsert
             CategoryId = request.CategoryId,
         };
         _context.Accessories.Add(product);
-        _context.SaveChanges(userName);
-
+        await _context.SaveChangesAsync(userName);
+        
         // Insert Image
         var imageTasks = request.Images.Select(async image =>
         {
@@ -91,7 +92,7 @@ public class MPSInsertAccessoryController : AbstractApiAsyncController<MPSInsert
         _context.Images.AddRange(images);
 
         // Save changes
-        _context.SaveChanges(userName);
+        await _context.SaveChangesAsync(userName);
         transaction.CommitAsync();
         
         // True
@@ -124,12 +125,11 @@ public class MPSInsertAccessoryController : AbstractApiAsyncController<MPSInsert
     }
     
     /// <summary>
-    /// Generate AccessoryId
+    /// Generate Accessory Code
     /// </summary>
     /// <returns></returns>
     private string GenerateAccessoryCode()
     {
         return "P00" + Guid.NewGuid().ToString("D").Substring(26).ToUpper();
     }
-
 }

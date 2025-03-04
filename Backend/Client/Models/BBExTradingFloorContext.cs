@@ -1318,6 +1318,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_wishlist_blind_box__wishlists");
         });
+        modelBuilder.HasSequence<int>("AccessorySeq");
 
         OnModelCreatingPartial(modelBuilder);
     }
