@@ -13,12 +13,12 @@ public class IdentityApiClient : IIdentityApiClient
         
         // Get email
         var email = identity.FindFirst(OpenIddictConstants.Claims.Email)?.Value ?? string.Empty;
-
+        
         // Create IdentityEntity
         var identityEntity = new IdentityEntity()
         {
             UserName = userNm,
-            Email = email
+            Email = email,
         };
         return identityEntity;
     }

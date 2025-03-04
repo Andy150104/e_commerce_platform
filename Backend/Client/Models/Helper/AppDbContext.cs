@@ -9,7 +9,7 @@ namespace Client.Models.Helper;
 public class AppDbContext : BBExTradingFloorContext
 {
     public NLog.Logger _Logger;
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -23,6 +23,17 @@ public class AppDbContext : BBExTradingFloorContext
     
     public IdentityEntity IdentityEntity { get; set; }
     
+    /// <summary>
+    /// Save changes async with common value
+    /// </summary>
+    /// <param name="updateUserId"></param>
+    /// <param name="needLogicalDelete"></param>
+    /// <returns></returns>
+    public Task<int> SaveChangesAsync(string updateUserId, bool needLogicalDelete = false)
+    {
+        this.SetCommonValue(updateUserId, needLogicalDelete);
+        return base.SaveChangesAsync();
+    }
     
     /// <summary>
     /// Save changes with common value
@@ -90,7 +101,7 @@ public class AppDbContext : BBExTradingFloorContext
                 if (needLogicalDelete)
                 {
                     // Delete
-                    modifiedEntity.IsActive = 0;
+                    modifiedEntity.IsActive = false;
                     modifiedEntity.UpdatedBy = updateUser;
                 }
                 else

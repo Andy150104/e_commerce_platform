@@ -18,7 +18,7 @@ public class ItemEntity
 {
     public string CodeProduct { get; set; }
 
-    public string NameProduct { get; set; }
+    public string NameAccessory { get; set; }
     
     public string? ShortDescription { get; set; }
 
@@ -36,8 +36,6 @@ public class ItemEntity
 
     public string? ParentCategoryName { get; set; }
     
-    public Guid? WishlistId { get; set; }
-
     public List<DpsSelectItemListImageUrl> ImageUrl { get; set; }
 
     public int? AverageRating { get; set; }

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 
-namespace Client.Controllers.V1.UPS;
+namespace Client.Controllers.V1.UDS;
 
 /// <summary>
 /// UDSSelectUserAddressController - Select User Address
@@ -23,6 +23,7 @@ public class UDSSelectUserAddressController : AbstractApiController<UDSSelectUse
     /// Constructor
     /// </summary>
     /// <param name="context"></param>
+    /// <param name="identityApiClient"></param>
     public UDSSelectUserAddressController(AppDbContext context, IIdentityApiClient identityApiClient)
     {
         _context = context;
@@ -49,7 +50,6 @@ public class UDSSelectUserAddressController : AbstractApiController<UDSSelectUse
     /// <param name="request"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     protected override UDSSelectUserAddressResponse Exec(UDSSelectUserAddressRequest request, IDbContextTransaction transaction)
     {
         var response = new UDSSelectUserAddressResponse() { Success = false };

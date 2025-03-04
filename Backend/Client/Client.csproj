@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+        <PackageReference Include="CloudinaryDotNet" Version="1.27.4" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
@@ -25,18 +26,21 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="OpenAI-DotNet" Version="8.5.4" />
         <PackageReference Include="OpenIddict" Version="6.0.0" />
         <PackageReference Include="OpenIddict.AspNetCore" Version="6.0.0" />
         <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="6.0.0" />
         <PackageReference Include="OpenIddict.Server.AspNetCore" Version="6.0.0" />
         <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.0.0" />
         <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="6.0.0" />
+        <PackageReference Include="RestSharp" Version="112.1.0" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <None Include="Controllers\V1\OPS\OPSAddPlanRefundResponse.cs" />
       <Content Update="appsettings.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>

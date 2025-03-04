@@ -3,7 +3,7 @@ namespace Client.Utils.Consts;
 public static class ConstantEnum
 {
     /// <summary>
-    /// Type of product. BlindBox or Product
+    /// Type of product. BlindBox or Accessory
     /// </summary>
     public enum ProductType
     {
@@ -24,14 +24,30 @@ public static class ConstantEnum
     }
     
     /// <summary>
-    /// Status of BlindBox
+    /// Status of Exchange
     /// </summary>
-    public enum Status
+    public enum ExchangeStatus
     {
-        Success = 1,
-        Pending = 2,
-        Fail = 3
+        PendingExchange = 1,
+        Approve = 2,
+        Success = 3,
+        Fail = 4
     }
 
-
+    public enum PostingStatus
+    {
+        PendingExchange = 1,
+        Fail = 2,
+        PendingRecheck = 3,
+    }
+    
+    
+    public enum OrderPlans
+    {
+        Success, 
+        Fail, 
+        Pending, 
+        Cancel, 
+        Refunded
+    }
 }

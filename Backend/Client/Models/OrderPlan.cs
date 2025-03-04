@@ -11,6 +11,8 @@ public partial class OrderPlan
 
     public Guid PlanId { get; set; }
 
+    public string? Description { get; set; }
+
     public byte Status { get; set; }
 
     public DateTime? CreatedAt { get; set; }
@@ -28,6 +30,8 @@ public partial class OrderPlan
     public Guid? VoucherId { get; set; }
 
     public virtual Plan Plan { get; set; } = null!;
+
+    public virtual ICollection<RefundPlanRequest> RefundPlanRequests { get; set; } = new List<RefundPlanRequest>();
 
     public virtual User UsernameNavigation { get; set; } = null!;
 

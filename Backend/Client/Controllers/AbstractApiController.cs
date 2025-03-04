@@ -45,7 +45,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
     /// Default SNAPSHOT Change it in the constructor
     /// </remarks>
     protected System.Data.IsolationLevel _isolationLevel = System.Data.IsolationLevel.Snapshot;
-    
+
     /// <summary>
     /// TemplateMethod
     /// </summary>
@@ -89,7 +89,7 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
 
         try
         {
-            appDbContext. _Logger = logger;
+            appDbContext._Logger = logger;
 
             // Start transaction
             using (var transaction = appDbContext.Database.BeginTransaction())

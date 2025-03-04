@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 
-namespace Client.Controllers.V1.UPS;
+namespace Client.Controllers.V1.UDS;
 
 /// <summary>
 /// UDSSelectUserProfileController - Select user profile

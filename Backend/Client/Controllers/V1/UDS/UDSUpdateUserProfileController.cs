@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 
-namespace Client.Controllers.V1.UPS;
+namespace Client.Controllers.V1.UDS;
 
 /// <summary>
 /// UDSUpdateUserProfileController - Update user profile

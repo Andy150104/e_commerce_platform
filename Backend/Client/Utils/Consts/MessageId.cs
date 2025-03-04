@@ -6,7 +6,7 @@ namespace Client.Utils.Consts;
 public class MessageId
 {
     /// <summary>
-    /// Processing successfully {0}
+    /// Information error
     /// </summary>
     public readonly static string I00000 = "I00000";
     
