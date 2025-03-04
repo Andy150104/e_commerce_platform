@@ -9,21 +9,22 @@ using NLog;
 namespace Client.Controllers.V1.MPS;
 
 /// <summary>
-/// MPSDeleteAccessoryController - Delete Accessory
+/// MPSDeleteImageAccessoryController - Delete image accessory
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class MPSDeleteAccessoryController : AbstractApiController<MPSDeleteAccessoryRequest, MPSDeleteAccessoryResponse, string>
+public class MPSDeleteImageAccessoryController : AbstractApiController<MPSDeleteImageAccessoryRequest,
+    MPSDeleteImageAccessoryResponse, string>
 {
-    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly AppDbContext _context;
+    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="context"></param>
     /// <param name="identityApiClient"></param>
-    public MPSDeleteAccessoryController(AppDbContext context, IIdentityApiClient identityApiClient)
+    public MPSDeleteImageAccessoryController(AppDbContext context, IIdentityApiClient identityApiClient)
     {
         _context = context;
         _context._Logger = logger;
@@ -38,9 +39,9 @@ public class MPSDeleteAccessoryController : AbstractApiController<MPSDeleteAcces
     [HttpPost]
     [Authorize(Roles = ConstRole.SaleEmployee + "," + ConstRole.Owner, 
         AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-    public override MPSDeleteAccessoryResponse Post(MPSDeleteAccessoryRequest request)
+    public override MPSDeleteImageAccessoryResponse Post(MPSDeleteImageAccessoryRequest request)
     {
-       return Post(request, _context, logger, new MPSDeleteAccessoryResponse());
+        return Post(request, _context, logger, new MPSDeleteImageAccessoryResponse());
     }
 
     /// <summary>
@@ -49,19 +50,18 @@ public class MPSDeleteAccessoryController : AbstractApiController<MPSDeleteAcces
     /// <param name="request"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
-    protected override MPSDeleteAccessoryResponse Exec(MPSDeleteAccessoryRequest request, IDbContextTransaction transaction)
+    /// <exception cref="NotImplementedException"></exception>
+    protected override MPSDeleteImageAccessoryResponse Exec(MPSDeleteImageAccessoryRequest request, IDbContextTransaction transaction)
     {
-        var response = new MPSDeleteAccessoryResponse() { Success = false };
+        var response = new MPSDeleteImageAccessoryResponse { Success = false };
         
-        // Get Accessory
-        foreach (var code in request.CodeAccessory)
-        {
-            var product = _context.Accessories.FirstOrDefault(x => x.AccessoryId == code && x.IsActive == true);
-            _context.Accessories.Update(product);
-            
-            var accessoryImage = _context.Images.Where(x => x.AccessoryId == code);
-            _context.Images.UpdateRange(accessoryImage);
-        }
+        // Delete Image
+        var imagesToDelete = _context.Images
+            .Where(img => request.ImageId.Contains(img.ImageId) && img.IsActive == true)
+            .ToList();
+        
+        // Delete
+        _context.Images.UpdateRange();
         _context.SaveChanges(_context.IdentityEntity.UserName, true);
         transaction.Commit();
         
@@ -78,10 +78,11 @@ public class MPSDeleteAccessoryController : AbstractApiController<MPSDeleteAcces
     /// <param name="detailErrorList"></param>
     /// <param name="transaction"></param>
     /// <returns></returns>
-    protected internal override MPSDeleteAccessoryResponse ErrorCheck(MPSDeleteAccessoryRequest request, List<DetailError> detailErrorList, IDbContextTransaction transaction)
+    protected internal override MPSDeleteImageAccessoryResponse ErrorCheck(MPSDeleteImageAccessoryRequest request,
+        List<DetailError> detailErrorList, IDbContextTransaction transaction)
     {
-        var response = new MPSDeleteAccessoryResponse() { Success = false };
-        
+        var response = new MPSDeleteImageAccessoryResponse() { Success = false };
+
         if (detailErrorList.Count > 0)
         {
             // Error
@@ -90,17 +91,18 @@ public class MPSDeleteAccessoryController : AbstractApiController<MPSDeleteAcces
             return response;
         }
 
-        foreach (var code in request.CodeAccessory)
+        // Check image
+        foreach (var imgId in request.ImageId)
         {
-            var product = _context.Accessories.FirstOrDefault(x => x.AccessoryId == code && x.IsActive == true);
-            if (product == null)
+            var imagesToDelete = _context.Images.FirstOrDefault(img => img.ImageId == imgId && img.IsActive == true);
+            if (imagesToDelete == null)
             {
-                // Error
-                response.SetMessage(MessageId.I00000, $"{"Accessory Id: " + code} is not found");
+                response.SetMessage(MessageId.I00000, $"{"Image Id: " + imagesToDelete} is not found");
                 response.DetailErrorList = detailErrorList;
                 return response;
             }
         }
+        
 
         // True
         response.Success = true;
