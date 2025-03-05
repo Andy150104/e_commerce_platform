@@ -7,6 +7,7 @@ import { useApiServer } from '@PKG_SRC/utils/auth/authHttp'
 
 export const fieldsInitialize = {
   password: '',
+  confirmPassword: '',
   key : '',
 }
 export type FormSchema = typeof fieldsInitialize
