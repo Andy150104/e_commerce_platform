@@ -77,10 +77,12 @@
   import BaseControlTextField from '@PKG_SRC/components/Basecontrol/BaseControlTextField.vue'
   import { useUpdatePassStore } from '@PKG_SRC/stores/Modules/ForgotPass/forgotStore'
   import { useForm } from 'vee-validate'
+import { useLoadingStore } from '@PKG_SRC/stores/Modules/usercontrol/loadingStore'
 
   const successMessage = ref(false)
   const stepperStore = useStepperStore()
   const store = useUpdatePassStore()
+  const loadingStore = useLoadingStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
   store.SetFields(formContext)
@@ -106,7 +108,11 @@
   }
   const onMoveToNextStep = async () => {
     if (store.createFlgUpdatePass) {
+      loadingStore.LoadingChange(true)
       if (!(await store.updatePassword())) return
+      setTimeout(() => {
+        loadingStore.LoadingChange(false)
+      }, 500)
       stepperStore.moveToNextStep()
       store.createFlgUpdatePass = false
     }
