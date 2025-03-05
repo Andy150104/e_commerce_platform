@@ -80,7 +80,7 @@ public class DPSSelectAccessoryController : AbstractApiControllerNotToken<DPSSel
             TotalReviews = productSelect.TotalReviews,
             ChildCategoryName = productSelect.ChildCategoryName,
             ParentCategoryName = productSelect.ParentCategoryName,
-            //ImageUrls = imageList,
+            ImageUrls = imageList,
         };
         
         // True
