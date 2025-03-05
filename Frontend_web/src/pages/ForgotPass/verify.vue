@@ -76,10 +76,12 @@
   import { useVerifyPasswordStore } from '@PKG_SRC/stores/Modules/ForgotPass/verifyPassword'
   import { useForm } from 'vee-validate'
   import { useRoute } from 'vue-router'
+  import { useLoadingStore } from '@PKG_SRC/stores/Modules/usercontrol/loadingStore'
 
   const route = useRoute()
   const stepperStore = useStepperStore()
   const successMessage = ref(false)
+  const loadingStore = useLoadingStore()
   const store = useVerifyPasswordStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
@@ -112,7 +114,11 @@
   }
   const onMoveToNextStep = async () => {
     if (store.createFlgVerifyPass) {
+      loadingStore.LoadingChange(true)
       if (!(await store.verifyPassword())) return
+      setTimeout(() => {
+        loadingStore.LoadingChange(false)
+      }, 500)
       stepperStore.moveToNextStep()
       store.createFlgVerifyPass = false
     }
