@@ -44,7 +44,7 @@ builder.Services.AddDbContext<BBExTradingFloorContext>(options =>
 builder.Services.AddControllers();
 
 // Swagger configuration to output API type definitions
-builder.Services.AddSwaggerDocument(config =>
+builder.Services.AddOpenApiDocument(config =>
 {
     config.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT Token"));
     config.AddSecurity("JWT Token", Enumerable.Empty<string>(),
