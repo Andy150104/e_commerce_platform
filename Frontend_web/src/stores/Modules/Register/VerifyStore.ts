@@ -115,8 +115,6 @@ export const useVerifyStore = defineStore('Verify', {
       return true
     },
     async activeAccount(key: string) {
-      const validation: any = await this.fields.validate()
-      if (validation.valid === false) return false
       const apiServer = useApiServer()
       const formMessage = useFormMessageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
@@ -128,6 +126,7 @@ export const useVerifyStore = defineStore('Verify', {
           key: key,
         },
       })
+      console.log('vaooooooooooo')
       loadingStore.LoadingChange(false)
       if (!res.success) {
         formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)

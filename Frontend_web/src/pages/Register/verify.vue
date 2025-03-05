@@ -209,7 +209,7 @@
     if (store.createFlgPlan) {
       store.RegisterUserClient(String(route.query.key))
       updateFlags(false, false, false, true)
-      window.location.href = localStorage.getItem('urlBack') ?? 'http://localhost:3000/Home'
+      window.location.href = 'http://localhost:3000/Home'
       return
     }
   }

@@ -1,10 +1,12 @@
 import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
 import { useUserStore } from '@PKG_SRC/stores/master/userStore'
+import { useVerifyTokenStore } from '@PKG_SRC/stores/master/verifyTokenStore'
 import { defineNuxtRouteMiddleware } from 'nuxt/app'
 
 export default defineNuxtRouteMiddleware(async (to) => {
   const authStore = useAuthStore()
   const userStore = useUserStore()
+  const verifyTokenStore = useVerifyTokenStore()
   const relativePath = to.path.split('/').filter(Boolean).join('/')
 
   const loginNotRequiredRoutes = [
@@ -31,4 +33,19 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (!authStore.isAuthorization && !loginNotRequiredRoutes.includes(relativePath) && !relativePath.startsWith('Service/Buying/Product')) {
     return { path: '/' }
   }
+
+  if (relativePath === 'Manage/Product') {
+    try {
+      await verifyTokenStore.GetRoleName()
+      if (verifyTokenStore.roleName === "Owner"){
+        return
+      }
+      else{
+        return navigateTo('/');
+      }
+    } catch (error) {
+      return navigateTo('/');
+    }
+  }
+
 })

@@ -165,6 +165,9 @@
                       Add to cart
                     </button>
                   </template>
+                  <template #body>
+                    <CardCart v-if="isCartVisible" :cart-model="cartList" />
+                  </template>
                 </SlideBar>
               </div>
 
@@ -187,19 +190,24 @@
 </template>
 
 <script setup lang="ts">
+  import type { DPSSelectCartItemEntity } from '@PKG_API/@types'
   import Accordion from '@PKG_SRC/components/Accordion/Accordion.vue'
   import BaseControlQuantityInput from '@PKG_SRC/components/Basecontrol/BaseControlQuantityInput.vue'
   import BreadCrumb from '@PKG_SRC/components/BreadCrumb/BreadCrumb.vue'
+  import CardCart from '@PKG_SRC/components/Card/CardCart.vue'
   import GalleryCarousel from '@PKG_SRC/components/Gallery/GalleryCarousel.vue'
   import SlideBar from '@PKG_SRC/components/NavBar/SlideBar.vue'
   import BaseScreenProduct from '@PKG_SRC/layouts/Basecreen/BaseScreenProduct.vue'
+  import { useCartStore } from '@PKG_SRC/stores/Modules/Blind_Box/CartStore'
   import { useDetailProductStore } from '@PKG_SRC/stores/Modules/Blind_Box/DetailProductStore'
-  import type { ImageItem } from '@PKG_SRC/types/models/imageTypes'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import { Drawer } from 'flowbite'
   import { useForm } from 'vee-validate'
 
   const store = useDetailProductStore()
+  const cartStore = useCartStore()
+  const isCartVisible = ref(true)
+  const isUpdated = ref(false)
   const route = useRoute()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
@@ -222,41 +230,33 @@
     return store.convertImageList(store.productDetail.imageUrls || [])
   })
 
-  const imageList = [
-    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-1.jpg', alt: 'Ảnh 1' },
-    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-2.jpg', alt: 'Ảnh 2' },
-    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-3.jpg', alt: 'Ảnh 3' },
-    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg', alt: 'Ảnh 4' },
-    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg', alt: 'Ảnh 5' },
-    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg', alt: 'Ảnh 6' },
-    { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg', alt: 'Ảnh 7' },
-  ]
-
   const addToCart = async () => {
-    // for (let index = 0; index < 30000; index++) {
-    //   console.log(index)
-    // }
-    return true // hoặc trả về giá trị khác nếu thành công
+    await store.AddProductToCart(codeProduct.value)
+    return true
   }
 
-  // const imageList: ImageItem[] = store.productDetail.imageUrls.map((image, index) => ({
-  //     src: image.imageUrl, // Đổi `imageUrl` thành `src`
-  //     alt: `Ảnh ${index + 1}`, // Gán mô tả ảnh
-  //   }))
+  const cartList = computed(() => cartStore.cartList)
 
   const handleAddToCart = async () => {
     const result = await addToCart()
-    console.log('quantity', store.fields.values.quantity)
     if (result !== false) {
+      await cartStore.GetAllCart()
+      isCartVisible.value = false
+      await nextTick()
+      isCartVisible.value = true
       const drawerElement = document.getElementById('drawer-navigation')
       if (drawerElement) {
         const drawerInstance = new Drawer(drawerElement)
+        isUpdated.value = true
         drawerInstance.show()
       }
     }
   }
 
   onMounted(async () => {
-    await store.GetProductById(codeProduct.value)
+    if (!(await store.GetProductById(codeProduct.value))) {
+      console.log(store.convertImageList(store.productDetail.imageUrls || []))
+      window.location.href = 'http://localhost:3000/Home'
+    }
   })
 </script>

@@ -57,18 +57,15 @@ export const useDetailProductStore = defineStore('Detail', {
       const defaultImage =
         'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
 
-      // Kiểm tra nếu imageUrls không tồn tại hoặc không phải là mảng, gán giá trị mặc định
       if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
         imageUrls = []
       }
 
-      // Chuyển đổi danh sách ảnh
       let imageList: ImageItemGallery[] = imageUrls.map((image, index) => ({
         src: image.imageUrl,
         alt: `Ảnh ${index + 1}`,
       }))
 
-      // Nếu số lượng ảnh ít hơn 6, thêm ảnh mặc định
       while (imageList.length < minImages) {
         imageList.push({
           src: defaultImage,

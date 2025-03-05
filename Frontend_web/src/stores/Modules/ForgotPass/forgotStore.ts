@@ -62,6 +62,7 @@ export const useUpdatePassStore = defineStore('UpdatePass', {
       const validation: any = await this.fields.validate()
       if (validation.valid === false) return false
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+      console.log('email', apiFieldValues.email)
       const apiClient = useApiServer()
       const formMessage = useFormMessageStore()
       const loadingStore = useLoadingStore()

@@ -231,7 +231,7 @@
   const scrollContainer = ref<HTMLElement | null>(null)
 
   const fetchProducts = async () => {
-    await store.GetProductList(searchStore.searchService, 0, 0, store.fieldValues.sortBy, pageSize.value)
+    await store.GetProductList(searchStore.searchService, 0, 0, store.fieldValues.sortBy, pageSize.value, searchStore.searchParams)
     await nextTick()
   }
 
@@ -250,12 +250,14 @@
     isShowPopupRef.value.closePopup(true)
   }
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     searchStore.searchParams = searchOneFieldRef.value.onGetSearch()
     router.push({
       path: '/Service/Buying',
       query: { search: searchStore.searchParams },
     })
+    await fetchProducts()
+    initCarousels()
   }
 
   watch(

@@ -30,6 +30,7 @@
           <CardContainer>
             <template #body>
               <CardProduct2 :product-model="displayProductStore.produtList" />
+              <CardSkeleton v-if="displayProductStore.isLoadingSkeletonCard" />
             </template>
           </CardContainer>
           <div class="text-center mt-8">
@@ -78,6 +79,8 @@
   import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
   import { useDisplayProductStore } from '@PKG_SRC/stores/Modules/Blind_Box/DisplayProductStore'
   import { SearchService, SortBy } from '@PKG_SRC/types/enums/constantBackend'
+import { initCarousels } from 'flowbite'
+import CardSkeleton from '@PKG_SRC/components/Skeleton/CardSkeleton.vue'
 
   const gradientCard = ref<HTMLElement | null>(null)
   const gradientEffect = ref<HTMLElement | null>(null)
@@ -96,7 +99,7 @@
   }
 
   const fetchProducts = async () => {
-    await displayProductStore.GetProductList(SearchService.Product, 0, 0, SortBy.MostPopular, 5)
+    await displayProductStore.GetProductList(SearchService.Product, 0, 0, SortBy.MostPopular, 5, '')
     await nextTick()
   }
 
@@ -112,6 +115,7 @@
   onMounted(async () => {
     store.GetImageList()
     await fetchProducts()
+    initCarousels()
     formMessageStore.SetMessageId('9000')
     await nextTick()
     if (gradientCard.value && gradientEffect.value) {

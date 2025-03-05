@@ -107,12 +107,14 @@ export const useAuthStore = defineStore('auth', {
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
       const logoutClient = useLogoutClient()
+      const formMessageStore = useFormMessageStore()
       this.ResetStore()
       setTimeout(() => {
         loadingStore.LoadingChange(false)
         const router = useRouter()
-        router.push('/Home')
+        window.location.href = "http://localhost:3000/Home"
       }, 1000)
+      formMessageStore.SetFormMessageNotApiRes('I000001', true, "Logout successfully!!!")
     },
   },
   persist: true,

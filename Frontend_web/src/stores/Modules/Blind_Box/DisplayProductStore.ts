@@ -59,7 +59,7 @@ export const useDisplayProductStore = defineStore('Product', {
       this.fields.resetForm()
       this.produtList = []
     },
-    async GetProductList(searchServiceNum: number, maxPrice: number, minPrice: number, sortBy: number, pageSize: number) {
+    async GetProductList(searchServiceNum: number, maxPrice: number, minPrice: number, sortBy: number, pageSize: number, searchParams: string | undefined) {
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
@@ -75,6 +75,7 @@ export const useDisplayProductStore = defineStore('Product', {
           minimumPrice: minPrice,
           parentCategoryName: '',
           sortBy: sortBy,
+          nameAccessory: searchParams ?? ''
         },
       })
       loadingStore.LoadingChange(false)

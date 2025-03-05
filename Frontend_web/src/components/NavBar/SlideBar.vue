@@ -7,7 +7,7 @@
   <!-- drawer component -->
   <div
     id="drawer-navigation"
-    :class="'fixed z-40 w-[500px] h-screen p-4 overflow-y-auto transition-transfor -translate-x-full bg-white dark:bg-gray-800 top-0 left-0'"
+    :class="'fixed z-40 w-screen max-w-3xl h-screen p-4 overflow-y-auto transition-transfor -translate-x-full bg-white dark:bg-gray-800 top-0 left-0'"
     tabindex="-1"
     aria-labelledby="drawer-navigation-label"
   >
