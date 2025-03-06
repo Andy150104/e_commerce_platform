@@ -1,70 +1,74 @@
 <template>
   <table id="sorting-table" class="w-full text-sm text-left text-gray-500">
     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-  <tr>
-    <th class="px-6 py-3 cursor-pointer" @click="sortBy('country')">
-      <span class="flex items-center">
-        Country
-        <svg
-          class="w-4 h-4 ms-1 transform transition-transform duration-200"
-          :class="{'rotate-180': sortKey === 'country' && sortOrder === 'desc'}"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-        </svg>
-      </span>
-    </th>
-    <th class="px-6 py-3 cursor-pointer" @click="sortBy('gdp')">
-      <span class="flex items-center">
-        GDP
-        <svg
-          class="w-4 h-4 ms-1 transform transition-transform duration-200"
-          :class="{'rotate-180': sortKey === 'gdp' && sortOrder === 'desc'}"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-        </svg>
-      </span>
-    </th>
-    <th class="px-6 py-3 cursor-pointer" @click="sortBy('population')">
-      <span class="flex items-center">
-        Population
-        <svg
-          class="w-4 h-4 ms-1 transform transition-transform duration-200"
-          :class="{'rotate-180': sortKey === 'population' && sortOrder === 'desc'}"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-        </svg>
-      </span>
-    </th>
-    <th class="px-6 py-3 cursor-pointer" @click="sortBy('gdpPerCapita')">
-      <span class="flex items-center">
-        GDP per Capita
-        <svg
-          class="w-4 h-4 ms-1 transform transition-transform duration-200"
-          :class="{'rotate-180': sortKey === 'gdpPerCapita' && sortOrder === 'desc'}"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/>
-        </svg>
-      </span>
-    </th>
-    <th class="px-6 py-3"></th>
-  </tr>
-</thead>
+      <tr>
+        <th class="px-6 py-3 cursor-pointer" @click="sortBy('country')">
+          <span class="flex items-center">
+            Country
+            <svg
+              class="w-4 h-4 ms-1 transform transition-transform duration-200"
+              :class="{ 'rotate-180': sortKey === 'country' && sortOrder === 'desc' }"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
+          </span>
+        </th>
+        <th class="px-6 py-3 cursor-pointer" @click="sortBy('gdp')">
+          <span class="flex items-center">
+            GDP
+            <svg
+              class="w-4 h-4 ms-1 transform transition-transform duration-200"
+              :class="{ 'rotate-180': sortKey === 'gdp' && sortOrder === 'desc' }"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
+          </span>
+        </th>
+        <th class="px-6 py-3 cursor-pointer" @click="sortBy('population')">
+          <span class="flex items-center">
+            Population
+            <svg
+              class="w-4 h-4 ms-1 transform transition-transform duration-200"
+              :class="{ 'rotate-180': sortKey === 'population' && sortOrder === 'desc' }"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
+          </span>
+        </th>
+        <th class="px-6 py-3 cursor-pointer" @click="sortBy('gdpPerCapita')">
+          <span class="flex items-center">
+            GDP per Capita
+            <svg
+              class="w-4 h-4 ms-1 transform transition-transform duration-200"
+              :class="{ 'rotate-180': sortKey === 'gdpPerCapita' && sortOrder === 'desc' }"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+            </svg>
+          </span>
+        </th>
+        <th class="px-6 py-3"></th>
+      </tr>
+    </thead>
 
     <tbody>
       <!-- Duyệt qua các hàng đã được sắp xếp -->
@@ -169,5 +173,4 @@
     })
     return sorted
   })
-  
 </script>

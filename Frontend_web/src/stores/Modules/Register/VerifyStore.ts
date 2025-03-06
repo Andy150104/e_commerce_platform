@@ -101,7 +101,6 @@ export const useVerifyStore = defineStore('Verify', {
           imageUrl:
             'https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
           phoneNumber: formatPhoneNumber(apiFieldValues.phoneNumber)?.toString(),
-          planId: '',
           province: apiFieldValues.province,
           ward: apiFieldValues.ward,
         },
@@ -126,7 +125,7 @@ export const useVerifyStore = defineStore('Verify', {
       const res = await apiServer.api.v1.UserInsertVerify.$post({
         body: {
           isOnlyValidation: false,
-          key: key
+          key: key,
         },
       })
       loadingStore.LoadingChange(false)

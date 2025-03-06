@@ -1,5 +1,6 @@
 using Client.Models.Helper;
 using Client.SystemClient;
+using Client.Utils;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,18 +57,20 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
     /// <returns></returns>
     protected U Post(T request, AppDbContext appDbContext, Logger logger, U returnValue)
     {
+        var loggingUtil = new LoggingUtil(logger, appDbContext?.IdentityEntity?.UserName ?? "System");
+
         // Get identity information 
         appDbContext.IdentityEntity = _identityApiClient?.GetIdentity(User);
-        logger.Warn(request);
+        loggingUtil.StartLog(request);
 
         // Check authentication information
         if (appDbContext.IdentityEntity == null)
         {
             // Authentication error
-            logger.Fatal($"Authenticated, but information is missing.");
+            loggingUtil.FatalLog($"Authenticated, but information is missing.");
             returnValue.Success = false;
             returnValue.SetMessage(MessageId.E11006);
-            logger.Warn(returnValue);
+            loggingUtil.EndLog(returnValue);
             return returnValue;
         }
         // Additional user information
@@ -80,10 +83,10 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
         catch (Exception e)
         {
             // Additional user information error
-            logger.Error($"Failed to get additional user information.：{e.Message}");
+            loggingUtil.FatalLog($"Failed to get additional user information.：{e.Message}");
             returnValue.Success = false;
             returnValue.SetMessage(MessageId.E11006);
-            logger.Warn(returnValue);
+            loggingUtil.EndLog(returnValue);
             return returnValue;
         }
 
@@ -104,11 +107,11 @@ public abstract class AbstractApiController<T, U, V> : ControllerBase
         }
         catch (Exception e)
         {
-            return AbstractFunction<T, U, V>.GetReturnValue(returnValue, logger, e, appDbContext);
+            return AbstractFunction<T, U, V>.GetReturnValue(returnValue, loggingUtil, e, appDbContext);
         }
 
         // Processing end log
-        logger.Warn(returnValue);
+        loggingUtil.EndLog(returnValue);
         return returnValue;
     }
 }

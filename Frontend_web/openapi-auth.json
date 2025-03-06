@@ -8,6 +8,105 @@
   "host": "localhost:5090",
   "schemes": ["https"],
   "paths": {
+    "/api/v1/UserVerifyKey": {
+      "post": {
+        "tags": ["UserVerifyKey"],
+        "operationId": "UserVerifyKey_Post",
+        "consumes": ["application/json", "text/json", "application/*+json"],
+        "produces": ["text/plain", "application/json", "text/json"],
+        "parameters": [
+          {
+            "name": "keyRequest",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserVerifyKeyRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UserVerifyKeyResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UpdateRole": {
+      "post": {
+        "tags": ["UpdateRole"],
+        "operationId": "UpdateRole_Post",
+        "consumes": ["application/json", "text/json", "application/*+json"],
+        "produces": ["text/plain", "application/json", "text/json"],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateRoleRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UpdateRoleResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/FPSVerifyKey": {
+      "post": {
+        "tags": ["FPSVerifyKey"],
+        "operationId": "FPSVerifyKey_Post",
+        "consumes": ["application/json", "text/json", "application/*+json"],
+        "produces": ["text/plain", "application/json", "text/json"],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FPSVerifyKeyRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/FPSVerifyKeyResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
     "/connect/token": {
       "post": {
         "tags": ["Authentication"],
@@ -72,6 +171,39 @@
             "description": "",
             "schema": {
               "type": "file"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/VerifyToken": {
+      "post": {
+        "tags": ["VerifyToken"],
+        "operationId": "VerifyToken_Post",
+        "consumes": ["application/json", "text/json", "application/*+json"],
+        "produces": ["text/plain", "application/json", "text/json"],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VerifyTokenRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/VerifyTokenResponse"
             }
           }
         },
@@ -147,10 +279,43 @@
           }
         ]
       }
+    },
+    "/api/v1/FPSForgotPassword": {
+      "post": {
+        "tags": ["FPSForgotPassword"],
+        "operationId": "FPSForgotPassword_Post",
+        "consumes": ["application/json", "text/json", "application/*+json"],
+        "produces": ["text/plain", "application/json", "text/json"],
+        "parameters": [
+          {
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FPSForgotPasswordRequest"
+            },
+            "x-nullable": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "x-nullable": false,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/FPSForgotPasswordResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
     }
   },
   "definitions": {
-    "UserInsertResponse": {
+    "UserVerifyKeyResponse": {
       "allOf": [
         {
           "$ref": "#/definitions/AbstractApiResponseOfString"
@@ -206,33 +371,215 @@
         }
       }
     },
-    "UserInsertRequest": {
+    "UserVerifyKeyRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["key"],
+          "properties": {
+            "key": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "AbstractApiRequest": {
       "type": "object",
-      "required": ["username", "email", "password", "firstName", "lastName"],
+      "x-abstract": true,
+      "required": ["isOnlyValidation"],
       "properties": {
-        "username": {
-          "type": "string",
-          "minLength": 1
-        },
-        "email": {
-          "type": "string",
-          "minLength": 1
-        },
-        "password": {
-          "type": "string",
-          "minLength": 1
-        },
-        "firstName": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
-        },
-        "lastName": {
-          "type": "string",
-          "minLength": 1,
-          "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+        "isOnlyValidation": {
+          "type": "boolean"
         }
       }
+    },
+    "UpdateRoleResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UpdateRoleRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["userName"],
+          "properties": {
+            "userName": {
+              "type": "string"
+            },
+            "planId": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        }
+      ]
+    },
+    "FPSVerifyKeyResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "FPSVerifyKeyRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["key", "newPassWord"],
+          "properties": {
+            "key": {
+              "type": "string",
+              "minLength": 1
+            },
+            "newPassWord": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "VerifyTokenResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfVerifyTokenEntity"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "$ref": "#/definitions/VerifyTokenEntity"
+            }
+          }
+        }
+      ]
+    },
+    "VerifyTokenEntity": {
+      "type": "object",
+      "required": ["roleName"],
+      "properties": {
+        "roleName": {
+          "type": "string"
+        }
+      }
+    },
+    "AbstractApiResponseOfVerifyTokenEntity": {
+      "type": "object",
+      "x-abstract": true,
+      "required": ["success", "messageId", "message", "detailErrorList"],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "detailErrorList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DetailError"
+          }
+        },
+        "response": {
+          "$ref": "#/definitions/VerifyTokenEntity"
+        }
+      }
+    },
+    "VerifyTokenRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "UserInsertResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "UserInsertRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["username", "email", "password", "firstName", "lastName"],
+          "properties": {
+            "username": {
+              "type": "string",
+              "minLength": 1
+            },
+            "email": {
+              "type": "string",
+              "minLength": 1
+            },
+            "password": {
+              "type": "string",
+              "minLength": 1
+            },
+            "firstName": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            },
+            "lastName": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^[a-zA-Z''-'\\s]{1,40}$"
+            }
+          }
+        }
+      ]
     },
     "UserInsertVerifyResponse": {
       "allOf": [
@@ -266,15 +613,39 @@
         }
       ]
     },
-    "AbstractApiRequest": {
-      "type": "object",
-      "x-abstract": true,
-      "required": ["isOnlyValidation"],
-      "properties": {
-        "isOnlyValidation": {
-          "type": "boolean"
+    "FPSForgotPasswordResponse": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiResponseOfString"
+        },
+        {
+          "type": "object",
+          "required": ["response"],
+          "properties": {
+            "response": {
+              "type": "string"
+            }
+          }
         }
-      }
+      ]
+    },
+    "FPSForgotPasswordRequest": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/AbstractApiRequest"
+        },
+        {
+          "type": "object",
+          "required": ["email"],
+          "properties": {
+            "email": {
+              "type": "string",
+              "format": "email",
+              "minLength": 1
+            }
+          }
+        }
+      ]
     }
   },
   "securityDefinitions": {

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen dark:bg-gray-900">
+  <div class="bg-white flex flex-col min-h-screen dark:bg-gray-900">
     <!-- Header -->
     <header class="sticky top-0 z-40 w-full">
       <NavBar />

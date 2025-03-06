@@ -41,10 +41,10 @@
   }
 
   const props = defineProps({
-    breadcrumbs:{
-        type: Array as PropType<Breadcrumb[]>,
-        required: true,
-        default: []
-    }
+    breadcrumbs: {
+      type: Array as PropType<Breadcrumb[]>,
+      required: true,
+      default: [],
+    },
   })
 </script>

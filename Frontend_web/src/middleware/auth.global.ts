@@ -19,6 +19,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'Product2',
     'Register',
     'Register/Verify',
+    'ForgotPass',
+    'ForgotPass/verify',
     'Blind_Box',
     'Blind_Box/Cart',
     'DashBoard',
@@ -28,11 +30,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   ]
 
   // Kiểm tra nếu không đăng nhập và không thuộc danh sách route cho phép
-  if (
-    !authStore.isAuthorization &&
-    !loginNotRequiredRoutes.includes(relativePath) &&
-    !relativePath.startsWith('Service/Buying/Product')
-  ) {
+  if (!authStore.isAuthorization && !loginNotRequiredRoutes.includes(relativePath) && !relativePath.startsWith('Service/Buying/Product')) {
     return { path: '/' }
   }
 })

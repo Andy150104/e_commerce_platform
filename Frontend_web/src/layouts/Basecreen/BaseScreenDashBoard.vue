@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen dark:bg-gray-900">
+  <div class="bg-white flex flex-col min-h-screen dark:bg-gray-900">
     <!-- Header -->
     <header class="sticky top-0 z-40 w-full"></header>
     <SlideBarUserNavigation>
@@ -12,13 +12,18 @@
         <FooterControl />
         <Loading />
         <ScrollToTopBtn />
+        <MessageToast />
       </template>
     </SlideBarUserNavigation>
   </div>
 </template>
 <script setup lang="ts">
   import FooterControl from '@PKG_SRC/components/Footer/FooterControl.vue'
+  import MessageToast from '@PKG_SRC/components/Toast/MessageToast.vue'
   import ScrollToTopBtn from '../Btn/ScrollToTopBtn.vue'
   import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
   import SlideBarUserNavigation from '@PKG_SRC/components/NavBar/SlideBarUserNavigation.vue'
+  import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
+
+  const formMessageStore = useFormMessageStore()
 </script>

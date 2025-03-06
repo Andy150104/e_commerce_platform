@@ -114,43 +114,64 @@
       </div>
     </div>
   </nav>
+  <div>
+    <BaseControlPriceRange :items="products" :columns="columns" />
+    <ModalInputForm header="Edit Profile" width="25rem" buttonLabel="Edit Profile">
+      <template #header>
+        <div class="inline-flex items-center gap-2">
+          <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />
+          <span class="font-bold whitespace-nowrap">Amy Elsner</span>
+        </div>
+      </template>
 
-  <LocationPicker
-    :xml-column-province="xmlColumns.mailAddressConfirm"
-    :maxlength-province="50"
-    :disabled-province="false"
-    :err-msg-province="fieldErrors.mailAddressConfirm"
-    :placeholder-province="'Province'"
-    :xml-column-district="xmlColumns.mailAddress"
-    :maxlength-district="50"
-    :disabled-district="false"
-    :err-msg-district="fieldErrors.mailAddress"
-    :placeholder-district="'District'"
-    :xml-column-ward="xmlColumns.passWord"
-    :maxlength-ward="50"
-    :disabled-ward="false"
-    :err-msg-ward="fieldErrors.passWord"
-    :placeholder-ward="'Ward'"
-  />
-  <Field id="password" name="password" type="password" />
-  <ModelFullScreen :is-open-modal="true">
-    <template #body>
-      <ImageCrop :images="myImages" />
-    </template>
-  </ModelFullScreen>
-  <!-- Video Container
-  <div class="video-container">
-    <iframe
-    src="https://www.youtube.com/embed/EHyfI3c6L3A?autoplay=1&loop=1&playlist=EHyfI3c6L3A&start=10&end=20&mute=1"
-    frameborder="0"
-    allow="autoplay; encrypted-media; picture-in-picture"
-    allowfullscreen
-    class="video-iframe"
-    ></iframe>
-  </div> -->
+      <LocationPicker
+        :xml-column-province="xmlColumns.mailAddress"
+        :maxlength-province="50"
+        :disabled-province="false"
+        :err-msg-province="fieldErrors.mailAddress"
+        :placeholder-province="'Province'"
+        :xml-column-district="xmlColumns.mailAddressConfirm"
+        :maxlength-district="50"
+        :disabled-district="false"
+        :err-msg-district="fieldErrors.mailAddressConfirm"
+        :placeholder-district="'District'"
+        :xml-column-ward="xmlColumns.passWord"
+        :maxlength-ward="50"
+        :disabled-ward="false"
+        :err-msg-ward="fieldErrors.passWord"
+        :placeholder-ward="'Ward'"
+      />
+
+      <template #footer>
+        <Button label="Cancel" text severity="secondary" />
+        <Button label="Save" outlined severity="primary" />
+      </template>
+    </ModalInputForm>
+  </div>
   <GalleryCarousel :images="imageList" />
+  <ModalPopupScreen
+    @ok-click="
+      () => {
+        const loadingStore = useLoadingStore()
+        loadingStore.LoadingChange(true)
+        for (let i = 1; i <= 100000; i++) {
+          console.log(i)
+        }
+        loadingStore.LoadingChange(false)
+      }
+    "
+    cancel-button-name="No, Cancel It"
+    label-name="Delete"
+    ok-button-name="Yes, let delete!!"
+  />
+  <button
+    class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+  >
+    Gradient Button
+  </button>
   <UserControlUploadImage :max-number-image="1" :is-show-popover="false" :label="'Upload avatar image'" />
   <TableComponent />
+  <TableNuxtUIComponent />
   <!-- Button to trigger Popover -->
   <div
     data-popover-target="popover-default"
@@ -182,7 +203,7 @@
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import { storeToRefs } from 'pinia'
   import { Field, useForm } from 'vee-validate'
-
+  import 'swiper/swiper-bundle.css'
   // Import Flowbite JavaScript
   import 'flowbite'
   import '@popperjs/core'
@@ -195,6 +216,16 @@
   import TableComponent from '@PKG_SRC/components/Table/TableComponent.vue'
   import UserControlUploadImage from '@PKG_SRC/components/UserControl/UserControlUploadImage.vue'
   import { useUploadImageStore } from '@PKG_SRC/stores/Modules/usercontrol/uploadImageStore'
+  import ModalPartScreen from '@PKG_SRC/components/Modal/ModalPartScreen.vue'
+  import { useProfileStore } from '@PKG_SRC/stores/Modules/DashBoard/profileStore'
+  import Loading from '@PKG_SRC/components/UserControl/Loading.vue'
+  import ModalPopupScreen from '@PKG_SRC/components/Modal/ModalPopupScreen.vue'
+  import { useLoadingStore } from '@PKG_SRC/stores/Modules/usercontrol/loadingStore'
+  import BaseControlQuantityInput from '@PKG_SRC/components/Basecontrol/BaseControlQuantityInput.vue'
+  import 'swiper/swiper-bundle.css'
+  import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue'
+  import BaseControlPriceRange from '@PKG_SRC/components/Basecontrol/BaseControlPriceRange.vue'
+  import ModalInputForm from '@PKG_SRC/components/Modal/ModalInputForm.vue'
   const imageStore = useUploadImageStore()
   imageStore.SetUploadImage('a', 1024, 'https://res.cloudinary.com/dbfokyruf/image/upload/v1739683116/fehfhddpzfgcpfrkkfoj.jpg')
   const imageList = [
@@ -204,8 +235,13 @@
     { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-4.jpg', alt: 'Ảnh 4' },
     { src: 'https://flowbite.s3.amazonaws.com/docs/gallery/square/image-9.jpg', alt: 'Ảnh 5' },
   ]
+  const handleOkClick = () => {
+    return false
+  }
   const store = useMyppStore()
+  const storeProfile = useProfileStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
+  const isOpen = ref(false)
   const formContext = useForm({ initialValues: fieldValues.value })
   store.SetFields(formContext)
   onMounted(async () => {
@@ -240,6 +276,224 @@
     { original: 'https://assets.teenvogue.com/photos/624c93e41741df0bc53718a2/4:3/w_3839,h_2879,c_limit/blackpink%20rose%20phone%20case.jpg' },
     { original: 'https://phongcachlamdep.com/wp-content/uploads/2022/04/kieu-toc-cua-rose-black-pink.jpg' },
   ])
+
+  const products = [
+    {
+      id: '1000',
+      code: 'f230fh0g3',
+      name: 'Bamboo Watch',
+      description: 'Product Description',
+      image: 'bamboo-watch.jpg',
+      price: 65,
+      category: 'Accessories',
+      quantity: 24,
+      inventoryStatus: 'INSTOCK',
+      rating: 5,
+    },
+    {
+      id: '1001',
+      code: 'nvklal433',
+      name: 'Black Watch',
+      description: 'Product Description',
+      image: 'black-watch.jpg',
+      price: 72,
+      category: 'Accessories',
+      quantity: 61,
+      inventoryStatus: 'INSTOCK',
+      rating: 4,
+    },
+    {
+      id: '1002',
+      code: 'zz21cz3c1',
+      name: 'Blue Band',
+      description: 'Product Description',
+      image: 'blue-band.jpg',
+      price: 79,
+      category: 'Fitness',
+      quantity: 2,
+      inventoryStatus: 'LOWSTOCK',
+      rating: 3,
+    },
+    {
+      id: '1003',
+      code: '244wgerg2',
+      name: 'Blue T-Shirt',
+      description: 'Product Description',
+      image: 'blue-t-shirt.jpg',
+      price: 29,
+      category: 'Clothing',
+      quantity: 25,
+      inventoryStatus: 'INSTOCK',
+      rating: 5,
+    },
+    {
+      id: '1004',
+      code: 'h456wer53',
+      name: 'Bracelet',
+      description: 'Product Description',
+      image: 'bracelet.jpg',
+      price: 15,
+      category: 'Accessories',
+      quantity: 73,
+      inventoryStatus: 'INSTOCK',
+      rating: 4,
+    },
+    {
+      id: '1005',
+      code: 'av2231fwg',
+      name: 'Brown Purse',
+      description: 'Product Description',
+      image: 'brown-purse.jpg',
+      price: 120,
+      category: 'Accessories',
+      quantity: 0,
+      inventoryStatus: 'OUTOFSTOCK',
+      rating: 4,
+    },
+    {
+      id: '1006',
+      code: 'bib36pfvm',
+      name: 'Chakra Bracelet',
+      description: 'Product Description',
+      image: 'chakra-bracelet.jpg',
+      price: 32,
+      category: 'Accessories',
+      quantity: 5,
+      inventoryStatus: 'LOWSTOCK',
+      rating: 3,
+    },
+    {
+      id: '1007',
+      code: 'mbvjkgip5',
+      name: 'Galaxy Earrings',
+      description: 'Product Description',
+      image: 'galaxy-earrings.jpg',
+      price: 34,
+      category: 'Accessories',
+      quantity: 23,
+      inventoryStatus: 'INSTOCK',
+      rating: 5,
+    },
+    {
+      id: '1008',
+      code: 'vbb124btr',
+      name: 'Game Controller',
+      description: 'Product Description',
+      image: 'game-controller.jpg',
+      price: 99,
+      category: 'Electronics',
+      quantity: 2,
+      inventoryStatus: 'LOWSTOCK',
+      rating: 4,
+    },
+    {
+      id: '1009',
+      code: 'cm230f032',
+      name: 'Gaming Set',
+      description: 'Product Description',
+      image: 'gaming-set.jpg',
+      price: 299,
+      category: 'Electronics',
+      quantity: 63,
+      inventoryStatus: 'INSTOCK',
+      rating: 3,
+    },
+    {
+      id: '1010',
+      code: 'plb34234v',
+      name: 'Gold Phone Case',
+      description: 'Product Description',
+      image: 'gold-phone-case.jpg',
+      price: 24,
+      category: 'Accessories',
+      quantity: 0,
+      inventoryStatus: 'OUTOFSTOCK',
+      rating: 4,
+    },
+    {
+      id: '1011',
+      code: '4920nnc2d',
+      name: 'Green Earbuds',
+      description: 'Product Description',
+      image: 'green-earbuds.jpg',
+      price: 89,
+      category: 'Electronics',
+      quantity: 23,
+      inventoryStatus: 'INSTOCK',
+      rating: 4,
+    },
+    {
+      id: '1012',
+      code: '250vm23cc',
+      name: 'Green T-Shirt',
+      description: 'Product Description',
+      image: 'green-t-shirt.jpg',
+      price: 49,
+      category: 'Clothing',
+      quantity: 74,
+      inventoryStatus: 'INSTOCK',
+      rating: 5,
+    },
+    {
+      id: '1013',
+      code: 'fldsmn31b',
+      name: 'Grey T-Shirt',
+      description: 'Product Description',
+      image: 'grey-t-shirt.jpg',
+      price: 48,
+      category: 'Clothing',
+      quantity: 0,
+      inventoryStatus: 'OUTOFSTOCK',
+      rating: 3,
+    },
+    // ... các sản phẩm khác
+  ]
+
+  // Cấu hình các cột hiển thị
+  const columns = [
+    {
+      field: 'name',
+      header: 'Name',
+      isFilter: true,
+      isSort: true,
+      filterType: 'text', // hoặc 'inputText'
+    },
+    {
+      field: 'description',
+      header: 'Description',
+      isFilter: true,
+      filterType: 'text',
+    },
+    {
+      field: 'price',
+      header: 'Price',
+      isFilter: true,
+      isSort: true,
+      filterType: 'text',
+    },
+    {
+      field: 'category',
+      header: 'Category',
+      isFilter: true,
+      isSort: true,
+      filterType: 'text',
+    },
+    {
+      field: 'inventoryStatus',
+      header: 'Status',
+      isFilter: true,
+      isSort: false,
+      filterType: 'multiSelect', // Dùng MultiSelect
+      options: ['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK'],
+    },
+    {
+      field: 'rating',
+      header: 'Rating',
+      isFilter: true,
+      isSort: true,
+      filterType: 'text',
+    },
+  ]
 </script>
 
 <style scoped>

@@ -209,6 +209,7 @@
     if (store.createFlgPlan) {
       store.RegisterUserClient(String(route.query.key))
       updateFlags(false, false, false, true)
+      window.location.href = localStorage.getItem('urlBack') ?? 'http://localhost:3000/Home'
       return
     }
   }
@@ -230,8 +231,8 @@
   }
 
   onMounted(async () => {
-    const $router = useRouter();
-    await $router.isReady();
+    const $router = useRouter()
+    await $router.isReady()
     if (await store.onVerify(String(route.query.key))) {
       isVerify.value = true
       updateFlags(false, true, false, false)

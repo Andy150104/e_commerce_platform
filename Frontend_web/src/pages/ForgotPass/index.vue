@@ -12,13 +12,11 @@
           </svg>
           <span class="font-medium">Success!</span> Profile updated successfully.
         </div>
-      </div> 
-      <ProgressStepper :items="stepperStore.steppList" class="pt-14"/>
+      </div>
+      <ProgressStepper :items="stepperStore.steppList" class="pt-14" />
       <div v-if="store.createFlgUpdatePass">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white text-center mb-8 pt-4">Forgot Password</h2>
-        <div class="mb-10 animate-jump-in animate-once animate-ease-linear">
-         
-        </div>
+        <div class="mb-10 animate-jump-in animate-once animate-ease-linear"></div>
         <div class="py-20 mx-14 text-center">
           <div class="space-y-4">
             <h2 class="text-2xl font-semibold">Account Confirm</h2>
@@ -126,7 +124,6 @@
       successMessage.value = false
     }, 3000)
   }
-
 
   onMounted(() => {
     store.createFlgUpdatePass = true

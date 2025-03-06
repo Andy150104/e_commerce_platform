@@ -39,7 +39,7 @@
       <div v-for="(image, index) in images" :key="index" @click="resetCarouselTo(index)" class="cursor-pointer transition-transform hover:scale-105">
         <!-- Ràng buộc class: nếu activeIndex === index thì viền sẽ là màu đỏ -->
         <img
-          :class="['w-full rounded-lg border', activeIndex === index ? 'border-blue-500 border-2' : 'border-gray-300']"
+          :class="['w-full h-3/5 object-cover rounded-lg border', activeIndex === index ? 'border-blue-500 border-2' : 'border-gray-300']"
           :src="image.src"
           :alt="image.alt || `Thumbnail ${index + 1}`"
         />
@@ -51,16 +51,11 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue'
   import { Carousel } from 'flowbite'
-
-  // Định nghĩa kiểu cho đối tượng ảnh
-  interface ImageItem {
-    src: string
-    alt?: string
-  }
+  import type { ImageItemGallery } from '@PKG_SRC/types'
 
   // Định nghĩa prop nhận vào mảng ảnh
   const props = defineProps<{
-    images: ImageItem[]
+    images: ImageItemGallery[]
   }>()
 
   // Biến reactive để theo dõi slide đang hoạt động.

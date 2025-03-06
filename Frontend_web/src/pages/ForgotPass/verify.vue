@@ -26,7 +26,7 @@
               :maxlength="50"
               :disabled="false"
               :type="'password'"
-              :err-msg="fieldErrors.password"
+              :err-msg="fieldErrors.confirmPassword"
               :placeholder="'Confirm Password'"
             />
           </div>
@@ -78,13 +78,11 @@
   import { useRoute } from 'vue-router'
 
   const route = useRoute()
-  // const key = route.query.key
   const stepperStore = useStepperStore()
   const successMessage = ref(false)
   const store = useVerifyPasswordStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
-  formContext.setFieldValue("otp", "2Z0hy+dT6RrXE7CWSvl5V1GWnpqSR6q5dL1RyukF9rVSKSMRMLqYsU1cByYpTkZlKZLKuQLuXa/nX+2Trm55A7RgPwl/D9oH2c/++1Je+pk=");
   store.SetFields(formContext)
   const steppList = ref<StepItem[]>([
     {
@@ -111,13 +109,6 @@
       visible: true,
       option: '',
     }),
-    otp: XmlLoadColumn({
-      id: 'otp',
-      name: 'otp',
-      rules: '',
-      visible: true,
-      option: '',
-    }),
   }
   const onMoveToNextStep = async () => {
     if (store.createFlgVerifyPass) {
@@ -132,16 +123,16 @@
       window.location.href = document.referrer
     }
   }
-  // const UpdatePass = async () => {
-  //   if (!(await store.updatePassword())) return
-  //   successMessage.value = true
-  //   setTimeout(() => {
-  //     successMessage.value = false
-  //   }, 3000)
-  // }
   onMounted(() => {
+    let key = route.query.key ?? sessionStorage.getItem("key") ?? "";
+  if (Array.isArray(key)) key = key[0] ?? "";
+  
+  if (key) {
+    sessionStorage.setItem("key", key);
+    formContext.setFieldValue("key", key);
+  }
+  console.log("Key GOT: "+ key);
     store.createFlgVerifyPass = true
     stepperStore.SetValues(steppList)
-    // console.log(key)
   })
 </script>
