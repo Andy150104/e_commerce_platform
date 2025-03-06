@@ -1,5 +1,6 @@
 using Client.Models.Helper;
 using Client.SystemClient;
+using Client.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
@@ -42,11 +43,10 @@ public abstract class AbstractApiControllerNotToken<T, U, V> : ControllerBase
     /// <param name="returnValue"></param>
     /// <returns></returns>
     protected U Post(T request, AppDbContext appDbContext, Logger logger, U returnValue)
-    {
+    {      
+        var loggingUtil = new LoggingUtil(logger, appDbContext?.IdentityEntity?.UserName ?? "System");
         try
         {
-            appDbContext. _Logger = logger;
-
             // Start transaction
             using (var transaction = appDbContext.Database.BeginTransaction())
             {
@@ -60,11 +60,11 @@ public abstract class AbstractApiControllerNotToken<T, U, V> : ControllerBase
         }
         catch (Exception e)
         {
-            return AbstractFunction<T, U, V>.GetReturnValue(returnValue, logger, e, appDbContext);
+            return AbstractFunction<T, U, V>.GetReturnValue(returnValue, loggingUtil, e, appDbContext);
         }
 
         // Processing end log
-        logger.Warn(returnValue);
+        loggingUtil.EndLog(returnValue);
         return returnValue;
     }
 }
