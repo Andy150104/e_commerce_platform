@@ -22,92 +22,32 @@ namespace Client.Logics.Commons;
 public static class CommonLogic
 {
     /// <summary>
-    /// Encrypt the text
+    /// Apply sorting
     /// </summary>
-    /// <param name="beforeEncrypt"></param>
-    /// <param name="context"></param>
+    /// <param name="query"></param>
+    /// <param name="sortBy"></param>
+    /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public static string EncryptText(string beforeEncrypt, AppDbContext context)
+    public static IQueryable<T> ApplySorting<T>(IQueryable<T> query, byte? sortBy) where T : class
     {
-        // Check for null or empty
-        ArgumentException.ThrowIfNullOrEmpty(beforeEncrypt);
+        if (!sortBy.HasValue)
+            return query;
 
-        // Get the system config
-        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv)?.Value;
-        var iv = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv)?.Value;
-        // Check for null
-        if (key == null)
+        return sortBy switch
         {
-            throw new ArgumentException();
-        }
-
-        // Encrypt the text
-        using (Aes aes = Aes.Create())
-        {
-            // Set the key and IV
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            if (iv != null) aes.IV = Encoding.UTF8.GetBytes(iv);
-
-            // Encrypt
-            ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-            using (MemoryStream ms = new MemoryStream())
-            {
-                using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
-                {
-                    using (StreamWriter sw = new StreamWriter(cs))
-                    {
-                        sw.Write(beforeEncrypt);
-                    }
-                }
-
-                return Convert.ToBase64String(ms.ToArray());
-            }
-        }
+            (byte)ConstantEnum.Sort.IncreasingPrice => query.OrderBy(x => EF.Property<decimal>(x, "Price")),
+            (byte)ConstantEnum.Sort.DecreasingPrice => query.OrderByDescending(x => EF.Property<decimal>(x, "Price")),
+            (byte)ConstantEnum.Sort.Newest => query.OrderByDescending(x => EF.Property<DateTime>(x, "CreatedAt")),
+            (byte)ConstantEnum.Sort.Oldest => query.OrderBy(x => EF.Property<DateTime>(x, "CreatedAt")),
+            (byte)ConstantEnum.Sort.MostPopular => query.OrderByDescending(x =>
+                Convert.ToDouble(EF.Property<int>(x, "TotalSold")) * 0.5 +
+                Convert.ToDouble(EF.Property<int>(x, "TotalOrders")) * 0.3 +
+                Convert.ToDouble(EF.Property<decimal>(x, "AverageRating")) * 0.2
+            ),
+            _ => query
+        };
     }
-
-    /// <summary>
-    /// Decrypt the text
-    /// </summary>
-    /// <param name="beforeDecrypt"></param>
-    /// <param name="context"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
-    public static string DecryptText(string beforeDecrypt, AppDbContext context)
-    {
-        // Check for null or empty
-        ArgumentException.ThrowIfNullOrEmpty(beforeDecrypt);
-        // Get the system config
-        var key = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptKey)?.Value;
-        var iv = context.SystemConfigs.AsNoTracking().FirstOrDefault(x => x.Id == SystemConfig.EncryptIv)?.Value;
-        // Check for null
-        if (key == null)
-        {
-            throw new ArgumentException();
-        }
-
-        // Decrypt the text
-        using (Aes aes = Aes.Create())
-        {
-            // Set the key and IV
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            if (iv != null) aes.IV = Encoding.UTF8.GetBytes(iv);
-            // Decrypt
-            ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-            using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(beforeDecrypt)))
-            {
-                using (CryptoStream cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read))
-                {
-                    using (StreamReader sr = new StreamReader(cs))
-                    {
-                        return sr.ReadToEnd();
-                    }
-                }
-            }
-        }
-    }
-
-
+    
     /// <summary>
     /// Call the API
     /// </summary>
@@ -230,83 +170,5 @@ public static class CommonLogic
     public class ApiResponse<T, V> : AbstractApiResponse<V>
     {
         public override V Response { get; set; }
-    }
-    
-    
-    public class CloudinaryService
-    {
-        private readonly Cloudinary _cloudinary;
-
-        public CloudinaryService(IOptions<CloudinarySettings> options)
-        {
-
-            var settings = options.Value;
-            var account = new Account(settings.CloudName, settings.ApiKey, settings.ApiSecret);
-            _cloudinary = new Cloudinary(account);
-        }
-
-        /// <summary>
-        /// Upload images to Cloudinary
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        /// <exception cref="Exception"></exception>
-        public async Task<string> UploadImageAsync(IFormFile file)
-        {
-            var uploadResult = new ImageUploadResult();
-
-            if (file == null || file.Length == 0)
-            {
-                throw new ArgumentException("File không hợp lệ.");
-            }
-
-            using (var stream = file.OpenReadStream())
-            {
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(file.FileName, stream)
-                };
-
-                uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            }
-
-            // Check for error
-            if (uploadResult.Error != null)
-            {
-                throw new Exception($"Cloudinary upload failed: {uploadResult.Error.Message}");
-            }
-
-            // Return the URL
-            return uploadResult.SecureUrl?.ToString() ?? throw new Exception("Upload không trả về URL.");
-        }
-        
-        /// <summary>
-        /// Delete image 
-        /// </summary>
-        /// <param name="publicId"></param>
-        /// <returns></returns>
-        public bool DeleteImage(string url)
-        {
-            var deletionParams = new DeletionParams(ExtractPublicId(url))
-            {
-                ResourceType = ResourceType.Image
-            };
-
-            var result = _cloudinary.Destroy(deletionParams);
-            return result.Result == "ok"; 
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="imageUrl"></param>
-        /// <returns></returns>
-        private string ExtractPublicId(string imageUrl)
-        {
-            // Find Public Id
-            var match = Regex.Match(imageUrl, @"/upload/v\d+/(.*)\..+$");
-            return match.Success ? match.Groups[1].Value : null;
-        }
     }
 }

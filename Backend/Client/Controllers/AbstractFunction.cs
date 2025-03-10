@@ -1,25 +1,20 @@
 using System.Text.RegularExpressions;
 using Client.Models.Helper;
 using Client.Utils;
+using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using NLog;
-using Client.Utils.Consts;
 
-namespace Client.Controllers;
+namespace Client.Controllers.AbstractClass;
 
-/// <summary>
-/// 
-/// </summary>
-public class AbstractFunction<T, U, V>
-    where T : AbstractApiRequest
+public class AbstractFunction<U, V>
     where U : AbstractApiResponse<V>
 {
     /// <summary>
     /// Return value
     /// </summary>
-    public static U GetReturnValue(U returnValue, LoggingUtil loggingUtil, Exception e, AppDbContext context)
+    public static U GetReturnValue(U returnValue, LoggingUtil loggingUtil, Exception e)
     {
         switch (e)
         {
