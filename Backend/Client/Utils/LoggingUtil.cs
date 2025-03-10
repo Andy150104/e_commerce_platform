@@ -10,7 +10,7 @@ public class LoggingUtil
     public readonly Logger _logger;
 
     private readonly string _userName;
-    
+
     private readonly string _executeId;
 
     /// <summary>
@@ -19,9 +19,8 @@ public class LoggingUtil
     private readonly JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
     {
         Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
-
     };
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -38,7 +37,7 @@ public class LoggingUtil
         _executeId = DateTime.Now.ToString("yyyyMMddHHmmss_")
                      + Guid.NewGuid().ToString("N").Substring(0, 10);
     }
-    
+
     /// <summary>
     /// Debug log output
     /// </summary>
@@ -56,7 +55,7 @@ public class LoggingUtil
     {
         _logger.Info($"{_executeId} | {_logger.Name} | {_userName} | Information Logs：{message}");
     }
-    
+
     /// <summary>
     /// Input check error log output
     /// </summary>
@@ -65,7 +64,7 @@ public class LoggingUtil
     {
         _logger.Error($"{_executeId} | {_logger.Name} | {_userName} | Error Logs：{message}");
     }
-    
+
     /// <summary>
     /// Warning log output
     /// </summary>
@@ -74,7 +73,7 @@ public class LoggingUtil
     {
         _logger.Warn($"{_executeId} | {_logger.Name} | {_userName} | Warning Logs：{message}");
     }
-    
+
     /// <summary>
     /// Fatal log output
     /// </summary>
@@ -83,17 +82,20 @@ public class LoggingUtil
     {
         _logger.Fatal($"{_executeId} | {_logger.Name} | {_userName} | Fatal Logs：{message}");
     }
-    
+
     /// <summary>
     /// Log output for API start (not required for each API)
     /// </summary>
     /// <param name="argument"></param>
-    public void StartLog(object argument)
+    public void StartLog(object argument = null)
     {
-        var message = JsonSerializer.Serialize(argument, jsonSerializerOptions);
-        _logger.Info($"{_executeId} | {_logger.Name} | {_userName} | Start Logs：{message}");
+        string message = argument != null
+            ? JsonSerializer.Serialize(argument, jsonSerializerOptions)
+            : "No argument provided";
+
+        _logger.Info($"{_executeId} | {_logger.Name} | {_userName} | Start Logs: {message}");
     }
-    
+
     /// <summary>
     /// Log output for API start (not required for each API)
     /// </summary>
@@ -106,5 +108,4 @@ public class LoggingUtil
 
         _logger.Info($"{_executeId} | {_logger.Name} | {_userName} | End Logs：{message}");
     }
-
 }

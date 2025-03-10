@@ -71,6 +71,10 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<VwImageBlindBox> VwImageBlindBoxes { get; set; }
 
+    public virtual DbSet<VwOrder> VwOrders { get; set; }
+
+    public virtual DbSet<VwOrderDetailsWithProduct> VwOrderDetailsWithProducts { get; set; }
+
     public virtual DbSet<VwPlan> VwPlans { get; set; }
 
     public virtual DbSet<VwUserAddress> VwUserAddresses { get; set; }
@@ -532,7 +536,9 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.TotalPrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("total_price");
@@ -564,11 +570,24 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.AccessoryId)
                 .HasMaxLength(255)
                 .HasColumnName("accessory_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.OrderId).HasColumnName("order_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.UnitPrice)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("unit_price");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
 
             entity.HasOne(d => d.Accessory).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.AccessoryId)
@@ -1079,6 +1098,80 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
         });
 
+        modelBuilder.Entity<VwOrder>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Orders");
+
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            entity.Property(e => e.OrderStatus).HasColumnName("order_status");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.TotalPrice)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("total_price");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+        });
+
+        modelBuilder.Entity<VwOrderDetailsWithProduct>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Order_Details_With_Products");
+
+            entity.Property(e => e.AccessoryId)
+                .HasMaxLength(255)
+                .HasColumnName("accessory_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.DiscountPercent)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("discount_percent");
+            entity.Property(e => e.DiscountedPrice)
+                .HasColumnType("decimal(21, 8)")
+                .HasColumnName("discounted_price");
+            entity.Property(e => e.OrderDetailId).HasColumnName("order_detail_id");
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            entity.Property(e => e.OriginalPrice)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("original_price");
+            entity.Property(e => e.ProductDescription).HasColumnName("product_description");
+            entity.Property(e => e.ProductName)
+                .HasMaxLength(255)
+                .HasColumnName("product_name");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
+            entity.Property(e => e.UnitPrice)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("unit_price");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .HasColumnName("username");
+        });
+
         modelBuilder.Entity<VwPlan>(entity =>
         {
             entity
@@ -1318,7 +1411,6 @@ public partial class BBExTradingFloorContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_wishlist_blind_box__wishlists");
         });
-        modelBuilder.HasSequence<int>("AccessorySeq");
 
         OnModelCreatingPartial(modelBuilder);
     }

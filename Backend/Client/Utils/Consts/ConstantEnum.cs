@@ -41,7 +41,9 @@ public static class ConstantEnum
         PendingRecheck = 3,
     }
     
-    
+    /// <summary>
+    /// Status of Order Plan
+    /// </summary>
     public enum OrderPlans
     {
         Success, 
@@ -49,5 +51,27 @@ public static class ConstantEnum
         Pending, 
         Cancel, 
         Refunded
+    }
+    
+    /// <summary>
+    /// Status of Order
+    /// </summary>
+    public enum OrderStatus
+    {
+        Pending = 1,
+        Processing = 2,
+        Shipping = 3,
+        Delivered = 4,
+        Cancel = 5,
+        Refunded = 6
+    }
+    
+    /// <summary>
+    /// Payment method
+    /// </summary>
+    public enum PaymentMethod
+    {
+        Online = 1,
+        CashOnDelivery = 2
     }
 }

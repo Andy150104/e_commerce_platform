@@ -15,6 +15,16 @@ public partial class OrderDetail
 
     public decimal UnitPrice { get; set; }
 
+    public bool IsActive { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
+
+    public string CreatedBy { get; set; } = null!;
+
+    public string UpdatedBy { get; set; } = null!;
+
     public virtual Accessory Accessory { get; set; } = null!;
 
     public virtual Order Order { get; set; } = null!;

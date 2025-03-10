@@ -21,6 +21,10 @@ public partial class Order
 
     public string? UpdatedBy { get; set; }
 
+    public byte Status { get; set; }
+
+    public bool IsActive { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual User UsernameNavigation { get; set; } = null!;
