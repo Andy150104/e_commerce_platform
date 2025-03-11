@@ -43,9 +43,9 @@
   import { className } from '@PKG_SRC/utils/class/className'
   import { Field } from 'vee-validate'
   import { uuid } from 'vue-uuid'
-  import { useAddressStore } from '@PKG_SRC/utils/address/store/addressStore'
   import { Address } from '@PKG_SRC/types/enums/constantFrontend'
   import LabelItem from '../Basecontrol/LabelItem.vue'
+import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressStore'
 
   const isDropdownOpen = ref(false)
 

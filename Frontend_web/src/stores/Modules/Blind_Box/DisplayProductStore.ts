@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { veeValidateStateInitialize } from '@PKG_SRC/utils/StoreFunction'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 import { SearchService } from '@PKG_SRC/types/enums/constantBackend'
-import type { DPSSelectItemEntity, ItemEntity } from '@PKG_API/@types'
+import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
+import type { ItemEntity } from '@PKG_SRC/composables/Client/api/@types'
 
 export const fieldsInitialize = {
   sortBy: 0,
@@ -64,18 +65,17 @@ export const useDisplayProductStore = defineStore('Product', {
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
       this.isLoadingSkeletonCard = true
-      const res = await apiClient.api.v1.DPSSelectItem.$post({
-        body: {
-          isOnlyValidation: false,
-          currentPage: 1,
-          pageSize: pageSize,
-          searchBy: searchServiceNum,
-          childCategoryName: '',
-          maximumPrice: maxPrice,
-          minimumPrice: minPrice,
-          parentCategoryName: '',
-          sortBy: sortBy,
-          nameAccessory: searchParams ?? ''
+      const res = await apiClient.api.v1.DPSSelectItem.$get({
+        query: {
+          CurrentPage: 1,
+          PageSize: pageSize,
+          SearchBy: searchServiceNum,
+          ChildCategoryName: '',
+          MaximumPrice: maxPrice,
+          MinimumPrice: minPrice,
+          ParentCategoryName: '',
+          SortBy: sortBy,
+          NameAccessory: searchParams ?? ''
         },
       })
       loadingStore.LoadingChange(false)

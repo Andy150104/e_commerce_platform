@@ -10,9 +10,9 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .ts,.js,.vue .",
     "format": "prettier --write .",
-    "generate-api": "npx openapi2aspida -i=./openapi.json",
-    "generate-api-auth": "npx openapi2aspida -i=./openapi-auth.json -o=src/utils/auth/define",
-    "generate-api-address": "npx openapi2aspida -i=./openapi-address.json -o=src/utils/address/define",
+    "generate-api": "npx openapi2aspida -i=./openapi.json -o=src/composables/Client/api",
+    "generate-api-auth": "npx openapi2aspida -i=./openapi-auth.json -o=src/composables/auth/define",
+    "generate-api-address": "npx openapi2aspida -i=./openapi-address.json -o=src/composables/ThirdApi/define",
     "start": "nuxt start"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
     "primevue": "^4.3.1",
+    "quill": "^2.0.3",
     "swiper": "^11.2.1",
     "tailwindcss-animated": "^2.0.0",
     "typescript": "^5.7.3",

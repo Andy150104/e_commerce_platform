@@ -15,9 +15,16 @@
       showGridlines
     >
       <template #header>
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 ">
           <div class="flex justify-between">
-            <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined @click="clearFilter" />
+            <div class="flex justify-between gap-6">
+              <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined @click="clearFilter" />
+              <ModalInputForm :header="'Add New Product'" :button-icon="'pi pi-plus'" :button-label="'New Product'" :button-severity="'contrast'" :width="'80rem'" @on-confirm="emit('on-insert')">
+                <template #body>
+                  <slot name="bodyButtonAdd"></slot>
+                </template>
+              </ModalInputForm>
+            </div>
             <div class="p-inputgroup">
               <IconField>
                 <InputIcon>
@@ -29,13 +36,14 @@
           </div>
           <!-- Hiển thị MultiSelect nếu isSelectedColumns bật -->
           <div v-if="isSelectedColumns">
-            <MultiSelect 
+            <MultiSelect
               v-model="selectedColumns"
               :options="columns"
               optionLabel="header"
               @update:modelValue="onToggle"
               display="chip"
-              placeholder="Select Columns" />
+              placeholder="Select Columns"
+            />
           </div>
         </div>
       </template>
@@ -69,13 +77,13 @@
             selectedItemsLabel="{0} items selected"
           />
           <!-- Mặc định dùng InputText -->
-          <InputText
-            v-else
-            v-model="filterModel.value"
-            type="text"
-            @input="filterCallback()"
-            :placeholder="`Search by ${col.header}`"
-          />
+          <InputText v-else v-model="filterModel.value" type="text" @input="filterCallback()" :placeholder="`Search by ${col.header}`" />
+        </template>
+      </Column>
+      <Column header="Actions" style="min-width: 12rem">
+        <template #body="slotProps">
+          <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" />
+          <ModalConfirm :is-only-show-icon="true" @on-confirm="confirmDeleteProduct(slotProps.data)"/>
         </template>
       </Column>
     </DataTable>
@@ -83,97 +91,111 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import MultiSelect from 'primevue/multiselect'
-import { FilterMatchMode } from '@primevue/core/api'
-import 'primeicons/primeicons.css'
+  import { ref, computed } from 'vue'
+  import DataTable from 'primevue/datatable'
+  import Column from 'primevue/column'
+  import Button from 'primevue/button'
+  import InputText from 'primevue/inputtext'
+  import MultiSelect from 'primevue/multiselect'
+  import { FilterMatchMode } from '@primevue/core/api'
+  import 'primeicons/primeicons.css'
+import ModalConfirm from '../Modal/ModalConfirm.vue'
+import ModalInputForm from '../Modal/ModalInputForm.vue'
 
-// Định nghĩa props với prop isSelectedColumns (mặc định là false)
-const props = withDefaults(
-  defineProps<{
-    items: any[]
-    columns: any[]
-    pageSize?: number
-    isSelectedColumns?: boolean
-  }>(),
-  {
-    pageSize: 10,
-    isSelectedColumns: false,
-  }
-)
-
-const loading = ref(false)
-
-const filters = ref<any>({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-})
-
-// Thiết lập filter cho từng cột nếu cột có isFilter
-props.columns.forEach((col) => {
-  if (col.isFilter) {
-    filters.value[col.field] = {
-      value: null,
-      matchMode: col.filterType === 'multiSelect' ? FilterMatchMode.IN : FilterMatchMode.CONTAINS,
+  // Định nghĩa props với prop isSelectedColumns (mặc định là false)
+  const props = withDefaults(
+    defineProps<{
+      items: any[]
+      columns: any[]
+      pageSize?: number
+      isSelectedColumns?: boolean
+    }>(),
+    {
+      pageSize: 10,
+      isSelectedColumns: false,
     }
-  }
-})
-const globalFilterFields = props.columns.map((col) => col.field)
+  )
 
-// Hàm clear filter cho global và các cột riêng
-const clearFilter = (): void => {
-  filters.value.global.value = null
+  const loading = ref(false)
+
+  const filters = ref<any>({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  })
+
+  interface Emits {
+    (e: 'on-delete', item: any): void
+    (e: 'on-update', item: any): void
+    (e: 'on-insert'): void
+  }
+  const emit = defineEmits<Emits>()
+
+  const editProduct = (product: any) => {
+    emit('on-update', product)
+  }
+
+  const confirmDeleteProduct = (product: any) => {
+    emit('on-delete', product)
+  }
+  // Thiết lập filter cho từng cột nếu cột có isFilter
   props.columns.forEach((col) => {
-    if (col.isFilter && filters.value[col.field]) {
-      filters.value[col.field].value = null
+    if (col.isFilter) {
+      filters.value[col.field] = {
+        value: null,
+        matchMode: col.filterType === 'multiSelect' ? FilterMatchMode.IN : FilterMatchMode.CONTAINS,
+      }
     }
   })
-}
+  const globalFilterFields = props.columns.map((col) => col.field)
 
-const selectedColumns = ref([...props.columns])
-const onToggle = (val: any) => {
-  selectedColumns.value = props.columns.filter(col =>
-    val.some((v: any) => v.field === col.field)
-  )
-}
+  // Hàm clear filter cho global và các cột riêng
+  const clearFilter = (): void => {
+    filters.value.global.value = null
+    props.columns.forEach((col) => {
+      if (col.isFilter && filters.value[col.field]) {
+        filters.value[col.field].value = null
+      }
+    })
+  }
 
-const displayedColumns = computed(() => {
-  return props.isSelectedColumns ? selectedColumns.value : props.columns
-})
+  const selectedColumns = ref([...props.columns])
+  const onToggle = (val: any) => {
+    selectedColumns.value = props.columns.filter((col) => val.some((v: any) => v.field === col.field))
+  }
+
+  const displayedColumns = computed(() => {
+    return props.isSelectedColumns ? selectedColumns.value : props.columns
+  })
 </script>
 
 <style>
-.my-custom-table .p-datatable-thead > tr > th {
-  background-color: #e6e8e8;
-  color: #000000;
-}
+  .my-custom-table .p-datatable-thead > tr > th {
+    background-color: #e6e8e8;
+    color: #000000;
+  }
 
-.my-custom-table .p-datatable-thead > tr > th:hover {
-  background-color: #dedede !important;
-  color: #333 !important;
-}
+  .my-custom-table .p-datatable-thead > tr > th:hover {
+    background-color: #dedede !important;
+    color: #333 !important;
+  }
 
-.my-custom-table .p-datatable-thead > tr.p-column-filter-row > th:hover {
-  background-color: #f7bebe !important;
-  color: #333 !important;
-}
+  .my-custom-table .p-datatable-thead > tr.p-column-filter-row > th:hover {
+    background-color: #f7bebe !important;
+    color: #333 !important;
+  }
 
-/* Dark Mode */
-.dark .my-custom-table .p-datatable-thead > tr > th {
-  background-color: #515456;
-  color: #ffffff;
-}
+  /* Dark Mode */
+  .dark .my-custom-table .p-datatable-thead > tr > th {
+    background-color: #515456;
+    color: #ffffff;
+  }
 
-.dark .my-custom-table .p-datatable-thead > tr > th:hover {
-  background-color: #494949 !important;
-  color: #fff !important;
-}
+  .dark .my-custom-table .p-datatable-thead > tr > th:hover {
+    background-color: #494949 !important;
+    color: #fff !important;
+  }
 
-.dark .my-custom-table .p-datatable-thead > tr.p-column-filter-row > th:hover {
-  background-color: #666 !important;
-  color: #fff !important;
-}
+  .dark .my-custom-table .p-datatable-thead > tr.p-column-filter-row > th:hover {
+    background-color: #666 !important;
+    color: #fff !important;
+  }
 </style>

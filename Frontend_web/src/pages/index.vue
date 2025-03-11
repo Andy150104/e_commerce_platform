@@ -210,7 +210,7 @@
   import { initDropdowns, initPopovers } from 'flowbite'
   import ImageCrop from '@PKG_SRC/components/CropImage/ImageCrop.vue'
   import DropDownSearch from '@PKG_SRC/components/DropDown/DropDownSearch.vue'
-  import { useAddressStore } from '@PKG_SRC/utils/address/store/addressStore'
+  import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressStore'
   import LocationPicker from '@PKG_SRC/components/UserControl/LocationPicker.vue'
   import GalleryCarousel from '@PKG_SRC/components/Gallery/GalleryCarousel.vue'
   import TableComponent from '@PKG_SRC/components/Table/TableComponent.vue'

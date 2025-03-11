@@ -242,7 +242,7 @@
   const onBuyNow = async (selectedProduct: any) => {
     // formMessageStore.SetFormMessageNotApiRes('E00001', true, onReturnLogin)
     if (authStore.isAuthorization) {
-      await detailProductStore.AddProductToCart(selectedProduct)
+      await detailProductStore.AddOneProductToCart(selectedProduct)
       await cartStore.GetAllCart()
       cardRef.value.openSideBar(true)
       return

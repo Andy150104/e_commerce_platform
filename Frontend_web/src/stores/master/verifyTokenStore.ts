@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useApiServer } from '@PKG_SRC/utils/auth/authHttp'
+import { useApiServer } from '@PKG_SRC/composables/auth/authHttp'
 import { useAuthStore } from './authStore'
 
 export type VerifyTokenState = {

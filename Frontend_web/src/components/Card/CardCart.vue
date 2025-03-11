@@ -45,12 +45,12 @@
   import { Swiper, SwiperSlide } from 'swiper/vue'
   import 'swiper/css'
   import 'swiper/css/pagination'
-  import type { DPSSelectCartItemEntity } from '@PKG_API/@types'
   import { useCartStore } from '@PKG_SRC/stores/Modules/Blind_Box/CartStore'
   import { useForm } from 'vee-validate'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import BaseControlQuantityInput from '../Basecontrol/BaseControlQuantityInput.vue'
   import { Currency, Locale } from '@PKG_SRC/types/enums/constantFrontend'
+  import type { DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
 
   const props = defineProps({
     cartModel: {

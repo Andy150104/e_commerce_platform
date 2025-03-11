@@ -28,7 +28,7 @@
             </div>
 
             <!-- Product Info -->
-            <div class="mt-6 sm:mt-8 lg:mt-0 lg:col-span-1 bg-gray-100 rounded-md p-6 border-spacing-2 border-b-0">
+            <div class="mt-6 sm:mt-8 lg:mt-0 lg:col-span-1 bg-gray-100 rounded-md p-6 border-spacing-2 border-b-0 break-words">
               <div class="mt-4 sm:items-center sm:gap-4 sm:flex">
                 <p class="text-2xl font-extrabold text-gray-900 sm:text-3xl dark:text-white">{{ store.productDetail.price }}</p>
                 <div class="flex items-center gap-2 mt-2 sm:mt-0">
@@ -173,9 +173,13 @@
 
               <hr class="my-6 md:my-8 border-gray-400 dark:border-gray-800" />
 
-              <p class="mb-6 text-gray-500 dark:text-gray-400">
+              <!-- <p class="mb-6 text-gray-500 dark:text-gray-400">
                 {{ store.productDetail.description }}
-              </p>
+              </p> -->
+              <div
+                v-html="store.productDetail.description"
+                class="mb-6 text-gray-500 dark:text-gray-400 whitespace-normal break-words overflow-auto"
+              ></div>
             </div>
 
             <!-- Accordion with top divider -->
@@ -190,7 +194,6 @@
 </template>
 
 <script setup lang="ts">
-  import type { DPSSelectCartItemEntity } from '@PKG_API/@types'
   import Accordion from '@PKG_SRC/components/Accordion/Accordion.vue'
   import BaseControlQuantityInput from '@PKG_SRC/components/Basecontrol/BaseControlQuantityInput.vue'
   import BreadCrumb from '@PKG_SRC/components/BreadCrumb/BreadCrumb.vue'
