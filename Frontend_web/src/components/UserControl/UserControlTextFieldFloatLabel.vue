@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-3">
     <div class="reactive">
       <Field
         :id="fieldId"
@@ -8,6 +8,7 @@
         :class="classField"
         :data-enter-move="move"
         :name="xmlColumn.id"
+        pattern="^[0-9A-Z]+"
         :rules="fieldRules"
         onfocus="select()"
         :disabled="disabled"
@@ -132,6 +133,16 @@
       required: false,
       default: false,
     },
+    isNumberic: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    isNotPhoneNumber: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   })
   interface Emits {
     (e: 'on-blur'): void
@@ -164,6 +175,12 @@
     errMessage.value = props.errMsg
     if (model.value === null) {
       model.value = ''
+    }
+    if (props.isNumberic) {
+      model.value = model.value.replace(/[^0-9]/g, '')
+    }
+    if (props.isNotPhoneNumber && model.value.startsWith('0')) {
+      model.value = model.value.replace(/^0/, '')
     }
     model.value = model.value.slice(0, props.maxlength)
     nextTick(() => {

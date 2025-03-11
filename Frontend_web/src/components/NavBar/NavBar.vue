@@ -7,7 +7,7 @@
       <!-- CỘT TRÁI: Logo -->
       <div class="flex items-center space-x-2 shrink-0">
         <img src="https://flowbite.com/docs/images/logo.svg" alt="Flowbite Logo" class="h-8" />
-        <span class="text-2xl font-semibold dark:text-white"> Flowbite </span>
+        <span class="text-2xl font-semibold dark:text-white"> SWD392 </span>
       </div>
 
       <!-- CỘT GIỮA: Menu (ẩn trên mobile) -->
@@ -48,7 +48,7 @@
         <!-- Contact -->
         <a href="#" class="text-gray-900 font-semibold dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400"> Contact </a>
       </div>
-
+      <ToggleThemeButton/>
       <!-- CỘT PHẢI: User hoặc Register/Login (ẩn trên mobile) -->
       <div class="hidden md:flex items-center space-x-4 shrink-0 ml-4">
         <!-- Nếu chưa login => Hiển thị nút Register / Login -->
@@ -206,6 +206,7 @@
   import { useCartStore } from '@PKG_SRC/stores/Modules/Blind_Box/CartStore'
   import { useProfileStore } from '@PKG_SRC/stores/Modules/DashBoard/profileStore'
   import { ref, onMounted, onUnmounted } from 'vue'
+import ToggleThemeButton from '../Theme/ToggleThemeButton.vue'
 
   /** Giả lập trạng thái đăng nhập */
   const authStore = useAuthStore()

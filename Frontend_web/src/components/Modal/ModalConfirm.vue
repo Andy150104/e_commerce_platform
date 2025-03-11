@@ -1,18 +1,24 @@
 <template>
-  <Button :label="labelButton" icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteSelected" :disabled="disabled" />
+  <Button v-if="isOnlyShowIcon" icon="pi pi-trash" outlined rounded severity="danger" @click="confirmDeleteSelected" />
+  <Button v-else :label="labelButton" icon="pi pi-trash" severity="danger" outlined @click="confirmDeleteSelected" :disabled="disabled" />
   <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
     <div class="flex items-center gap-4">
       <i class="pi pi-exclamation-triangle !text-3xl" />
       <span>{{ content }}</span>
     </div>
     <template #footer>
-      <Button :label="labelCancelButton" icon="pi pi-times" text @click="deleteProductsDialog = false" />
+      <Button :label="labelCancelButton" severity="secondary" outlined icon="pi pi-times" text @click="deleteProductsDialog = false" />
       <Button :label="labelOkButton" icon="pi pi-check" text @click="confirmFunction" />
     </template>
   </Dialog>
 </template>
 <script lang="ts" setup>
   const props = defineProps({
+    isOnlyShowIcon:{
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     labelButton: {
       type: String,
       required: false,

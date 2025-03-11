@@ -21,7 +21,7 @@
 
       <!-- Slot Body (Nội dung chính) -->
       <div class="p-4">
-        <slot>
+        <slot name="body">
           <p class="text-gray-500">Default content here. Override this by using slot.</p>
         </slot>
       </div>

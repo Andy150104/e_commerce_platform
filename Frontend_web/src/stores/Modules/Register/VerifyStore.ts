@@ -1,12 +1,13 @@
-import type { AbstractApiResponseOfString } from '@PKG_API/@types'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
-import { AuthAPI } from '@PKG_SRC/utils/auth/authClient'
-import { useApiServer, useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
+import { AuthAPI } from '@PKG_SRC/composables/auth/authClient'
+import { useApiServer, useLogoutClient } from '@PKG_SRC/composables/auth/authHttp'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 import { useUploadImageStore } from '../usercontrol/uploadImageStore'
 import { DateFormat } from '@PKG_SRC/types/enums/constantFrontend'
+import type { AbstractApiResponseOfString } from '@PKG_SRC/composables/Client/api/@types'
+import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
 
 export const fieldsInitialize = {
   phoneNumber: '',
@@ -115,8 +116,6 @@ export const useVerifyStore = defineStore('Verify', {
       return true
     },
     async activeAccount(key: string) {
-      const validation: any = await this.fields.validate()
-      if (validation.valid === false) return false
       const apiServer = useApiServer()
       const formMessage = useFormMessageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)

@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { veeValidateStateInitialize } from '@PKG_SRC/utils/StoreFunction'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 import { SearchService } from '@PKG_SRC/types/enums/constantBackend'
-import type { DPSSelectCartItemEntity, DPSSelectItemEntity, ItemEntity } from '@PKG_API/@types'
+import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
+import type { DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
 
 export type FormSchema = Record<string, string>
 
@@ -57,11 +58,7 @@ export const useCartStore = defineStore('Cart', {
     async GetAllCart() {
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
-      const res = await apiClient.api.v1.DPSSelectCartItem.$post({
-        body: {
-          isOnlyValidation: false,
-        },
-      })
+      const res = await apiClient.api.v1.DPSSelectCartItem.$get()
       if (!res.success) return false
       this.cartList = res.response ?? []
       return true
@@ -70,7 +67,7 @@ export const useCartStore = defineStore('Cart', {
       const key = `quantity_${index}`
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
-      const res = await apiClient.api.v1.DPSUpdateCartItem.$post({
+      const res = await apiClient.api.v1.DPSUpdateCartItem.$patch({
         body: {
           isOnlyValidation: false,
           accessoryId: accessoryId,
@@ -84,7 +81,7 @@ export const useCartStore = defineStore('Cart', {
       const key = `quantity_${index}`
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
-      const res = await apiClient.api.v1.DPSDeleteCartItem.$post({
+      const res = await apiClient.api.v1.DPSDeleteCartItem.$patch({
         body: {
           isOnlyValidation: false,
           codeAccessory: productId,

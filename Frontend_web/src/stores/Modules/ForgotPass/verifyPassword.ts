@@ -1,9 +1,9 @@
-import type { AbstractApiResponseOfString } from '@PKG_API/@types'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 import { useLoadingStore } from '../usercontrol/loadingStore'
-import { useApiServer } from '@PKG_SRC/utils/auth/authHttp'
+import { useApiServer } from '@PKG_SRC/composables/auth/authHttp'
+import type { AbstractApiResponseOfString } from '@PKG_SRC/composables/auth/define/@types'
 
 export const fieldsInitialize = {
   password: '',
