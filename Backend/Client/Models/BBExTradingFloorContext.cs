@@ -67,6 +67,8 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<VwCartDisplay> VwCartDisplays { get; set; }
 
+    public virtual DbSet<VwCategoriesDisplay> VwCategoriesDisplays { get; set; }
+
     public virtual DbSet<VwImageAccessory> VwImageAccessories { get; set; }
 
     public virtual DbSet<VwImageBlindBox> VwImageBlindBoxes { get; set; }
@@ -1072,6 +1074,20 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.TotalPrice)
                 .HasColumnType("decimal(21, 2)")
                 .HasColumnName("total_price");
+        });
+
+        modelBuilder.Entity<VwCategoriesDisplay>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Categories_Display");
+
+            entity.Property(e => e.CategoryId).HasColumnName("category_id");
+            entity.Property(e => e.CategoryName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("category_name");
+            entity.Property(e => e.ParentId).HasColumnName("parent_id");
         });
 
         modelBuilder.Entity<VwImageAccessory>(entity =>

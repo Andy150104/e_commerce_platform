@@ -42,7 +42,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
         var userName = identityService.IdentityEntity.UserName;
 
         // Begin transaction
-        Repository.ExecuteInTransactionAsync(async () =>
+        await Repository.ExecuteInTransactionAsync(async () =>
         {
             // Insert Accessory
             var product = new Accessory
@@ -320,7 +320,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
         return responseEntity;
     }
 
-    public Task<MPSUpdateAccessoryResponse> UpdateAccessory(MPSUpdateAccessoryRequest request,
+    public async Task<MPSUpdateAccessoryResponse> UpdateAccessory(MPSUpdateAccessoryRequest request,
         IIdentityService identityService)
     {
         var response = new MPSUpdateAccessoryResponse() { Success = false };
@@ -329,7 +329,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
         var userName = identityService.IdentityEntity.UserName;
 
         // Begin transaction
-        Repository.ExecuteInTransactionAsync(async () =>
+        await Repository.ExecuteInTransactionAsync(async () =>
         {
             // Get Accessory
             var product = Find(x => x.AccessoryId == request.CodeAccessory && x.IsActive == true).FirstOrDefault();
@@ -417,7 +417,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             response.Success = true;
             response.SetMessage(MessageId.I00001);
         });
-        return Task.FromResult(response);
+        return response;
     }
 
     /// <summary>
