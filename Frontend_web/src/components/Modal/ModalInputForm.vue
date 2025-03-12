@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Button :label="buttonLabel" @click="visible = true" :disabled="disabled" :outlined="outlined" :icon="buttonIcon" :severity="buttonSeverity" />
+    <Button :label="buttonLabel" @click="onBlinding" :disabled="disabled" :outlined="outlined" :icon="buttonIcon" :severity="buttonSeverity" />
 
     <Dialog
       v-model:visible="visible"
@@ -90,11 +90,17 @@
 
   interface Emits {
     (e: 'on-confirm'): void
+    (e: 'on-blinding-update'): void
   }
 
   const emit = defineEmits<Emits>()
 
   const visible = ref(false)
+
+  const onBlinding = () => {
+    visible.value = true
+    emit('on-blinding-update')
+  }
 
   const onConfirm = () => {
     emit('on-confirm')

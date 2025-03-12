@@ -99,8 +99,8 @@
   import MultiSelect from 'primevue/multiselect'
   import { FilterMatchMode } from '@primevue/core/api'
   import 'primeicons/primeicons.css'
-import ModalConfirm from '../Modal/ModalConfirm.vue'
-import ModalInputForm from '../Modal/ModalInputForm.vue'
+  import ModalConfirm from '../Modal/ModalConfirm.vue'
+  import ModalInputForm from '../Modal/ModalInputForm.vue'
 
   // Định nghĩa props với prop isSelectedColumns (mặc định là false)
   const props = withDefaults(

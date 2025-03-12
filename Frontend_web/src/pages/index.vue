@@ -6,6 +6,14 @@
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
       </a>
       <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+        <UserControlTextFieldLabel
+        :xml-column="xmlColumns.test"
+                :maxlength="50"
+                :disabled="false"
+                :type="'password'"
+                :err-msg="fieldErrors.test"
+                :placeholder="'***********'"
+        />
         <button
           type="button"
           class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -226,6 +234,7 @@
   import { Swiper, SwiperSlide, useSwiper } from 'swiper/vue'
   import BaseControlPriceRange from '@PKG_SRC/components/Basecontrol/BaseControlPriceRange.vue'
   import ModalInputForm from '@PKG_SRC/components/Modal/ModalInputForm.vue'
+import UserControlTextFieldLabel from '@PKG_SRC/components/UserControl/UserControlTextFieldLabel.vue'
   const imageStore = useUploadImageStore()
   imageStore.SetUploadImage('a', 1024, 'https://res.cloudinary.com/dbfokyruf/image/upload/v1739683116/fehfhddpzfgcpfrkkfoj.jpg')
   const imageList = [
@@ -266,6 +275,13 @@
     }),
     passWord: XmlLoadColumn({
       id: 'passWord',
+      name: 'Password',
+      rules: '',
+      visible: true,
+      option: '',
+    }),
+    test: XmlLoadColumn({
+      id: 'test',
       name: 'Password',
       rules: '',
       visible: true,
