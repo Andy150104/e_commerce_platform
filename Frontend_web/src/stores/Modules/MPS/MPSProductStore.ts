@@ -79,7 +79,6 @@ export const useMPSProductStore = defineStore('MPS', {
       const formMessage = useFormMessageStore()
       const res = await apiClient.api.v1.MPSDeleteAccessory.$patch({
         body: {
-          isOnlyValidation: false,
           codeAccessory: [id],
         },
       })
@@ -112,8 +111,8 @@ export const useMPSProductStore = defineStore('MPS', {
           Description: description,
           Discount: Number(apiFieldValues.discount),
           Name: apiFieldValues.name,
-          Price: 122312,
-          Quantity: 12,
+          Price: Number(apiFieldValues.price),
+          Quantity: Number(apiFieldValues.quantity),
           ShortDescription: apiFieldValues.shortDescription,
         },
       })

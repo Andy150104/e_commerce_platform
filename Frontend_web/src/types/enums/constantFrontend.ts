@@ -47,3 +47,7 @@ export enum Address {
   Ward = '2',
   Other = '3',
 }
+export enum Catogry {
+  ParentCategory = '0',
+  ChildCategory = '1',
+}

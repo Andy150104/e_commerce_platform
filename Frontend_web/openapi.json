@@ -48,6 +48,86 @@
         ]
       }
     },
+    "/api/v1/CreateCategory": {
+      "post": {
+        "tags": [
+          "CreateCategory"
+        ],
+        "operationId": "CreateCategory_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCategoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "SaleEmployee",
+              "Owner"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/DeleteCategory": {
+      "patch": {
+        "tags": [
+          "DeleteCategory"
+        ],
+        "operationId": "DeleteCategory_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteCategoryRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCategoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "SaleEmployee",
+              "Owner"
+            ]
+          }
+        ]
+      }
+    },
     "/api/v1/DPSDeleteCartItem": {
       "patch": {
         "tags": [
@@ -472,6 +552,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/HSShowPlanResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/InsertOrder": {
+      "post": {
+        "tags": [
+          "InsertOrder"
+        ],
+        "operationId": "InsertOrder_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InsertOrderRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InsertOrderResponse"
                 }
               }
             }
@@ -1011,6 +1128,150 @@
         ]
       }
     },
+    "/api/v1/SelectCategories": {
+      "get": {
+        "tags": [
+          "SelectCategories"
+        ],
+        "operationId": "SelectCategories_Get",
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SelectCategoriesRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectCategoriesResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/SelectCategory": {
+      "get": {
+        "tags": [
+          "SelectCategory"
+        ],
+        "operationId": "SelectCategory_Get",
+        "parameters": [
+          {
+            "name": "CategoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectCategoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/SelectSubCategories": {
+      "get": {
+        "tags": [
+          "SelectSubCategories"
+        ],
+        "operationId": "SelectSubCategories_Get",
+        "parameters": [
+          {
+            "name": "ParentCategoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectSubCategoriesResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UDSDeleteUserAddress": {
+      "patch": {
+        "tags": [
+          "UDSDeleteUserAddress"
+        ],
+        "operationId": "UDSDeleteUserAddress_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UDSDeleteUserAddressRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UDSDeleteUserAddressResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
     "/api/v1/UDSInsertUserAddress": {
       "post": {
         "tags": [
@@ -1188,6 +1449,46 @@
         "security": [
           {
             "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/UpdateCategory": {
+      "put": {
+        "tags": [
+          "UpdateCategory"
+        ],
+        "operationId": "UpdateCategory_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCategoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "SaleEmployee",
+              "Owner"
+            ]
           }
         ]
       }
@@ -1400,6 +1701,43 @@
                 "type": "string",
                 "pattern": "^[\\p{L}0-9\\s\\-,./]{1,40}$",
                 "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "UDSDeleteUserAddressResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "UDSDeleteUserAddressRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "addressId"
+            ],
+            "properties": {
+              "addressId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
               }
             }
           }
@@ -2024,6 +2362,72 @@
           }
         ]
       },
+      "InsertOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "InsertOrderRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "paymentMethod",
+              "addressId"
+            ],
+            "properties": {
+              "orderDetails": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TOSOrderDetailRequest"
+                }
+              },
+              "paymentMethod": {
+                "type": "integer",
+                "format": "byte"
+              },
+              "addressId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              }
+            }
+          }
+        ]
+      },
+      "TOSOrderDetailRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "accessoryId",
+          "quantity"
+        ],
+        "properties": {
+          "accessoryId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "AEPSAddExchangeAccessoryResponse": {
         "allOf": [
           {
@@ -2072,6 +2476,324 @@
                 "items": {
                   "type": "string"
                 }
+              }
+            }
+          }
+        ]
+      },
+      "CreateCategoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "CreateCategoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "categoryName"
+            ],
+            "properties": {
+              "categoryName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "parentId": {
+                "type": "string",
+                "format": "guid",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "DeleteCategoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "DeleteCategoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "categoryId": {
+                "type": "string",
+                "format": "guid",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "SelectCategoriesResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfSelectCategoriesEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SelectCategoriesEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "SelectCategoriesEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfSelectCategoriesEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SelectCategoriesEntity"
+            }
+          }
+        }
+      },
+      "SelectCategoriesRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "SelectCategoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfSelectCategoryEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "$ref": "#/components/schemas/SelectCategoryEntity"
+              }
+            }
+          }
+        ]
+      },
+      "SelectCategoryEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          }
+        }
+      },
+      "AbstractApiResponseOfSelectCategoryEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SelectCategoryEntity"
+              }
+            ]
+          }
+        }
+      },
+      "SelectSubCategoriesResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfSelectSubCategoriesEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SelectSubCategoriesEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "SelectSubCategoriesEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "categoryName": {
+            "type": "string"
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfSelectSubCategoriesEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SelectSubCategoriesEntity"
+            }
+          }
+        }
+      },
+      "UpdateCategoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateCategoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "categoryId": {
+                "type": "string",
+                "format": "guid"
+              },
+              "categoryName": {
+                "type": "string"
+              },
+              "parentId": {
+                "type": "string",
+                "format": "guid",
+                "nullable": true
               }
             }
           }

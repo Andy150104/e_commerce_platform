@@ -69,7 +69,6 @@ export const useCartStore = defineStore('Cart', {
       const loadingStore = useLoadingStore()
       const res = await apiClient.api.v1.DPSUpdateCartItem.$patch({
         body: {
-          isOnlyValidation: false,
           accessoryId: accessoryId,
           quantity: Number(this.fieldValues[key]),
         },
@@ -83,7 +82,6 @@ export const useCartStore = defineStore('Cart', {
       const loadingStore = useLoadingStore()
       const res = await apiClient.api.v1.DPSDeleteCartItem.$patch({
         body: {
-          isOnlyValidation: false,
           codeAccessory: productId,
         },
       })

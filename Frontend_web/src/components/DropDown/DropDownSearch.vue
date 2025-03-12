@@ -24,16 +24,28 @@
     </div>
     <ul
       v-if="isDropdownOpen && filteredOptions.length"
-      class="absolute w-full bg-white text-black border border-gray-300 rounded-lg mt-1 shadow-lg z-10 max-h-48 overflow-y-auto list-none dark:text-white dark:bg-slate-900"
+      class="absolute w-full bg-white text-black border border-gray-300 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto list-none dark:text-white dark:bg-slate-900"
     >
-      <li
-        v-for="option in filteredOptions"
-        :key="option.value"
-        class="p-2 hover:bg-blue-100 cursor-pointer"
-        @click="selectProvince(option.name, option.code)"
-      >
-        {{ option.name }}
-      </li>
+      <div v-if="isCategory">
+        <li
+          v-for="option in filteredOptions"
+          :key="option.value"
+          class="p-2 hover:bg-blue-100 cursor-pointer"
+          @click="selectCategory(option.name, option.code)"
+        >
+          {{ option.name }}
+        </li>
+      </div>
+      <div v-else>
+        <li
+          v-for="option in filteredOptions"
+          :key="option.value"
+          class="p-2 hover:bg-blue-100 cursor-pointer"
+          @click="selectProvince(option.name, option.code)"
+        >
+          {{ option.name }}
+        </li>
+      </div>
     </ul>
   </div>
 </template>
@@ -43,9 +55,10 @@
   import { className } from '@PKG_SRC/utils/class/className'
   import { Field } from 'vee-validate'
   import { uuid } from 'vue-uuid'
-  import { Address } from '@PKG_SRC/types/enums/constantFrontend'
+  import { Address, Catogry } from '@PKG_SRC/types/enums/constantFrontend'
   import LabelItem from '../Basecontrol/LabelItem.vue'
-import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressStore'
+  import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressStore'
+  import { useCatogryStore } from '@PKG_SRC/stores/Components/CategoryStore'
 
   const isDropdownOpen = ref(false)
 
@@ -110,6 +123,11 @@ import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressSt
       required: true,
       default: [],
     },
+    isCategory: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   })
   interface Emits {
     (e: 'on-blur'): void
@@ -125,6 +143,7 @@ import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressSt
   const model = ref(props.textModel)
   const errMessage = ref(props.errMsg)
   const addressStore = useAddressStore()
+  const categoryStore = useCatogryStore()
 
   const filteredOptions = computed(() => {
     if (!model.value) return props.options
@@ -143,6 +162,16 @@ import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressSt
     }
     if (props.masterName === Address.Ward) {
       addressStore.wardCode = code
+    }
+    isDropdownOpen.value = false
+  }
+  const selectCategory = (category: string, code: string) => {
+    setModel(category)
+    if (props.masterName === Catogry.ParentCategory) {
+      categoryStore.parentId = code
+      categoryStore.GetChildCategory()
+    }
+    if (props.masterName === Catogry.ChildCategory) {
     }
     isDropdownOpen.value = false
   }

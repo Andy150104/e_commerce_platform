@@ -84,15 +84,14 @@ export const useVerifyStore = defineStore('Verify', {
     async RegisterUserClient(key: string) {
       const validation: any = await this.fields.validate()
       if (validation.valid === false) return false
-      const apiServer = useApiClient()
+      const apiClient = useApiClient()
       const formMessage = useFormMessageStore()
       const useImageStore = useUploadImageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
-      const res = await apiServer.api.v1.URSUserRegister.$post({
+      const res = await apiClient.api.v1.URSUserRegister.$post({
         body: {
-          isOnlyValidation: false,
           key: key,
           addressLine: apiFieldValues.addressLine,
           birthDay: convertDateFormat(apiFieldValues.birthday, DateFormat.YYYYMMDD),

@@ -4,7 +4,14 @@
       <div
         class="animate-fade-left animate-ease-out animate-delay-100 p-10 md:max-w-none md:p-12 lg:p-30 rounded-xl mb-16 max-w-screen-lg mx-auto h-auto overflow-hidden"
       >
-        <BaseDataTable :items="store.accessoriesList" :columns="columns" :is-selected-columns="true" @on-delete="onDelete" @on-insert="onInsert">
+        <BaseDataTable
+          :items="store.accessoriesList"
+          :columns="columns"
+          :is-selected-columns="true"
+          @on-delete="onDelete"
+          @on-insert="onInsert"
+          :default-fields-select="['accessoryId', 'accessoryName', 'price', 'imageAccessoriesList']"
+        >
           <template #bodyButtonAdd>
             <div class="grid grid-cols-2 gap-6 mb-8">
               <div>
@@ -166,6 +173,13 @@
       isFilter: true,
       isSort: true,
       filterType: 'text',
+    },
+    {
+      field: 'imageAccessoriesList',
+      header: 'Images',
+      isFilter: false,
+      isSort: false,
+      filterType: '',
     },
   ]
   const onDelete = async (items: any) => {

@@ -85,7 +85,6 @@ export const useDetailProductStore = defineStore('Detail', {
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
       const res = await apiClient.api.v1.DPSInsertCart.$post({
         body: {
-          isOnlyValidation: false,
           codeAccessory: codeProduct,
           quantity: Number(apiFieldValues.quantity),
         },
@@ -103,7 +102,6 @@ export const useDetailProductStore = defineStore('Detail', {
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
       const res = await apiClient.api.v1.DPSInsertCart.$post({
         body: {
-          isOnlyValidation: false,
           codeAccessory: codeProduct,
           quantity: 1,
         },

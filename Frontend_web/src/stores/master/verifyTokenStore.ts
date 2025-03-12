@@ -12,9 +12,9 @@ export const useVerifyTokenStore = defineStore('VerifyToken', {
   }),
   actions: {
     async GetRoleName() {
-      const apiClient = useApiServer()
+      const apiServer = useApiServer()
       const authStore = useAuthStore()
-      const res = await apiClient.api.v1.VerifyToken.$post({
+      const res = await apiServer.api.v1.VerifyToken.$post({
         body: {
           isOnlyValidation: false,
         },

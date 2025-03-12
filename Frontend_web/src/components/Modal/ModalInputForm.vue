@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Button :label="buttonLabel" @click="visible = true" :disabled="disabled" :outlined="outlined" :icon="buttonIcon" :severity="buttonSeverity" />
-
+    <Button v-if="isOnlyShowIcon" :icon="buttonIcon" outlined rounded :severity="buttonSeverity" @click="visible = true" />
+    <Button v-else :label="buttonLabel" @click="visible = true" :disabled="disabled" :outlined="outlined" :icon="buttonIcon" :severity="buttonSeverity" />
     <Dialog
       v-model:visible="visible"
       :header="header"
@@ -15,7 +15,7 @@
       <!-- Slot Header -->
       <template #header>
         <slot name="header">
-          <h2 class="font-bold">{{ header }}</h2>
+          <h2 class="font-bold" v-html="header"></h2>
         </slot>
       </template>
 
@@ -41,6 +41,11 @@
   import { ref } from 'vue'
 
   const props = defineProps({
+    isOnlyShowIcon:{
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     buttonLabel: {
       type: String,
       default: 'Show',

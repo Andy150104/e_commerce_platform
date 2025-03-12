@@ -4,7 +4,7 @@
   <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
     <div class="flex items-center gap-4">
       <i class="pi pi-exclamation-triangle !text-3xl" />
-      <span>{{ content }}</span>
+      <span v-html="content"></span>
     </div>
     <template #footer>
       <Button :label="labelCancelButton" severity="secondary" outlined icon="pi pi-times" text @click="deleteProductsDialog = false" />
