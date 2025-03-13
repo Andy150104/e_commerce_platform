@@ -83,7 +83,9 @@ public class CartItemService : BaseService<CartItem, Guid, VwCartDisplay>, ICart
             .ToList();
         
         // Get cart result
-        var cartItemResponse = new List<DPSSelectCartItemEntity>();
+        var cartItemEntity = new List<DPSSelectCartItem>();
+        var cartItemResponse = new DPSSelectCartItemEntity();
+
         foreach (var cart in cartSelects)
         {
             var imageSelect = _imageService
@@ -94,18 +96,20 @@ public class CartItemService : BaseService<CartItem, Guid, VwCartDisplay>, ICart
                 })
                 .ToList();
 
-            var cartEntity = new DPSSelectCartItemEntity
+            var cartEntity = new DPSSelectCartItem
             {
                 AccessoryId = cart.AccessoryId,
                 Price = cart.Price,
                 Quantity = cart.Quantity,
                 AccessoryName = cart.AccessoryName,
-                TotalPrice = cart.TotalPrice,
+                UnitPrice = cart.TotalPrice,
                 Images = imageSelect,
                 ShortDescription = cart.ShortDescription
             };
-            cartItemResponse.Add(cartEntity);
+            cartItemEntity.Add(cartEntity);
+            cartItemResponse.TotalPrice += cartEntity.UnitPrice ?? 0;
         }
+        cartItemResponse.Items = cartItemEntity;
         
         // True
         response.Success = true;

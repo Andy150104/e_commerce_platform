@@ -9,7 +9,7 @@ public partial class Review
 
     public string Username { get; set; } = null!;
 
-    public Guid AccessoryId { get; set; }
+    public string AccessoryId { get; set; } = null!;
 
     public string? ReviewContent { get; set; }
 

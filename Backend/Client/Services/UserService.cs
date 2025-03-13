@@ -78,7 +78,7 @@ public class UserService : BaseService<User, string, VwUserProfile>, IUserServic
             await _addressService .AddAsync(newAddress);
         
             // Save changes
-            Repository.SaveChangesAsync(userName);
+            await Repository.SaveChangesAsync(userName);
         
             // True
             response.Success = true;
