@@ -74,4 +74,14 @@ public static class ConstantEnum
         Online = 1,
         CashOnDelivery = 2
     }
+
+    /// <summary>
+    /// Re-check Satus
+    /// </summary>
+    public enum RecheckStatus
+    {
+        Pending = 0,
+        Approved = 1,
+        Rejected = 2
+    }
 }

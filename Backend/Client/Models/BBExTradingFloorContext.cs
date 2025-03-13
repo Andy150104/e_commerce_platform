@@ -91,6 +91,8 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<WishlistItemBlindBox> WishlistItemBlindBoxes { get; set; }
 
+    public virtual DbSet<ExchangeRecheckRequest> ExchangeRecheckRequests { get; set; }
+
     private string GetConnectionString()
     {
         IConfiguration config = new ConfigurationBuilder()
@@ -1410,6 +1412,32 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasForeignKey(d => d.WishlistId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_wishlist_blind_box__wishlists");
+        });
+
+        modelBuilder.Entity<ExchangeRecheckRequest>(entity =>
+        {
+            entity.HasKey(e => e.RequestId).HasName("PK_ExchangeRecheckRequest");
+
+            entity.ToTable("ExchangeRecheckRequest");
+
+            entity.Property(e => e.RequestId)
+                .HasColumnName("requestId");
+            entity.Property(e => e.ExchangeId).HasColumnName("exchangeId");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Status).HasColumnName("status");
         });
 
         OnModelCreatingPartial(modelBuilder);
