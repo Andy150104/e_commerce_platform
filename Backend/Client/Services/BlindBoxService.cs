@@ -2,6 +2,7 @@ using Client.Controllers.V1.DPS;
 using Client.Logics.Commons;
 using Client.Models;
 using Client.Repositories;
+using Client.Utils.Consts;
 
 namespace Client.Services;
 
@@ -30,8 +31,10 @@ public class BlindBoxService : BaseService<BlindBox, Guid, VwBlindBoxDisplay>, I
 
         // Select Accessories
         var blindBoxDisplays = Repository.FindView();
-        
-        blindBoxDisplays = CommonLogic.ApplySorting(blindBoxDisplays, sortBy);
+        if (sortBy == (byte)ConstantEnum.Sort.Newest || sortBy == (byte)ConstantEnum.Sort.Oldest)
+        {
+            blindBoxDisplays = CommonLogic.ApplySorting(blindBoxDisplays, sortBy);
+        }
         
         var blindBixList = blindBoxDisplays.ToList();
         foreach (var blindBox in blindBixList)

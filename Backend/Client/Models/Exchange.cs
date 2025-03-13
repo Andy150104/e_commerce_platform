@@ -23,6 +23,8 @@ public partial class Exchange
 
     public virtual BlindBox BlindBox { get; set; } = null!;
 
+    public virtual ICollection<ExchangeRecheckRequest> ExchangeRecheckRequests { get; set; } = new List<ExchangeRecheckRequest>();
+
     public virtual ICollection<OrdersExchange> OrdersExchanges { get; set; } = new List<OrdersExchange>();
 
     public virtual ICollection<Queue> Queues { get; set; } = new List<Queue>();

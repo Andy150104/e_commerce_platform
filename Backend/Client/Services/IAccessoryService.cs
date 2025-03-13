@@ -15,7 +15,7 @@ public interface IAccessoryService : IBaseService<Accessory, string, VwAccessory
     MPSSelectAccessoriesResponse SelectAccessories(MPSSelectAccessoriesRequest request);
 
     List<ItemEntity> SelectByAccessory(decimal? minPrice, decimal? maxPrice, string nameAccessory,
-        string parentCategory, string childCategory, byte? sortBy);
+        string parentCategory, string childCategory, byte? sortBy, string userName);
     
     Task<MPSUpdateAccessoryResponse> UpdateAccessory(MPSUpdateAccessoryRequest request, IIdentityService identityService);
     

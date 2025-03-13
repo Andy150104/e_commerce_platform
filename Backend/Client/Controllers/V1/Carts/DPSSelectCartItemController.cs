@@ -15,7 +15,7 @@ namespace Client.Controllers.V1.Carts;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class DPSSelectCartItemController : AbstractApiGetController<DPSSelectCartItemRequest, DPSSelectCartItemResponse, List<DPSSelectCartItemEntity>>
+public class DPSSelectCartItemController : AbstractApiGetController<DPSSelectCartItemRequest, DPSSelectCartItemResponse, DPSSelectCartItemEntity>
 {
     private readonly Logger _logger = LogManager.GetCurrentClassLogger();
     private readonly IIdentityService _identityService;

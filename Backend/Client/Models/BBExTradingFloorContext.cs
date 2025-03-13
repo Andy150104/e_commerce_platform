@@ -31,6 +31,8 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<Exchange> Exchanges { get; set; }
 
+    public virtual DbSet<ExchangeRecheckRequest> ExchangeRecheckRequests { get; set; }
+
     public virtual DbSet<Image> Images { get; set; }
 
     public virtual DbSet<ImagesBlindBox> ImagesBlindBoxes { get; set; }
@@ -50,6 +52,8 @@ public partial class BBExTradingFloorContext : DbContext
     public virtual DbSet<Queue> Queues { get; set; }
 
     public virtual DbSet<RefundPlanRequest> RefundPlanRequests { get; set; }
+
+    public virtual DbSet<RefundRequestsOrder> RefundRequestsOrders { get; set; }
 
     public virtual DbSet<Report> Reports { get; set; }
 
@@ -78,6 +82,8 @@ public partial class BBExTradingFloorContext : DbContext
     public virtual DbSet<VwOrderDetailsWithProduct> VwOrderDetailsWithProducts { get; set; }
 
     public virtual DbSet<VwPlan> VwPlans { get; set; }
+
+    public virtual DbSet<VwRefundRequestOrder> VwRefundRequestOrders { get; set; }
 
     public virtual DbSet<VwUserAddress> VwUserAddresses { get; set; }
 
@@ -412,6 +418,38 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasForeignKey(d => d.BlindBoxId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_exchanges_blind_boxs");
+        });
+
+        modelBuilder.Entity<ExchangeRecheckRequest>(entity =>
+        {
+            entity.HasKey(e => e.RequestId);
+
+            entity.ToTable("ExchangeRecheckRequest");
+
+            entity.Property(e => e.RequestId)
+                .ValueGeneratedNever()
+                .HasColumnName("requestId");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.ExchangeId).HasColumnName("exchangeId");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+
+            entity.HasOne(d => d.Exchange).WithMany(p => p.ExchangeRecheckRequests)
+                .HasForeignKey(d => d.ExchangeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ExchangeRecheckRequest_exchanges");
         });
 
         modelBuilder.Entity<Image>(entity =>
@@ -783,6 +821,66 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasConstraintName("FK_refundPlanRequests_order_plans");
         });
 
+        modelBuilder.Entity<RefundRequestsOrder>(entity =>
+        {
+            entity.HasKey(e => e.RefundId).HasName("PK__refund_r__897E9EA373812C5D");
+
+            entity.ToTable("refund_requests_orders");
+
+            entity.Property(e => e.RefundId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("refund_id");
+            entity.Property(e => e.ApprovedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("approved_at");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.ImageUrl)
+                .IsUnicode(false)
+                .HasColumnName("image_url");
+            entity.Property(e => e.IsActive)
+                .HasDefaultValue(true)
+                .HasColumnName("is_active");
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            entity.Property(e => e.PaymentMethod).HasColumnName("payment_method");
+            entity.Property(e => e.ProcessedBy)
+                .HasMaxLength(50)
+                .HasColumnName("processed_by");
+            entity.Property(e => e.RefundAmount)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("refund_amount");
+            entity.Property(e => e.RefundReason)
+                .HasMaxLength(255)
+                .HasColumnName("refund_reason");
+            entity.Property(e => e.RefundStatus).HasColumnName("refund_status");
+            entity.Property(e => e.RejectedReason)
+                .HasMaxLength(255)
+                .HasColumnName("rejected_reason");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.UserName)
+                .HasMaxLength(50)
+                .HasColumnName("userName");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.RefundRequestsOrders)
+                .HasForeignKey(d => d.OrderId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__refund_re__order__3FD07829");
+
+            entity.HasOne(d => d.UserNameNavigation).WithMany(p => p.RefundRequestsOrders)
+                .HasForeignKey(d => d.UserName)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__refund_re__userN__40C49C62");
+        });
+
         modelBuilder.Entity<Report>(entity =>
         {
             entity.HasKey(e => e.ReportId).HasName("PK__reports__779B7C58DE93213A");
@@ -830,7 +928,9 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.ReviewId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("review_id");
-            entity.Property(e => e.AccessoryId).HasColumnName("accessory_id");
+            entity.Property(e => e.AccessoryId)
+                .HasMaxLength(255)
+                .HasColumnName("accessory_id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -1203,6 +1303,48 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("price");
+        });
+
+        modelBuilder.Entity<VwRefundRequestOrder>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_Refund_Request_Orders");
+
+            entity.Property(e => e.ApprovedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("approved_at");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            entity.Property(e => e.PaymentMethod).HasColumnName("payment_method");
+            entity.Property(e => e.ProcessedBy)
+                .HasMaxLength(50)
+                .HasColumnName("processed_by");
+            entity.Property(e => e.RefundAmount)
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("refund_amount");
+            entity.Property(e => e.RefundId).HasColumnName("refund_id");
+            entity.Property(e => e.RefundReason)
+                .HasMaxLength(255)
+                .HasColumnName("refund_reason");
+            entity.Property(e => e.RefundStatus).HasColumnName("refund_status");
+            entity.Property(e => e.RejectedReason)
+                .HasMaxLength(255)
+                .HasColumnName("rejected_reason");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.UserName)
+                .HasMaxLength(50)
+                .HasColumnName("userName");
         });
 
         modelBuilder.Entity<VwUserAddress>(entity =>
