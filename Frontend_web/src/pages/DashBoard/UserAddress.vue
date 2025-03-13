@@ -55,6 +55,7 @@
                 <div class="text-gray-700 dark:text-gray-300 font-bold flex items-center text-xl gap-2">
                   {{ (address?.firstName ?? '') + ' ' + (address?.lastName ?? '') }}
                 </div>
+                <p class="text-gray-700 dark:text-gray-300">{{ address.addressLine }}</p>
                 <p class="text-gray-700 dark:text-gray-300">{{ address.ward }}</p>
                 <p class="text-gray-700 dark:text-gray-300">
                   {{
@@ -73,6 +74,7 @@
                   :confirm-label="'Update'"
                   :width="'60rem'"
                   @on-blinding-update="onBinding(address.addressId ?? '')"
+                  @on-confirm="updateAddress"
                 >
                   <template #body>
                     <div class="space-y-4">
@@ -130,7 +132,6 @@
   import ModalInputForm from '@PKG_SRC/components/Modal/ModalInputForm.vue'
   import LocationPicker from '@PKG_SRC/components/UserControl/LocationPicker.vue'
   import ModalConfirm from '@PKG_SRC/components/Modal/ModalConfirm.vue'
-
   const store = useDashAddressStore()
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
@@ -185,6 +186,8 @@
   // Binding data to field
   const onBinding = async (addressId: string) => {
     const address = await store.uUDSSelectUserAddressEntity.find((a) => a.addressId === addressId)
+    console.log("ADDRESS ID : "+ address?.addressId)
+    store.fields.setFieldValue('addressId', address?.addressId)
     store.fields.setFieldValue('addressLine', address?.addressLine)
     store.fields.setFieldValue('ward', address?.ward)
     store.fields.setFieldValue('province', address?.province)
@@ -198,6 +201,12 @@
 
   const removeAddress = async (addressId: string) => {
     const success = await store.RemoveAddress(addressId)
+    if (success) {
+      store.GetAddress()
+    }
+  }
+  const updateAddress = async () =>{
+    const success = await store.UpdateAddress()
     if (success) {
       store.GetAddress()
     }
