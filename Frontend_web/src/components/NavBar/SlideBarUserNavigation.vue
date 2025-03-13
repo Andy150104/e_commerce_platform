@@ -32,7 +32,7 @@
           </button>
           <a href="https://flowbite.com" class="flex ms-2 md:me-24">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" />
-            <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Flowbite</span>
+            <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">SWD392</span>
           </a>
         </div>
         <div class="flex items-center">
@@ -53,8 +53,8 @@
               id="dropdown-user"
             >
               <div class="px-4 py-3" role="none">
-                <p class="text-sm text-gray-900 dark:text-white" role="none">Neil Sims</p>
-                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">neil.sims@flowbite.com</p>
+                <p class="text-sm text-gray-900 dark:text-white" role="none">{{ profileUser.firstName + ' ' + profileUser.lastName }}</p>
+                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300" role="none">{{ profileUser.email }}</p>
               </div>
               <ul class="py-1" role="none">
                 <li>
@@ -83,9 +83,9 @@
                 </li>
                 <li>
                   <a
-                    href="#"
                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
                     role="menuitem"
+                    @click="authStore.Logout()"
                     >Sign out</a
                   >
                 </li>
@@ -244,9 +244,15 @@
 <script setup lang="ts">
   import { initDropdowns, initFlowbite } from 'flowbite'
   import DropDownControl from '../DropDown/DropDownControl.vue'
+  import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
+  import { useProfileStore } from '@PKG_SRC/stores/Modules/DashBoard/profileStore'
 
   const isMobile = ref(false)
+  const authStore = useAuthStore()
   const isCloseSideBar = ref(false)
+  const profileStore = useProfileStore()
+  const profileUser = computed(() => profileStore.uDSSelectUserProfileEntity)
+
   const toggleSideBar = () => {
     if (isMobile) console.log('a')
     isCloseSideBar.value = !isCloseSideBar.value

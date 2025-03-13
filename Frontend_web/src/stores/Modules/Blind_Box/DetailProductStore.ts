@@ -2,9 +2,10 @@ import { defineStore } from 'pinia'
 import { veeValidateStateInitialize } from '@PKG_SRC/utils/StoreFunction'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 import { SearchService } from '@PKG_SRC/types/enums/constantBackend'
-import type { DPSSelectAccessoryEntity, DPSSelectItemEntity, ItemEntity } from '@PKG_API/@types'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 import type { ImageItemGallery } from '@PKG_SRC/types'
+import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
+import type { DPSSelectAccessoryEntity } from '@PKG_SRC/composables/Client/api/@types'
 
 export const fieldsInitialize = {
   quantity: '1',
@@ -57,18 +58,15 @@ export const useDetailProductStore = defineStore('Detail', {
       const defaultImage =
         'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
 
-      // Kiểm tra nếu imageUrls không tồn tại hoặc không phải là mảng, gán giá trị mặc định
       if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
         imageUrls = []
       }
 
-      // Chuyển đổi danh sách ảnh
       let imageList: ImageItemGallery[] = imageUrls.map((image, index) => ({
         src: image.imageUrl,
         alt: `Ảnh ${index + 1}`,
       }))
 
-      // Nếu số lượng ảnh ít hơn 6, thêm ảnh mặc định
       while (imageList.length < minImages) {
         imageList.push({
           src: defaultImage,
@@ -84,9 +82,26 @@ export const useDetailProductStore = defineStore('Detail', {
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
       const formMessageStore = useFormMessageStore()
+      const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
       const res = await apiClient.api.v1.DPSInsertCart.$post({
         body: {
-          isOnlyValidation: false,
+          codeAccessory: codeProduct,
+          quantity: Number(apiFieldValues.quantity),
+        },
+      })
+      loadingStore.LoadingChange(false)
+      if (!res.success) return false
+      formMessageStore.SetFormMessage(res, true)
+      return true
+    },
+    async AddOneProductToCart(codeProduct: string) {
+      const apiClient = useApiClient()
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
+      const formMessageStore = useFormMessageStore()
+      const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+      const res = await apiClient.api.v1.DPSInsertCart.$post({
+        body: {
           codeAccessory: codeProduct,
           quantity: 1,
         },
@@ -100,10 +115,9 @@ export const useDetailProductStore = defineStore('Detail', {
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
-      const res = await apiClient.api.v1.DPSSelectAccessory.$post({
-        body: {
-          isOnlyValidation: false,
-          codeAccessory: codeProduct,
+      const res = await apiClient.api.v1.DPSSelectAccessory.$get({
+        query: {
+          CodeAccessory: codeProduct,
         },
       })
       loadingStore.LoadingChange(false)

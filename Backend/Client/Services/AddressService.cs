@@ -1,4 +1,5 @@
 using Client.Controllers.V1.UDS;
+using Client.Controllers.V1.Users;
 using Client.Models;
 using Client.Repositories;
 using Client.Utils.Consts;
@@ -16,6 +17,12 @@ public class AddressService : BaseService<Address, Guid, VwUserAddress>, IAddres
     {
     }
 
+    /// <summary>
+    /// Insert user address
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="identityService"></param>
+    /// <returns></returns>
     public UDSInsertUserAddressResponse InsertUserAddress(UDSInsertUserAddressRequest request, IIdentityService identityService)
     {
         var response = new UDSInsertUserAddressResponse() { Success = false };
@@ -94,6 +101,36 @@ public class AddressService : BaseService<Address, Guid, VwUserAddress>, IAddres
             // Save changes
             Repository.Update(address);
             Repository.SaveChanges(address.Username);
+        
+            // True
+            response.Success = true;
+            response.SetMessage(MessageId.I00001);
+        });
+        return response;
+    }
+
+    /// <summary>
+    /// Delete user address
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="identityService"></param>
+    /// <returns></returns>
+    public UDSDeleteUserAddressResponse DeleteUserAddress(UDSDeleteUserAddressRequest request, IIdentityService identityService)
+    {
+        var response = new UDSDeleteUserAddressResponse() { Success = false };
+        
+        // Get userName
+        var userName = identityService.IdentityEntity.UserName;
+        
+        // Begin transaction
+        Repository.ExecuteInTransaction(() =>
+        {
+            // Get address
+            var address = Repository.Find(x => x.Username == userName && x.AddressId == request.AddressId).FirstOrDefault();
+        
+            // Delete address
+            Repository.Update(address);
+            Repository.SaveChanges(userName, true);
         
             // True
             response.Success = true;

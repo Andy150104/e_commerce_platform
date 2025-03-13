@@ -25,7 +25,7 @@ public class BaseService<T, TU, TSelect> : IBaseService<T, TU, TSelect>
         Repository = repository;
     }
 
-    public Task<IQueryable<T?>> FindAsync(Expression<Func<T, bool>> predicate = null, bool isTracking = false, params Expression<Func<T, object>>[] includes)
+    public Task<IQueryable<T?>> FindAsync(Expression<Func<T, bool>> predicate = null, bool isTracking = true, params Expression<Func<T, object>>[] includes)
     {
         return Repository.FindAsync(predicate, isTracking, includes);
     }
@@ -58,7 +58,7 @@ public class BaseService<T, TU, TSelect> : IBaseService<T, TU, TSelect>
         return Repository.FindView(predicate, isTracking, includes);
     }
 
-    public IQueryable<T?> Find(Expression<Func<T, bool>> predicate = null, bool isTracking = false, params Expression<Func<T, object>>[] includes)
+    public IQueryable<T?> Find(Expression<Func<T, bool>> predicate = null, bool isTracking = true, params Expression<Func<T, object>>[] includes)
     {
         return Repository.Find(predicate, isTracking, includes);
     }

@@ -11,6 +11,7 @@ using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
 using Client.SystemClient;
 using Client.Controllers.V1.MomoPayment.MomoServices;
 using Client.Logics.Commons;
+using Client.Logics.Commons.GHNLogics;
 using Client.Repositories;
 using Client.Services;
 using Client.Settings;
@@ -48,10 +49,12 @@ builder.Services.AddScoped<IAccessoryService, AccessoryService>();
 builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IExchangeRecheckRequestService, ExchangeRecheckRequestService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 //Connect MOMO API (NOT CHANGE)
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
+builder.Services.AddScoped<IGHNLogic, GHNLogics>();
 
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
 

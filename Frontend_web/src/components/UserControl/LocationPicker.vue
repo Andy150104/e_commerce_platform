@@ -42,7 +42,7 @@
   import { Address } from '@PKG_SRC/types/enums/constantFrontend'
   import DropDownSearch from '../DropDown/DropDownSearch.vue'
   import type { xmlColumn } from '@PKG_SRC/utils/xml'
-  import { useAddressStore } from '@PKG_SRC/utils/address/store/addressStore'
+  import { useAddressStore } from '@PKG_SRC/stores/Third Modules/address/addressStore'
 
   const addressStore = useAddressStore()
   const wardRef = ref()

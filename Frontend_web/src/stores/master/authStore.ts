@@ -2,13 +2,13 @@ import { useRuntimeConfig } from 'nuxt/app'
 import { defineStore } from 'pinia'
 import { useLoginStore } from '../Modules/loginStore'
 import { useLoadingStore } from '../Modules/usercontrol/loadingStore'
-import { AuthAPI } from '@PKG_SRC/utils/auth/authClient'
+import { AuthAPI } from '@PKG_SRC/composables/auth/authClient'
 import { useRouter, type Router } from 'vue-router'
 import { useUserStore } from './userStore'
 import { UserInfoGrpId } from '@PKG_SRC/types/enums/constantFrontend'
 import axios from 'axios'
-import { useLogoutClient } from '@PKG_SRC/utils/auth/authHttp'
-import type { TokenResponse } from '@PKG_SRC/utils/auth/define/@types'
+import { useLogoutClient } from '@PKG_SRC/composables/auth/authHttp'
+import type { TokenResponse } from '@PKG_SRC/composables/auth/define/@types'
 import { useProfileStore } from '../Modules/DashBoard/profileStore'
 import { useFormMessageStore } from './formMessageStore'
 
@@ -107,12 +107,14 @@ export const useAuthStore = defineStore('auth', {
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
       const logoutClient = useLogoutClient()
+      const formMessageStore = useFormMessageStore()
       this.ResetStore()
       setTimeout(() => {
         loadingStore.LoadingChange(false)
         const router = useRouter()
-        router.push('/Home')
+        window.location.href = "http://localhost:3000/Home"
       }, 1000)
+      formMessageStore.SetFormMessageNotApiRes('I000001', true, "Logout successfully!!!")
     },
   },
   persist: true,

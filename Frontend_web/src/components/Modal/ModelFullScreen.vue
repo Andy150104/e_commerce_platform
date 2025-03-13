@@ -8,7 +8,6 @@
       <template #header>
         <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white text-center">Modal</h3>
-          <Button icon="pi pi-times" class="-my-1" @click="isCloseModal" />
         </div>
       </template>
       <div class="flex-grow w-full h-auto p-6">
@@ -28,9 +27,6 @@
   const isOpen = ref(false)
   const isOpenModal = (isOpenModal: boolean) => {
     isOpen.value = isOpenModal
-  }
-  const isCloseModal = () => {
-    isOpen.value = false
   }
 
   const props = defineProps({

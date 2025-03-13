@@ -1,4 +1,3 @@
-import type { DPSSelectCartItemEntity } from '@PKG_API/@types'
 import { Gender, SortBy } from '@PKG_SRC/types/enums/constantBackend'
 import type { selectItem } from '@PKG_SRC/types/enums/constantFrontend'
 
@@ -100,4 +99,26 @@ export function formatPhoneNumber(phoneNumber: string): string | null {
     return null
   }
   return '+84' + cleanedNumber.slice(1)
+}
+// utils/base64ToFile.ts
+export function base64ToFile(base64String: string, filename: string): File {
+  const arr = base64String.split(',')
+  if (arr.length !== 2) {
+    throw new Error('Chuỗi base64 không đúng định dạng (thiếu dấu phẩy).')
+  }
+
+  const mimeMatch = arr[0].match(/:(.*?);/)
+  if (!mimeMatch) {
+    throw new Error('Không tìm thấy MIME type trong base64.')
+  }
+  const mime = mimeMatch[1] // "image/png" chẳng hạn
+
+  const binaryStr = atob(arr[1])
+  const len = binaryStr.length
+  const u8arr = new Uint8Array(len)
+  for (let i = 0; i < len; i++) {
+    u8arr[i] = binaryStr.charCodeAt(i)
+  }
+
+  return new File([u8arr], filename, { type: mime })
 }
