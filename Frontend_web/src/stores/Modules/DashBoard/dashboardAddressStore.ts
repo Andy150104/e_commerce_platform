@@ -63,8 +63,6 @@ export const useDashAddressStore = defineStore('Address', {
       }
     },
     async UpdateAddress() {
-      const validation: any = await this.fields.validate()
-      if (validation.valid === false) return false
       const apiServer = useApiClient()
       const formMessage = useFormMessageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
