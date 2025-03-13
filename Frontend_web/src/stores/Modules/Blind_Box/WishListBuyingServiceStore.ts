@@ -67,7 +67,6 @@ export const useWishListBuyingServiceStore = defineStore('Wishlist', {
       const loadingStore = useLoadingStore()
       const res = await apiClient.api.v1.DPSInsertWishList.$post({
         body: {
-          isOnlyValidation: false,
           codeAccessory: accessoryId,
         },
       })
@@ -80,7 +79,6 @@ export const useWishListBuyingServiceStore = defineStore('Wishlist', {
       const loadingStore = useLoadingStore()
       const res = await apiClient.api.v1.DPSDeleteCartItem.$patch({
         body: {
-          isOnlyValidation: false,
           codeAccessory: productId,
         },
       })

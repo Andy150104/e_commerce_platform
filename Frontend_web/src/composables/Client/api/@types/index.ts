@@ -34,6 +34,14 @@ export type UDSUpdateUserAddressRequest = AbstractApiRequest & {
   district?: string | null | undefined;
 }
 
+export type UDSDeleteUserAddressResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type UDSDeleteUserAddressRequest = AbstractApiRequest & {
+  addressId: string;
+}
+
 export type UDSInsertUserAddressResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
@@ -179,6 +187,21 @@ export type OPSAddPlanRefundRequest = AbstractApiRequest & {
   reason: string;
 }
 
+export type InsertOrderResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type InsertOrderRequest = AbstractApiRequest & {
+  orderDetails?: TOSOrderDetailRequest[] | undefined;
+  paymentMethod: number;
+  addressId: string;
+}
+
+export type TOSOrderDetailRequest = {
+  accessoryId: string;
+  quantity: number;
+}
+
 export type AEPSAddExchangeAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
@@ -188,6 +211,89 @@ export type AEPSAddExchangeAccessoryRequest = AbstractApiRequest & {
   description: string;
   price: number;
   imageUrls: string[];
+}
+
+export type CreateCategoryResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type CreateCategoryRequest = AbstractApiRequest & {
+  categoryName: string;
+  parentId?: string | null | undefined;
+}
+
+export type DeleteCategoryResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type DeleteCategoryRequest = AbstractApiRequest & {
+  categoryId?: string | null | undefined;
+}
+
+export type SelectCategoriesResponse = AbstractApiResponseOfListOfSelectCategoriesEntity & {
+  response?: SelectCategoriesEntity[] | undefined;
+}
+
+export type SelectCategoriesEntity = {
+  categoryId?: string | undefined;
+  categoryName?: string | undefined;
+  parentId?: string | null | undefined;
+}
+
+export type AbstractApiResponseOfListOfSelectCategoriesEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: SelectCategoriesEntity[] | null | undefined;
+}
+
+export type SelectCategoriesRequest = AbstractApiRequest
+
+export type SelectCategoryResponse = AbstractApiResponseOfSelectCategoryEntity & {
+  response?: SelectCategoryEntity | undefined;
+}
+
+export type SelectCategoryEntity = {
+  categoryId?: string | undefined;
+  categoryName?: string | undefined;
+  parentId?: string | null | undefined;
+}
+
+export type AbstractApiResponseOfSelectCategoryEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: SelectCategoryEntity | null | undefined;
+}
+
+export type SelectSubCategoriesResponse = AbstractApiResponseOfListOfSelectSubCategoriesEntity & {
+  response?: SelectSubCategoriesEntity[] | undefined;
+}
+
+export type SelectSubCategoriesEntity = {
+  categoryId?: string | undefined;
+  categoryName?: string | undefined;
+}
+
+export type AbstractApiResponseOfListOfSelectSubCategoriesEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: SelectSubCategoriesEntity[] | null | undefined;
+}
+
+export type UpdateCategoryResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type UpdateCategoryRequest = AbstractApiRequest & {
+  categoryId?: string | undefined;
+  categoryName?: string | undefined;
+  parentId?: string | null | undefined;
 }
 
 export type DPSDeleteCartItemReponse = AbstractApiResponseOfString & {
@@ -419,5 +525,4 @@ export type MSPInsertImageAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
 export type AbstractApiRequest = {
-  isOnlyValidation?: boolean | undefined
 }

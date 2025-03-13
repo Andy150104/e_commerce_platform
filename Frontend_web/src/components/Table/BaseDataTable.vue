@@ -15,11 +15,18 @@
       showGridlines
     >
       <template #header>
-        <div class="flex flex-col gap-2 ">
+        <div class="flex flex-col gap-2">
           <div class="flex justify-between">
             <div class="flex justify-between gap-6">
               <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined @click="clearFilter" />
-              <ModalInputForm :header="'Add New Product'" :button-icon="'pi pi-plus'" :button-label="'New Product'" :button-severity="'contrast'" :width="'80rem'" @on-confirm="emit('on-insert')">
+              <ModalInputForm
+                :header="'Add New Product'"
+                :button-icon="'pi pi-plus'"
+                :button-label="'New Product'"
+                :button-severity="'contrast'"
+                :width="'80rem'"
+                @on-confirm="emit('on-insert')"
+              >
                 <template #body>
                   <slot name="bodyButtonAdd"></slot>
                 </template>
@@ -61,7 +68,12 @@
         style="min-width: 12rem"
       >
         <template #body="{ data }">
-          {{ data[col.field] }}
+          <template v-if="col.field === 'imageAccessoriesList'">
+            <GalleryCarouselPopup :images="data[col.field]" />
+          </template>
+          <template v-else>
+            {{ data[col.field] }}
+          </template>
         </template>
         <template v-if="col.isFilter" #filter="{ filterModel, filterCallback }">
           <MultiSelect
@@ -82,8 +94,23 @@
       </Column>
       <Column header="Actions" style="min-width: 12rem">
         <template #body="slotProps">
-          <Button icon="pi pi-pencil" outlined rounded class="mr-2" @click="editProduct(slotProps.data)" />
-          <ModalConfirm :is-only-show-icon="true" @on-confirm="confirmDeleteProduct(slotProps.data)"/>
+          <ModalInputForm
+            :is-only-show-icon="true"
+            :header="'Update Accessory With Id <strong>' + slotProps.data.accessoryId + '</strong>'"
+            :button-icon="'pi pi-pencil'"
+            :button-severity="'success'"
+            :width="'80rem'"
+            @on-confirm="onUpdateAccessory(slotProps.data)"
+          >
+            <template #body>
+              <slot name="bodyButtonAdd"></slot>
+            </template>
+          </ModalInputForm>
+          <ModalConfirm
+            :is-only-show-icon="true"
+            @on-confirm="confirmDeleteProduct(slotProps.data)"
+            :content="'Are you sure you want to delete <strong>' + slotProps.data.accessoryId + '</strong>?'"
+          />
         </template>
       </Column>
     </DataTable>
@@ -101,11 +128,14 @@
   import 'primeicons/primeicons.css'
   import ModalConfirm from '../Modal/ModalConfirm.vue'
   import ModalInputForm from '../Modal/ModalInputForm.vue'
+  import GalleryCarouselPopup from '../Gallery/GalleryCarouselPopup.vue'
+  import { data } from 'autoprefixer'
 
   // Định nghĩa props với prop isSelectedColumns (mặc định là false)
   const props = withDefaults(
     defineProps<{
       items: any[]
+      defaultFieldsSelect: string[]
       columns: any[]
       pageSize?: number
       isSelectedColumns?: boolean
@@ -136,6 +166,11 @@
   const confirmDeleteProduct = (product: any) => {
     emit('on-delete', product)
   }
+
+  const onUpdateAccessory = (product: any) => {
+    emit('on-update', product)
+  }
+
   // Thiết lập filter cho từng cột nếu cột có isFilter
   props.columns.forEach((col) => {
     if (col.isFilter) {
@@ -157,7 +192,8 @@
     })
   }
 
-  const selectedColumns = ref([...props.columns])
+  const selectedColumns = ref(props.columns.filter((col) => props.defaultFieldsSelect.includes(col.field)))
+
   const onToggle = (val: any) => {
     selectedColumns.value = props.columns.filter((col) => val.some((v: any) => v.field === col.field))
   }

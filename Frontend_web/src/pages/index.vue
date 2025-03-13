@@ -123,6 +123,18 @@
     </div>
   </nav>
   <div>
+      <UserControlSelectCategory
+        :xml-column-parent-category="xmlColumns.mailAddress"
+        :maxlength-parent-category="50"
+        :disabled-parent-category="false"
+        :err-msg-parent-category="fieldErrors.mailAddress"
+        :placeholder-parent-category="'Parent Category'"
+        :xml-column-child-category="xmlColumns.mailAddressConfirm"
+        :maxlength-child-category="50"
+        :disabled-child-category="false"
+        :err-msg-child-category="fieldErrors.mailAddressConfirm"
+        :placeholder-child-category="'Child Category'"
+      />
     <BaseControlPriceRange :items="products" :columns="columns" />
     <ModalInputForm header="Edit Profile" width="25rem" buttonLabel="Edit Profile">
       <template #header>
@@ -235,6 +247,7 @@
   import BaseControlPriceRange from '@PKG_SRC/components/Basecontrol/BaseControlPriceRange.vue'
   import ModalInputForm from '@PKG_SRC/components/Modal/ModalInputForm.vue'
 import UserControlTextFieldLabel from '@PKG_SRC/components/UserControl/UserControlTextFieldLabel.vue'
+import UserControlSelectCategory from '@PKG_SRC/components/UserControl/UserControlSelectCategory.vue'
   const imageStore = useUploadImageStore()
   imageStore.SetUploadImage('a', 1024, 'https://res.cloudinary.com/dbfokyruf/image/upload/v1739683116/fehfhddpzfgcpfrkkfoj.jpg')
   const imageList = [
