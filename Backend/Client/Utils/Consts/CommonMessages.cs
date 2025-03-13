@@ -25,4 +25,13 @@ public class CommonMessages
     public static readonly string QuantityIsGreaterStock = "Quantity is greater than stock";
     
     public static readonly string ImageNotFound = "Image not found";
+    
+    public static readonly string OrderDescription = "Payment for order";
+    
+    public static readonly string AddressOfUserNotFound = "Address of user not found";
+    
+    public static readonly string CategoryNotFound = "Category not found";
+    
+    public static readonly string PaymentFailed = "Payment failed";
+    
 }

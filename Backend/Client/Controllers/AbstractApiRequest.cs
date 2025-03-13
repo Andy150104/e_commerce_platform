@@ -5,8 +5,4 @@ namespace Client.Controllers;
 /// </summary>
 public abstract class AbstractApiRequest
 {
-    /// <summary>
-    /// true: input value validation only/false: input value validation + main processing
-    /// </summary>
-    public bool IsOnlyValidation { get; set; }
 }

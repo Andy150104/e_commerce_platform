@@ -1,46 +1,41 @@
 using System.Text.RegularExpressions;
 using Client.Models.Helper;
 using Client.Utils;
+using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using NLog;
-using Client.Utils.Consts;
 
-namespace Client.Controllers;
+namespace Client.Controllers.AbstractClass;
 
-/// <summary>
-/// 
-/// </summary>
-public class AbstractFunction<T, U, V>
-    where T : AbstractApiRequest
+public class AbstractFunction<U, V>
     where U : AbstractApiResponse<V>
 {
     /// <summary>
     /// Return value
     /// </summary>
-    public static U GetReturnValue(U returnValue, Logger logger, Exception e, AppDbContext context)
+    public static U GetReturnValue(U returnValue, LoggingUtil loggingUtil, Exception e)
     {
         switch (e)
         {
             case AggregateException:
-                logger.Warn($"Report API connection error ：{e.Message}");
+                loggingUtil.FatalLog($"Report API connection error ：{e.Message}");
                 returnValue.SetMessage(MessageId.E99001);
                 break;
             case DbUpdateConcurrencyException:
-                logger.Error($"Exclusive error ：{e.Message}");
+                loggingUtil.ErrorLog($"Exclusive error ：{e.Message}");
                 returnValue.SetMessage(MessageId.E99002);
                 break;
             case InvalidOperationException:
                 if (e.InnerException?.HResult == -2146233088)
                 {
                     // Exclusive control error Another update in the transaction
-                    logger.Error($"Exclusive error ：{e.Message}");
+                    loggingUtil.ErrorLog($"Exclusive error ：{e.Message}");
                     returnValue.SetMessage(MessageId.E99002);
                 }
                 else
                 {
-                    logger.Warn($"A system error has occurred.：{e.Message} {e.StackTrace} {e.InnerException}");
+                    loggingUtil.FatalLog($"A system error has occurred.：{e.Message} {e.StackTrace} {e.InnerException}");
                     returnValue.SetMessage(MessageId.E99999);
                 }
 
@@ -50,32 +45,32 @@ public class AbstractFunction<T, U, V>
                 if (e.InnerException?.HResult == -2147467259)
                 {
                     // SQL timeout
-                    logger.Error($"SQL timeout error ：{e.Message} {e.StackTrace} {e.InnerException}");
+                    loggingUtil.ErrorLog($"SQL timeout error ：{e.Message} {e.StackTrace} {e.InnerException}");
                     returnValue.SetMessage(MessageId.E99003);
                 }
                 else if (ex.Number == 3961)
                 {
                     // View definition changed
-                    logger.Warn(
+                    loggingUtil.ErrorLog(
                         $"The definition of a view, etc. was changed during processing ：{e.Message} {e.StackTrace} {e.InnerException}");
                     returnValue.SetMessage(MessageId.E99004);
                 }
                 else
                 {
-                    logger.Warn($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
+                    loggingUtil.ErrorLog($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
                     returnValue.SetMessage(MessageId.E99005);
                 }
 
                 break;
             case Exception:
                 // System error
-                logger.Warn($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
+                loggingUtil.ErrorLog($"A system error has occurred ：{e.Message} {e.StackTrace} {e.InnerException}");
                 returnValue.SetMessage(MessageId.E99999);
                 break;
         }
 
         returnValue.Success = false;
-        logger.Warn(returnValue);
+        loggingUtil.EndLog(returnValue);
         return returnValue;
     }
 

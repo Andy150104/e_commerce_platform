@@ -1,29 +1,30 @@
-using Client.Models.Helper;
-using Client.SystemClient;
+using System.Data;
+using Client.Controllers.AbstractClass;
+using Client.Services;
+using Client.Utils;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
 
 namespace Client.Controllers;
 
-public abstract class AbstractApiControllerNotToken<T, U, V> : ControllerBase
+public abstract class AbstractApiControllerNotToken<T, TU, TV> : ControllerBase
     where T : AbstractApiRequest
-    where U : AbstractApiResponse<V>
+    where TU : AbstractApiResponse<TV>
 {
     /// <summary>
     /// API entry point
     /// </summary>
-    public abstract U Post(T request);
+    public abstract TU Post(T request);
 
     /// <summary>
     /// Main processing
     /// </summary>
-    protected abstract U Exec(T request, IDbContextTransaction transaction);
+    protected abstract TU Exec(T request);
 
     /// <summary>
     /// Error check
     /// </summary>
-    protected internal abstract U ErrorCheck(T request, List<DetailError> detailErrorList, IDbContextTransaction transaction);
+    protected internal abstract TU ErrorCheck(T request, List<DetailError> detailErrorList);
 
     /// <summary>
     /// Transaction isolation level
@@ -31,40 +32,35 @@ public abstract class AbstractApiControllerNotToken<T, U, V> : ControllerBase
     /// <remarks>
     /// Default SNAPSHOT Change it in the constructor
     /// </remarks>
-    protected System.Data.IsolationLevel _isolationLevel = System.Data.IsolationLevel.Snapshot;
-    
+    protected IsolationLevel _isolationLevel = IsolationLevel.Snapshot;
+
     /// <summary>
     /// TemplateMethod
     /// </summary>
     /// <param name="request"></param>
-    /// <param name="appDbContext"></param>
+    /// <param name="identityService"></param>
     /// <param name="logger"></param>
     /// <param name="returnValue"></param>
     /// <returns></returns>
-    protected U Post(T request, AppDbContext appDbContext, Logger logger, U returnValue)
+    protected TU Post(T request, IIdentityService identityService, Logger logger, TU returnValue)
     {
+        var loggingUtil = new LoggingUtil(logger, identityService.IdentityEntity.UserName ?? "System");
         try
         {
-            appDbContext. _Logger = logger;
+            // Error check
+            var detailErrorList = AbstractFunction<TU, TV>.ErrorCheck(this.ModelState);
+            returnValue = ErrorCheck(request, detailErrorList);
 
-            // Start transaction
-            using (var transaction = appDbContext.Database.BeginTransaction())
-            {
-                // Error check
-                var detailErrorList = AbstractFunction<T, U, V>.ErrorCheck(this.ModelState);
-                returnValue = ErrorCheck(request, detailErrorList, transaction);
-
-                // If there is no error, execute the main process
-                if (returnValue.Success && !request.IsOnlyValidation) returnValue = Exec(request, transaction);
-            }
+            // If there is no error, execute the main process
+            if (returnValue.Success) returnValue = Exec(request);
         }
         catch (Exception e)
         {
-            return AbstractFunction<T, U, V>.GetReturnValue(returnValue, logger, e, appDbContext);
+            return AbstractFunction<TU, TV>.GetReturnValue(returnValue, loggingUtil, e);
         }
 
         // Processing end log
-        logger.Warn(returnValue);
+        loggingUtil.EndLog(returnValue);
         return returnValue;
     }
 }

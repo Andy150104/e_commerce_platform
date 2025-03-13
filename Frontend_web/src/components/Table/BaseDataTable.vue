@@ -129,7 +129,7 @@
   import ModalConfirm from '../Modal/ModalConfirm.vue'
   import ModalInputForm from '../Modal/ModalInputForm.vue'
   import GalleryCarouselPopup from '../Gallery/GalleryCarouselPopup.vue'
-import { data } from 'autoprefixer'
+  import { data } from 'autoprefixer'
 
   // Định nghĩa props với prop isSelectedColumns (mặc định là false)
   const props = withDefaults(

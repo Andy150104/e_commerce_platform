@@ -1,5 +1,8 @@
+using Client.Controllers.AbstractClass;
 using Client.Models.Helper;
+using Client.Services;
 using Client.SystemClient;
+using Client.Utils;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +23,12 @@ public abstract class AbstractApiAsyncController<T, U, V> : ControllerBase
     /// <summary>
     /// Main processing
     /// </summary>
-    protected abstract Task<U> Exec(T request, IDbContextTransaction transaction);
+    protected abstract Task<U> Exec(T request);
 
     /// <summary>
     /// Error check
     /// </summary>
-    protected internal abstract U ErrorCheck(T request, List<DetailError> detailErrorList, IDbContextTransaction transaction);
+    protected internal abstract U ErrorCheck(T request, List<DetailError> detailErrorList);
 
     /// <summary>
     /// Authentication API client
@@ -44,65 +47,60 @@ public abstract class AbstractApiAsyncController<T, U, V> : ControllerBase
     /// TemplateMethod
     /// </summary>
     /// <param name="request"></param>
-    /// <param name="appDbContext"></param>
+    /// <param name="identityService"></param>
     /// <param name="logger"></param>
     /// <param name="returnValue"></param>
     /// <returns></returns>
-    protected async Task<U> Post(T request, AppDbContext appDbContext, Logger logger, U returnValue)
+    protected async Task<U> Post(T request, IIdentityService identityService, Logger logger, U returnValue)
     {
+        var loggingUtil = new LoggingUtil(logger, identityService.IdentityEntity?.UserName ?? "System");
+
         // Get identity information 
-        appDbContext.IdentityEntity = _identityApiClient?.GetIdentity(User);
-        logger.Warn(request);
+        identityService.IdentityEntity = _identityApiClient?.GetIdentity(User);
+        loggingUtil.StartLog(request);
 
         // Check authentication information
-        if (appDbContext.IdentityEntity == null)
+        if (identityService.IdentityEntity == null)
         {
             // Authentication error
-            logger.Fatal($"Authenticated, but information is missing.");
+            loggingUtil.FatalLog($"Authenticated, but information is missing.");
             returnValue.Success = false;
             returnValue.SetMessage(MessageId.E11006);
-            logger.Warn(returnValue);
+            loggingUtil.EndLog(returnValue);
             return returnValue;
         }
+
         // Additional user information
         try
         {
-            appDbContext.IdentityEntity.UserName = appDbContext.VwUserAuthentications
-                .AsNoTracking()
-                .FirstOrDefault(x => x.UserName == appDbContext.IdentityEntity.UserName).UserName;
+            identityService.GetUserName(identityService.IdentityEntity.UserName);
         }
         catch (Exception e)
         {
             // Additional user information error
-            logger.Error($"Failed to get additional user information.：{e.Message}");
+            loggingUtil.FatalLog($"Failed to get additional user information.：{e.Message}");
             returnValue.Success = false;
             returnValue.SetMessage(MessageId.E11006);
-            logger.Warn(returnValue);
+            loggingUtil.EndLog(returnValue);
             return returnValue;
         }
 
         try
         {
-            appDbContext. _Logger = logger;
+            // Error check
+            var detailErrorList = AbstractFunction<U, V>.ErrorCheck(this.ModelState);
+            returnValue = ErrorCheck(request, detailErrorList);
 
-            // Start transaction
-            using (var transaction = appDbContext.Database.BeginTransaction())
-            {
-                // Error check
-                var detailErrorList = AbstractFunction<T, U, V>.ErrorCheck(this.ModelState);
-                returnValue = ErrorCheck(request, detailErrorList, transaction);
-
-                // If there is no error, execute the main process
-                if (returnValue.Success && !request.IsOnlyValidation) returnValue = await Exec(request, transaction);
-            }
+            // If there is no error, execute the main process
+            if (returnValue.Success) returnValue = await Exec(request);
         }
         catch (Exception e)
         {
-            return AbstractFunction<T, U, V>.GetReturnValue(returnValue, logger, e, appDbContext);
+            return AbstractFunction<U, V>.GetReturnValue(returnValue, loggingUtil, e);
         }
 
         // Processing end log
-        logger.Warn(returnValue);
+        loggingUtil.EndLog(returnValue);
         return returnValue;
     }
 }
