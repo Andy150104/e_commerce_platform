@@ -1,6 +1,7 @@
 using Client.Controllers.AbstractClass;
 using Client.Controllers.V1.DPS;
 using Client.Services;
+using Client.SystemClient;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
@@ -18,6 +19,7 @@ public class DPSSelectItemController : AbstractApiGetControllerNotToken<DPSSelec
     private readonly IIdentityService _identityService;
     private readonly IAccessoryService _accessoryService;
     private readonly IBlindBoxService _blindBoxService;
+    private readonly IIdentityApiClient _identityApiClient;
 
     /// <summary>
     /// Constructor
@@ -25,11 +27,14 @@ public class DPSSelectItemController : AbstractApiGetControllerNotToken<DPSSelec
     /// <param name="identityService"></param>
     /// <param name="accessoryService"></param>
     /// <param name="blindBoxService"></param>
-    public DPSSelectItemController(IIdentityService identityService, IAccessoryService accessoryService, IBlindBoxService blindBoxService)
+    /// <param name="identityApiClient"></param>
+    public DPSSelectItemController(IIdentityService identityService, IAccessoryService accessoryService
+        , IBlindBoxService blindBoxService, IIdentityApiClient identityApiClient)
     {
         _identityService = identityService;
         _accessoryService = accessoryService;
         _blindBoxService = blindBoxService;
+        _identityApiClient = identityApiClient;
     }
 
     /// <summary>
@@ -56,20 +61,27 @@ public class DPSSelectItemController : AbstractApiGetControllerNotToken<DPSSelec
         #region SelectItem
         
         // Get request
+
+        #region Variable declaration
         decimal? minPrice = request.MinimumPrice.HasValue ? request.MinimumPrice.Value : null;
         decimal? maxPrice = request.MaximumPrice.HasValue ? request.MaximumPrice.Value : null;
         string parentCategory = request.ParentCategoryName?.Trim().ToLower()!;
         string childCategory = request.ChildCategoryName?.Trim().ToLower()!;
         string nameAccessory = request.NameAccessory?.Trim().ToLower()!;
         
+        #endregion
+        
         request.CurrentPage = Math.Max(1, request.CurrentPage);
         request.PageSize = Math.Max(1, request.PageSize);
+        
+        // Get userName
+        var userName = _identityApiClient?.GetIdentity(User)?.UserName;
         
         // If search by product
         if (request.SearchBy == (byte) ConstantEnum.ProductType.Product)
         {
             // Select products
-           responseEntity = _accessoryService.SelectByAccessory( minPrice, maxPrice, nameAccessory!, parentCategory!, childCategory!, request.SortBy);
+           responseEntity = _accessoryService.SelectByAccessory( minPrice, maxPrice, nameAccessory!, parentCategory!, childCategory!, request.SortBy, userName!);
         }
         
         // If search by blind box

@@ -7,8 +7,8 @@ namespace Client.Logics.Commons.GHNLogics;
 public class GHNLogics : IGHNLogic
 {
     private readonly HttpClient _httpClient;
-    private readonly string _apiToken = "YOUR_GHN_API_TOKEN"; 
-    private readonly string _shopId = "YOUR_GHN_SHOP_ID";
+    private readonly string _apiToken = "880e415a-fc97-11ef-82e7-a688a46b55a3"; 
+    private readonly string _shopId = "196113";
     private readonly string _createOrderUrl = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create";
 
     public GHNLogics(HttpClient httpClient)
@@ -23,8 +23,9 @@ public class GHNLogics : IGHNLogic
         var response = new CreateOrderGHNResponse();
         var request = new CreateOrderGHNRequest
         {
-            ToName = $"{user.LastName} {user.FirstName}",
-            ToPhone = user.PhoneNumber,
+            //$"{user.LastName} {user.FirstName}"
+            ToName = "Khoiii",
+            ToPhone = "0987654321",
             ToAddress = address.AddressLine,
             ToWardCode = "20308",
             ToDistrictId = 1444,

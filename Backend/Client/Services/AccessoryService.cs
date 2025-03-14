@@ -12,6 +12,7 @@ namespace Client.Services;
 public class AccessoryService : BaseService<Accessory, string, VwAccessoryDisplay>, IAccessoryService
 {
     private readonly IBaseService<Image, Guid, VwImageAccessory> _imageAccessoryService;
+    private readonly IWishListService _wishListService;
     private readonly CloudinaryLogic _cloudinaryLogic;
 
     /// <summary>
@@ -19,12 +20,15 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
     /// </summary>
     /// <param name="repository"></param>
     /// <param name="imageAccessoryService"></param>
+    /// <param name="cloudinaryLogic"></param>
+    /// <param name="wishListService"></param>
     public AccessoryService(IBaseRepository<Accessory, string, VwAccessoryDisplay> repository,
         IBaseService<Image, Guid, VwImageAccessory> imageAccessoryService,
-        CloudinaryLogic cloudinaryLogic) : base(repository)
+        CloudinaryLogic cloudinaryLogic, IWishListService wishListService) : base(repository)
     {
         _imageAccessoryService = imageAccessoryService;
         _cloudinaryLogic = cloudinaryLogic;
+        _wishListService = wishListService;
     }
 
     /// <summary>
@@ -164,6 +168,9 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             })
             .ToList();
 
+        // Get WishList
+        var wishListId = _wishListService.FindView(x => x.AccessoryId == productSelect.AccessoryId).FirstOrDefault()?.WishlistId;
+
         // Response
         var responseEntity = new DPSSelectAccessoryEntity
         {
@@ -173,6 +180,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             Description = productSelect.Description,
             Price = StringUtil.ConvertToVND(productSelect.Price),
             Discount = StringUtil.ConvertToPercent(productSelect.Discount),
+            WishlistId = wishListId,
             SalePrice = (productSelect.Price * (1 - productSelect.Discount / 100)).ToString(),
             CreatedAt = productSelect.CreatedAt,
             AverageRating = productSelect.AverageRating,
@@ -246,7 +254,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
 
     public List<ItemEntity> SelectByAccessory(decimal? minPrice, decimal? maxPrice, string nameAccessory,
         string parentCategory,
-        string childCategory, byte? sortBy)
+        string childCategory, byte? sortBy, string userName)
     {
         var responseEntity = new List<ItemEntity>();
 
@@ -297,6 +305,11 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
                 })
                 .ToList();
 
+            // Get wishlist
+            var wishListId = _wishListService
+                .FindView(x => x.AccessoryId == productDisplay.AccessoryId && x.CustomerUsername == userName)
+                .FirstOrDefault()?.WishlistId;
+            
             // Create entity
             var entity = new ItemEntity
             {
@@ -313,6 +326,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
                 ImageUrl = imageUrls,
                 AverageRating = productDisplay.AverageRating,
                 TotalReviews = productDisplay.TotalReviews,
+                WishListId = wishListId,
             };
             responseEntity.Add(entity);
         }

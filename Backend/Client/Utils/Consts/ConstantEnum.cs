@@ -74,4 +74,14 @@ public static class ConstantEnum
         Online = 1,
         CashOnDelivery = 2
     }
+    
+    /// <summary>
+    /// Status of Refund Order
+    /// </summary>
+    public enum RefundOrderStatus
+    {
+        PendingApproval = 1,
+        Approved = 2,
+        Rejected = 3
+    }
 }

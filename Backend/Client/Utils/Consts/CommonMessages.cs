@@ -34,4 +34,6 @@ public class CommonMessages
     
     public static readonly string PaymentFailed = "Payment failed";
     
+    public static readonly string RefundRequestOrderNotFound = "Refund request order not found";
+    
 }
