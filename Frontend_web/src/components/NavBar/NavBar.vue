@@ -83,7 +83,7 @@
                 :badge="cartLength.toString()"
                 badgeSeverity="info"
                 severity="contrast"
-                @click.stop=""
+                @click="ViewCart()"
               />
             </span>
           </button>
@@ -244,6 +244,10 @@ import ToggleThemeButton from '../Theme/ToggleThemeButton.vue'
         isUserOpen.value = false
       }
     }
+  }
+
+  function viewCart(){
+    window.location.href = "http://localhost:3000/Service/ViewCart"
   }
 
   const cartLength = computed(() => {
