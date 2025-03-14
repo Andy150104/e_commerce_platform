@@ -33,7 +33,7 @@
         <!-- Thông tin ảnh -->
         <div class="flex items-center">
           <div @mouseover="togglePopover(index)" @mouseleave="togglePopover(index)">
-            <h1 class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer lg:text-lg">{{ image.name }}</h1>
+            <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer lg:text-lg">{{ image.name }}</h3>
           </div>
           <span class="ml-4 text-sm text-gray-600 dark:text-gray-400">{{ image.size }} MB</span>
           <button class="ml-auto text-gray-500 hover:text-gray-700 dark:hover:text-gray-300" @click="removeImage(index)">

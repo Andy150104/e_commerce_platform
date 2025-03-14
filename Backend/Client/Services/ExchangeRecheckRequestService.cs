@@ -11,6 +11,8 @@ public class ExchangeRecheckRequestService : BaseService<ExchangeRecheckRequest,
     private readonly IIdentityService _identityService;
     private readonly IExchangeService _exchangeService;
     private readonly ILogicCommonRepository _logicCommonRepository;
+    private readonly IBlindBoxService _blindBoxService;
+    private readonly IBaseService<ImagesBlindBox, Guid, object> _imagesService;
 
     /// <summary>
     /// Constructor
@@ -20,11 +22,13 @@ public class ExchangeRecheckRequestService : BaseService<ExchangeRecheckRequest,
     /// <param name="blindBoxService"></param>
     /// <param name="logicCommonRepository"></param>
     public ExchangeRecheckRequestService(IBaseRepository<ExchangeRecheckRequest, Guid, object> repository, IIdentityService identityService, IExchangeService exchangeService,
-        ILogicCommonRepository logicCommonRepository) : base(repository)
+        ILogicCommonRepository logicCommonRepository, IBlindBoxService blindBoxService, IBaseService<ImagesBlindBox, Guid, object> imagesService) : base(repository)
     {
         _identityService = identityService;
         _logicCommonRepository = logicCommonRepository;
         _exchangeService = exchangeService;
+        _blindBoxService = blindBoxService;
+        _imagesService = imagesService;
     }
 
     /// <summary>
@@ -43,8 +47,17 @@ public class ExchangeRecheckRequestService : BaseService<ExchangeRecheckRequest,
         Repository.ExecuteInTransaction(() =>
         {
             var requestExchange = Repository.Find(x => x.RequestId == request.RequestId).FirstOrDefault();
+            var exchange = _exchangeService.Find(x => x.ExchangeId == requestExchange.ExchangeId).FirstOrDefault();
+            var blindBox = _blindBoxService.Find(x => x.BlindBoxId == exchange.BlindBoxId).FirstOrDefault();
+            var imageList = _imagesService.Find(x => x.BlindBoxId == blindBox.BlindBoxId).ToList();
 
-            requestExchange.Status = request.isAccepted ? (byte)1 : (byte)0;
+            requestExchange.Status = request.isAccepted ? (byte)ConstantEnum.RecheckStatus.Approved : (byte)ConstantEnum.RecheckStatus.Rejected;
+            if (requestExchange.Status == (byte)ConstantEnum.RecheckStatus.Approved)
+            {
+                exchange.Status = (byte)ConstantEnum.ExchangeStatus.PendingExchange;
+                _exchangeService.Update(exchange);
+                _exchangeService.SaveChanges(userName);
+            }
 
             Repository.Update(requestExchange);
             Repository.SaveChanges(userName);

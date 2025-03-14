@@ -30,14 +30,6 @@
             />
           </div>
 
-          <!-- Terms and Conditions -->
-          <div class="mb-4 flex items-center">
-            <input id="terms" type="checkbox" class="h-4 w-4 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600 focus:ring-blue-500" />
-            <label for="terms" class="ml-2 text-sm text-gray-600 dark:text-gray-400"
-              >I accept the <a href="#" class="text-blue-600 dark:text-blue-400 underline">Terms and Conditions</a></label
-            >
-          </div>
-
           <!-- Submit Button -->
           <button
             type="submit"

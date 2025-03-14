@@ -36,6 +36,8 @@ public class ItemEntity
 
     public string? ParentCategoryName { get; set; }
     
+    public Guid? WishListId { get; set; }
+    
     public List<DpsSelectItemListImageUrl> ImageUrl { get; set; }
 
     public int? AverageRating { get; set; }

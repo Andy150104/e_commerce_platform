@@ -200,7 +200,7 @@
   }
 
   const Update = async () => {
-    store.UpdateUser()
+    await store.UpdateUser()
     isActive.value = false
     successMessage.value = true
     setTimeout(() => {

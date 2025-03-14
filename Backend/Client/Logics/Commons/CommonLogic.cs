@@ -1,15 +1,8 @@
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using Client.Controllers;
-using Client.Models.Helper;
-using Client.Settings;
 using Client.Utils.Consts;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using HttpMethod = System.Net.Http.HttpMethod;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -40,9 +33,9 @@ public static class CommonLogic
             (byte)ConstantEnum.Sort.Newest => query.OrderByDescending(x => EF.Property<DateTime>(x, "CreatedAt")),
             (byte)ConstantEnum.Sort.Oldest => query.OrderBy(x => EF.Property<DateTime>(x, "CreatedAt")),
             (byte)ConstantEnum.Sort.MostPopular => query.OrderByDescending(x =>
-                Convert.ToDouble(EF.Property<int>(x, "TotalSold")) * 0.5 +
-                Convert.ToDouble(EF.Property<int>(x, "TotalOrders")) * 0.3 +
-                Convert.ToDouble(EF.Property<decimal>(x, "AverageRating")) * 0.2
+                Convert.ToDouble(EF.Property<int?>(x, "TotalSold")) * 0.5 +
+                Convert.ToDouble(EF.Property<int?>(x, "TotalOrders")) * 0.3 +
+                Convert.ToDouble(EF.Property<decimal?>(x, "AverageRating")) * 0.2
             ),
             _ => query
         };

@@ -231,7 +231,7 @@
   const scrollContainer = ref<HTMLElement | null>(null)
 
   const fetchProducts = async () => {
-    await store.GetProductList(searchStore.searchService, 0, 0, store.fieldValues.sortBy, pageSize.value)
+    await store.GetProductList(searchStore.searchService, 0, 0, store.fieldValues.sortBy, pageSize.value, searchStore.searchParams)
     await nextTick()
   }
 
@@ -242,7 +242,7 @@
   const onBuyNow = async (selectedProduct: any) => {
     // formMessageStore.SetFormMessageNotApiRes('E00001', true, onReturnLogin)
     if (authStore.isAuthorization) {
-      await detailProductStore.AddProductToCart(selectedProduct)
+      await detailProductStore.AddOneProductToCart(selectedProduct)
       await cartStore.GetAllCart()
       cardRef.value.openSideBar(true)
       return
@@ -250,12 +250,14 @@
     isShowPopupRef.value.closePopup(true)
   }
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     searchStore.searchParams = searchOneFieldRef.value.onGetSearch()
     router.push({
       path: '/Service/Buying',
       query: { search: searchStore.searchParams },
     })
+    await fetchProducts()
+    initCarousels()
   }
 
   watch(

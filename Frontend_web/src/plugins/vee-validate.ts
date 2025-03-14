@@ -64,6 +64,7 @@ export default defineNuxtPlugin(() => {
         required: REQUIRED_ERROR,
         email: CONFIRM_EMAIL,
         min: MIN_LENGTH_ERROR,
+        min_max: MIN_MAX,
       },
     }),
     validateOnBlur: true,
@@ -101,5 +102,24 @@ export default defineNuxtPlugin(() => {
     const password = (document.getElementsByName(target)[0] as HTMLInputElement)?.value ?? ''
     return value === password || CONFIRM_NEW_PASSWORD_ERROR
   })
+  defineRule('min_max', (value: string, [min, max]: string) => {
+    if (
+      value === '' ||
+      value === undefined ||
+      value === null ||
+      !useValidate(window.event?.type)
+    ) {
+      return true
+    }
+    const numericValue = Number(value)
+    if (isNaN(numericValue)) {
+      return NUMERIC_ERROR
+    }
+    if (numericValue >= Number(min) && numericValue <= Number(max)) {
+      return true
+    }
+    return MIN_MAX.replace('{min}', min).replace('{max}', max)
+  })
+  
   setLocale('en')
 })

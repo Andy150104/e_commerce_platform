@@ -1,8 +1,9 @@
-import type { AbstractApiResponseOfString, UDSSelectUserProfileEntity } from '@PKG_API/@types'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
 import { useLoadingStore } from '../usercontrol/loadingStore'
+import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
+import type { AbstractApiResponseOfString, UDSSelectUserProfileEntity } from '@PKG_SRC/composables/Client/api/@types'
 
 export const fieldsInitialize = {
   userName: '',
@@ -64,12 +65,8 @@ export const useProfileStore = defineStore('Profile', {
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
       const apiClient = useApiClient()
-      const res = await apiClient.api.v1.UDSSelectUserProfile.$post({
-        body: {
-          isOnlyValidation: false,
-        },
-      })
-      this.uDSSelectUserProfileEntity = res.response
+      const res = await apiClient.api.v1.UDSSelectUserProfile.$get({})
+      this.uDSSelectUserProfileEntity = res.response ?? {}
       this.fields.setFieldValue('email', this.uDSSelectUserProfileEntity.email)
       this.fields.setFieldValue('imageUrl', this.uDSSelectUserProfileEntity.imageUrl)
       this.fields.setFieldValue('phoneNumber', this.uDSSelectUserProfileEntity.phoneNumber)
@@ -87,7 +84,7 @@ export const useProfileStore = defineStore('Profile', {
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
       const loadingStore = useLoadingStore()
       loadingStore.LoadingChange(true)
-      const res = await apiServer.api.v1.UDSUpdateUserProfile.$post({
+      const res = await apiServer.api.v1.UDSUpdateUserProfile.$put({
         body: {
           isOnlyValidation: false,
           firstName: apiFieldValues.firstName,
