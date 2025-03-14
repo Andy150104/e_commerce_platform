@@ -2,7 +2,7 @@
   <div
     v-for="(product, index) in productModel"
     :key="index"
-    class="animate-fade-up max-w-sm md:max-w-[400px] w-full h-[550px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300"
+    class="animate-fade-up max-w-sm md:max-w-[400px] w-full h-[600px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300"
     @click="goToProduct(product.codeProduct)"
   >
     <!-- Carousel Section -->
@@ -49,9 +49,9 @@
       <p class="mb-4 text-sm text-gray-600">{{ product.shortDescription }}</p>
       <div v-if="product.salePrice">
         <!-- <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.price)) }}</p> -->
-        <p class="text-2xl font-bold text-gray-800 mb-1">{{ product.price }}</p>
+        <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.salePrice)) }}</p>
         <!-- <p class="text-sm text-gray-500 line-through">{{ moneyFormatter(Number(product.salePrice)) }}</p> -->
-        <p class="text-sm text-gray-500 line-through">{{ product.salePrice }}</p>
+        <p class="text-xl text-gray-500 line-through">{{ product.price }}</p>
       </div>
       <div v-else>
         <p class="text-2xl font-bold text-gray-800 mb-1">{{ product.price }}</p>
@@ -105,7 +105,7 @@
     </div>
   </div>
   <div v-if="isHaveSideBar">
-    <SideBarNoButton text-title="Cart" v-if="isShowSideBar" @on-click-close="handleClose">
+    <SideBarNoButton :is-cart="true" text-title="Cart" v-if="isShowSideBar" @on-click-close="handleClose">
       <template #bodySideBar>
         <slot name="body"></slot>
       </template>

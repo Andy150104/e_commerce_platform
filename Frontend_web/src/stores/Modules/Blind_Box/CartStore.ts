@@ -3,7 +3,7 @@ import { veeValidateStateInitialize } from '@PKG_SRC/utils/StoreFunction'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 import { SearchService } from '@PKG_SRC/types/enums/constantBackend'
 import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
-import type { DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
+import type { DPSSelectCartItem, DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
 
 export type FormSchema = Record<string, string>
 
@@ -30,13 +30,15 @@ export type ImageListResponse = {
 
 export type CartState = {
   fields: typeof fields
-  cartList: DPSSelectCartItemEntity[]
+  cartList: DPSSelectCartItem[]
+  totalCartPrice: Number
 }
 
 export const useCartStore = defineStore('Cart', {
   state: (): CartState => ({
     fields,
     cartList: [],
+    totalCartPrice: 0,
   }),
   // state
 
@@ -60,7 +62,8 @@ export const useCartStore = defineStore('Cart', {
       const loadingStore = useLoadingStore()
       const res = await apiClient.api.v1.DPSSelectCartItem.$get()
       if (!res.success) return false
-      this.cartList = res.response ?? []
+      this.cartList = res.response?.items ?? []
+      this.totalCartPrice = res.response?.totalPrice ?? 0
       return true
     },
     async UpdateCart(index: number, accessoryId: string) {

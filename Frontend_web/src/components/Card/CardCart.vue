@@ -17,7 +17,7 @@
       <h2 class="text-sm md:text-lg font-semibold text-gray-800 dark:text-gray-200">{{ cart.accessoryName }}</h2>
       <p class="text-xs md:text-sm text-gray-500 dark:text-gray-400">{{ cart.accessoryId }}</p>
       <span class="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-200">{{ moneyFormatter(Number(cart.price)) }}</span>
-      <span class="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-200">Total price: {{ moneyFormatter(Number(cart.totalPrice)) }}</span>
+      <span class="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-200">Total price: {{ moneyFormatter(Number(cart.unitPrice)) }}</span>
     </div>
     <!-- Quantity & Delete -->
     <div class="col-span-2 flex flex-row justify-between items-center gap-2 md:gap-4">
@@ -50,11 +50,11 @@
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import BaseControlQuantityInput from '../Basecontrol/BaseControlQuantityInput.vue'
   import { Currency, Locale } from '@PKG_SRC/types/enums/constantFrontend'
-  import type { DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
+  import type { DPSDeleteCartItemReponse, DPSSelectCartItem, DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
 
   const props = defineProps({
     cartModel: {
-      type: Array as PropType<DPSSelectCartItemEntity[]>,
+      type: Array as PropType<DPSSelectCartItem[]>,
       required: false,
     },
   })

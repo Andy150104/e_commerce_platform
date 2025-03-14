@@ -138,6 +138,94 @@ export type URSUserRegisterRequest = AbstractApiRequest & {
   key: string;
 }
 
+export type RROApproveRefundRequestOrderResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type RROApproveRefundRequestOrderRequest = AbstractApiRequest & {
+  refundId: string;
+  isApproved: boolean;
+  rejectedReason?: string | null | undefined;
+}
+
+export type RRODeleteRefundRequestOrderResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type RRODeleteRefundRequestOrderRequest = AbstractApiRequest & {
+  refundId?: string | undefined;
+}
+
+export type RROInsertRefundRequestOrderResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type RROInsertRefundRequestOrderRequest = AbstractApiRequest & {
+  orderId: string;
+  refundReason: string;
+  imageUrl: string;
+}
+
+export type RROSelectRefundRequestOrderResponse = AbstractApiResponseOfRROSelectRefundRequestOrderEntity & {
+  response?: RROSelectRefundRequestOrderEntity | undefined;
+}
+
+export type RROSelectRefundRequestOrderEntity = {
+  refundId?: string | undefined;
+  orderId?: string | undefined;
+  userName?: string | undefined;
+  refundAmount?: number | undefined;
+  refundReason?: string | undefined;
+  refundStatus?: number | undefined;
+  paymentMethod?: number | undefined;
+  updatedAt?: string | undefined;
+  createdAt?: string | undefined;
+  processedBy?: string | null | undefined;
+  approvedAt?: string | null | undefined;
+  rejectedReason?: string | null | undefined;
+}
+
+export type AbstractApiResponseOfRROSelectRefundRequestOrderEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: RROSelectRefundRequestOrderEntity | null | undefined;
+}
+
+export type RROSelectRefundRequestOrdersResponse = AbstractApiResponseOfListOfRROSelectRefundRequestOrdersEntity & {
+  response?: RROSelectRefundRequestOrdersEntity[] | undefined;
+}
+
+export type RROSelectRefundRequestOrdersEntity = {
+  refundId?: string | undefined;
+  orderId?: string | undefined;
+  userName?: string | undefined;
+  refundAmount?: number | undefined;
+  refundStatus?: number | undefined;
+  paymentMethod?: number | undefined;
+  createdAt?: string | undefined;
+}
+
+export type AbstractApiResponseOfListOfRROSelectRefundRequestOrdersEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: RROSelectRefundRequestOrdersEntity[] | null | undefined;
+}
+
+export type RROUpdateRefundRequestOrderResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type RROUpdateRefundRequestOrderRequest = AbstractApiRequest & {
+  refundId: string;
+  refundReason?: string | null | undefined;
+  imageUrl?: string | null | undefined;
+}
+
 export type VEXSAddToQueueResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
@@ -304,16 +392,21 @@ export type DPSDeleteCartItemRequest = AbstractApiRequest & {
   codeAccessory?: string | undefined;
 }
 
-export type DPSSelectCartItemResponse = AbstractApiResponseOfListOfDPSSelectCartItemEntity & {
-  response?: DPSSelectCartItemEntity[] | undefined;
+export type DPSSelectCartItemResponse = AbstractApiResponseOfDPSSelectCartItemEntity & {
+  response?: DPSSelectCartItemEntity | undefined;
 }
 
 export type DPSSelectCartItemEntity = {
+  totalPrice?: number | undefined;
+  items?: DPSSelectCartItem[] | undefined;
+}
+
+export type DPSSelectCartItem = {
   accessoryId?: string | undefined;
   accessoryName?: string | undefined;
   price?: number | undefined;
   quantity?: number | undefined;
-  totalPrice?: number | null | undefined;
+  unitPrice?: number | null | undefined;
   shortDescription?: string | undefined;
   images?: DPSSelectCartItemImages[] | undefined;
 }
@@ -322,12 +415,13 @@ export type DPSSelectCartItemImages = {
   imageUrl?: string | undefined;
 }
 
-export type AbstractApiResponseOfListOfDPSSelectCartItemEntity = {
+export type AbstractApiResponseOfDPSSelectCartItemEntity = {
   success?: boolean | undefined;
   messageId?: string | undefined;
   message?: string | undefined;
   detailErrorList?: DetailError[] | undefined;
-  response?: DPSSelectCartItemEntity[] | null | undefined;
+
+  response?: DPSSelectCartItemEntity | null | undefined;
 }
 
 export type DPSSelectCartItemRequest = AbstractApiRequest
@@ -476,6 +570,7 @@ export type ItemEntity = {
   createdAt?: string | null | undefined;
   childCategoryName?: string | null | undefined;
   parentCategoryName?: string | null | undefined;
+  wishListId?: string | null | undefined;
   imageUrl?: DpsSelectItemListImageUrl[] | undefined;
   averageRating?: number | null | undefined;
   totalReviews?: number | null | undefined;

@@ -892,8 +892,8 @@
             "schema": {
               "type": "number",
               "format": "decimal",
-              "maximum": 100.0,
-              "minimum": 0.0,
+              "maximum": 100,
+              "minimum": 0,
               "nullable": true
             },
             "x-position": 5
@@ -1124,6 +1124,240 @@
         "security": [
           {
             "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/RROApproveRefundRequestOrder": {
+      "patch": {
+        "tags": [
+          "RROApproveRefundRequestOrder"
+        ],
+        "operationId": "RROApproveRefundRequestOrder_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RROApproveRefundRequestOrderRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RROApproveRefundRequestOrderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Owner"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/RRODeleteRefundRequestOrder": {
+      "patch": {
+        "tags": [
+          "RRODeleteRefundRequestOrder"
+        ],
+        "operationId": "RRODeleteRefundRequestOrder_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RRODeleteRefundRequestOrderRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RRODeleteRefundRequestOrderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Customer",
+              "PlannedCustomer"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/RROInsertRefundRequestOrder": {
+      "post": {
+        "tags": [
+          "RROInsertRefundRequestOrder"
+        ],
+        "operationId": "RROInsertRefundRequestOrder_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RROInsertRefundRequestOrderRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RROInsertRefundRequestOrderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Customer",
+              "PlannedCustomer"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/RROSelectRefundRequestOrder": {
+      "get": {
+        "tags": [
+          "RROSelectRefundRequestOrder"
+        ],
+        "operationId": "RROSelectRefundRequestOrder_Get",
+        "parameters": [
+          {
+            "name": "RefundId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RROSelectRefundRequestOrderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Owner"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/RROSelectRefundRequestOrders": {
+      "get": {
+        "tags": [
+          "RROSelectRefundRequestOrders"
+        ],
+        "operationId": "RROSelectRefundRequestOrders_Get",
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/RROSelectRefundRequestOrdersRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RROSelectRefundRequestOrdersResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Owner"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/RROUpdateRefundRequestOrder": {
+      "patch": {
+        "tags": [
+          "RROUpdateRefundRequestOrder"
+        ],
+        "operationId": "RROUpdateRefundRequestOrder_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RROUpdateRefundRequestOrderRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RROUpdateRefundRequestOrderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Customer",
+              "PlannedCustomer"
+            ]
           }
         ]
       }
@@ -2038,8 +2272,8 @@
               "gender": {
                 "type": "integer",
                 "format": "byte",
-                "maximum": 3.0,
-                "minimum": 1.0,
+                "maximum": 3,
+                "minimum": 1,
                 "nullable": true
               }
             }
@@ -2055,7 +2289,9 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "response": {}
+              "response": {
+
+              }
             }
           }
         ]
@@ -2115,8 +2351,8 @@
               "gender": {
                 "type": "integer",
                 "format": "byte",
-                "maximum": 3.0,
-                "minimum": 1.0,
+                "maximum": 3,
+                "minimum": 1,
                 "nullable": true
               },
               "addressLine": {
@@ -2147,6 +2383,360 @@
               "key": {
                 "type": "string",
                 "minLength": 1
+              }
+            }
+          }
+        ]
+      },
+      "RROApproveRefundRequestOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "RROApproveRefundRequestOrderRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "refundId",
+              "isApproved"
+            ],
+            "properties": {
+              "refundId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "isApproved": {
+                "type": "boolean"
+              },
+              "rejectedReason": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "RRODeleteRefundRequestOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "RRODeleteRefundRequestOrderRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "refundId": {
+                "type": "string",
+                "format": "guid"
+              }
+            }
+          }
+        ]
+      },
+      "RROInsertRefundRequestOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "RROInsertRefundRequestOrderRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "orderId",
+              "refundReason",
+              "imageUrl"
+            ],
+            "properties": {
+              "orderId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "refundReason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "imageUrl": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        ]
+      },
+      "RROSelectRefundRequestOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfRROSelectRefundRequestOrderEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "$ref": "#/components/schemas/RROSelectRefundRequestOrderEntity"
+              }
+            }
+          }
+        ]
+      },
+      "RROSelectRefundRequestOrderEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "refundId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "orderId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "refundAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "refundReason": {
+            "type": "string"
+          },
+          "refundStatus": {
+            "type": "integer",
+            "format": "byte"
+          },
+          "paymentMethod": {
+            "type": "integer",
+            "format": "byte"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "processedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "approvedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "rejectedReason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AbstractApiResponseOfRROSelectRefundRequestOrderEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RROSelectRefundRequestOrderEntity"
+              }
+            ]
+          }
+        }
+      },
+      "RROSelectRefundRequestOrdersResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfRROSelectRefundRequestOrdersEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/RROSelectRefundRequestOrdersEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "RROSelectRefundRequestOrdersEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "refundId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "orderId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "refundAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "refundStatus": {
+            "type": "integer",
+            "format": "byte"
+          },
+          "paymentMethod": {
+            "type": "integer",
+            "format": "byte"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfRROSelectRefundRequestOrdersEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RROSelectRefundRequestOrdersEntity"
+            }
+          }
+        }
+      },
+      "RROSelectRefundRequestOrdersRequest": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "RROUpdateRefundRequestOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "RROUpdateRefundRequestOrderRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "refundId"
+            ],
+            "properties": {
+              "refundId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "refundReason": {
+                "type": "string",
+                "nullable": true
+              },
+              "imageUrl": {
+                "type": "string",
+                "nullable": true
               }
             }
           }
@@ -2834,23 +3424,36 @@
       "DPSSelectCartItemResponse": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AbstractApiResponseOfListOfDPSSelectCartItemEntity"
+            "$ref": "#/components/schemas/AbstractApiResponseOfDPSSelectCartItemEntity"
           },
           {
             "type": "object",
             "additionalProperties": false,
             "properties": {
               "response": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/DPSSelectCartItemEntity"
-                }
+                "$ref": "#/components/schemas/DPSSelectCartItemEntity"
               }
             }
           }
         ]
       },
       "DPSSelectCartItemEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "totalPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DPSSelectCartItem"
+            }
+          }
+        }
+      },
+      "DPSSelectCartItem": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -2868,7 +3471,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "totalPrice": {
+          "unitPrice": {
             "type": "number",
             "format": "decimal",
             "nullable": true
@@ -2893,7 +3496,7 @@
           }
         }
       },
-      "AbstractApiResponseOfListOfDPSSelectCartItemEntity": {
+      "AbstractApiResponseOfDPSSelectCartItemEntity": {
         "type": "object",
         "x-abstract": true,
         "additionalProperties": false,
@@ -2914,11 +3517,12 @@
             }
           },
           "response": {
-            "type": "array",
             "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/DPSSelectCartItemEntity"
-            }
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DPSSelectCartItemEntity"
+              }
+            ]
           }
         }
       },
@@ -3151,8 +3755,8 @@
               "quantity": {
                 "type": "integer",
                 "format": "int32",
-                "maximum": 2147483647.0,
-                "minimum": 1.0
+                "maximum": 2147483647,
+                "minimum": 1
               }
             }
           }
@@ -3473,6 +4077,11 @@
           },
           "parentCategoryName": {
             "type": "string",
+            "nullable": true
+          },
+          "wishListId": {
+            "type": "string",
+            "format": "guid",
             "nullable": true
           },
           "imageUrl": {

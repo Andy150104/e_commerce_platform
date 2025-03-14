@@ -22,10 +22,8 @@ export const useApiClient = () => {
   })
   apiClientAxios.interceptors.request.use((request) => {
     request.headers.Authorization = 'Bearer ' + authStore.accessToken
-    if (request.data instanceof FormData) {
-      delete request.headers['Content-Type']
-    } else {
-      request.headers['Content-Type'] = 'application/json'
+    if (!(request.data instanceof FormData)) {
+      request.headers['Content-Type'] = 'application/json';
     }
 
     loadingStore.LoadingChange(true)

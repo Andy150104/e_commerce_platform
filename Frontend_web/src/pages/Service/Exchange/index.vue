@@ -233,7 +233,7 @@
   const scrollContainer = ref<HTMLElement | null>(null)
 
   const fetchProducts = async () => {
-    await store.GetProductList(searchStore.searchService, 0, 0, store.fieldValues.sortBy, pageSize.value, searchStore.searchParams)
+    await store.GetProductList(SearchService.BlindBox, 0, 0, store.fieldValues.sortBy, pageSize.value, searchStore.searchParams)
     await nextTick()
   }
 

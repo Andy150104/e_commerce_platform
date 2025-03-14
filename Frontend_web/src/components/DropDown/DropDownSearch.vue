@@ -172,6 +172,7 @@
       categoryStore.GetChildCategory()
     }
     if (props.masterName === Catogry.ChildCategory) {
+      categoryStore.childId = code
     }
     isDropdownOpen.value = false
   }
