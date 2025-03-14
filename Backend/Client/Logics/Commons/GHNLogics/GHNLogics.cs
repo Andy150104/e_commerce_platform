@@ -24,11 +24,11 @@ public class GHNLogics : IGHNLogic
         var request = new CreateOrderGHNRequest
         {
             //$"{user.LastName} {user.FirstName}"
-            ToName = "Khoiii",
-            ToPhone = "0987654321",
-            ToAddress = address.AddressLine,
-            ToWardCode = "20308",
-            ToDistrictId = 1444,
+            // ToName = "Khoiii",
+            // ToPhone = "0987654321",
+            // ToAddress = "72 Thành Thái, Phường 14, Quận 10, Hồ Chí Minh, Vietnam",
+            // ToWardCode = "20308",
+            // ToDistrictId = 1444,
         };
 
         request.Items = orderDetails.Select(x => new GhnOrderItem
@@ -54,6 +54,7 @@ public class GHNLogics : IGHNLogic
 
             if (!httpResponse.IsSuccessStatusCode)
             {
+                response.Code = (int)httpResponse.StatusCode;
                 response.Message = "GHN API Error: " + jsonResponse;
                 return response;
             }

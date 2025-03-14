@@ -1,23 +1,20 @@
-using Client.Controllers.V1.MomoPayment;
-using Client.Controllers.V1.MomoPayment.MomoServices;
-using Client.Models;
-using Client.Models.Helper;
+using Client.Controllers.V1.TOS;
 using Client.Services;
 using Client.SystemClient;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage;
 using NLog;
+using OpenIddict.Validation.AspNetCore;
 
-namespace Client.Controllers.V1.TOS;
+namespace Client.Controllers.V1.Orders;
 
 /// <summary>
 /// TOSInsertOrderController - Insert new Order
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class InsertOrderController : AbstractApiController<InsertOrderRequest, InsertOrderResponse, string>
+public class InsertOrderController : AbstractApiAsyncController<InsertOrderRequest, InsertOrderResponse, InsertOrderResponseEntity>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly IIdentityService _identityService;
@@ -41,10 +38,10 @@ public class InsertOrderController : AbstractApiController<InsertOrderRequest, I
     /// <param name="request"></param>
     /// <returns></returns>
     [HttpPost]
-    [Authorize(AuthenticationSchemes = OpenIddict.Validation.AspNetCore.OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-    public override InsertOrderResponse ProcessRequest(InsertOrderRequest request)
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
+    public async override Task<InsertOrderResponse> Post(InsertOrderRequest request)
     {
-        return ProcessRequest(request, _identityService, logger, new InsertOrderResponse());
+        return await Post(request, _identityService, logger, new InsertOrderResponse());
     }
 
     /// <summary>
@@ -52,9 +49,9 @@ public class InsertOrderController : AbstractApiController<InsertOrderRequest, I
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    protected override InsertOrderResponse Exec(InsertOrderRequest request)
+    protected async override Task<InsertOrderResponse> Exec(InsertOrderRequest request)
     {
-        return _orderService.InsertOrder(request, _identityService);
+        return await _orderService.InsertOrder(request, _identityService);
     }
 
     /// <summary>

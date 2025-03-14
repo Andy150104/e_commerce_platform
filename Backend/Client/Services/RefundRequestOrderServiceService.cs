@@ -173,7 +173,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             .ToList();
 
         response.Success = true;
-        response.Response = refundRequestOrders;
+       // response.Response = refundRequestOrders;
         response.SetMessage(MessageId.I00001);
         return response;
     }
@@ -207,7 +207,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             .FirstOrDefault();
         
         response.Success = true;
-        response.Response = refundRequestOrder;
+        //response.Response = refundRequestOrder;
         response.SetMessage(MessageId.I00001);
         return response;
     }
