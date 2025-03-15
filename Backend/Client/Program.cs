@@ -50,6 +50,7 @@ builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IRefundRequestOrderService, RefundRequestOrderServiceService>();
+builder.Services.AddScoped<IExchangeRecheckRequestService, ExchangeRecheckRequestService>();
 
 //Connect MOMO API (NOT CHANGE)
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
