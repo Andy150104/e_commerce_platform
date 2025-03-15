@@ -97,7 +97,7 @@
   const xmlColumns = {
     password: XmlLoadColumn({
       id: 'password',
-      name: 'password',
+      name: 'Password',
       rules: 'required',
       visible: true,
       option: '',
@@ -126,11 +126,11 @@
   onMounted(() => {
     let key = route.query.key ?? sessionStorage.getItem("key") ?? "";
   if (Array.isArray(key)) key = key[0] ?? "";
-  
-  if (key) {
+
+    if (key) {
     sessionStorage.setItem("key", key);
     formContext.setFieldValue("key", key);
-  }
+    }
   console.log("Key GOT: "+ key);
     store.createFlgVerifyPass = true
     stepperStore.SetValues(steppList)
