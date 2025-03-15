@@ -142,7 +142,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasMaxLength(255)
                 .HasColumnName("name");
             entity.Property(e => e.Price)
-                .HasColumnType("decimal(10, 2)")
+                .HasColumnType("decimal(15, 2)")
                 .HasColumnName("price");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.ShortDescription)
@@ -580,7 +580,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.TotalPrice)
-                .HasColumnType("decimal(10, 2)")
+                .HasColumnType("decimal(15, 2)")
                 .HasColumnName("total_price");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")

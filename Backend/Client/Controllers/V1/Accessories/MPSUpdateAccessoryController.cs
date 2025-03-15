@@ -12,7 +12,7 @@ namespace Client.Controllers.V1.Accessories;
 /// <summary>
 /// MPSUpdateAccessoryController - Update Accessory
 /// </summary>
-[Route("api/v1/mps/[controller]")]
+[Route("api/v1/[controller]")]
 [ApiController]
 public class MPSUpdateAccessoryController : AbstractApiAsyncController<MPSUpdateAccessoryRequest, MPSUpdateAccessoryResponse, string>
 {

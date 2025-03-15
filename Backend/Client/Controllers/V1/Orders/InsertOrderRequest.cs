@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Client.Controllers.V1.TOS;
+namespace Client.Controllers.V1.Orders;
 
 public class InsertOrderRequest : AbstractApiRequest
 {
-    public List<TOSOrderDetailRequest> OrderDetails { get; set; }
+    public List<TOSOrderDetailRequest>? OrderDetails { get; set; }
     
     [Required(ErrorMessage = "PaymentMethod is required")]
     public byte PaymentMethod { get; set; }
