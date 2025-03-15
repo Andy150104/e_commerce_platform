@@ -98,7 +98,7 @@
   const xmlColumns = {
     email: XmlLoadColumn({
       id: 'email',
-      name: 'email',
+      name: 'Email',
       rules: '',
       visible: true,
       option: '',
