@@ -1,6 +1,6 @@
 <template>
   <div v-for="(cart, index) in cartList" :key="index"
-    class="grid grid-cols-7 bg-white dark:bg-gray-900 rounded-lg p-4 w-full max-w-3xl shadow-md border border-gray-40000 dark:border-gray-700 mb-5">
+    class="grid grid-cols-7 bg-white dark:bg-gray-900 rounded-lg p-4 w-full shadow-md border border-gray-40000 dark:border-gray-700 mb-5">
     <div class="col-span-2 flex justify-center items-center">
       <Swiper class="relative w-20 h-20 md:w-36 md:h-36" :pagination="true" :spaceBetween="10" :slidesPerView="1"
         :loop="true">
@@ -54,9 +54,7 @@ const moneyFormatter = (money?: number) => {
   if (money) return formatMoney(money, Currency.VND, Locale.VI_VN)
 }
 const emit = defineEmits(['updateTotal'])
-watch(totalPrice, (newTotal) => {
-  emit('updateTotal', newTotal)
-})
+
 const store = useCartStore()
 const cartList = computed(() => props.cartModel || [])
 const initialFields: Record<string, string> = {}

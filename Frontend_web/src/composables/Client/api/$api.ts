@@ -18,8 +18,10 @@ import type { Methods as Methods_x7pqea } from './api/v1/MPSDeleteAccessory';
 import type { Methods as Methods_bguy4h } from './api/v1/MPSDeleteImageAccessory';
 import type { Methods as Methods_1jdop5c } from './api/v1/MPSInsertAccessory';
 import type { Methods as Methods_12w961n } from './api/v1/MPSSelectAccessories';
+import type { Methods as Methods_13dmkbk } from './api/v1/MPSUpdateAccessory';
 import type { Methods as Methods_1sd1oup } from './api/v1/MSPInsertImageAccessory';
 import type { Methods as Methods_1k8tpuv } from './api/v1/Momo';
+import type { Methods as Methods_vss6uo } from './api/v1/Momo/Order';
 import type { Methods as Methods_f44lv5 } from './api/v1/OPSAddPlanRefund';
 import type { Methods as Methods_bvea9y } from './api/v1/OPSBuyingPlan';
 import type { Methods as Methods_9j6uh0 } from './api/v1/RROApproveRefundRequestOrder';
@@ -40,7 +42,6 @@ import type { Methods as Methods_o6khhm } from './api/v1/UDSUpdateUserProfile';
 import type { Methods as Methods_1bn80az } from './api/v1/URSUserRegister';
 import type { Methods as Methods_t8kgc6 } from './api/v1/UpdateCategory';
 import type { Methods as Methods_7pt71i } from './api/v1/VEXSAddToQueue';
-import type { Methods as Methods_10gaz9b } from './api/v1/mps/MPSUpdateAccessory';
 
 const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
   const prefix = (baseURL === undefined ? 'https://localhost:5092' : baseURL).replace(/\/$/, '');
@@ -62,29 +63,30 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
   const PATH15 = '/api/v1/MPSDeleteImageAccessory';
   const PATH16 = '/api/v1/MPSInsertAccessory';
   const PATH17 = '/api/v1/MPSSelectAccessories';
-  const PATH18 = '/api/v1/MSPInsertImageAccessory';
-  const PATH19 = '/api/v1/Momo';
-  const PATH20 = '/api/v1/OPSAddPlanRefund';
-  const PATH21 = '/api/v1/OPSBuyingPlan';
-  const PATH22 = '/api/v1/RROApproveRefundRequestOrder';
-  const PATH23 = '/api/v1/RRODeleteRefundRequestOrder';
-  const PATH24 = '/api/v1/RROInsertRefundRequestOrder';
-  const PATH25 = '/api/v1/RROSelectRefundRequestOrder';
-  const PATH26 = '/api/v1/RROSelectRefundRequestOrders';
-  const PATH27 = '/api/v1/RROUpdateRefundRequestOrder';
-  const PATH28 = '/api/v1/SelectCategories';
-  const PATH29 = '/api/v1/SelectCategory';
-  const PATH30 = '/api/v1/SelectSubCategories';
-  const PATH31 = '/api/v1/UDSDeleteUserAddress';
-  const PATH32 = '/api/v1/UDSInsertUserAddress';
-  const PATH33 = '/api/v1/UDSSelectUserAddress';
-  const PATH34 = '/api/v1/UDSSelectUserProfile';
-  const PATH35 = '/api/v1/UDSUpdateUserAddress';
-  const PATH36 = '/api/v1/UDSUpdateUserProfile';
-  const PATH37 = '/api/v1/URSUserRegister';
-  const PATH38 = '/api/v1/UpdateCategory';
-  const PATH39 = '/api/v1/VEXSAddToQueue';
-  const PATH40 = '/api/v1/mps/MPSUpdateAccessory';
+  const PATH18 = '/api/v1/MPSUpdateAccessory';
+  const PATH19 = '/api/v1/MSPInsertImageAccessory';
+  const PATH20 = '/api/v1/Momo';
+  const PATH21 = '/api/v1/Momo/Order';
+  const PATH22 = '/api/v1/OPSAddPlanRefund';
+  const PATH23 = '/api/v1/OPSBuyingPlan';
+  const PATH24 = '/api/v1/RROApproveRefundRequestOrder';
+  const PATH25 = '/api/v1/RRODeleteRefundRequestOrder';
+  const PATH26 = '/api/v1/RROInsertRefundRequestOrder';
+  const PATH27 = '/api/v1/RROSelectRefundRequestOrder';
+  const PATH28 = '/api/v1/RROSelectRefundRequestOrders';
+  const PATH29 = '/api/v1/RROUpdateRefundRequestOrder';
+  const PATH30 = '/api/v1/SelectCategories';
+  const PATH31 = '/api/v1/SelectCategory';
+  const PATH32 = '/api/v1/SelectSubCategories';
+  const PATH33 = '/api/v1/UDSDeleteUserAddress';
+  const PATH34 = '/api/v1/UDSInsertUserAddress';
+  const PATH35 = '/api/v1/UDSSelectUserAddress';
+  const PATH36 = '/api/v1/UDSSelectUserProfile';
+  const PATH37 = '/api/v1/UDSUpdateUserAddress';
+  const PATH38 = '/api/v1/UDSUpdateUserProfile';
+  const PATH39 = '/api/v1/URSUserRegister';
+  const PATH40 = '/api/v1/UpdateCategory';
+  const PATH41 = '/api/v1/VEXSAddToQueue';
   const GET = 'GET';
   const POST = 'POST';
   const PUT = 'PUT';
@@ -226,177 +228,182 @@ const api = <T>({ baseURL, fetch }: AspidaClient<T>) => {
           $path: (option?: { method?: 'get' | undefined; query: Methods_12w961n['get']['query'] } | undefined) =>
             `${prefix}${PATH17}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
-        MSPInsertImageAccessory: {
-          post: (option: { body: Methods_1sd1oup['post']['reqBody'], query?: Methods_1sd1oup['post']['query'] | undefined, config?: T | undefined }) =>
-            fetch<Methods_1sd1oup['post']['resBody'], BasicHeaders, Methods_1sd1oup['post']['status']>(prefix, PATH18, POST, option, 'FormData').json(),
-          $post: (option: { body: Methods_1sd1oup['post']['reqBody'], query?: Methods_1sd1oup['post']['query'] | undefined, config?: T | undefined }) =>
-            fetch<Methods_1sd1oup['post']['resBody'], BasicHeaders, Methods_1sd1oup['post']['status']>(prefix, PATH18, POST, option, 'FormData').json().then(r => r.body),
-          $path: (option?: { method: 'post'; query: Methods_1sd1oup['post']['query'] } | undefined) =>
+        MPSUpdateAccessory: {
+          put: (option: { body: Methods_13dmkbk['put']['reqBody'], query?: Methods_13dmkbk['put']['query'] | undefined, config?: T | undefined }) =>
+            fetch<Methods_13dmkbk['put']['resBody'], BasicHeaders, Methods_13dmkbk['put']['status']>(prefix, PATH18, PUT, option, 'FormData').json(),
+          $put: (option: { body: Methods_13dmkbk['put']['reqBody'], query?: Methods_13dmkbk['put']['query'] | undefined, config?: T | undefined }) =>
+            fetch<Methods_13dmkbk['put']['resBody'], BasicHeaders, Methods_13dmkbk['put']['status']>(prefix, PATH18, PUT, option, 'FormData').json().then(r => r.body),
+          $path: (option?: { method: 'put'; query: Methods_13dmkbk['put']['query'] } | undefined) =>
             `${prefix}${PATH18}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
+        MSPInsertImageAccessory: {
+          post: (option: { body: Methods_1sd1oup['post']['reqBody'], query?: Methods_1sd1oup['post']['query'] | undefined, config?: T | undefined }) =>
+            fetch<Methods_1sd1oup['post']['resBody'], BasicHeaders, Methods_1sd1oup['post']['status']>(prefix, PATH19, POST, option, 'FormData').json(),
+          $post: (option: { body: Methods_1sd1oup['post']['reqBody'], query?: Methods_1sd1oup['post']['query'] | undefined, config?: T | undefined }) =>
+            fetch<Methods_1sd1oup['post']['resBody'], BasicHeaders, Methods_1sd1oup['post']['status']>(prefix, PATH19, POST, option, 'FormData').json().then(r => r.body),
+          $path: (option?: { method: 'post'; query: Methods_1sd1oup['post']['query'] } | undefined) =>
+            `${prefix}${PATH19}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+        },
         Momo: {
+          Order: {
+            get: (option?: { config?: T | undefined } | undefined) =>
+              fetch<Methods_vss6uo['get']['resBody'], BasicHeaders, Methods_vss6uo['get']['status']>(prefix, PATH21, GET, option).blob(),
+            $get: (option?: { config?: T | undefined } | undefined) =>
+              fetch<Methods_vss6uo['get']['resBody'], BasicHeaders, Methods_vss6uo['get']['status']>(prefix, PATH21, GET, option).blob().then(r => r.body),
+            $path: () => `${prefix}${PATH21}`,
+          },
           get: (option?: { config?: T | undefined } | undefined) =>
-            fetch<Methods_1k8tpuv['get']['resBody'], BasicHeaders, Methods_1k8tpuv['get']['status']>(prefix, PATH19, GET, option).blob(),
+            fetch<Methods_1k8tpuv['get']['resBody'], BasicHeaders, Methods_1k8tpuv['get']['status']>(prefix, PATH20, GET, option).blob(),
           $get: (option?: { config?: T | undefined } | undefined) =>
-            fetch<Methods_1k8tpuv['get']['resBody'], BasicHeaders, Methods_1k8tpuv['get']['status']>(prefix, PATH19, GET, option).blob().then(r => r.body),
-          $path: () => `${prefix}${PATH19}`,
+            fetch<Methods_1k8tpuv['get']['resBody'], BasicHeaders, Methods_1k8tpuv['get']['status']>(prefix, PATH20, GET, option).blob().then(r => r.body),
+          $path: () => `${prefix}${PATH20}`,
         },
         OPSAddPlanRefund: {
           post: (option: { body: Methods_f44lv5['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_f44lv5['post']['resBody'], BasicHeaders, Methods_f44lv5['post']['status']>(prefix, PATH20, POST, option).json(),
+            fetch<Methods_f44lv5['post']['resBody'], BasicHeaders, Methods_f44lv5['post']['status']>(prefix, PATH22, POST, option).json(),
           $post: (option: { body: Methods_f44lv5['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_f44lv5['post']['resBody'], BasicHeaders, Methods_f44lv5['post']['status']>(prefix, PATH20, POST, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH20}`,
+            fetch<Methods_f44lv5['post']['resBody'], BasicHeaders, Methods_f44lv5['post']['status']>(prefix, PATH22, POST, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH22}`,
         },
         OPSBuyingPlan: {
           post: (option: { body: Methods_bvea9y['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_bvea9y['post']['resBody'], BasicHeaders, Methods_bvea9y['post']['status']>(prefix, PATH21, POST, option).json(),
+            fetch<Methods_bvea9y['post']['resBody'], BasicHeaders, Methods_bvea9y['post']['status']>(prefix, PATH23, POST, option).json(),
           $post: (option: { body: Methods_bvea9y['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_bvea9y['post']['resBody'], BasicHeaders, Methods_bvea9y['post']['status']>(prefix, PATH21, POST, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH21}`,
+            fetch<Methods_bvea9y['post']['resBody'], BasicHeaders, Methods_bvea9y['post']['status']>(prefix, PATH23, POST, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH23}`,
         },
         RROApproveRefundRequestOrder: {
           patch: (option: { body: Methods_9j6uh0['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_9j6uh0['patch']['resBody'], BasicHeaders, Methods_9j6uh0['patch']['status']>(prefix, PATH22, PATCH, option).json(),
+            fetch<Methods_9j6uh0['patch']['resBody'], BasicHeaders, Methods_9j6uh0['patch']['status']>(prefix, PATH24, PATCH, option).json(),
           $patch: (option: { body: Methods_9j6uh0['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_9j6uh0['patch']['resBody'], BasicHeaders, Methods_9j6uh0['patch']['status']>(prefix, PATH22, PATCH, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH22}`,
+            fetch<Methods_9j6uh0['patch']['resBody'], BasicHeaders, Methods_9j6uh0['patch']['status']>(prefix, PATH24, PATCH, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH24}`,
         },
         RRODeleteRefundRequestOrder: {
           patch: (option: { body: Methods_vucz9i['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_vucz9i['patch']['resBody'], BasicHeaders, Methods_vucz9i['patch']['status']>(prefix, PATH23, PATCH, option).json(),
+            fetch<Methods_vucz9i['patch']['resBody'], BasicHeaders, Methods_vucz9i['patch']['status']>(prefix, PATH25, PATCH, option).json(),
           $patch: (option: { body: Methods_vucz9i['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_vucz9i['patch']['resBody'], BasicHeaders, Methods_vucz9i['patch']['status']>(prefix, PATH23, PATCH, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH23}`,
+            fetch<Methods_vucz9i['patch']['resBody'], BasicHeaders, Methods_vucz9i['patch']['status']>(prefix, PATH25, PATCH, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH25}`,
         },
         RROInsertRefundRequestOrder: {
           post: (option: { body: Methods_1lte7bs['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_1lte7bs['post']['resBody'], BasicHeaders, Methods_1lte7bs['post']['status']>(prefix, PATH24, POST, option).json(),
+            fetch<Methods_1lte7bs['post']['resBody'], BasicHeaders, Methods_1lte7bs['post']['status']>(prefix, PATH26, POST, option).json(),
           $post: (option: { body: Methods_1lte7bs['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_1lte7bs['post']['resBody'], BasicHeaders, Methods_1lte7bs['post']['status']>(prefix, PATH24, POST, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH24}`,
+            fetch<Methods_1lte7bs['post']['resBody'], BasicHeaders, Methods_1lte7bs['post']['status']>(prefix, PATH26, POST, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH26}`,
         },
         RROSelectRefundRequestOrder: {
           get: (option?: { query?: Methods_uzk94p['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_uzk94p['get']['resBody'], BasicHeaders, Methods_uzk94p['get']['status']>(prefix, PATH25, GET, option).json(),
+            fetch<Methods_uzk94p['get']['resBody'], BasicHeaders, Methods_uzk94p['get']['status']>(prefix, PATH27, GET, option).json(),
           $get: (option?: { query?: Methods_uzk94p['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_uzk94p['get']['resBody'], BasicHeaders, Methods_uzk94p['get']['status']>(prefix, PATH25, GET, option).json().then(r => r.body),
+            fetch<Methods_uzk94p['get']['resBody'], BasicHeaders, Methods_uzk94p['get']['status']>(prefix, PATH27, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_uzk94p['get']['query'] } | undefined) =>
-            `${prefix}${PATH25}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+            `${prefix}${PATH27}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
         RROSelectRefundRequestOrders: {
           get: (option?: { query?: Methods_772ni6['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_772ni6['get']['resBody'], BasicHeaders, Methods_772ni6['get']['status']>(prefix, PATH26, GET, option).json(),
+            fetch<Methods_772ni6['get']['resBody'], BasicHeaders, Methods_772ni6['get']['status']>(prefix, PATH28, GET, option).json(),
           $get: (option?: { query?: Methods_772ni6['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_772ni6['get']['resBody'], BasicHeaders, Methods_772ni6['get']['status']>(prefix, PATH26, GET, option).json().then(r => r.body),
+            fetch<Methods_772ni6['get']['resBody'], BasicHeaders, Methods_772ni6['get']['status']>(prefix, PATH28, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_772ni6['get']['query'] } | undefined) =>
-            `${prefix}${PATH26}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+            `${prefix}${PATH28}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
         RROUpdateRefundRequestOrder: {
           patch: (option: { body: Methods_14wigjo['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_14wigjo['patch']['resBody'], BasicHeaders, Methods_14wigjo['patch']['status']>(prefix, PATH27, PATCH, option).json(),
+            fetch<Methods_14wigjo['patch']['resBody'], BasicHeaders, Methods_14wigjo['patch']['status']>(prefix, PATH29, PATCH, option).json(),
           $patch: (option: { body: Methods_14wigjo['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_14wigjo['patch']['resBody'], BasicHeaders, Methods_14wigjo['patch']['status']>(prefix, PATH27, PATCH, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH27}`,
+            fetch<Methods_14wigjo['patch']['resBody'], BasicHeaders, Methods_14wigjo['patch']['status']>(prefix, PATH29, PATCH, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH29}`,
         },
         SelectCategories: {
           get: (option?: { query?: Methods_1ywrqxf['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_1ywrqxf['get']['resBody'], BasicHeaders, Methods_1ywrqxf['get']['status']>(prefix, PATH28, GET, option).json(),
+            fetch<Methods_1ywrqxf['get']['resBody'], BasicHeaders, Methods_1ywrqxf['get']['status']>(prefix, PATH30, GET, option).json(),
           $get: (option?: { query?: Methods_1ywrqxf['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_1ywrqxf['get']['resBody'], BasicHeaders, Methods_1ywrqxf['get']['status']>(prefix, PATH28, GET, option).json().then(r => r.body),
+            fetch<Methods_1ywrqxf['get']['resBody'], BasicHeaders, Methods_1ywrqxf['get']['status']>(prefix, PATH30, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_1ywrqxf['get']['query'] } | undefined) =>
-            `${prefix}${PATH28}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+            `${prefix}${PATH30}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
         SelectCategory: {
           get: (option?: { query?: Methods_wgnsfn['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_wgnsfn['get']['resBody'], BasicHeaders, Methods_wgnsfn['get']['status']>(prefix, PATH29, GET, option).json(),
+            fetch<Methods_wgnsfn['get']['resBody'], BasicHeaders, Methods_wgnsfn['get']['status']>(prefix, PATH31, GET, option).json(),
           $get: (option?: { query?: Methods_wgnsfn['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_wgnsfn['get']['resBody'], BasicHeaders, Methods_wgnsfn['get']['status']>(prefix, PATH29, GET, option).json().then(r => r.body),
+            fetch<Methods_wgnsfn['get']['resBody'], BasicHeaders, Methods_wgnsfn['get']['status']>(prefix, PATH31, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_wgnsfn['get']['query'] } | undefined) =>
-            `${prefix}${PATH29}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+            `${prefix}${PATH31}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
         SelectSubCategories: {
           get: (option?: { query?: Methods_16r358v['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_16r358v['get']['resBody'], BasicHeaders, Methods_16r358v['get']['status']>(prefix, PATH30, GET, option).json(),
+            fetch<Methods_16r358v['get']['resBody'], BasicHeaders, Methods_16r358v['get']['status']>(prefix, PATH32, GET, option).json(),
           $get: (option?: { query?: Methods_16r358v['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_16r358v['get']['resBody'], BasicHeaders, Methods_16r358v['get']['status']>(prefix, PATH30, GET, option).json().then(r => r.body),
+            fetch<Methods_16r358v['get']['resBody'], BasicHeaders, Methods_16r358v['get']['status']>(prefix, PATH32, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_16r358v['get']['query'] } | undefined) =>
-            `${prefix}${PATH30}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+            `${prefix}${PATH32}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
         UDSDeleteUserAddress: {
           patch: (option: { body: Methods_ecpjzp['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_ecpjzp['patch']['resBody'], BasicHeaders, Methods_ecpjzp['patch']['status']>(prefix, PATH31, PATCH, option).json(),
+            fetch<Methods_ecpjzp['patch']['resBody'], BasicHeaders, Methods_ecpjzp['patch']['status']>(prefix, PATH33, PATCH, option).json(),
           $patch: (option: { body: Methods_ecpjzp['patch']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_ecpjzp['patch']['resBody'], BasicHeaders, Methods_ecpjzp['patch']['status']>(prefix, PATH31, PATCH, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH31}`,
+            fetch<Methods_ecpjzp['patch']['resBody'], BasicHeaders, Methods_ecpjzp['patch']['status']>(prefix, PATH33, PATCH, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH33}`,
         },
         UDSInsertUserAddress: {
           post: (option: { body: Methods_1othzpb['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_1othzpb['post']['resBody'], BasicHeaders, Methods_1othzpb['post']['status']>(prefix, PATH32, POST, option).json(),
+            fetch<Methods_1othzpb['post']['resBody'], BasicHeaders, Methods_1othzpb['post']['status']>(prefix, PATH34, POST, option).json(),
           $post: (option: { body: Methods_1othzpb['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_1othzpb['post']['resBody'], BasicHeaders, Methods_1othzpb['post']['status']>(prefix, PATH32, POST, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH32}`,
+            fetch<Methods_1othzpb['post']['resBody'], BasicHeaders, Methods_1othzpb['post']['status']>(prefix, PATH34, POST, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH34}`,
         },
         UDSSelectUserAddress: {
           get: (option?: { query?: Methods_1i0gbdw['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_1i0gbdw['get']['resBody'], BasicHeaders, Methods_1i0gbdw['get']['status']>(prefix, PATH33, GET, option).json(),
+            fetch<Methods_1i0gbdw['get']['resBody'], BasicHeaders, Methods_1i0gbdw['get']['status']>(prefix, PATH35, GET, option).json(),
           $get: (option?: { query?: Methods_1i0gbdw['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_1i0gbdw['get']['resBody'], BasicHeaders, Methods_1i0gbdw['get']['status']>(prefix, PATH33, GET, option).json().then(r => r.body),
+            fetch<Methods_1i0gbdw['get']['resBody'], BasicHeaders, Methods_1i0gbdw['get']['status']>(prefix, PATH35, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_1i0gbdw['get']['query'] } | undefined) =>
-            `${prefix}${PATH33}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+            `${prefix}${PATH35}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
         UDSSelectUserProfile: {
           get: (option?: { query?: Methods_1smrvw1['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_1smrvw1['get']['resBody'], BasicHeaders, Methods_1smrvw1['get']['status']>(prefix, PATH34, GET, option).json(),
+            fetch<Methods_1smrvw1['get']['resBody'], BasicHeaders, Methods_1smrvw1['get']['status']>(prefix, PATH36, GET, option).json(),
           $get: (option?: { query?: Methods_1smrvw1['get']['query'] | undefined, config?: T | undefined } | undefined) =>
-            fetch<Methods_1smrvw1['get']['resBody'], BasicHeaders, Methods_1smrvw1['get']['status']>(prefix, PATH34, GET, option).json().then(r => r.body),
+            fetch<Methods_1smrvw1['get']['resBody'], BasicHeaders, Methods_1smrvw1['get']['status']>(prefix, PATH36, GET, option).json().then(r => r.body),
           $path: (option?: { method?: 'get' | undefined; query: Methods_1smrvw1['get']['query'] } | undefined) =>
-            `${prefix}${PATH34}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
+            `${prefix}${PATH36}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
         },
         UDSUpdateUserAddress: {
           put: (option: { body: Methods_pfkw7b['put']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_pfkw7b['put']['resBody'], BasicHeaders, Methods_pfkw7b['put']['status']>(prefix, PATH35, PUT, option).json(),
+            fetch<Methods_pfkw7b['put']['resBody'], BasicHeaders, Methods_pfkw7b['put']['status']>(prefix, PATH37, PUT, option).json(),
           $put: (option: { body: Methods_pfkw7b['put']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_pfkw7b['put']['resBody'], BasicHeaders, Methods_pfkw7b['put']['status']>(prefix, PATH35, PUT, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH35}`,
+            fetch<Methods_pfkw7b['put']['resBody'], BasicHeaders, Methods_pfkw7b['put']['status']>(prefix, PATH37, PUT, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH37}`,
         },
         UDSUpdateUserProfile: {
           put: (option: { body: Methods_o6khhm['put']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_o6khhm['put']['resBody'], BasicHeaders, Methods_o6khhm['put']['status']>(prefix, PATH36, PUT, option).json(),
+            fetch<Methods_o6khhm['put']['resBody'], BasicHeaders, Methods_o6khhm['put']['status']>(prefix, PATH38, PUT, option).json(),
           $put: (option: { body: Methods_o6khhm['put']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_o6khhm['put']['resBody'], BasicHeaders, Methods_o6khhm['put']['status']>(prefix, PATH36, PUT, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH36}`,
+            fetch<Methods_o6khhm['put']['resBody'], BasicHeaders, Methods_o6khhm['put']['status']>(prefix, PATH38, PUT, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH38}`,
         },
         URSUserRegister: {
           post: (option: { body: Methods_1bn80az['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_1bn80az['post']['resBody'], BasicHeaders, Methods_1bn80az['post']['status']>(prefix, PATH37, POST, option).json(),
+            fetch<Methods_1bn80az['post']['resBody'], BasicHeaders, Methods_1bn80az['post']['status']>(prefix, PATH39, POST, option).json(),
           $post: (option: { body: Methods_1bn80az['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_1bn80az['post']['resBody'], BasicHeaders, Methods_1bn80az['post']['status']>(prefix, PATH37, POST, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH37}`,
+            fetch<Methods_1bn80az['post']['resBody'], BasicHeaders, Methods_1bn80az['post']['status']>(prefix, PATH39, POST, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH39}`,
         },
         UpdateCategory: {
           put: (option: { body: Methods_t8kgc6['put']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_t8kgc6['put']['resBody'], BasicHeaders, Methods_t8kgc6['put']['status']>(prefix, PATH38, PUT, option).json(),
+            fetch<Methods_t8kgc6['put']['resBody'], BasicHeaders, Methods_t8kgc6['put']['status']>(prefix, PATH40, PUT, option).json(),
           $put: (option: { body: Methods_t8kgc6['put']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_t8kgc6['put']['resBody'], BasicHeaders, Methods_t8kgc6['put']['status']>(prefix, PATH38, PUT, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH38}`,
+            fetch<Methods_t8kgc6['put']['resBody'], BasicHeaders, Methods_t8kgc6['put']['status']>(prefix, PATH40, PUT, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH40}`,
         },
         VEXSAddToQueue: {
           post: (option: { body: Methods_7pt71i['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_7pt71i['post']['resBody'], BasicHeaders, Methods_7pt71i['post']['status']>(prefix, PATH39, POST, option).json(),
+            fetch<Methods_7pt71i['post']['resBody'], BasicHeaders, Methods_7pt71i['post']['status']>(prefix, PATH41, POST, option).json(),
           $post: (option: { body: Methods_7pt71i['post']['reqBody'], config?: T | undefined }) =>
-            fetch<Methods_7pt71i['post']['resBody'], BasicHeaders, Methods_7pt71i['post']['status']>(prefix, PATH39, POST, option).json().then(r => r.body),
-          $path: () => `${prefix}${PATH39}`,
-        },
-        mps: {
-          MPSUpdateAccessory: {
-            put: (option: { body: Methods_10gaz9b['put']['reqBody'], query?: Methods_10gaz9b['put']['query'] | undefined, config?: T | undefined }) =>
-              fetch<Methods_10gaz9b['put']['resBody'], BasicHeaders, Methods_10gaz9b['put']['status']>(prefix, PATH40, PUT, option, 'FormData').json(),
-            $put: (option: { body: Methods_10gaz9b['put']['reqBody'], query?: Methods_10gaz9b['put']['query'] | undefined, config?: T | undefined }) =>
-              fetch<Methods_10gaz9b['put']['resBody'], BasicHeaders, Methods_10gaz9b['put']['status']>(prefix, PATH40, PUT, option, 'FormData').json().then(r => r.body),
-            $path: (option?: { method: 'put'; query: Methods_10gaz9b['put']['query'] } | undefined) =>
-              `${prefix}${PATH40}${option && option.query ? `?${dataToURLString(option.query)}` : ''}`,
-          },
+            fetch<Methods_7pt71i['post']['resBody'], BasicHeaders, Methods_7pt71i['post']['status']>(prefix, PATH41, POST, option).json().then(r => r.body),
+          $path: () => `${prefix}${PATH41}`,
         },
       },
     },

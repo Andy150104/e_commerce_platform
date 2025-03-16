@@ -149,7 +149,7 @@ export const useMPSProductStore = defineStore('MPS', {
         base64ToFile(image.imagePreview, `image_${index + 1}.png`)
       )
     
-      const res = await apiClient.api.v1.mps.MPSUpdateAccessory.$put({
+      const res = await apiClient.api.v1.MPSUpdateAccessory.$put({
         body:{
           Images: images
         },

@@ -569,7 +569,7 @@
         "tags": [
           "InsertOrder"
         ],
-        "operationId": "InsertOrder_ProcessRequest",
+        "operationId": "InsertOrder_Post",
         "requestBody": {
           "x-name": "request",
           "content": {
@@ -627,128 +627,20 @@
         ]
       }
     },
-    "/api/v1/mps/MPSUpdateAccessory": {
-      "put": {
+    "/api/v1/Momo/Order": {
+      "get": {
         "tags": [
-          "MPSUpdateAccessory"
+          "Momo"
         ],
-        "operationId": "MPSUpdateAccessory_Post",
-        "parameters": [
-          {
-            "name": "CodeAccessory",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "Description",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
-            "name": "Name",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
-            "name": "Price",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "decimal"
-            },
-            "x-position": 4
-          },
-          {
-            "name": "Quantity",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 5
-          },
-          {
-            "name": "Discount",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "decimal",
-              "nullable": true
-            },
-            "x-position": 6
-          },
-          {
-            "name": "ShortDescription",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 7
-          },
-          {
-            "name": "CategoryId",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "format": "guid",
-              "nullable": true
-            },
-            "x-position": 8
-          },
-          {
-            "name": "ImageId",
-            "in": "query",
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "array",
-              "nullable": true,
-              "items": {
-                "type": "string",
-                "format": "guid"
-              }
-            },
-            "x-position": 9
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "Images": {
-                    "type": "array",
-                    "nullable": true,
-                    "items": {
-                      "type": "string",
-                      "format": "binary"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
+        "operationId": "Momo_PaymentOrderCallBack",
         "responses": {
           "200": {
             "description": "",
             "content": {
-              "application/json": {
+              "application/octet-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/MPSUpdateAccessoryResponse"
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -756,10 +648,7 @@
         },
         "security": [
           {
-            "JWT Token": [
-              "SaleEmployee",
-              "Owner"
-            ]
+            "JWT Token": []
           }
         ]
       }
@@ -892,8 +781,8 @@
             "schema": {
               "type": "number",
               "format": "decimal",
-              "maximum": 100,
-              "minimum": 0,
+              "maximum": 100.0,
+              "minimum": 0.0,
               "nullable": true
             },
             "x-position": 5
@@ -982,6 +871,143 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MPSSelectAccessoriesResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "SaleEmployee",
+              "Owner"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/MPSUpdateAccessory": {
+      "put": {
+        "tags": [
+          "MPSUpdateAccessory"
+        ],
+        "operationId": "MPSUpdateAccessory_Post",
+        "parameters": [
+          {
+            "name": "CodeAccessory",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Description",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Price",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Quantity",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Discount",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "ShortDescription",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "CategoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "ImageId",
+            "in": "query",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "nullable": true,
+              "items": {
+                "type": "string",
+                "format": "guid"
+              }
+            },
+            "x-position": 9
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Images": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MPSUpdateAccessoryResponse"
                 }
               }
             }
@@ -2272,8 +2298,8 @@
               "gender": {
                 "type": "integer",
                 "format": "byte",
-                "maximum": 3,
-                "minimum": 1,
+                "maximum": 3.0,
+                "minimum": 1.0,
                 "nullable": true
               }
             }
@@ -2289,9 +2315,7 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "response": {
-
-              }
+              "response": {}
             }
           }
         ]
@@ -2351,8 +2375,8 @@
               "gender": {
                 "type": "integer",
                 "format": "byte",
-                "maximum": 3,
-                "minimum": 1,
+                "maximum": 3.0,
+                "minimum": 1.0,
                 "nullable": true
               },
               "addressLine": {
@@ -2955,18 +2979,60 @@
       "InsertOrderResponse": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+            "$ref": "#/components/schemas/AbstractApiResponseOfInsertOrderResponseEntity"
           },
           {
             "type": "object",
             "additionalProperties": false,
             "properties": {
               "response": {
-                "type": "string"
+                "$ref": "#/components/schemas/InsertOrderResponseEntity"
               }
             }
           }
         ]
+      },
+      "InsertOrderResponseEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "paymentUrl": {
+            "type": "string"
+          },
+          "ghnCode": {
+            "type": "string"
+          }
+        }
+      },
+      "AbstractApiResponseOfInsertOrderResponseEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/InsertOrderResponseEntity"
+              }
+            ]
+          }
+        }
       },
       "InsertOrderRequest": {
         "allOf": [
@@ -2983,6 +3049,7 @@
             "properties": {
               "orderDetails": {
                 "type": "array",
+                "nullable": true,
                 "items": {
                   "$ref": "#/components/schemas/TOSOrderDetailRequest"
                 }
@@ -3755,8 +3822,8 @@
               "quantity": {
                 "type": "integer",
                 "format": "int32",
-                "maximum": 2147483647,
-                "minimum": 1
+                "maximum": 2147483647.0,
+                "minimum": 1.0
               }
             }
           }

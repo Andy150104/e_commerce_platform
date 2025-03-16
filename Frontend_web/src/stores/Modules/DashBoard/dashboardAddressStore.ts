@@ -70,7 +70,6 @@ export const useDashAddressStore = defineStore('Address', {
       loadingStore.LoadingChange(true)
       const res = await apiServer.api.v1.UDSUpdateUserAddress.$put({
         body: {
-          isOnlyValidation: false,
           addressId: apiFieldValues.addressId,
           addressLine: apiFieldValues.addressLine,
           ward: apiFieldValues.ward,
@@ -97,7 +96,6 @@ export const useDashAddressStore = defineStore('Address', {
 
       const res = await apiServer.api.v1.UDSInsertUserAddress.$post({
         body: {
-          isOnlyValidation: false,
           addressLine: apiFieldValues.addressLine,
           ward: apiFieldValues.ward,
           city: apiFieldValues.province,
@@ -124,7 +122,6 @@ export const useDashAddressStore = defineStore('Address', {
       loadingStore.LoadingChange(true)
       const res = await apiServer.api.v1.UDSDeleteUserAddress.$patch({
         body: {
-          isOnlyValidation: false,
           addressId: addressId,
         },
       })

@@ -192,7 +192,7 @@
                    focus:outline-none focus:ring-2 focus:ring-blue-500"
           /> -->
           <BaseControlTextArea
-          v-model="myText"
+            v-model="myText"
             placeholder="Type a message..."
           />
           <button

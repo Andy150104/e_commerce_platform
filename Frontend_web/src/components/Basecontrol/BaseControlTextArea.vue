@@ -1,5 +1,5 @@
 <template>
-  <Textarea v-model="internalValue" :placeholder="placeholder" :rows="rows" autoResize :style="styleCss" />
+  <Textarea v-model="internalValue" :placeholder="placeholder" :rows="rows" autoResize :style="styleCss" :disabled="disable"/>
 </template>
 
 <script lang="ts" setup>
@@ -8,6 +8,11 @@
 
   /** Định nghĩa các props */
   const props = defineProps({
+    disable: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     modelValue: {
       type: String,
       default: '',

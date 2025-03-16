@@ -275,12 +275,26 @@ export type OPSAddPlanRefundRequest = AbstractApiRequest & {
   reason: string;
 }
 
-export type InsertOrderResponse = AbstractApiResponseOfString & {
-  response?: string | undefined;
+export type InsertOrderResponse = AbstractApiResponseOfInsertOrderResponseEntity & {
+  response?: InsertOrderResponseEntity | undefined;
+}
+
+export type InsertOrderResponseEntity = {
+  paymentUrl?: string | undefined;
+  ghnCode?: string | undefined;
+}
+
+export type AbstractApiResponseOfInsertOrderResponseEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: InsertOrderResponseEntity | null | undefined;
 }
 
 export type InsertOrderRequest = AbstractApiRequest & {
-  orderDetails?: TOSOrderDetailRequest[] | undefined;
+  orderDetails?: TOSOrderDetailRequest[] | null | undefined;
   paymentMethod: number;
   addressId: string;
 }
@@ -618,6 +632,4 @@ export type MPSUpdateAccessoryResponse = AbstractApiResponseOfString & {
 
 export type MSPInsertImageAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
-}
-export type AbstractApiRequest = {
 }

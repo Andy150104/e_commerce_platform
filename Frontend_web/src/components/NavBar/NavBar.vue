@@ -83,7 +83,7 @@
                 :badge="cartLength.toString()"
                 badgeSeverity="info"
                 severity="contrast"
-                @click="ViewCart()"
+                @click.stop="viewCart"
               />
             </span>
           </button>
@@ -97,7 +97,7 @@
               <span class="block text-sm text-gray-900 dark:text-white"> {{ profileUser.firstName + ' ' + profileUser.lastName }} </span>
               <span class="block text-sm text-gray-500 truncate dark:text-gray-400"> {{ profileUser.email }}</span>
             </div>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Dashboard </a>
+            <a href="/Dashboard/UserProfile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Dashboard </a>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Settings </a>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"> Earnings </a>
             <a
@@ -165,8 +165,8 @@
           v-if="!authStore.isAuthorization"
           class="px-4 py-2 flex space-x-2 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
         >
-          <a href="#" class="flex-1 text-center py-2 bg-blue-600 text-white rounded hover:bg-blue-700"> Register </a>
-          <a href="#" class="flex-1 text-center py-2 bg-purple-600 text-white rounded hover:bg-purple-700"> Login </a>
+          <a href="/Register" class="flex-1 text-center py-2 bg-blue-600 text-white rounded hover:bg-blue-700"> Register </a>
+          <a href="/Login" class="flex-1 text-center py-2 bg-purple-600 text-white rounded hover:bg-purple-700"> Login </a>
         </div>
 
         <!-- Nếu đã login => Hiển thị user info trên mobile -->
@@ -179,7 +179,7 @@
             </div>
           </div>
           <div class="mt-3 space-y-1">
-            <a href="#" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
+            <a href="/Dashboard/UserProfile" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
               Dashboard
             </a>
             <a href="#" class="block px-3 py-2 text-sm text-gray-700 dark:text-gray-200 rounded hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -246,7 +246,7 @@ import ToggleThemeButton from '../Theme/ToggleThemeButton.vue'
     }
   }
 
-  function viewCart(){
+  const viewCart = () => {
     window.location.href = "http://localhost:3000/Service/ViewCart"
   }
 

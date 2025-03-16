@@ -162,7 +162,16 @@
           </div>
           <CardContainer>
             <template #body>
-              <CardProduct2 ref="cardRef" :product-model="store.produtList" :label-name="'Add to cart'" @on-buy="onBuyNow" :is-have-side-bar="true">
+              <CardProduct2
+                ref="cardRef"
+                :is-show-button2="true"
+                :product-model="store.produtList"
+                :label-name="'Add to cart'"
+                @on-buy="onBuyNow"
+                @on-add-wishlist="onAddToWishlist"
+                @on-remove-wishlist="onRemoveOutWishlist"
+                :is-have-side-bar="true"
+              >
                 <template #body>
                   <CardCart :cart-model="cartStore.cartList" />
                 </template>
@@ -201,8 +210,10 @@
   import { useForm } from 'vee-validate'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import BaseControlSearchOneField from '@PKG_SRC/components/Basecontrol/BaseControlSearchOneField.vue'
+  import { useWishListStore } from '@PKG_SRC/stores/Modules/WishList/WishlistStore'
 
   const store = useDisplayProductStore()
+  const wishListStore = useWishListStore()
   const searchStore = useSearchStore()
   const cartStore = useCartStore()
   const detailProductStore = useDetailProductStore()
@@ -237,6 +248,16 @@
 
   const onReturnLogin = () => {
     window.location.href = 'http://localhost:3000/Login'
+  }
+
+  const onRemoveOutWishlist = async (selectedProduct: any) => {
+    await wishListStore.RemoveItemOutWishlist(selectedProduct)
+    await fetchProducts()
+  }
+
+  const onAddToWishlist = async (selectedProduct: any) => {
+    await wishListStore.AddToWishList(selectedProduct)
+    await fetchProducts()
   }
 
   const onBuyNow = async (selectedProduct: any) => {

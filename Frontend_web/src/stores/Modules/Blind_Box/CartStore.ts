@@ -32,6 +32,7 @@ export type CartState = {
   fields: typeof fields
   cartList: DPSSelectCartItem[]
   totalCartPrice: Number
+  isPaymentFlag: boolean,
 }
 
 export const useCartStore = defineStore('Cart', {
@@ -39,6 +40,7 @@ export const useCartStore = defineStore('Cart', {
     fields,
     cartList: [],
     totalCartPrice: 0,
+    isPaymentFlag: false,
   }),
   // state
 
@@ -92,5 +94,16 @@ export const useCartStore = defineStore('Cart', {
       await this.GetAllCart()
       return true
     },
+    async InsertOrder () {
+      // const apiClient = useApiClient()
+      // const loadingStore = useLoadingStore()
+      // const res = await apiClient.api.v1.InsertOrder.$post({
+
+      // })
+      // if (!res.success) return false
+      // this.cartList = res.response?.items ?? []
+      // this.totalCartPrice = res.response?.totalPrice ?? 0
+      // return true
+    }
   },
 })
