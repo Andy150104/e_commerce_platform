@@ -123,7 +123,6 @@ public class PlanService : BaseService<Plan, Guid, VwPlan>, IPlanService
         var username = identityService.IdentityEntity.UserName;
         Repository.ExecuteInTransaction(() =>
         {
-            Voucher voucher;
 
             // Get Plan
             var plan = Repository.GetById(request.PlanId);
@@ -135,24 +134,12 @@ public class PlanService : BaseService<Plan, Guid, VwPlan>, IPlanService
 
             var orderPlan = new OrderPlan
             {
+                OrderId = Guid.NewGuid(),
                 PlanId = request.PlanId,
                 Username = username,
                 Price = plan.Price,
                 Status = (byte)ConstantEnum.OrderPlans.Pending
             };
-
-            if (request.VoucherId != null)
-            {
-                voucher = _voucherService.GetById(request.VoucherId ?? Guid.Empty);
-                if (voucher == null)
-                {
-                    response.SetMessage(MessageId.I00000, CommonMessages.VoucherNotFound);
-                    return;
-                }
-
-                orderPlan.VoucherId = voucher.VoucherId;
-                orderPlan.Price = plan.Price - voucher.UnitPrice;
-            }
 
             // Create Payment
             var res = _momoService.CreatePaymentAsync(new MomoExecuteResponseModel
