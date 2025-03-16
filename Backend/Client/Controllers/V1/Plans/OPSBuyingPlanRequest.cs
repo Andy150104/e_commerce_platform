@@ -6,6 +6,5 @@ namespace Client.Controllers.V1.OPS
     {
         [Required(ErrorMessage = "Plan Id is required")]
         public Guid PlanId { get; set; }
-        public Guid? VoucherId { get; set; }   
     }
 }
