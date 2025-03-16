@@ -122,3 +122,23 @@ export function base64ToFile(base64String: string, filename: string): File {
 
   return new File([u8arr], filename, { type: mime })
 }
+
+export async function urlToBase64(url: string): Promise<string> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Không thể tải ảnh từ URL: ${response.statusText}`);
+  }
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject('Không thể chuyển đổi blob sang base64.');
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}

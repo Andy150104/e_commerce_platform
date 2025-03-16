@@ -26,6 +26,7 @@
                 :button-severity="'contrast'"
                 :width="'80rem'"
                 @on-confirm="emit('on-insert')"
+                @on-blinding-insert="emit('on-binding-insert-data')"
               >
                 <template #body>
                   <slot name="bodyButtonAdd"></slot>
@@ -95,6 +96,7 @@
       <Column header="Actions" style="min-width: 12rem">
         <template #body="slotProps">
           <ModalInputForm
+            @on-blinding-update="onBindingUpdate(slotProps.data)"
             :is-only-show-icon="true"
             :header="'Update Accessory With Id <strong>' + slotProps.data.accessoryId + '</strong>'"
             :button-icon="'pi pi-pencil'"
@@ -103,7 +105,7 @@
             @on-confirm="onUpdateAccessory(slotProps.data)"
           >
             <template #body>
-              <slot name="bodyButtonAdd"></slot>
+              <slot name="bodyButtonUpdate"></slot>
             </template>
           </ModalInputForm>
           <ModalConfirm
@@ -155,9 +157,15 @@
   interface Emits {
     (e: 'on-delete', item: any): void
     (e: 'on-update', item: any): void
+    (e: 'on-binding-insert-data'): void
+    (e: 'on-binding-update-data', item: any): void
     (e: 'on-insert'): void
   }
   const emit = defineEmits<Emits>()
+
+  const onBindingUpdate = (product: any) =>{
+    emit('on-binding-update-data', product)
+  }
 
   const editProduct = (product: any) => {
     emit('on-update', product)

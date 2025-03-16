@@ -29,8 +29,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'DashBoard/Account',
     'DashBoard/Address',
     'Service/Buying',
-    'Service/ViewCart',
-    'Service/Blind_Box',
+    'Service/Exchange',
   ]
 
   // Kiểm tra nếu không đăng nhập và không thuộc danh sách route cho phép

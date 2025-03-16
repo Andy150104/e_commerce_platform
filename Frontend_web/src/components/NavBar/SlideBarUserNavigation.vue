@@ -170,7 +170,7 @@
                 childItemName: 'History order',
               },
               {
-                link: '#',
+                link: '/Dashboard/Wishlist',
                 childItemName: 'WishList',
               },
             ]"

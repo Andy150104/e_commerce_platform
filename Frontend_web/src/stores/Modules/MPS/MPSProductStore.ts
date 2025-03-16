@@ -5,8 +5,8 @@ import { SearchService } from '@PKG_SRC/types/enums/constantBackend'
 import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
 import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 import { useUploadImageStore } from '../usercontrol/uploadImageStore'
-import fs from "fs";
 import type { AbstractApiResponseOfString, MPSSelectAccessoriesEntity } from '@PKG_SRC/composables/Client/api/@types'
+import { useCatogryStore } from '@PKG_SRC/stores/Components/CategoryStore'
 export type FormSchema = Record<string, string>
 
 export const fieldsInitialize: FormSchema = {
@@ -15,7 +15,17 @@ export const fieldsInitialize: FormSchema = {
   name: '',
   price: '',
   discount: '',
-  shortDescription: ''
+  shortDescription: '',
+  parentCategory: '',
+  childCategory: '',
+  quantityUpdate: '1',
+  descriptionUpdate: '',
+  nameUpdate: '',
+  priceUpdate: '',
+  discountUpdate: '',
+  shortDescriptionUpdate: '',
+  parentCategoryUpdate: '',
+  childCategoryUpdate: '',
 }
 
 const errorFieldsInitialize: FormSchema = { ...fieldsInitialize }
@@ -35,13 +45,13 @@ export type ImageListResponse = {
   imagesList: string[]
 }
 
-export type CartState = {
+export type MPSProductState = {
   fields: typeof fields
   accessoriesList: MPSSelectAccessoriesEntity[]
 }
 
 export const useMPSProductStore = defineStore('MPS', {
-  state: (): CartState => ({
+  state: (): MPSProductState => ({
     fields,
     accessoriesList: [],
   }),
@@ -91,29 +101,68 @@ export const useMPSProductStore = defineStore('MPS', {
       return true
     },
     async AddProduct(description: string) {
+      const categoryStore = useCatogryStore()
       const apiClient = useApiClient()
       const loadingStore = useLoadingStore()
-      loadingStore.LoadingChange(true)
       const formMessage = useFormMessageStore()
       const uploadStore = useUploadImageStore()
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
-      const formData = new FormData();
       const images: File[] = uploadStore.uploadImage.map((image, index) =>
         base64ToFile(image.imagePreview, `image_${index + 1}.png`)
       )
-    
+      console.log('Discount', apiFieldValues.discount)
+      console.log('Name', apiFieldValues.name)
+      loadingStore.LoadingChange(true)
       const res = await apiClient.api.v1.MPSInsertAccessory.$post({
         body: {
           Images: images,
         },
         query: {
-          CategoryId: 'B6FDC0BE-3D87-4F5F-AE08-7E33757DF1B4',
+          CategoryId: await categoryStore.CheckCategory() ? categoryStore.chooseCategoryId : '',
           Description: description,
           Discount: Number(apiFieldValues.discount),
           Name: apiFieldValues.name,
           Price: Number(apiFieldValues.price),
           Quantity: Number(apiFieldValues.quantity),
           ShortDescription: apiFieldValues.shortDescription,
+        },
+      })
+      categoryStore.ResetCategory()
+      loadingStore.LoadingChange(false)
+      if (!res.success) {
+        formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+        return false
+      }
+      uploadStore.ResetStore()
+      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
+      return true
+    },
+    async UpdateProduct(description: string, id: string, imageIds: string[]) {
+      const categoryStore = useCatogryStore()
+      const apiClient = useApiClient()
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
+      const formMessage = useFormMessageStore()
+      const uploadStore = useUploadImageStore()
+      const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
+      const images: File[] = uploadStore.uploadImage.map((image, index) =>
+        base64ToFile(image.imagePreview, `image_${index + 1}.png`)
+      )
+    
+      const res = await apiClient.api.v1.MPSUpdateAccessory.$put({
+        body:{
+          Images: images
+        },
+        query: {
+          CodeAccessory: id,
+          CategoryId: await categoryStore.CheckCategory() ? categoryStore.chooseCategoryId : '',
+          Description: description,
+          Discount: Number(apiFieldValues.discount),
+          Name: apiFieldValues.name,
+          Price: Number(apiFieldValues.price),
+          Quantity: Number(apiFieldValues.quantity),
+          ShortDescription: apiFieldValues.shortDescription,
+          ImageId: imageIds
         },
       })
       loadingStore.LoadingChange(false)

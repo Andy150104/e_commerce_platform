@@ -2,7 +2,7 @@
   <div
     v-for="(product, index) in productModel"
     :key="index"
-    class="animate-fade-up max-w-sm md:max-w-[400px] w-full h-[550px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300"
+    class="animate-fade-up max-w-sm md:max-w-[400px] w-full h-[600px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300"
     @click="goToProduct(product.codeProduct)"
   >
     <!-- Carousel Section -->
@@ -49,9 +49,9 @@
       <p class="mb-4 text-sm text-gray-600">{{ product.shortDescription }}</p>
       <div v-if="product.salePrice">
         <!-- <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.price)) }}</p> -->
-        <p class="text-2xl font-bold text-gray-800 mb-1">{{ product.price }}</p>
+        <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.salePrice)) }}</p>
         <!-- <p class="text-sm text-gray-500 line-through">{{ moneyFormatter(Number(product.salePrice)) }}</p> -->
-        <p class="text-sm text-gray-500 line-through">{{ product.salePrice }}</p>
+        <p class="text-xl text-gray-500 line-through">{{ product.price }}</p>
       </div>
       <div v-else>
         <p class="text-2xl font-bold text-gray-800 mb-1">{{ product.price }}</p>
@@ -65,6 +65,7 @@
       </div>
       <div class="flex items-center space-x-4">
         <button
+          v-if="isShowButton2"
           class="flex-1 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100"
           @click.stop=""
         >
@@ -79,7 +80,12 @@
         <button
           type="button"
           data-tooltip-target="tooltip-add-to-favorites"
-          class="rounded-lg p-2 text-gray-500 hover:bg-red-500 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          :class="[
+            'rounded-lg p-2',
+            product.wishListId ? 'bg-red-500 text-white' : 'text-gray-500 hover:bg-red-500 hover:text-gray-900',
+            'dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+          ]"
+          @click.stop="onAddAndRemoveWishlist(product)"
         >
           <span class="sr-only"> Add to Favorites </span>
           <svg class="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -105,7 +111,7 @@
     </div>
   </div>
   <div v-if="isHaveSideBar">
-    <SideBarNoButton text-title="Cart" v-if="isShowSideBar" @on-click-close="handleClose">
+    <SideBarNoButton :is-cart="true" text-title="Cart" v-if="isShowSideBar" @on-click-close="handleClose">
       <template #bodySideBar>
         <slot name="body"></slot>
       </template>
@@ -122,6 +128,11 @@
   const isShowSideBar = ref(false)
 
   const props = defineProps({
+    isShowButton2: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     productModel: {
       type: Array as PropType<any[]>,
       required: false,
@@ -162,6 +173,12 @@
 
   interface Emits {
     (e: 'on-buy', codeProduct: any): void
+    (e: 'on-add-wishlist', codeProduct: any): void
+    (e: 'on-remove-wishlist', codeProduct: any): void
+  }
+
+  const onAddAndRemoveWishlist = async (product: any) =>{
+    product.wishListId ? emit('on-remove-wishlist', product.codeProduct) : emit('on-add-wishlist', product.codeProduct)
   }
 
   function openSideBar(value: boolean) {

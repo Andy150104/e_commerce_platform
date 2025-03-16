@@ -22,10 +22,11 @@ export const useUploadImageStore = defineStore('Upload Image', {
       })
     },
     SetImage(imageList: string[]) {
+      this.ResetStore()
       imageList.forEach((image) => {
         this.uploadImage.push({
-          name: '',
-          size: 0,
+          name: 'image',
+          size: 1024,
           imagePreview: image,
         })
       })

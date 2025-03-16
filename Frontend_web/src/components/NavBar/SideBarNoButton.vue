@@ -53,8 +53,10 @@
                   Filters
                 </button>
                 <div class="flex items-center gap-2 bg-gray-100 px-4 py-2 rounded-md shadow-md">
-                  <span class="text-sm font-medium text-gray-500">Total:</span>
-                  <span class="text-lg font-bold text-black"> VND </span>
+                  <div v-if="isCart">
+                    <span class="text-sm font-medium text-gray-500">Total:</span>
+                    <span class="text-lg font-bold text-black"> {{ moneyFormatter(Number(cartStore.totalCartPrice)) }} VND </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -65,13 +67,27 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { useCartStore } from '@PKG_SRC/stores/Modules/Blind_Box/CartStore';
+import { Currency, Locale } from '@PKG_SRC/types/enums/constantFrontend';
+
   const props = defineProps({
     textTitle: {
       type: String,
       required: false,
       default: 'Title',
     },
+    isCart: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
   })
+
+  const cartStore = useCartStore()
+
+  const moneyFormatter = (money?: number) => {
+    if (money) return formatMoney(money, Currency.VND, Locale.VI_VN)
+  }
 
   interface Emits {
     (e: 'on-click-close', value: boolean): void

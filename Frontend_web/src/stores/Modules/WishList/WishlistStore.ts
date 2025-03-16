@@ -3,7 +3,9 @@ import { veeValidateStateInitialize } from '@PKG_SRC/utils/StoreFunction'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 import { SearchService } from '@PKG_SRC/types/enums/constantBackend'
 import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
-import type { DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
+import type { DPSSelectCartItem, DPSSelectCartItemEntity } from '@PKG_SRC/composables/Client/api/@types'
+import { useCartStore } from '../Blind_Box/CartStore'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
 export type FormSchema = Record<string, string>
 
@@ -13,30 +15,24 @@ export const fieldsInitialize: FormSchema = {
 
 const errorFieldsInitialize: FormSchema = { ...fieldsInitialize }
 
+// VeeValidate fields
 const fields = {
   values: fieldsInitialize,
   errors: errorFieldsInitialize,
   ...veeValidateStateInitialize,
 }
 
-export type ImageList = {
-  response: ImageListResponse
-}
-
-export type ImageListResponse = {
-  imagesList: string[]
-}
-
 export type CartState = {
   fields: typeof fields
-  cartList: DPSSelectCartItemEntity[]
+  address: any
 }
 
-export const useWishListBuyingServiceStore = defineStore('Wishlist', {
+export const useWishListStore = defineStore('Wishlist', {
   state: (): CartState => ({
     fields,
-    cartList: [],
+    address: {},
   }),
+  // state
 
   getters: {
     fieldValues: (state) => {
@@ -53,28 +49,32 @@ export const useWishListBuyingServiceStore = defineStore('Wishlist', {
     ResetStore() {
       this.fields.resetForm()
     },
-    async AddToWishList(index: number, accessoryId: string) {
-      const key = `quantity_${index}`
+    async AddToWishList(codeAccessory: string) {
       const apiClient = useApiClient()
+      const cartStore = useCartStore()
       const loadingStore = useLoadingStore()
+      const formMessageStore = useFormMessageStore()
       const res = await apiClient.api.v1.DPSInsertWishList.$post({
         body: {
-          codeAccessory: accessoryId,
+          codeAccessory: codeAccessory,
         },
       })
       if (!res.success) return false
+      formMessageStore.SetFormMessage(res, true)
       return true
     },
-    async DeleteCart(index: number, productId: string) {
-      const key = `quantity_${index}`
+    async RemoveItemOutWishlist(codeAccessory: string) {
       const apiClient = useApiClient()
+      const cartStore = useCartStore()
       const loadingStore = useLoadingStore()
-      const res = await apiClient.api.v1.DPSDeleteCartItem.$patch({
+      const formMessageStore = useFormMessageStore()
+      const res = await apiClient.api.v1.DPSDeleteWishList.$patch({
         body: {
-          codeAccessory: productId,
+          codeAccessory: codeAccessory,
         },
       })
       if (!res.success) return false
+      formMessageStore.SetFormMessage(res, true)
       return true
     },
   },
