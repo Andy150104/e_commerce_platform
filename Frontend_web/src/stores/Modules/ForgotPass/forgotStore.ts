@@ -57,8 +57,6 @@ export const useUpdatePassStore = defineStore('UpdatePass', {
       return this.fieldValid
     },
     async updatePassword() {
-      // const validation: any = await this.fields.validate()
-      // if (validation.valid === false) return false
       const validation: any = await this.fields.validate()
       if (validation.valid === false) return false
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
@@ -66,6 +64,7 @@ export const useUpdatePassStore = defineStore('UpdatePass', {
       const apiClient = useApiServer()
       const formMessage = useFormMessageStore()
       const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
       const res = await apiClient.api.v1.FPSForgotPassword.$post({
         body: {
           isOnlyValidation: false,

@@ -7,6 +7,7 @@ import type { AbstractApiResponseOfString } from '@PKG_SRC/composables/auth/defi
 
 export const fieldsInitialize = {
   password: '',
+  confirmPassword:'',
   key : '',
 }
 export type FormSchema = typeof fieldsInitialize
@@ -52,12 +53,14 @@ export const useVerifyPasswordStore = defineStore('VerifyPass', {
       return this.fieldValid
     },
     async verifyPassword() {
+      
+      const loadingStore = useLoadingStore()
+      loadingStore.LoadingChange(true)
       const validation: any = await this.fields.validate()
       if (validation.valid === false) return false
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize)
       const apiClient = useApiServer()
       const formMessage = useFormMessageStore()
-      const loadingStore = useLoadingStore()
       const res = await apiClient.api.v1.FPSVerifyKey.$post({
         body: {
           isOnlyValidation: false,
