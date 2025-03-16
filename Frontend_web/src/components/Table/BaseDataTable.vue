@@ -95,24 +95,33 @@
       </Column>
       <Column header="Actions" style="min-width: 12rem">
         <template #body="slotProps">
-          <ModalInputForm
-            @on-blinding-update="onBindingUpdate(slotProps.data)"
-            :is-only-show-icon="true"
-            :header="'Update Accessory With Id <strong>' + slotProps.data.accessoryId + '</strong>'"
-            :button-icon="'pi pi-pencil'"
-            :button-severity="'success'"
-            :width="'80rem'"
-            @on-confirm="onUpdateAccessory(slotProps.data)"
-          >
-            <template #body>
-              <slot name="bodyButtonUpdate"></slot>
-            </template>
-          </ModalInputForm>
-          <ModalConfirm
-            :is-only-show-icon="true"
-            @on-confirm="confirmDeleteProduct(slotProps.data)"
-            :content="'Are you sure you want to delete <strong>' + slotProps.data.accessoryId + '</strong>?'"
-          />
+          <div v-if="showActions">
+            <ModalInputForm
+              @on-blinding-update="onBindingUpdate(slotProps.data)"
+              :is-only-show-icon="true"
+              :header="'Update Accessory With Id <strong>' + slotProps.data.accessoryId + '</strong>'"
+              :button-icon="'pi pi-pencil'"
+              :button-severity="'success'"
+              :width="'80rem'"
+              @on-confirm="onUpdateAccessory(slotProps.data)"
+            >
+              <template #body>
+                <slot name="bodyButtonUpdate"></slot>
+              </template>
+            </ModalInputForm>
+            <ModalConfirm
+              :is-only-show-icon="true"
+              @on-confirm="confirmDeleteProduct(slotProps.data)"
+              :content="'Are you sure you want to delete <strong>' + slotProps.data.accessoryId + '</strong>?'"
+            />
+          </div>
+          <button
+  class="px-4 py-2 text-white rounded"
+  :class="slotProps.data.status === 0 ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'"
+  @click="toggleStatus(slotProps.data)"
+>
+  {{ slotProps.data.status === 1 ? 'Accept' : 'UnAccept' }}
+</button>
         </template>
       </Column>
     </DataTable>
@@ -133,6 +142,7 @@
   import GalleryCarouselPopup from '../Gallery/GalleryCarouselPopup.vue'
   import { data } from 'autoprefixer'
 
+  // Đặt thành true nếu muốn hiển thị Update & Delete
   // Định nghĩa props với prop isSelectedColumns (mặc định là false)
   const props = withDefaults(
     defineProps<{
@@ -141,13 +151,14 @@
       columns: any[]
       pageSize?: number
       isSelectedColumns?: boolean
+      showActions?: boolean
     }>(),
     {
       pageSize: 10,
       isSelectedColumns: false,
+      showActions: true, // Mặc định bật
     }
   )
-
   const loading = ref(false)
 
   const filters = ref<any>({
@@ -160,10 +171,12 @@
     (e: 'on-binding-insert-data'): void
     (e: 'on-binding-update-data', item: any): void
     (e: 'on-insert'): void
+    (e: 'on-accept', item: any): void
+    (e: 'on-unaccept', item: any): void
   }
   const emit = defineEmits<Emits>()
 
-  const onBindingUpdate = (product: any) =>{
+  const onBindingUpdate = (product: any) => {
     emit('on-binding-update-data', product)
   }
 
@@ -178,7 +191,13 @@
   const onUpdateAccessory = (product: any) => {
     emit('on-update', product)
   }
-
+  const toggleStatus = (product: any) => {
+  if (product.status === 1) {
+    emit('on-accept', product);
+  } else {
+    emit('on-unaccept', product);
+  }
+};
   // Thiết lập filter cho từng cột nếu cột có isFilter
   props.columns.forEach((col) => {
     if (col.isFilter) {
