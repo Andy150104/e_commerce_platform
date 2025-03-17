@@ -87,13 +87,14 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                     return;
                 }
 
+                var accessoryPrice = Math.Floor((accessory.Price - (accessory.Price * ((accessory.Discount ?? 0) / 100))));
                 // Insert new OrderDetail
                 var orderDetail = new OrderDetail
                 {
                     OrderId = newOrder.OrderId,
                     AccessoryId = accessory.AccessoryId,
                     Quantity = item.Quantity,
-                    UnitPrice = accessory.Price * item.Quantity
+                    UnitPrice = accessoryPrice
                 };
 
                 listAccessoryName.Add(new KeyValuePair<string, string>(accessory.AccessoryId, accessory.Name));
@@ -110,6 +111,7 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                 _accessoryService.Update(accessory);
             }
             
+            SaveChanges(userName);
             // Update TotalPrice of Order
             newOrder.TotalPrice = totalPrice;
             
@@ -132,7 +134,7 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                 var res = await _momoService.CreatePaymentOrderAsync(new MomoExecuteResponseModel
                 {
                     FullName = $"{newOrder.OrderId}_{userName}",
-                    Amount = Math.Round(totalPrice * 100, 0).ToString(),
+                    Amount = ((int) newOrder.TotalPrice).ToString(),
                     OrderId = newOrder.OrderId.ToString(),
                     OrderInfo = $"{CommonMessages.OrderDescription}_{newOrder.OrderId}",
                 });
@@ -144,7 +146,7 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                     return;
                 }
 
-                newOrder.Status = (byte)ConstantEnum.OrderStatus.Pending;
+                newOrder.Status = (byte)ConstantEnum.OrderStatus.Processing;
 
                 // Set Response
                 response.Response = new InsertOrderResponseEntity
@@ -161,7 +163,7 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                     return;
                 }
 
-                newOrder.Status = (byte)ConstantEnum.OrderStatus.Processing;
+                newOrder.Status = (byte)ConstantEnum.OrderStatus.Success;
 
                 response.Response = new InsertOrderResponseEntity
                 {

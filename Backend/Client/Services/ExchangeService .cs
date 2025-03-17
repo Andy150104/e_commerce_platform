@@ -1,15 +1,17 @@
 using Client.Controllers.V1.AEPS;
+using Client.Controllers.V1.DPS;
+using Client.Logics.Commons;
 using Client.Models;
 using Client.Repositories;
 using Client.Utils.Consts;
 
 namespace Client.Services;
 
-public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeService
+public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, IExchangeService
 {
     private readonly IIdentityService _identityService;
     private readonly IBlindBoxService _blindBoxService;
-    private readonly IBaseService<ImagesBlindBox, Guid, object> _imagesService;
+    private readonly IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> _imagesService;
     private readonly ILogicCommonRepository _logicCommonRepository;
 
     /// <summary>
@@ -20,8 +22,8 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
     /// <param name="blindBoxService"></param>
     /// <param name="imagesService"></param>
     /// <param name="logicCommonRepository"></param>
-    public ExchangeService(IBaseRepository<Exchange, Guid, object> repository, IIdentityService identityService, 
-        IBlindBoxService blindBoxService, IBaseService<ImagesBlindBox, Guid, object> imagesService, 
+    public ExchangeService(IBaseRepository<Exchange, Guid, VwBlindBoxDisplay> repository, IIdentityService identityService, 
+        IBlindBoxService blindBoxService, IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> imagesService, 
         ILogicCommonRepository logicCommonRepository) : base(repository)
     {
         _identityService = identityService;
@@ -115,8 +117,8 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
 
         var exchangeList = Repository
             .Find(x => x.BlindBox.Username == userName, isTracking: false, x => x.BlindBox, x => x.BlindBox.ImagesBlindBoxes)
-            .Where(x => x.Status != (byte)ConstantEnum.ExchangeStatus.Fail)
-            .OrderByDescending(x => x.CreatedAt)
+            .Where(x => x!.Status != (byte)ConstantEnum.ExchangeStatus.Fail)
+            .OrderByDescending(x => x!.CreatedAt)
             .ToList();
 
         if (!exchangeList.Any())
@@ -127,7 +129,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
 
         response.Response = exchangeList.Select(exchange => new AEPSGetExchangeAccessoryEntity
         {
-            ExchangeId = exchange.ExchangeId,
+            ExchangeId = exchange!.ExchangeId,
             BlindBoxId = exchange.BlindBoxId,
             Status = exchange.Status,
             IsActive = exchange.IsActive,
@@ -176,8 +178,8 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
 
         var exchangeList = Repository
             .Find(x => x.BlindBox.Username == userName, isTracking: false, x => x.BlindBox, x => x.BlindBox.ImagesBlindBoxes)
-            .Where(x => x.Status == (byte)ConstantEnum.ExchangeStatus.Fail)
-            .OrderByDescending(x => x.CreatedAt)
+            .Where(x => x!.Status == (byte)ConstantEnum.ExchangeStatus.Fail)
+            .OrderByDescending(x => x!.CreatedAt)
             .ToList();
 
         if (!exchangeList.Any())
@@ -188,7 +190,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
 
         response.Response = exchangeList.Select(exchange => new AEPSGetFailExchangeAccessoryEntity
         {
-            ExchangeId = exchange.ExchangeId,
+            ExchangeId = exchange!.ExchangeId,
             BlindBoxId = exchange.BlindBoxId,
             Status = exchange.Status,
             IsActive = exchange.IsActive,
@@ -219,5 +221,50 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
         response.SetMessage(MessageId.I00001);
 
         return response;
+    }
+    
+    /// <summary>
+    /// Select by blind box
+    /// </summary>
+    /// <param name="sortBy"></param>
+    /// <returns></returns>
+    public List<ItemEntity> SelectByBlindBox(byte? sortBy)
+    {
+        var responseEntity = new List<ItemEntity>();
+        
+        // Get blind boxes
+        var blindBoxs = _blindBoxService.FindView(x => x.Status == (byte) ConstantEnum.PostingStatus.PendingExchange);
+        
+        if (sortBy == (byte)ConstantEnum.Sort.Newest || sortBy == (byte)ConstantEnum.Sort.Oldest)
+        {
+            blindBoxs = CommonLogic.ApplySorting(blindBoxs, sortBy);
+        }
+        
+        var blindBoxList = blindBoxs.ToList();
+        foreach (var blindBox in blindBoxList)
+        {
+            // Get image urls
+            var imageUrls = _imagesService
+                .FindView(x => x.ImageId == blindBox!.BlindBoxId)
+                .Select(x => new DpsSelectItemListImageUrl
+                {
+                    ImageUrl = x!.ImageUrl
+                })
+                .ToList();
+            
+            // Create entity
+            var entity = new ItemEntity
+            {
+                CodeProduct = blindBox!.BlindBoxId.ToString(),
+                CreatedAt = blindBox.CreatedAt,
+                FirstNameCreator = blindBox.FirstName!,
+                LastNameCreator = blindBox.LastName!,
+                ImageUrl = imageUrls,
+                ExchangeId = blindBox.ExchangeId,
+            };
+            responseEntity.Add(entity);
+        }
+        
+        return responseEntity;
     }
 }

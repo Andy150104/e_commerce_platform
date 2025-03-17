@@ -19,5 +19,6 @@ public class TOSOrderDetailRequest
     public string AccessoryId { get; set; }
     
     [Required(ErrorMessage = "Quantity is required")]
+    [Range(1, int.MaxValue, ErrorMessage = "Quantity must be a positive value")]
     public int Quantity { get; set; }
 }

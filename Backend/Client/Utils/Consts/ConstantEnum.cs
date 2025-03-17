@@ -58,12 +58,9 @@ public static class ConstantEnum
     /// </summary>
     public enum OrderStatus
     {
-        Pending = 1,
-        Processing = 2,
-        Shipping = 3,
-        Delivered = 4,
-        Cancel = 5,
-        Refunded = 6
+        Processing = 1,
+        Success = 2,
+        Failed = 3,
     }
     
     /// <summary>
