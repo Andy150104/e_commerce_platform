@@ -16,8 +16,6 @@ public class AEPSGetExchangeAccessoryEntity
 
     public string Description { get; set; }
 
-    public decimal Price { get; set; }
-
     public byte? Status { get; set; }
 
     public Guid BlindBoxId { get; set; }

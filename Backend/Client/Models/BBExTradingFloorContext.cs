@@ -415,12 +415,9 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("updated_by");  
             entity.Property(e => e.ExchangeName)
                 .HasMaxLength(50)
-                .HasColumnName("exchangeName");   
+                .HasColumnName("exchangeName");
             entity.Property(e => e.Description)
                 .HasColumnName("description");
-            entity.Property(e => e.Price)
-                .HasColumnType("decimal(18, 2)")
-                .HasColumnName("price");
 
             entity.HasOne(d => d.BlindBox).WithMany(p => p.Exchanges)
                 .HasForeignKey(d => d.BlindBoxId)

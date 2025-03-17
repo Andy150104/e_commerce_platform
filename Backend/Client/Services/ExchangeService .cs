@@ -88,7 +88,6 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
             var exchange = new Exchange
             {
                 BlindBoxId = blindBox.BlindBoxId,
-                Price = request.Price,
                 Description = request.Description
             };
 
@@ -137,7 +136,6 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
             BlindBoxId = exchange.BlindBox.BlindBoxId,
             Status = exchange.Status,
             Description = exchange.Description,
-            Price = exchange.Price,
             ExchangeName = exchange.ExchangeName,
             imageBlindBoxList = exchange.BlindBox.ImagesBlindBoxes
     .Select(img => new AEPSGetByIdExchangeAccessoryImageList
@@ -184,7 +182,6 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
             BlindBoxId = exchange.BlindBox.BlindBoxId,
             Status = exchange.Status,
             Description = exchange.Description,
-            Price = exchange.Price,
             ExchangeName = exchange.ExchangeName,
             imageBlindBoxList = exchange.BlindBox.ImagesBlindBoxes
             .Select(img => new AEPSGetExchangeAccessoryImageBlindBoxList
@@ -221,7 +218,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
 
         if (!exchangeList.Any())
         {
-            response.SetMessage(MessageId.E00000);
+            response.SetMessage(MessageId.I00001);
             return response;
         }
 
@@ -231,7 +228,6 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
             BlindBoxId = exchange.BlindBox.BlindBoxId,
             Status = exchange.Status,
             Description = exchange.Description,
-            Price = exchange.Price,
             ExchangeName = exchange.ExchangeName,
             imageBlindBoxList = exchange.BlindBox.ImagesBlindBoxes
             .Select(img => new AEPSGetFailExchangeAccessoryImageBlindBoxList

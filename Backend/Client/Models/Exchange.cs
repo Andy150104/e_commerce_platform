@@ -25,8 +25,6 @@ public partial class Exchange
 
     public string? Description { get; set; }
 
-    public decimal Price { get; set; }
-
     public virtual BlindBox BlindBox { get; set; } = null!;
 
     public virtual ICollection<ExchangeRecheckRequest> ExchangeRecheckRequests { get; set; } = new List<ExchangeRecheckRequest>();
