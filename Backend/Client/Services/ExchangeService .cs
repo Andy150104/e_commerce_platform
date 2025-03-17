@@ -1,4 +1,5 @@
 using Client.Controllers.V1.AEPS;
+using Client.Logics.Commons;
 using Client.Models;
 using Client.Repositories;
 using Client.Utils.Consts;
@@ -11,6 +12,8 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
     private readonly IBlindBoxService _blindBoxService;
     private readonly IBaseService<ImagesBlindBox, Guid, object> _imagesService;
     private readonly ILogicCommonRepository _logicCommonRepository;
+    private readonly CloudinaryLogic _cloudinaryLogic;
+
 
     /// <summary>
     /// Constructor
@@ -22,12 +25,13 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
     /// <param name="logicCommonRepository"></param>
     public ExchangeService(IBaseRepository<Exchange, Guid, object> repository, IIdentityService identityService, 
         IBlindBoxService blindBoxService, IBaseService<ImagesBlindBox, Guid, object> imagesService, 
-        ILogicCommonRepository logicCommonRepository) : base(repository)
+        ILogicCommonRepository logicCommonRepository, CloudinaryLogic cloudinaryLogic) : base(repository)
     {
         _identityService = identityService;
         _blindBoxService = blindBoxService;
         _imagesService = imagesService;
         _logicCommonRepository = logicCommonRepository;
+        _cloudinaryLogic = cloudinaryLogic;
     }
 
     /// <summary>
@@ -42,39 +46,49 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
         
         // Get userName
         var userName = identityService.IdentityEntity.UserName;
-        
-        // Check image
-        var checkImage = _logicCommonRepository.ImageCheck(request.ImageUrls).Result;
 
         // Begin transaction
-        Repository.ExecuteInTransaction(() =>
+        Repository.ExecuteInTransaction(async () =>
         {
             // Add new blind box
             var blindBox = new BlindBox
             {
+                BlindBoxId = Guid.NewGuid(),
                 Username = userName
             };
             _blindBoxService.Add(blindBox);
             _identityService.SaveChanges(userName);
-        
-            // Add images
-            blindBox.ImagesBlindBoxes = request.ImageUrls
-                .Select(i => new ImagesBlindBox
-                { 
-                    BlindBoxId = blindBox.BlindBoxId, 
-                    ImageUrl = i 
-                }).ToList();
 
-            foreach (var image in blindBox.ImagesBlindBoxes)
+            // Upload Images in Parallel
+            var uploadTasks = request.Images.Select(async image =>
+            {
+                var imageUrl = await _cloudinaryLogic.UploadImageAsync(image);
+                return new ImagesBlindBox
+                {
+                    ImageId = Guid.NewGuid(),
+                    ImageUrl = imageUrl,
+                    BlindBoxId = blindBox.BlindBoxId
+                };
+            }).ToList();
+            var images = await Task.WhenAll(uploadTasks);
+
+            // Insert Images
+            foreach (var image in images)
             {
                 _imagesService.Add(image);
             }
             _identityService.SaveChanges(userName);
+
+            var list = images.Select(i => i.ImageUrl).ToList();
+
+            // Check image
+            var checkImage = _logicCommonRepository.ImageCheck(list).Result;
         
             // Add exchange with blind box
             var exchange = new Exchange
             {
                 BlindBoxId = blindBox.BlindBoxId,
+                Description = request.Description
             };
 
             // Check image
@@ -97,6 +111,43 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
             }
 
         });
+        return response;
+    }
+
+    /// <summary>
+    /// Get By Id Exchange
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="identityService"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public AEPSGetByIdExchangeAccessoryResponse GetByIdExchangeAccessory(AEPSGetByIdExchangeAccessoryRequest request, IIdentityService identityService)
+    {
+        var response = new AEPSGetByIdExchangeAccessoryResponse() { Success = false };
+
+        // Get userName
+        var userName = identityService.IdentityEntity.UserName;
+
+        var exchange = Repository.Find(x => x.ExchangeId == request.ExchangeId, isTracking: false, x => x.BlindBox.ImagesBlindBoxes).FirstOrDefault();
+
+        response.Response =  new AEPSGetByIdExchangeAccessoryEntity
+        {
+            ExchangeId = exchange.ExchangeId,
+            BlindBoxId = exchange.BlindBox.BlindBoxId,
+            Status = exchange.Status,
+            Description = exchange.Description,
+            ExchangeName = exchange.ExchangeName,
+            imageBlindBoxList = exchange.BlindBox.ImagesBlindBoxes
+    .Select(img => new AEPSGetByIdExchangeAccessoryImageList
+    {
+        ImageId = img.ImageId,
+        ImageUrls = img.ImageUrl
+    }).ToList()
+        };
+
+        response.Success = true;
+        response.SetMessage(MessageId.I00001);
+
         return response;
     }
 
@@ -128,32 +179,17 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
         response.Response = exchangeList.Select(exchange => new AEPSGetExchangeAccessoryEntity
         {
             ExchangeId = exchange.ExchangeId,
-            BlindBoxId = exchange.BlindBoxId,
+            BlindBoxId = exchange.BlindBox.BlindBoxId,
             Status = exchange.Status,
-            IsActive = exchange.IsActive,
-            CreatedAt = exchange.CreatedAt,
-            UpdatedAt = exchange.UpdatedAt,
-            CreatedBy = exchange.CreatedBy,
-            UpdatedBy = exchange.UpdatedBy,
-            BlindBox = new AEPSGetExchangeAccessoryBlindBoxEntity
+            Description = exchange.Description,
+            ExchangeName = exchange.ExchangeName,
+            imageBlindBoxList = exchange.BlindBox.ImagesBlindBoxes
+            .Select(img => new AEPSGetExchangeAccessoryImageBlindBoxList
             {
-                BlindBoxId = exchange.BlindBox.BlindBoxId,
-                Username = exchange.BlindBox.Username,
-                CreatedAt = exchange.BlindBox.CreatedAt,
-                UpdatedAt = exchange.BlindBox.UpdatedAt,
-                CreatedBy = exchange.BlindBox.CreatedBy,
-                UpdatedBy = exchange.BlindBox.UpdatedBy,
-                IsActive = exchange.BlindBox.IsActive,
-                WishlistId = exchange.BlindBox.WishlistId,
-                ImagesBlindBoxes = exchange.BlindBox.ImagesBlindBoxes
-            .Select(img => new AEPSGetExchangeAccessoryImagesBlindBoxesEntity
-            {
-                ImageUrl = img.ImageUrl
-            })
-.ToList()
-            }
+                ImageId = img.ImageId,
+                ImageUrls = img.ImageUrl
+            }).ToList()
         }).ToList();
-        
 
         response.Success = true;
         response.SetMessage(MessageId.I00001);
@@ -182,36 +218,23 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
 
         if (!exchangeList.Any())
         {
-            response.SetMessage(MessageId.E00000);
+            response.SetMessage(MessageId.I00001);
             return response;
         }
 
         response.Response = exchangeList.Select(exchange => new AEPSGetFailExchangeAccessoryEntity
         {
             ExchangeId = exchange.ExchangeId,
-            BlindBoxId = exchange.BlindBoxId,
+            BlindBoxId = exchange.BlindBox.BlindBoxId,
             Status = exchange.Status,
-            IsActive = exchange.IsActive,
-            CreatedAt = exchange.CreatedAt,
-            UpdatedAt = exchange.UpdatedAt,
-            CreatedBy = exchange.CreatedBy,
-            UpdatedBy = exchange.UpdatedBy,
-            BlindBox = new AEPSGetFailExchangeAccessoryBlindBoxEntity
+            Description = exchange.Description,
+            ExchangeName = exchange.ExchangeName,
+            imageBlindBoxList = exchange.BlindBox.ImagesBlindBoxes
+            .Select(img => new AEPSGetFailExchangeAccessoryImageBlindBoxList
             {
-                BlindBoxId = exchange.BlindBox.BlindBoxId,
-                Username = exchange.BlindBox.Username,
-                CreatedAt = exchange.BlindBox.CreatedAt,
-                UpdatedAt = exchange.BlindBox.UpdatedAt,
-                CreatedBy = exchange.BlindBox.CreatedBy,
-                UpdatedBy = exchange.BlindBox.UpdatedBy,
-                IsActive = exchange.BlindBox.IsActive,
-                WishlistId = exchange.BlindBox.WishlistId,
-                ImagesBlindBoxes = exchange.BlindBox.ImagesBlindBoxes
-            .Select(img => new AEPSGetFailExchangeAccessoryImagesBlindBoxesEntity
-            {
-                ImageUrl = img.ImageUrl
+                ImageId = img.ImageId,
+                ImageUrls = img.ImageUrl
             }).ToList()
-            }
         }).ToList();
 
 

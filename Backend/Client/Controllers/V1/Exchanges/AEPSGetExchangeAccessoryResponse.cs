@@ -12,57 +12,20 @@ public class AEPSGetExchangeAccessoryEntity
 {
     public Guid ExchangeId { get; set; }
 
-    public Guid BlindBoxId { get; set; }
+    public string ExchangeName { get; set; }
+
+    public string Description { get; set; }
 
     public byte? Status { get; set; }
 
-    public bool? IsActive { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public string? CreatedBy { get; set; }
-
-    public string? UpdatedBy { get; set; }
-
-    public AEPSGetExchangeAccessoryBlindBoxEntity BlindBox { get; set; } = null!;
-}
-
-public class AEPSGetExchangeAccessoryBlindBoxEntity
-{
     public Guid BlindBoxId { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public string Username { get; set; } = null!;
-
-    public string? CreatedBy { get; set; }
-
-    public string? UpdatedBy { get; set; }
-
-    public bool? IsActive { get; set; }
-
-    public Guid? WishlistId { get; set; }
-
-    public virtual ICollection<AEPSGetExchangeAccessoryImagesBlindBoxesEntity> ImagesBlindBoxes { get; set; } = new List<AEPSGetExchangeAccessoryImagesBlindBoxesEntity>();   
+    public ICollection<AEPSGetExchangeAccessoryImageBlindBoxList> imageBlindBoxList = new List<AEPSGetExchangeAccessoryImageBlindBoxList>();
 }
 
-public class AEPSGetExchangeAccessoryImagesBlindBoxesEntity
+public class AEPSGetExchangeAccessoryImageBlindBoxList
 {
     public Guid ImageId { get; set; }
 
-    public string ImageUrl { get; set; } = null!;
-
-    public bool? IsActive { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public string? CreatedBy { get; set; }
-
-    public string? UpdatedBy { get; set; }
+    public string ImageUrls { get; set; } = null!;
 }
