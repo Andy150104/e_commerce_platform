@@ -1,12 +1,12 @@
-import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
-import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { defineStore } from 'pinia'
+import { ConvertCastValue, createErrorFields } from '@PKG_SRC/utils/commonFunction'
 import { useLoadingStore } from '../usercontrol/loadingStore'
 import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
 import type {
   AbstractApiResponseOfString,
   AEPSGetExchangeRecheckRequestAccessoryEntity,
 } from '@PKG_SRC/composables/Client/api/@types'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
 export const fieldsInitialize = {
   requestId: '',
@@ -23,8 +23,6 @@ export const fieldsInitialize = {
 export type FormSchema = typeof fieldsInitialize
 
 const errorFieldsInitialize = createErrorFields(fieldsInitialize)
-
-const formMessage = useFormMessageStore()
 
 const fields = {
   values: fieldsInitialize,
@@ -86,9 +84,13 @@ export const useDBExchangeStore = defineStore('DBExchange', {
       })
       loadingStore.LoadingChange(false)
       if (!res.response) {
+        
+      const formMessage = useFormMessageStore()
         formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
         return false
       }
+      
+      const formMessage = useFormMessageStore()
       formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
       return true
     },

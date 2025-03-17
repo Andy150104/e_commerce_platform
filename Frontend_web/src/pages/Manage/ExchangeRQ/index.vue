@@ -3,7 +3,7 @@
     <template #body>
         <div class="max-w-3xl mx-auto text-center relative z-10 mt-0 pt-0">
           <h1 class="text-4xl font-bold text-black dark:text-white mb-4 animate-fade-up animate-duration-1000 animate-delay-500">Manage Exchange Requests</h1>
-          <!-- <p class="text-lg text-gray-700 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">Edit Your Own Personal Informations!</p> -->
+          <p class="text-lg text-gray-700 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">Manage Exchange Recheck Request!</p>
           <div class="mt-8 flex justify-center space-x-4"></div>
         </div>
       <div
@@ -15,6 +15,8 @@
   :is-selected-columns="true"
   @on-binding-update-data="onBinding"
   @on-toggle-status="handleToggleStatus"
+  @on-accept="handleAccept"
+  @on-unaccept="handleUnAccept"
   :default-fields-select="['requestId', 'status']"
    :showActions="false"
 />
@@ -23,22 +25,13 @@
   </BaseScreenManage>
 </template>
 <script lang="ts" setup>
-  import BaseControlEditorInput from '@PKG_SRC/components/Basecontrol/BaseControlEditorInput.vue'
   import BaseDataTable from '@PKG_SRC/components/Table/BaseDataTable.vue'
-  import UserControlSelectCategory from '@PKG_SRC/components/UserControl/UserControlSelectCategory.vue'
-  import UserControlTextFieldFloatLabel from '@PKG_SRC/components/UserControl/UserControlTextFieldFloatLabel.vue'
-  import UserControlUploadImage from '@PKG_SRC/components/UserControl/UserControlUploadImage.vue'
   import BaseScreenManage from '@PKG_SRC/layouts/Basecreen/BaseScreenManage.vue'
-  import { useCatogryStore } from '@PKG_SRC/stores/Components/CategoryStore'
-import { useDBExchangeStore } from '@PKG_SRC/stores/Modules/DashBoard/DBExchangeStore'
-  import { useMPSProductStore } from '@PKG_SRC/stores/Modules/MPS/MPSProductStore'
-  import { useUploadImageStore } from '@PKG_SRC/stores/Modules/usercontrol/uploadImageStore'
-  
+  import { useDBExchangeStore } from '@PKG_SRC/stores/Modules/DashBoard/DBExchangeStore'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import { useForm } from 'vee-validate'
 
   const store = useDBExchangeStore()
-  const uploadImageStore = useUploadImageStore()
   const editorValue = ref('')
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
@@ -159,21 +152,9 @@ import { useDBExchangeStore } from '@PKG_SRC/stores/Modules/DashBoard/DBExchange
       isSort: true,
       filterType: 'boolean',
     },
-    {
-  field: 'actions',
-  header: 'Actions',
-  isFilter: false,
-  isSort: false,
-  render: (row: any) => `
-    <button 
-      class="px-4 py-2 text-white rounded transition-all"
-      :class="row.status === 1 ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'"
-      @click="$emit('on-toggle-status', row.requestId, row.status === 0 ? 1 : 0)">
-      {{ row.status === 1 ? 'UnAccept' : 'Accept' }}
-    </button>
-  `,
-},
-  ]
+    
+
+ ]
 
   const onBinding = async (items: any) => {
     await nextTick()
@@ -185,25 +166,25 @@ import { useDBExchangeStore } from '@PKG_SRC/stores/Modules/DashBoard/DBExchange
     store.fields.setFieldValue('createdBy', items.createdBy)
     store.fields.setFieldValue('updatedBy', items.updatedBy)
     store.fields.setFieldValue('updatedAt', items.updatedAt)
-    const base64Images = await Promise.all(
-      items.imageAccessoriesList.map(async (img: any) => {
-        return await urlToBase64(img.imageUrl)
-      })
-    )
-    uploadImageStore.SetImage(base64Images)
     editorValue.value = items.description
   }
-  const handleToggleStatus = async (requestId: string, newStatus: number) => {
+  const handleToggleStatus = async (item: any) => {
   try {
-    if (newStatus === 1) {
-      await handleAccept(requestId)   // Nếu newStatus là 1 → Accept
+    console.log("Item nhận được:", item);
+    const { requestId, isAccepted } = item;
+
+    console.log("requestId:", requestId);
+    console.log("isAccepted:", isAccepted);
+
+    if (isAccepted) {
+      await handleAccept(requestId);
     } else {
-      await handleUnAccept(requestId) // Nếu newStatus là 0 → UnAccept
+      await handleUnAccept(requestId);
     }
   } catch (error) {
-    console.error('Error toggling request status:', error)
+    console.error('Error toggling request status:', error);
   }
-}
+};
 
 
   const handleAccept = async (requestId: string) => {

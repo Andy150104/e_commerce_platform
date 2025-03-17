@@ -115,16 +115,41 @@
               :content="'Are you sure you want to delete <strong>' + slotProps.data.accessoryId + '</strong>?'"
             />
           </div>
+
           <button
-  class="px-4 py-2 text-white rounded"
-  :class="slotProps.data.status === 0 ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'"
-  @click="toggleStatus(slotProps.data)"
->
-  {{ slotProps.data.status === 1 ? 'Accept' : 'UnAccept' }}
-</button>
+            v-if="slotProps.data.status === 0"
+            class="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-yellow-600"
+            @click="openApprovalModal(slotProps.data)"
+          >
+            Pending
+          </button>
+
+          <button v-else-if="slotProps.data.status === 1" class="px-4 py-2 text-white bg-green-500 rounded cursor-not-allowed" disabled>
+            Accepted
+          </button>
+          <button v-else-if="slotProps.data.status === 2" class="px-4 py-2 text-white bg-red-500 rounded cursor-not-allowed" disabled>
+            Rejected
+          </button>
         </template>
       </Column>
     </DataTable>
+
+    <ConfirmDialog group="headless" :modal="true" :closable="true" :dismissableMask="true">
+      <template #container="{ message, acceptCallback, rejectCallback }">
+        <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded relative">
+          <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200" @click="closeDialog">
+            ✕
+          </button>
+          <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
+          <p class="mb-0">{{ message.message }}</p>
+
+          <div class="flex items-center gap-2 mt-6">
+            <Button label="Approve" @click="acceptCallback" class="w-32"></Button>
+            <Button label="Reject" outlined @click="rejectCallback" class="w-32 bg-red-500 hover:bg-red-600 text-white"></Button>
+          </div>
+        </div>
+      </template>
+    </ConfirmDialog>
   </div>
 </template>
 
@@ -141,7 +166,8 @@
   import ModalInputForm from '../Modal/ModalInputForm.vue'
   import GalleryCarouselPopup from '../Gallery/GalleryCarouselPopup.vue'
   import { data } from 'autoprefixer'
-
+  import ConfirmDialog from 'primevue/confirmdialog'
+  import { useConfirm } from 'primevue/useconfirm'
   // Đặt thành true nếu muốn hiển thị Update & Delete
   // Định nghĩa props với prop isSelectedColumns (mặc định là false)
   const props = withDefaults(
@@ -171,10 +197,33 @@
     (e: 'on-binding-insert-data'): void
     (e: 'on-binding-update-data', item: any): void
     (e: 'on-insert'): void
-    (e: 'on-accept', item: any): void
-    (e: 'on-unaccept', item: any): void
+    (e: 'on-toggle-status', item: any): void
   }
   const emit = defineEmits<Emits>()
+
+  const confirm = useConfirm()
+
+  const openApprovalModal = (product: any) => {
+    confirm.require({
+      group: 'headless',
+      header: 'Approval Confirmation',
+      message: `Do you want to approve request ${product.requestId}?`,
+      accept: () => handleApprove(product.requestId),
+      reject: () => handleReject(product.requestId),
+    })
+  }
+  const closeDialog = () => {
+    confirm.close() // Đóng modal thủ công
+  }
+  const handleApprove = (requestId: number) => {
+    emit('on-toggle-status', { requestId, isAccepted: true })
+    console.log(`✅ Approved request: ${requestId}`)
+  }
+
+  const handleReject = (requestId: number) => {
+    emit('on-toggle-status', { requestId, isAccepted: false })
+    console.log(`❌ Rejected request: ${requestId}`)
+  }
 
   const onBindingUpdate = (product: any) => {
     emit('on-binding-update-data', product)
@@ -191,13 +240,7 @@
   const onUpdateAccessory = (product: any) => {
     emit('on-update', product)
   }
-  const toggleStatus = (product: any) => {
-  if (product.status === 1) {
-    emit('on-accept', product);
-  } else {
-    emit('on-unaccept', product);
-  }
-};
+
   // Thiết lập filter cho từng cột nếu cột có isFilter
   props.columns.forEach((col) => {
     if (col.isFilter) {
