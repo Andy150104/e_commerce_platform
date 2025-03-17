@@ -12,57 +12,23 @@ public class AEPSGetFailExchangeAccessoryEntity
 {
     public Guid ExchangeId { get; set; }
 
-    public Guid BlindBoxId { get; set; }
+    public string ExchangeName { get; set; }
+
+    public string Description { get; set; }
+
+    public decimal Price { get; set; }
 
     public byte? Status { get; set; }
 
-    public bool? IsActive { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public string? CreatedBy { get; set; }
-
-    public string? UpdatedBy { get; set; }
-
-    public AEPSGetFailExchangeAccessoryBlindBoxEntity BlindBox { get; set; } = null!;
-}
-
-public class AEPSGetFailExchangeAccessoryBlindBoxEntity
-{
     public Guid BlindBoxId { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public string Username { get; set; } = null!;
-
-    public string? CreatedBy { get; set; }
-
-    public string? UpdatedBy { get; set; }
-
-    public bool? IsActive { get; set; }
-
-    public Guid? WishlistId { get; set; }
-
-    public virtual ICollection<AEPSGetFailExchangeAccessoryImagesBlindBoxesEntity> ImagesBlindBoxes { get; set; } = new List<AEPSGetFailExchangeAccessoryImagesBlindBoxesEntity>();   
+    public ICollection<AEPSGetFailExchangeAccessoryImageBlindBoxList> imageBlindBoxList = new List<AEPSGetFailExchangeAccessoryImageBlindBoxList>();
 }
 
-public class AEPSGetFailExchangeAccessoryImagesBlindBoxesEntity
+public class AEPSGetFailExchangeAccessoryImageBlindBoxList
 {
     public Guid ImageId { get; set; }
 
-    public string ImageUrl { get; set; } = null!;
-
-    public bool? IsActive { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
-
-    public DateTime? UpdatedAt { get; set; }
-
-    public string? CreatedBy { get; set; }
-
-    public string? UpdatedBy { get; set; }
+    public string ImageUrls { get; set; } = null!;
 }
+

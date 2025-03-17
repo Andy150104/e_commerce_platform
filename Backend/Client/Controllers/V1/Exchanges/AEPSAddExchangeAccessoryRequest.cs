@@ -14,5 +14,5 @@ public class AEPSAddExchangeAccessoryRequest : AbstractApiRequest
     public decimal Price { get; set; }
 
     [Required(ErrorMessage = "Images is required")]
-    public List<string> ImageUrls { get; set; }
+    public List<IFormFile> Images { get; set; }
 }

@@ -412,7 +412,15 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("updated_at");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
-                .HasColumnName("updated_by");
+                .HasColumnName("updated_by");  
+            entity.Property(e => e.ExchangeName)
+                .HasMaxLength(50)
+                .HasColumnName("exchangeName");   
+            entity.Property(e => e.Description)
+                .HasColumnName("description");
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("price");
 
             entity.HasOne(d => d.BlindBox).WithMany(p => p.Exchanges)
                 .HasForeignKey(d => d.BlindBoxId)
@@ -699,6 +707,19 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("order_exchange_id");
             entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
             entity.Property(e => e.QueueId).HasColumnName("queue_id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
 
             entity.HasOne(d => d.Exchange).WithMany(p => p.OrdersExchanges)
                 .HasForeignKey(d => d.ExchangeId)
