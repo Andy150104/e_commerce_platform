@@ -32,9 +32,10 @@
 
           <!-- Submit Button -->
           <button
-            type="submit"
+            type="button"
             class="w-full bg-blue-600 text-white py-2.5 rounded-lg text-center font-medium hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
             @click="Login"
+            @keyup.enter="Login" 
           >
             Login
           </button>

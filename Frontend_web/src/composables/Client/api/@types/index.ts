@@ -633,3 +633,6 @@ export type MPSUpdateAccessoryResponse = AbstractApiResponseOfString & {
 export type MSPInsertImageAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
+export type AbstractApiRequest = {
+
+}

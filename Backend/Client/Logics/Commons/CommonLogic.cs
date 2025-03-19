@@ -21,7 +21,7 @@ public static class CommonLogic
     /// <param name="sortBy"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static IQueryable<T> ApplySorting<T>(IQueryable<T> query, byte? sortBy) where T : class
+    public static IQueryable<T?> ApplySorting<T>(IQueryable<T> query, byte? sortBy) where T : class?
     {
         if (!sortBy.HasValue)
             return query;

@@ -1,6 +1,19 @@
 <template>
   <BaseScreenManage>
     <template #body>
+      <div class="max-w-3xl text-start relative z-10 mt-0 pt-0 font-sans leading-relaxed text-gray-900 dark:text-white">
+        <!-- Heading lớn: dùng text-3xl hoặc text-4xl, có thể để gradient nếu muốn tạo điểm nhấn -->
+        <h1
+          class="text-4xl font-medium tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600 mb-4 animate-fade-up animate-duration-1000 animate-delay-300"
+        >
+          Manage Product
+        </h1>
+
+        <!-- Đoạn chào: dùng text-lg hoặc text-base + màu chữ trung bình (xám) -->
+        <p class="text-base sm:text-lg text-gray-700 dark:text-gray-300 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">
+          Welcome, Admin!
+        </p>
+      </div>
       <div
         class="animate-fade-left animate-ease-out animate-delay-100 p-10 md:max-w-none md:p-12 lg:p-30 rounded-xl mb-16 max-w-screen-lg mx-auto h-auto overflow-hidden"
       >

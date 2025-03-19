@@ -7,6 +7,8 @@ import type { ItemEntity } from '@PKG_SRC/composables/Client/api/@types'
 
 export const fieldsInitialize = {
   sortBy: 0,
+  parentCategory: '',
+  childCategory: '',
 }
 export type FormSchema = typeof fieldsInitialize
 
@@ -57,7 +59,6 @@ export const useDisplayProductStore = defineStore('Product', {
       this.fields = value
     },
     ResetStore() {
-      this.fields.resetForm()
       this.produtList = []
     },
     async GetProductList(searchServiceNum: number, maxPrice: number, minPrice: number, sortBy: number, pageSize: number, searchParams: string | undefined) {

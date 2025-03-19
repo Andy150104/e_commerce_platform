@@ -86,7 +86,6 @@ export const useProfileStore = defineStore('Profile', {
       loadingStore.LoadingChange(true)
       const res = await apiServer.api.v1.UDSUpdateUserProfile.$put({
         body: {
-          isOnlyValidation: false,
           firstName: apiFieldValues.firstName,
           lastName: apiFieldValues.lastName,
           phoneNumber: apiFieldValues.phoneNumber,

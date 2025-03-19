@@ -11,6 +11,7 @@ using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
 using Client.SystemClient;
 using Client.Controllers.V1.MomoPayment.MomoServices;
 using Client.Logics.Commons;
+using Client.Logics.Commons.Dashboard;
 using Client.Logics.Commons.GHNLogics;
 using Client.Repositories;
 using Client.Services;
@@ -37,6 +38,7 @@ builder.Services.AddScoped<IBaseService<Voucher, Guid, object>, BaseService<Vouc
 builder.Services.AddScoped<IBaseService<RefundPlanRequest, Guid, object>, BaseService<RefundPlanRequest, Guid, object>>();
 builder.Services.AddScoped<IBaseService<OrderPlan, Guid, object>, BaseService<OrderPlan, Guid, object>>();
 builder.Services.AddScoped<IBaseService<Cart, Guid, VwCartDisplay>, BaseService<Cart, Guid, VwCartDisplay>>();
+builder.Services.AddScoped<IBaseService<OrderDetail, Guid, VwOrderDetailsWithProduct>, BaseService<OrderDetail, Guid, VwOrderDetailsWithProduct>>();
 
 
 builder.Services.AddScoped<IWishListService, WishListService>();
@@ -56,6 +58,7 @@ builder.Services.AddScoped<IExchangeRecheckRequestService, ExchangeRecheckReques
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IGHNLogic, GHNLogics>();
+builder.Services.AddScoped<IDashboardLogic, DashboardLogic>();
 
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
 

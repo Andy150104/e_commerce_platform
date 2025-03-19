@@ -58,6 +58,7 @@
       <template #empty> No items found. </template>
       <template #loading> Loading data. Please wait. </template>
       <Column
+        class="animate-flip-up animate-once animate-ease-out animate-normal animate-fill-forwards"
         v-for="(col, index) in displayedColumns"
         :key="index"
         :field="col.field"

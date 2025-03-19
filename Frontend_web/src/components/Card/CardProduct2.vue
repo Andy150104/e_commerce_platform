@@ -2,7 +2,7 @@
   <div
     v-for="(product, index) in productModel"
     :key="index"
-    class="animate-fade-up max-w-sm md:max-w-[400px] w-full h-[600px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300"
+    class="flex flex-col animate-fade-up max-w-sm md:max-w-[400px] w-full h-[600px] mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl hover:scale-105 transition-all duration-300"
     @click="goToProduct(product.codeProduct)"
   >
     <!-- Carousel Section -->
@@ -44,9 +44,11 @@
       </button>
     </div>
     <!-- Content Section -->
-    <div class="p-6">
+    <div class="p-6 flex flex-col flex-1">
       <h5 class="mb-2 text-xl font-semibold tracking-tight text-gray-800">{{ product.nameAccessory }}</h5>
-      <p class="mb-4 text-sm text-gray-600">{{ product.shortDescription }}</p>
+      <div class="mb-4">
+        <p class="text-sm text-gray-600">{{ product.shortDescription ?? "Don't have short description" }}</p>
+      </div>
       <div v-if="product.salePrice">
         <!-- <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.price)) }}</p> -->
         <p class="text-2xl font-bold text-gray-800 mb-1">{{ moneyFormatter(Number(product.salePrice)) }}</p>
@@ -63,13 +65,13 @@
           <span class="text-gray-600 text-sm ml-2">{{ '(' + formatRating(product.averageRating ?? 0) + '/5.0)' }}</span>
         </div>
       </div>
-      <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-4 mt-auto">
         <button
           v-if="isShowButton2"
           class="flex-1 py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100"
-          @click.stop=""
+          @click.stop="emit('on-function-but2', product)"
         >
-          Wishlist
+          {{ button2Name }}
         </button>
         <button
           class="flex-1 py-2 px-4 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg hover:bg-blue-700"
@@ -78,6 +80,7 @@
           {{ labelName }}
         </button>
         <button
+          v-if="isShowWishList"
           type="button"
           data-tooltip-target="tooltip-add-to-favorites"
           :class="[
@@ -133,6 +136,11 @@
       required: false,
       default: false,
     },
+    button2Name: {
+      type: String,
+      required: false,
+      default: 'Wishlist',
+    },
     productModel: {
       type: Array as PropType<any[]>,
       required: false,
@@ -152,6 +160,16 @@
       required: false,
       default: false,
     },
+    isExchange:{
+      type: Boolean,
+      required: false,
+      default: false
+    },
+    isShowWishList:{
+      type: Boolean,
+      required: false,
+      default: false
+    }
   })
 
   const isOpen = ref(false)
@@ -168,11 +186,12 @@
 
   const goToProduct = (codeProduct: string) => {
     const router = useRouter()
-    router.push(`/Service/Buying/Product/${codeProduct}`)
+    props.isExchange ? router.push(`/Service/Exchange/Blindbox/${codeProduct}`) : router.push(`/Service/Buying/Product/${codeProduct}`)
   }
 
   interface Emits {
     (e: 'on-buy', codeProduct: any): void
+    (e: 'on-function-but2', product: any): void
     (e: 'on-add-wishlist', codeProduct: any): void
     (e: 'on-remove-wishlist', codeProduct: any): void
   }

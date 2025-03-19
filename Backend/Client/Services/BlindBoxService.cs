@@ -1,3 +1,4 @@
+
 using Client.Controllers.V1.DPS;
 using Client.Logics.Commons;
 using Client.Models;
@@ -9,7 +10,7 @@ namespace Client.Services;
 public class BlindBoxService : BaseService<BlindBox, Guid, VwBlindBoxDisplay>, IBlindBoxService
 {
     private readonly IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> _imageBlindBoxService;
-    
+
     /// <summary>
     /// Constructor
     /// </summary>
@@ -19,7 +20,7 @@ public class BlindBoxService : BaseService<BlindBox, Guid, VwBlindBoxDisplay>, I
     {
         _imageBlindBoxService = imageBlindBoxService;
     }
-    
+
     /// <summary>
     /// Select by blind box
     /// </summary>
@@ -35,7 +36,7 @@ public class BlindBoxService : BaseService<BlindBox, Guid, VwBlindBoxDisplay>, I
         {
             blindBoxDisplays = CommonLogic.ApplySorting(blindBoxDisplays, sortBy);
         }
-        
+
         var blindBixList = blindBoxDisplays.ToList();
         foreach (var blindBox in blindBixList)
         {
@@ -47,7 +48,7 @@ public class BlindBoxService : BaseService<BlindBox, Guid, VwBlindBoxDisplay>, I
                     ImageUrl = x.ImageUrl
                 })
                 .ToList();
-            
+
             // Create entity
             var entity = new ItemEntity
             {
