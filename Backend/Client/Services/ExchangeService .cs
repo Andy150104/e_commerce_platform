@@ -40,7 +40,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
     /// <param name="request"></param>
     /// <param name="identityService"></param>
     /// <returns></returns>
-    public AEPSAddExchangeAccessoryResponse AddExchangeAccessory(AEPSAddExchangeAccessoryRequest request, IIdentityService identityService)
+    public async Task<AEPSAddExchangeAccessoryResponse> AddExchangeAccessory(AEPSAddExchangeAccessoryRequest request, IIdentityService identityService)
     {
         var response = new AEPSAddExchangeAccessoryResponse() { Success = false };
         
@@ -48,7 +48,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
         var userName = identityService.IdentityEntity.UserName;
 
         // Begin transaction
-        Repository.ExecuteInTransaction(async () =>
+        await Repository.ExecuteInTransactionAsync(async () =>
         {
             // Add new blind box
             var blindBox = new BlindBox
@@ -88,7 +88,8 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
             var exchange = new Exchange
             {
                 BlindBoxId = blindBox.BlindBoxId,
-                Description = request.Description
+                Description = request.Description,
+                ExchangeName = request.Name
             };
 
             // Check image
