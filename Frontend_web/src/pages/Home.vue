@@ -29,7 +29,7 @@
           <h2 class="text-2xl font-bold text-center text-gray-900 mb-8 dark:text-white">Featured Products</h2>
           <CardContainer>
             <template #body>
-              <CardProduct2 :product-model="displayProductStore.produtList" />
+              <CardProduct2 :product-model="displayProductStore.produtList" :label-name="'View'" @on-buy="onBuyNow" />
               <CardSkeleton v-if="displayProductStore.isLoadingSkeletonCard" />
             </template>
           </CardContainer>
@@ -103,6 +103,11 @@ import CardSkeleton from '@PKG_SRC/components/Skeleton/CardSkeleton.vue'
     await nextTick()
   }
 
+  const onBuyNow = async (selectedProduct: any) => {
+    const router = useRouter()
+    router.push('/Service/Buying')
+  }
+
   const onMoveToBuyService = () => {
     const router = useRouter()
     router.push('Service/Buying')
@@ -127,6 +132,7 @@ import CardSkeleton from '@PKG_SRC/components/Skeleton/CardSkeleton.vue'
   onUnmounted(() => {
     gradientCard.value?.removeEventListener('mousemove', onMouseMove)
     gradientCard.value?.removeEventListener('mouseleave', onMouseLeave)
+    displayProductStore.ResetStore()
   })
 </script>
 

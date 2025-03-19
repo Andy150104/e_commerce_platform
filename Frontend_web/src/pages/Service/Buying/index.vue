@@ -51,36 +51,20 @@
               <template #body>
                 <div>
                   <div class="bg-white p-6 space-y-6">
-                    <!-- Hàng 1: Product Brand, Product Model -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <!-- Product Brand -->
-                      <div>
-                        <label for="productBrand" class="block text-sm font-medium mb-1">Product Brand</label>
-                        <select
-                          id="productBrand"
-                          class="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 text-sm p-2"
-                        >
-                          <option value="Apple">Apple</option>
-                          <option value="Samsung">Samsung</option>
-                          <option value="Asus">Asus</option>
-                          <option value="Lenovo">Lenovo</option>
-                        </select>
-                      </div>
-                      <!-- Product Model -->
-                      <div>
-                        <label for="productModel" class="block text-sm font-medium mb-1">Product Model</label>
-                        <select
-                          id="productModel"
-                          class="block w-full rounded-md border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-400 dark:focus:border-blue-400 text-sm p-2"
-                        >
-                          <option value="iMac 27">iMac 27</option>
-                          <option value="MacBook Pro">MacBook Pro</option>
-                          <option value="iPhone 14">iPhone 14</option>
-                          <option value="iPad Air">iPad Air</option>
-                        </select>
-                      </div>
+                    <div>
+                      <UserControlSelectCategory
+                        :xml-column-parent-category="xmlColumns.parentCategory"
+                        :maxlength-parent-category="50"
+                        :disabled-parent-category="false"
+                        :err-msg-parent-category="fieldErrors.parentCategory"
+                        :placeholder-parent-category="'Parent Category'"
+                        :xml-column-child-category="xmlColumns.childCategory"
+                        :maxlength-child-category="50"
+                        :disabled-child-category="false"
+                        :err-msg-child-category="fieldErrors.childCategory"
+                        :placeholder-child-category="'Child Category'"
+                      />
                     </div>
-
                     <!-- Hàng 2: (ví dụ) Manufacture Year, Price Range -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <!-- Manufacture Year (nếu cần) -->
@@ -171,6 +155,7 @@
                 @on-add-wishlist="onAddToWishlist"
                 @on-remove-wishlist="onRemoveOutWishlist"
                 :is-have-side-bar="true"
+                :is-show-wish-list="true"
               >
                 <template #body>
                   <CardCart :cart-model="cartStore.cartList" />
@@ -211,6 +196,7 @@
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import BaseControlSearchOneField from '@PKG_SRC/components/Basecontrol/BaseControlSearchOneField.vue'
   import { useWishListStore } from '@PKG_SRC/stores/Modules/WishList/WishlistStore'
+  import UserControlSelectCategory from '@PKG_SRC/components/UserControl/UserControlSelectCategory.vue'
 
   const store = useDisplayProductStore()
   const wishListStore = useWishListStore()
@@ -232,6 +218,20 @@
     sortBy: XmlLoadColumn({
       id: 'sortBy',
       name: 'sortBy',
+      rules: '',
+      visible: true,
+      option: '',
+    }),
+    parentCategory: XmlLoadColumn({
+      id: 'parentCategory',
+      name: 'Parent Category',
+      rules: '',
+      visible: true,
+      option: '',
+    }),
+    childCategory: XmlLoadColumn({
+      id: 'childCategory',
+      name: 'Child Category',
       rules: '',
       visible: true,
       option: '',
@@ -313,6 +313,6 @@
   })
 
   onUnmounted(() => {
-    store.$reset()
+    store.ResetStore()
   })
 </script>
