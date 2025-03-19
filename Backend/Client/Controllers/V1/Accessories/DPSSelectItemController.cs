@@ -18,7 +18,7 @@ public class DPSSelectItemController : AbstractApiGetControllerNotToken<DPSSelec
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly IIdentityService _identityService;
     private readonly IAccessoryService _accessoryService;
-    private readonly IBlindBoxService _blindBoxService;
+    private readonly IExchangeService _exchangeService;
     private readonly IIdentityApiClient _identityApiClient;
 
     /// <summary>
@@ -26,14 +26,14 @@ public class DPSSelectItemController : AbstractApiGetControllerNotToken<DPSSelec
     /// </summary>
     /// <param name="identityService"></param>
     /// <param name="accessoryService"></param>
-    /// <param name="blindBoxService"></param>
+    /// <param name="exchangeService"></param>
     /// <param name="identityApiClient"></param>
     public DPSSelectItemController(IIdentityService identityService, IAccessoryService accessoryService
-        , IBlindBoxService blindBoxService, IIdentityApiClient identityApiClient)
+        , IExchangeService exchangeService, IIdentityApiClient identityApiClient)
     {
         _identityService = identityService;
         _accessoryService = accessoryService;
-        _blindBoxService = blindBoxService;
+        _exchangeService = exchangeService;
         _identityApiClient = identityApiClient;
     }
 
@@ -87,7 +87,7 @@ public class DPSSelectItemController : AbstractApiGetControllerNotToken<DPSSelec
         // If search by blind box
         else if (request.SearchBy == (byte) ConstantEnum.ProductType.BlindBox)
         {
-            responseEntity = _blindBoxService.SelectByBlindBox(request.SortBy);
+            responseEntity = _exchangeService.SelectByBlindBox(request.SortBy);
         }
 
         // Total records
