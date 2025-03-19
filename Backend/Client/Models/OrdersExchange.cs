@@ -19,7 +19,7 @@ public partial class OrdersExchange
 
     public string? UpdatedBy { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 
     public virtual Exchange Exchange { get; set; } = null!;
 

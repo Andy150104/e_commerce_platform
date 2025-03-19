@@ -30,6 +30,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     'DashBoard/Address',
     'Service/Buying',
     'Service/Exchange',
+    'Service/Exchange/AddExchange',
   ]
 
   // Kiểm tra nếu không đăng nhập và không thuộc danh sách route cho phép

@@ -405,21 +405,19 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
-            entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.ExchangeName)
-                .HasMaxLength(50)
-                .HasColumnName("exchangeName");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
-            entity.Property(e => e.Price)
-                .HasColumnType("decimal(10, 2)")
-                .HasColumnName("price");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
-                .HasColumnName("updated_by");
+                .HasColumnName("updated_by");  
+            entity.Property(e => e.ExchangeName)
+                .HasMaxLength(50)
+                .HasColumnName("exchangeName");
+            entity.Property(e => e.Description)
+                .HasColumnName("description");
 
             entity.HasOne(d => d.BlindBox).WithMany(p => p.Exchanges)
                 .HasForeignKey(d => d.BlindBoxId)
@@ -704,15 +702,15 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.OrderExchangeId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_exchange_id");
+            entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
+            entity.Property(e => e.QueueId).HasColumnName("queue_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
-            entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
-            entity.Property(e => e.QueueId).HasColumnName("queue_id");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -1148,16 +1146,11 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
-            entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
-            entity.Property(e => e.ExchangeName)
-                .HasMaxLength(50)
-                .HasColumnName("exchangeName");
             entity.Property(e => e.FirstName).HasColumnName("first_name");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.LastName).HasColumnName("last_name");
-            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
