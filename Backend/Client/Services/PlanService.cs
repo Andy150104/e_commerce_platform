@@ -145,7 +145,7 @@ public class PlanService : BaseService<Plan, Guid, VwPlan>, IPlanService
             var res = _momoService.CreatePaymentAsync(new MomoExecuteResponseModel
             {
                 FullName = $"{orderPlan.OrderId}_{username}",
-                Amount = Math.Round(orderPlan.Price * 100, 0).ToString(),
+                Amount = ((int)orderPlan.Price).ToString(),
                 OrderId = orderPlan.OrderId.ToString(),
                 OrderInfo = plan.Description!
             }).Result;

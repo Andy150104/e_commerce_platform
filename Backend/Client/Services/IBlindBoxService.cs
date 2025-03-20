@@ -5,5 +5,5 @@ namespace Client.Services;
 
 public interface IBlindBoxService : IBaseService<BlindBox, Guid, VwBlindBoxDisplay>
 {
-    // List<ItemEntity> SelectByBlindBox(byte? sortBy);
+    List<ItemEntity> SelectByBlindBox(byte? sortBy);
 }

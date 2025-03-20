@@ -37,5 +37,7 @@ public class CommonMessages
     public static readonly string RefundRequestOrderNotFound = "Refund request order not found";
     
     public static readonly string FailedToFetchGHNApi = "Failed to fetch GHN API";
+
+    public static readonly string ListIsEmpty = "List is Empty";
     
 }

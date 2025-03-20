@@ -4,6 +4,8 @@ using Client.Services;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Polly;
 
 namespace Client.Controllers.V1.MomoPayment
 {
@@ -31,6 +33,7 @@ namespace Client.Controllers.V1.MomoPayment
         [HttpGet]
         public IActionResult PaymentCallBack()
         {
+            const string updateRole = "https://localhost:5090/api/v1/UpdateRole";
             const string trueUrl = "";
             const string falseUrl = "";
             var response = _momoSerivce.PaymentExecuteAsync(HttpContext.Request.Query);
@@ -54,12 +57,20 @@ namespace Client.Controllers.V1.MomoPayment
                 orderPlan.Description = response.TransactionId;
                 userName.PlanId = orderPlan.PlanId;
                 userName.PlanExpired = DateTime.Now.AddMonths(plan.DurationMonths);
-                _appDbContext.Users.Update(userName);
-                _appDbContext.OrderPlans.Update(orderPlan);
-                _appDbContext.SaveChanges();
-                transaction.Commit();   
-            }
-            return Ok(true);
+
+                //Update Role
+                var httpClient = new HttpClient();
+                var body = new { isOnlyValidation = false, userName = userName.FirstName, planId = orderPlan.PlanId };
+                var res = httpClient.PostAsJsonAsync(updateRole, body).Result;
+                if (res.IsSuccessStatusCode)
+                {
+                    _appDbContext.Users.Update(userName);
+                    _appDbContext.OrderPlans.Update(orderPlan);
+                    _appDbContext.SaveChanges();
+                    transaction.Commit();
+                }
+                }
+                return Ok(true);
         }
         
         [HttpGet("Order")]
