@@ -72,7 +72,7 @@ export const useAddExchangeStore = defineStore('AddExchange', {
       const images: File[] = uploadImageStore.uploadImage.map((image, index) =>
         base64ToFile(image.imagePreview, `image_${index + 1}.png`)
       )
-      const res = await apiClient.api.v1.AEPSAddExchangeAccessory.$get({
+      const res = await apiClient.api.v1.AEPSAddExchangeAccessory.$post({
         query: {
           Name: apiFieldValues.name,
           Description: apiFieldValues.description,
