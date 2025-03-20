@@ -23,13 +23,13 @@ const fields = {
   ...veeValidateStateInitialize,
 }
 
-export type UpdatePassState = {
+export type AddExchangeState = {
   fields: typeof fields
   createFlgAddPass: boolean
 }
 
-export const useAddExchangeStore = defineStore('UpdatePass', {
-  state: (): UpdatePassState => ({
+export const useAddExchangeStore = defineStore('AddExchange', {
+  state: (): AddExchangeState => ({
     fields,
     createFlgAddPass: false,
   }),
@@ -63,35 +63,37 @@ export const useAddExchangeStore = defineStore('UpdatePass', {
     
       // Lấy danh sách ảnh từ store
       const uploadImageStore = useUploadImageStore();
-      const uploadedImages = uploadImageStore.uploadImage.map(image => image.imagePreview);
-    
+
       const apiClient = useApiClient();
       const formMessage = useFormMessageStore();
       const loadingStore = useLoadingStore();
     
       loadingStore.LoadingChange(true);
-    
-    //   const res = await apiClient.api.v1.AEPSAddExchangeAccessory.$post({
-    //     body: {
-    //       name: apiFieldValues.name,
-    //       description: apiFieldValues.description,
-    //       price: apiFieldValues.price,
-    //       imageUrls: uploadedImages, // Gửi danh sách ảnh
-    //     },
-    //   });
+      const images: File[] = uploadImageStore.uploadImage.map((image, index) =>
+        base64ToFile(image.imagePreview, `image_${index + 1}.png`)
+      )
+      const res = await apiClient.api.v1.AEPSAddExchangeAccessory.$get({
+        query: {
+          Name: apiFieldValues.name,
+          Description: apiFieldValues.description,
+        },
+        body:{
+          Images:images
+        },
+      });
     
       loadingStore.LoadingChange(false);
     console.log("api gonna call this:"+ apiFieldValues.name)
     console.log("api gonna call this:"+ apiFieldValues.description)
     console.log("api gonna call this:"+ apiFieldValues.price)
-    console.log("api gonna call this:"+ uploadedImages.at(1))
-    //   if (!res.success) {
-    //     formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
-    //     return false;
-    //   }
+    console.log("api gonna call this:"+ images)
+      if (!res.success) {
+        formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
+        return false;
+      }
     
-    //   formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
-    //   return true;
+      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
+      return true;
     }    
   },
 })
