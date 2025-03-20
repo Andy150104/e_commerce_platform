@@ -94,6 +94,19 @@
           <InputText v-else v-model="filterModel.value" type="text" @input="filterCallback()" :placeholder="`Search by ${col.header}`" />
         </template>
       </Column>
+      <Column field="statusText" header="Status"  v-if="!showActions">
+        <template #body="{ data }">
+          <span
+            :class="{
+              'text-green-500 font-bold': data.statusText === 'Approved',
+              'text-red-500 font-bold': data.statusText === 'Rejected',
+              'text-yellow-500 font-bold': data.statusText === 'Pending',
+            }"
+          >
+            {{ data.statusText }}
+          </span>
+        </template>
+      </Column>
       <Column header="Actions" style="min-width: 12rem">
         <template #body="slotProps">
           <div v-if="showActions">
@@ -116,20 +129,19 @@
               :content="'Are you sure you want to delete <strong>' + slotProps.data.accessoryId + '</strong>?'"
             />
           </div>
-
           <button
             v-if="slotProps.data.status === 0"
             class="px-4 py-2 text-white bg-yellow-500 rounded hover:bg-yellow-600"
             @click="openApprovalModal(slotProps.data)"
           >
-            Pending
+            Processing
           </button>
-
-          <button v-else-if="slotProps.data.status === 1" class="px-4 py-2 text-white bg-green-500 rounded cursor-not-allowed" disabled>
-            Accepted
-          </button>
-          <button v-else-if="slotProps.data.status === 2" class="px-4 py-2 text-white bg-red-500 rounded cursor-not-allowed" disabled>
-            Rejected
+          <button
+            v-else-if="slotProps.data.status === 1 || slotProps.data.status === 2"
+            class="px-4 py-2 text-white bg-gray-500 rounded cursor-not-allowed"
+            disabled
+          >
+            Processed
           </button>
         </template>
       </Column>
