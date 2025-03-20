@@ -10,14 +10,14 @@
         class="animate-fade-left animate-ease-out animate-delay-100 p-10 md:max-w-none md:p-12 lg:p-30 rounded-xl mb-16 max-w-screen-lg mx-auto h-auto overflow-hidden"
       >
       <BaseDataTable
-  :items="store.uAEPSGetExchangeRecheckRequestAccessoryEntity"
+  :items="formattedItems"
   :columns="columns"
   :is-selected-columns="true"
   @on-binding-update-data="onBinding"
   @on-toggle-status="handleToggleStatus"
   @on-accept="handleAccept"
   @on-unaccept="handleUnAccept"
-  :default-fields-select="['requestId', 'status']"
+  :default-fields-select="['requestId', 'statusText']"
    :showActions="false"
 />
       </div>
@@ -138,13 +138,13 @@
       isSort: true,
       filterType: 'text',
     },
-    {
-      field: 'status',
-      header: 'Status',
-      isFilter: true,
-      isSort: true,
-      filterType: 'byte',
-    },
+    // {
+    // field: 'status',
+    // header: 'Status',
+    // isFilter: true,
+    // isSort: true,
+    // filterType: 'byte'
+    // },
     {
       field: 'isActive',
       header: 'Is Active',
@@ -152,7 +152,12 @@
       isSort: true,
       filterType: 'boolean',
     },
-    
+    {
+    field: 'statusText', // Dùng `statusText` thay vì `status`
+    header: 'Status',
+    isFilter: true,
+    isSort: true
+  }
 
  ]
 
@@ -160,7 +165,7 @@
     await nextTick()
     store.fields.setFieldValue('requestId', items.requestId)
     store.fields.setFieldValue('exchangeId', items.exchangeId)
-    store.fields.setFieldValue('status', items.status)
+    store.fields.setFieldValue('status', items.status);
     store.fields.setFieldValue('isActive', items.isActive)
     store.fields.setFieldValue('createdAt', items.createdAt)
     store.fields.setFieldValue('createdBy', items.createdBy)
@@ -185,7 +190,12 @@
     console.error('Error toggling request status:', error);
   }
 };
-
+const formattedItems = computed(() => {
+  return store.uAEPSGetExchangeRecheckRequestAccessoryEntity.map(item => ({
+    ...item,
+    statusText: item.status === 1 ? "Approved" : item.status === 2 ? "Rejected" : "Pending"
+  }));
+});
 
   const handleAccept = async (requestId: string) => {
   try {
