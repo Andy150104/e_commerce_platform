@@ -38,13 +38,6 @@
               :err-msg="fieldErrors.description"
               placeholder="Product description"
             />
-            <UserControlTextFieldLabel
-              :xml-column="xmlColumns.price"
-              :maxlength="50"
-              :disabled="false"
-              :err-msg="fieldErrors.price"
-              placeholder="0.00"
-            />
 
             <!-- Image Upload (Max 6) -->
             <UserControlUploadImage
@@ -116,7 +109,6 @@
   const xmlColumns = {
     name: XmlLoadColumn({ id: 'name', name: 'Name', rules: 'required', visible: true, option: '' }),
     description: XmlLoadColumn({ id: 'description', name: 'Description', rules: 'required', visible: true, option: '' }),
-    price: XmlLoadColumn({ id: 'price', name: 'Price', rules: '', visible: true, option: '' }),
   }
   const ClearAll = () => {
     store.ResetStore()
