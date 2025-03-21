@@ -25,6 +25,10 @@ public partial class Order
 
     public bool IsActive { get; set; }
 
+    public Guid? AddressId { get; set; }
+
+    public virtual Address? Address { get; set; }
+
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
     public virtual ICollection<RefundRequestsOrder> RefundRequestsOrders { get; set; } = new List<RefundRequestsOrder>();

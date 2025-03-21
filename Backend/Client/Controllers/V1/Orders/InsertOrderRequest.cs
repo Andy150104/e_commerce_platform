@@ -9,6 +9,10 @@ public class InsertOrderRequest : AbstractApiRequest
     [Required(ErrorMessage = "PaymentMethod is required")]
     public byte PaymentMethod { get; set; }
     
+    [Required(ErrorMessage = "PlatForm is required")]
+    [Range(1, 2, ErrorMessage = "PlatForm between 1 and 2")]
+    public byte PlatForm { get; set; }
+    
     [Required(ErrorMessage = "AddressId is required")]
     public Guid AddressId { get; set; }
 }

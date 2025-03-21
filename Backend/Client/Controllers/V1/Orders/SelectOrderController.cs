@@ -13,7 +13,7 @@ namespace Client.Controllers.V1.Orders;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public class SelectOrdersController : AbstractApiGetController<SelectOrdersRequest, SelectOrdersResponse, List<SelectOrdersEntity>>
+public class SelectOrderController : AbstractApiGetController<SelectOrderRequest, SelectOrderResponse, SelectOrderEntity>
 {
     private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly IIdentityService _identityService;
@@ -24,7 +24,7 @@ public class SelectOrdersController : AbstractApiGetController<SelectOrdersReque
     /// </summary>
     /// <param name="identityService"></param>
     /// <param name="identityApiClient"></param>
-    public SelectOrdersController(IIdentityService identityService, IIdentityApiClient identityApiClient, IOrderService orderService)
+    public SelectOrderController(IIdentityService identityService, IIdentityApiClient identityApiClient, IOrderService orderService)
     {
         _identityService = identityService;
         _orderService = orderService;
@@ -36,9 +36,9 @@ public class SelectOrdersController : AbstractApiGetController<SelectOrdersReque
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    public override SelectOrdersResponse Get(SelectOrdersRequest request)
+    public override SelectOrderResponse Get(SelectOrderRequest request)
     {
-        return Get(request, _identityService, logger, new SelectOrdersResponse());
+        return Get(request, _identityService, logger, new SelectOrderResponse());
     }
 
     /// <summary>
@@ -46,22 +46,20 @@ public class SelectOrdersController : AbstractApiGetController<SelectOrdersReque
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    protected override SelectOrdersResponse ExecGet(SelectOrdersRequest request)
+    protected override SelectOrderResponse ExecGet(SelectOrderRequest request)
     {
-        return _orderService.SelectOrders(_identityService);
+        return _orderService.SelectOrder(request, _identityService);
     }
-
-
+    
     /// <summary>
     /// Error Check
     /// </summary>
     /// <param name="request"></param>
     /// <param name="detailErrorList"></param>
-    /// <param name="transaction"></param>
     /// <returns></returns>
-    protected internal override SelectOrdersResponse ErrorCheck(SelectOrdersRequest request, List<DetailError> detailErrorList)
+    protected internal override SelectOrderResponse ErrorCheck(SelectOrderRequest request, List<DetailError> detailErrorList)
     {
-        var response = new SelectOrdersResponse() { Success = false };
+        var response = new SelectOrderResponse() { Success = false };
         if (detailErrorList.Count > 0)
         {
             // Error

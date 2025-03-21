@@ -126,8 +126,14 @@ public class DashboardController : AbstractApiGetAsyncController<DashboardReques
     private async Task<decimal> CalculateGrowthRate(decimal current, decimal previous)
     {
         // If last month is 0, return 100%
-        if (previous == 0) 
+        if (previous == 0 && current != 0) 
             return 100;
+        
+        // If last month and this month are 0, return 0 -> no change
+        if (previous == 0 && current == 0)
+            return 0;
+        
+        // Calculate growth rate
         return Math.Round(((current - previous) / previous) * 100, 2);
     }
 }

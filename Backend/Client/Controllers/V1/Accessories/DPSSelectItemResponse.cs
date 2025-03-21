@@ -20,6 +20,8 @@ public class ItemEntity
 
     public string NameAccessory { get; set; }
     
+    public string ExchangeName { get; set; }
+    
     public string? ShortDescription { get; set; }
 
     public string? Description { get; set; }

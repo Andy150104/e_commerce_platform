@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Client.Models.Helper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Client.Repositories;
 
@@ -221,12 +222,26 @@ public class BaseRepository<TEntity, Type, TSelect> : IBaseRepository<TEntity, T
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
-    public void ExecuteInTransaction(Action action)
+    public void ExecuteInTransaction(Func<bool> action)
     {
-        using (var transaction = Context.Database.BeginTransaction())
+        // Begin transaction
+        using var transaction = Context.Database.BeginTransaction();
+        try
         {
-                action();
+            // Execute action
+            if (action())
+            {
                 transaction.Commit();
+            }
+            else
+            {
+                transaction.Rollback();
+            }
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
         }
     }
 
@@ -235,12 +250,27 @@ public class BaseRepository<TEntity, Type, TSelect> : IBaseRepository<TEntity, T
     /// </summary>
     /// <param name="action"></param>
     /// <returns></returns>
-    public async Task ExecuteInTransactionAsync(Func<Task> action)
+    public async Task ExecuteInTransactionAsync(Func<Task<bool>> action)
     {
-        using (var transaction = await Context.Database.BeginTransactionAsync())
+        // Begin transaction
+        await using var transaction = await Context.Database.BeginTransactionAsync();
+        try
         {
-            await action();
-            await transaction.CommitAsync();
+            // Execute action
+            if (await action())
+            {
+                await transaction.CommitAsync();
+            }
+            else
+            {
+                await transaction.RollbackAsync();
+            }
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
         }
     }
+
 }

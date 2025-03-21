@@ -15,8 +15,7 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
     private readonly IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> _imagesService;
     private readonly ILogicCommonRepository _logicCommonRepository;
     private readonly CloudinaryLogic _cloudinaryLogic;
-
-
+    
     /// <summary>
     /// Constructor
     /// </summary>
@@ -114,6 +113,7 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
                 response.SetMessage("Invalid Images");
             }
 
+            return true;
         });
         return response;
     }
@@ -270,7 +270,7 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
         {
             // Get image urls
             var imageUrls = _imagesService
-                .FindView(x => x.ImageId == blindBox!.BlindBoxId)
+                .FindView(x => x.BlindBoxId == blindBox!.BlindBoxId)
                 .Select(x => new DpsSelectItemListImageUrl
                 {
                     ImageUrl = x!.ImageUrl
@@ -281,6 +281,7 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
             var entity = new ItemEntity
             {
                 CodeProduct = blindBox!.BlindBoxId.ToString(),
+                ExchangeName = blindBox.ExchangeName,
                 CreatedAt = blindBox.CreatedAt,
                 FirstNameCreator = blindBox.FirstName!,
                 LastNameCreator = blindBox.LastName!,
