@@ -1,5 +1,4 @@
-﻿using Client.Controllers.V1.MomoPayment.MomoServices;
-using Client.Services;
+﻿using Client.Services;
 using Client.SystemClient;
 using Client.Utils.Consts;
 using Microsoft.AspNetCore.Authorization;

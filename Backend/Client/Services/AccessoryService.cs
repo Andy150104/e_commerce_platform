@@ -87,6 +87,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -106,7 +107,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             if (accessorySelect == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.ProductNotFound);
-                return;
+                return false;
             }
        
             // Add ImageList
@@ -134,6 +135,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         
         return response;
@@ -227,7 +229,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             var entity = new MPSSelectAccessoriesEntity
             {
                 AccessoryId = accessory.AccessoryId,
-                AccessoryName = accessory.AccessoryName,
+                AccessoryName = accessory.AccessoryName!,
                 Price = accessory.Price,
                 Description = accessory.Description,
                 ShortDescription = accessory.ShortDescription,
@@ -350,7 +352,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             if (product == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.ProductNotFound);
-                return;
+                return false;
             }
 
             if (request.Name != null)
@@ -398,7 +400,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
                 if (missingImages.Any())
                 {
                     response.SetMessage(MessageId.I00000, $"Image Ids not found: {string.Join(", ", missingImages)}");
-                    return;
+                    return false;
                 }
 
                 // Delete old images
@@ -430,6 +432,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -456,7 +459,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
                 {
                     // Error
                     response.SetMessage(MessageId.I00000, $"{"Accessory Id: " + code} is not found");
-                    return;
+                    return false;
                 }
 
                 Update(product);
@@ -473,6 +476,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -497,7 +501,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
                 if (imagesToDelete == null)
                 {
                     response.SetMessage(MessageId.I00000, $"{"Image Id: " + imagesToDelete} is not found");
-                    return;
+                    return true;
                 }
 
                 _imageAccessoryService.Update(imagesToDelete);
@@ -509,6 +513,7 @@ public class AccessoryService : BaseService<Accessory, string, VwAccessoryDispla
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

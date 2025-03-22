@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Client.Repositories;
 
@@ -59,7 +60,7 @@ public interface IBaseRepository<T, TU, TSelect>
     
     Task<int> SaveChangesAsync(string userName, bool needLogicalDelete = false);
 
-    public void ExecuteInTransaction(Action action);
-    
-    public Task ExecuteInTransactionAsync(Func<Task> action);
+    public void ExecuteInTransaction(Func<bool> action);
+
+    public Task ExecuteInTransactionAsync(Func<Task<bool>> action);
 }

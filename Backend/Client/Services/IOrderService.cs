@@ -1,4 +1,5 @@
 using Client.Controllers.V1.Orders;
+using Client.Controllers.V1.ThirdParty;
 using Client.Controllers.V1.TOS;
 using Client.Models;
 
@@ -8,5 +9,9 @@ public interface IOrderService : IBaseService<Order, Guid, VwOrder>
 {
     Task<InsertOrderResponse> InsertOrder(InsertOrderRequest request, IIdentityService identityService);
     
-    void UpdateOrderStatus(Guid orderId, string userName);
+    MomoOrderLogicReturnResponse UpdateOrderStatusBySystem(MomoOrderLogicReturnRequest request, IIdentityService identityService);
+    
+    SelectOrdersResponse SelectOrders(IIdentityService identityService);
+    
+    SelectOrderResponse SelectOrder(SelectOrderRequest request, IIdentityService identityService);
 }

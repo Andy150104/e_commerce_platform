@@ -12,7 +12,6 @@ public class WishListService : BaseService<Wishlist, Guid, VwWishListDisplay>, I
 {
     private readonly IBaseService<Image, Guid, VwImageAccessory> _imageService;
     private readonly IBaseService<WishlistItem, Guid, object> _wishListItemService;
-    //private readonly IUnitOfWork _unitOfWork;
 
     /// <summary>
     /// Constructor
@@ -20,7 +19,6 @@ public class WishListService : BaseService<Wishlist, Guid, VwWishListDisplay>, I
     /// <param name="repository"></param>
     /// <param name="imageService"></param>
     /// <param name="wishListItemService"></param>
-    /// <param name="unitOfWork"></param>
     public WishListService(IBaseRepository<Wishlist, Guid, VwWishListDisplay> repository,
         IBaseService<Image, Guid, VwImageAccessory> imageService,
         IBaseService<WishlistItem, Guid, object> wishListItemService) : base(repository)
@@ -135,11 +133,11 @@ public class WishListService : BaseService<Wishlist, Guid, VwWishListDisplay>, I
             }
 
             _wishListItemService.SaveChanges(userName);
+            // True
+            response.Success = true;
+            response.SetMessage(MessageId.I00001);
+            return true;
         });
-
-        // True
-        response.Success = true;
-        response.SetMessage(MessageId.I00001);
         return response;
     }
 
@@ -165,7 +163,7 @@ public class WishListService : BaseService<Wishlist, Guid, VwWishListDisplay>, I
             {
                 // Error
                 response.SetMessage(MessageId.I00000, CommonMessages.WishListNotFound);
-                return;
+                return false;
             }
 
             // Get WishListItem
@@ -179,7 +177,7 @@ public class WishListService : BaseService<Wishlist, Guid, VwWishListDisplay>, I
             {
                 // Error
                 response.SetMessage(MessageId.I00000, CommonMessages.WishListItemNotFound);
-                return;
+                return false;
             }
 
             _wishListItemService.Update(wishListItemSelect);
@@ -188,6 +186,7 @@ public class WishListService : BaseService<Wishlist, Guid, VwWishListDisplay>, I
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

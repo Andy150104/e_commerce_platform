@@ -7,7 +7,14 @@ public class InsertOrderResponse : AbstractApiResponse<InsertOrderResponseEntity
 
 public class InsertOrderResponseEntity
 {
-    public string PaymentUrl { get; set; }
-    
+    public MomoResponse Momo { get; set; }
     public string GHNCode { get; set; }
+}
+
+public class MomoResponse
+{
+    public string PaymentUrl { get; set; }
+    public string QrCodeUrl { get; set; }
+    public string Deeplink { get; set; }
+    public string DeeplinkWebInApp { get; set; }
 }

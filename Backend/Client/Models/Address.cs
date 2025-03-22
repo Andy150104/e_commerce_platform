@@ -29,5 +29,7 @@ public partial class Address
 
     public string? Province { get; set; }
 
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
     public virtual User UsernameNavigation { get; set; } = null!;
 }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Client.Controllers.V1.MomoPayment
+namespace Client.Controllers.V1.ThirdParty
 {
     public class MomoResponse
     {
@@ -12,8 +12,10 @@ namespace Client.Controllers.V1.MomoPayment
         public string OrderId { get; set; }
         public string Amount { get; set; }
         public string FullName { get; set; }
-        public string OrderInfo { get; set; }
+        public string OrderInfo { get; set; } 
         public string TransactionId { get; set; }
+        
+        public string ExtraData { get; set; }
     }
 
     public class MomoCreatePaymentResponseModel

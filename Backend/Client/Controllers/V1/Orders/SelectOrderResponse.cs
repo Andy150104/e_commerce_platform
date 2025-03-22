@@ -1,11 +1,11 @@
-namespace Client.Controllers.V1.TOS;
+namespace Client.Controllers.V1.Orders;
 
-public class SelectOrdersResponse : AbstractApiResponse<List<SelectOrdersEntity>>
+public class SelectOrderResponse : AbstractApiResponse<SelectOrderEntity>
 {
-    public override List<SelectOrdersEntity> Response { get; set; }
+    public override SelectOrderEntity Response { get; set; }
 }
 
-public class SelectOrdersEntity
+public class SelectOrderEntity
 {
     public Guid OrderId { get; set; }
     
@@ -15,10 +15,18 @@ public class SelectOrdersEntity
     
     public byte Status { get; set; }
     
-    public List<TOSSelectOrderDetails> OrderDetails { get; set; }
+    public DateTime? CreatedAt { get; set; }
+
+    public string? CreatedBy { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public string? UpdatedBy { get; set; }
+    
+    public List<SelectOrderDetails> OrderDetails { get; set; }
 }
 
-public class TOSSelectOrderDetails
+public class SelectOrderDetails
 {
     public Guid OrderDetailId { get; set; }
     

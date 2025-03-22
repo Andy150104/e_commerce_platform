@@ -51,6 +51,9 @@ public class CartItemService : BaseService<CartItem, Guid, VwCartDisplay>, ICart
                            && x.AccessoryId == request.CodeAccessory
                            && x.IsActive == true)
                 .FirstOrDefault();
+            
+            
+            
 
             // Delete CartItem
             cartItemSelect.Quantity = 0;
@@ -60,6 +63,7 @@ public class CartItemService : BaseService<CartItem, Guid, VwCartDisplay>, ICart
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -153,6 +157,7 @@ public class CartItemService : BaseService<CartItem, Guid, VwCartDisplay>, ICart
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -189,13 +194,13 @@ public class CartItemService : BaseService<CartItem, Guid, VwCartDisplay>, ICart
             if (productSelect == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.ProductNotFound);
-                return;
+                return true;
             }
 
             if (request.Quantity > productSelect?.Quantity)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.QuantityIsGreaterStock);
-                return;
+                return true;
             }
 
             // Get CartItem
@@ -227,6 +232,7 @@ public class CartItemService : BaseService<CartItem, Guid, VwCartDisplay>, ICart
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

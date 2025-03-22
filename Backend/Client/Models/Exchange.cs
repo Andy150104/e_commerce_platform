@@ -19,8 +19,8 @@ public partial class Exchange
 
     public string? CreatedBy { get; set; }
 
-    public string? UpdatedBy { get; set; }   
-    
+    public string? UpdatedBy { get; set; }
+
     public string? ExchangeName { get; set; }
 
     public string? Description { get; set; }

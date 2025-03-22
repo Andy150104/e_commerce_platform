@@ -50,7 +50,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                 if (blindBoxPost == null)
                 {
                     response.SetMessage(MessageId.I00000, CommonMessages.BlindBoxNotFound);
-                    return;
+                    return false;
                 }
 
                 var queue = new Queue
@@ -67,6 +67,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                 // True
                 response.Success = true;
                 response.SetMessage(MessageId.I00001);
+                return true;
             }
         );
         return response;
@@ -94,18 +95,18 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
             if (blindBoxPost == null)
             {
                 response.SetMessage(MessageId.E00000, CommonMessages.BlindBoxNotFound);
-                return;
+                return false;
             }
             if(blindBoxPost.Status == (byte)ConstantEnum.ExchangeStatus.isChanging)
             {
-                response.SetMessage(MessageId.E00000, CommonMessages.ExchangeIsChanging);
-                return;
+                response.SetMessage(MessageId.E00000, CommonMessages.ExchangeIsChanging); 
+                return false;
             }
             var queue = Repository.Find(x => x.QueueId == request.QueueId).FirstOrDefault();
             if (queue == null)
             {
                 response.SetMessage(MessageId.E00000, CommonMessages.QueueNotFound);
-                return;
+                return false;
             }
 
             blindBoxPost.Status = (byte)ConstantEnum.ExchangeStatus.isChanging;
@@ -121,8 +122,8 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
-        }
-        );
+            return true;
+        });
         return response;
     }
 
@@ -170,8 +171,8 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
-        }
-        );
+            return true;
+        });
         return response;
     }
 
@@ -217,6 +218,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

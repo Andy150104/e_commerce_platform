@@ -50,4 +50,5 @@ public class CommonMessages
 
     public static readonly string QueueIsNotChanging = "Queue is not changing";
     
+    public static readonly string SignatureInvalid = "Signature invalid";
 }
