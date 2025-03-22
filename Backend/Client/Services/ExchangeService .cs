@@ -5,6 +5,7 @@ using Client.Logics.Commons;
 using Client.Models;
 using Client.Repositories;
 using Client.Utils.Consts;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Client.Services;
 
@@ -13,7 +14,9 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
     private readonly IIdentityService _identityService;
     private readonly IBlindBoxService _blindBoxService;
     private readonly IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> _imagesService;
+    private readonly IBaseService<Queue, Guid, object> _queueService;
     private readonly ILogicCommonRepository _logicCommonRepository;
+    private readonly IBaseService<OrdersExchange, Guid, object> _orderExchangeService;
     private readonly CloudinaryLogic _cloudinaryLogic;
     
     /// <summary>
@@ -27,13 +30,15 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
     public ExchangeService(IBaseRepository<Exchange, Guid, VwBlindBoxDisplay> repository,
         IIdentityService identityService,
         IBlindBoxService blindBoxService, IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> imagesService,
-        ILogicCommonRepository logicCommonRepository, CloudinaryLogic cloudinaryLogic) : base(repository)
+        ILogicCommonRepository logicCommonRepository, CloudinaryLogic cloudinaryLogic, IBaseService<Queue, Guid, object> queueService, IBaseService<OrdersExchange, Guid, object> orderExchange) : base(repository)
     {
         _identityService = identityService;
         _blindBoxService = blindBoxService;
         _imagesService = imagesService;
         _logicCommonRepository = logicCommonRepository;
         _cloudinaryLogic = cloudinaryLogic;
+        _queueService = queueService;
+        _orderExchangeService = orderExchange;
     }
 
     /// <summary>
@@ -119,6 +124,75 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
     }
 
     /// <summary>
+    /// Final Accepted Exchange
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="identityService"></param>
+    /// <returns></returns>
+    public AEPSFinalAcceptExchangeAccessoryResponse FinalAcceptedExchange(AEPSFinalAcceptExchangeAccessoryRequest request, IIdentityService identityService)
+    {
+        var response = new AEPSFinalAcceptExchangeAccessoryResponse() { Success = false };
+
+        // Get userName
+        var userName = identityService.IdentityEntity.UserName;
+
+        var exchange = Repository.Find(x => x.ExchangeId == request.ExchangeId).FirstOrDefault();
+
+        if(exchange == null)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.ExchangeNotFound);
+            return response;
+        }
+
+        if (exchange.Status != (byte)ConstantEnum.ExchangeStatus.isChanging)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.ExchangeIsNotChanging);
+            return response;
+        }
+
+        var queue = _queueService.Find(x => x.QueueId == request.QueueId).FirstOrDefault();
+
+        if (queue == null)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.QueueNotFound);
+            return response;
+        }
+
+        if (queue.Status != (byte)ConstantEnum.QueueStatus.isChanging)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.QueueIsNotChanging);
+            return response;
+        }
+
+        if (request.isAccepted)
+        {
+            exchange.Status = (byte)ConstantEnum.ExchangeStatus.Success;
+            
+            var OrderExchange = new OrdersExchange
+            {
+                ExchangeId = request.ExchangeId,
+                OrderExchangeId = Guid.NewGuid(),
+                QueueId = request.QueueId
+            };
+
+            _orderExchangeService.Add(OrderExchange);
+            _orderExchangeService.SaveChanges(userName);
+
+        }else if(!request.isAccepted)
+        {
+            exchange.Status = (byte)ConstantEnum.ExchangeStatus.PendingExchange;
+            queue.Status = (byte)ConstantEnum.QueueStatus.Fail;
+            
+           _queueService.Update(queue);
+           _queueService.SaveChanges(userName);
+        }
+        Repository.Update(exchange);
+        Repository.SaveChanges(userName);
+
+        return response;
+    }
+
+    /// <summary>
     /// Get By Id Exchange
     /// </summary>
     /// <param name="request"></param>
@@ -176,7 +250,7 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
 
         if (!exchangeList.Any())
         {
-            response.SetMessage(MessageId.E00000);
+            response.SetMessage(MessageId.E00000, CommonMessages.ListIsEmpty);
             return response;
         }
 
