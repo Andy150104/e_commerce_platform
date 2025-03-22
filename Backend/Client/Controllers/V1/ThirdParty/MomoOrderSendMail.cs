@@ -13,7 +13,7 @@ public class MomoOrderSendMail
     /// <param name="context"></param>
     /// <param name="codeGHN"></param>
     /// <returns></returns>
-    public static bool SendMailGhnCode(IEmailTemplateService service, string codeGHN, string email, AppDbContext context, List<DetailError> detailErrors)
+    public static bool SendMailGhnCode(IEmailTemplateService service, Order order, string email, AppDbContext context, List<DetailError> detailErrors)
     {
         // Get the mail template
         var mailTemplate = service.GetEmailTemplateByOrderScreen();
@@ -21,10 +21,9 @@ public class MomoOrderSendMail
         
         var replacements = new Dictionary<string, string>
         {
-            { "${key}", codeGHN },
+            { "${order_id}", order.OrderId.ToString() },
         };
-
-        // Replace the variables in the mail template
+        
         var mailBody = mailTemplate.Body;
         foreach (var replacement in replacements)
         {

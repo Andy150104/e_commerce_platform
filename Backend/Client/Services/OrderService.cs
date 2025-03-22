@@ -145,10 +145,10 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
             {
                 var momoExcuteResponseModel = new MomoExecuteResponseModel
                 {
-                    FullName = $"{newOrder.OrderId}_{userName}",
+                    FullName = $"{userName}",
                     Amount = ((int)newOrder.TotalPrice).ToString(),
                     OrderId = newOrder.OrderId.ToString(),
-                    OrderInfo = $"{CommonMessages.OrderDescription}_{newOrder.OrderId}",
+                    OrderInfo = $"{user.LastName}-{user.FirstName}_{CommonMessages.OrderDescription}_{newOrder.OrderId}",
                 };
 
                 var res = await _momoService.CreatePaymentOrderAsync(momoExcuteResponseModel, request.PlatForm,
@@ -207,10 +207,11 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
     }
 
     /// <summary>
-    /// Update Order Status
+    /// Update Order Status By System
     /// </summary>
-    /// <param name="orderId"></param>
-    /// <param name="userName"></param>
+    /// <param name="request"></param>
+    /// <param name="identityService"></param>
+    /// <returns></returns>
     public MomoOrderLogicReturnResponse UpdateOrderStatusBySystem(MomoOrderLogicReturnRequest request, IIdentityService identityService)
     {
         var response = new MomoOrderLogicReturnResponse { Success = false };
@@ -227,9 +228,11 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                 return false;
             }
 
-            order.Status = (byte)ConstantEnum.OrderStatus.Processing;
+            order.Status = (byte) ConstantEnum.OrderStatus.Success;
+            order.GhnCode = request.GhnOrderCode;
+            
             Update(order);
-            SaveChanges("System");
+            SaveChanges("OrderSystem");
 
             response.Success = true;
             response.SetMessage(MessageId.I00001);

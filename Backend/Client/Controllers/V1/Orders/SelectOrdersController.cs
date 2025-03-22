@@ -3,8 +3,10 @@ using Client.Controllers.V1.TOS;
 using Client.Services;
 using Client.SystemClient;
 using Client.Utils.Consts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using OpenIddict.Validation.AspNetCore;
 
 namespace Client.Controllers.V1.Orders;
 
@@ -36,6 +38,8 @@ public class SelectOrdersController : AbstractApiGetController<SelectOrdersReque
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public override SelectOrdersResponse Get(SelectOrdersRequest request)
     {
         return Get(request, _identityService, logger, new SelectOrdersResponse());
@@ -50,7 +54,6 @@ public class SelectOrdersController : AbstractApiGetController<SelectOrdersReque
     {
         return _orderService.SelectOrders(_identityService);
     }
-
 
     /// <summary>
     /// Error Check

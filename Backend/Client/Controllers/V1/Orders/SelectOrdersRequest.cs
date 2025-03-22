@@ -1,4 +1,4 @@
-namespace Client.Controllers.V1.TOS;
+namespace Client.Controllers.V1.Orders;
 
 public class SelectOrdersRequest : AbstractApiRequest
 {

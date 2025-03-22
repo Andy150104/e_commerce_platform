@@ -63,8 +63,6 @@ namespace Client.Logics.Commons.MomoLogics
 
         public async Task<MomoCreatePaymentResponseModel> CreatePaymentOrderAsync(MomoExecuteResponseModel model, byte platForm, Guid addressId)
         {
-            model.OrderInfo = model.FullName + "_" + model.OrderInfo;
-            
             // Add extra data to the request
             var extraData = $"{model.FullName}|{addressId}|{platForm}"; 
             
@@ -144,15 +142,15 @@ namespace Client.Logics.Commons.MomoLogics
             var orderId = collection.First(s => s.Key == "orderId").Value;
             var transId = collection.First(s => s.Key == "transId").Value;
             var extraData = collection.First(s => s.Key == "extraData").Value;
-            var res = orderInfo.ToString().Split('_');
+            var res = extraData.ToString().Split('|');
 
             return new MomoExecuteResponseModel()
             {
                 ErrorCode = errorCode,
-                FullName = res[1],
+                FullName = res[0],
                 Amount = amount,
                 OrderId = orderId,
-                OrderInfo = res[2],
+                OrderInfo = orderInfo,
                 TransactionId = transId,
                 ExtraData = extraData,
             };

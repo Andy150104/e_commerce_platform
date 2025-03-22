@@ -583,6 +583,10 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
+            entity.Property(e => e.GhnCode)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("ghn_code");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.Status).HasColumnName("status");

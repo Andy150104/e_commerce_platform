@@ -13,7 +13,7 @@ public class CommonUrl
     /// <summary>
     /// Url for web tracking success
     /// </summary>
-    public static readonly string WebUrlTrackingSuccess = "http://localhost:3000/transaction/order?success=true?orderId=";
+    public static readonly string WebUrlTrackingSuccess = "http://localhost:3000/transaction/order?success=true";
     
     /// <summary>
     /// Url for web tracking fail

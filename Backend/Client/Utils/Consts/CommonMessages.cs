@@ -26,7 +26,7 @@ public class CommonMessages
     
     public static readonly string ImageNotFound = "Image not found";
     
-    public static readonly string OrderDescription = "Paymentfororder";
+    public static readonly string OrderDescription = "Payment for order";
     
     public static readonly string AddressOfUserNotFound = "Address of user not found";
     

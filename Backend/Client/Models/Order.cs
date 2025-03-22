@@ -27,6 +27,8 @@ public partial class Order
 
     public Guid? AddressId { get; set; }
 
+    public string? GhnCode { get; set; }
+
     public virtual Address? Address { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
