@@ -12,4 +12,5 @@ public interface IExchangeService : IBaseService<Exchange, Guid, VwBlindBoxDispl
     AEPSGetFailExchangeAccessoryResponse GetFailExchangeAccessory(AEPSGetFailExchangeAccessoryRequest request, IIdentityService identityService);
     List<ItemEntity> SelectByBlindBox(byte? sortBy);
     AEPSGetByIdExchangeAccessoryResponse GetByIdExchangeAccessory(AEPSGetByIdExchangeAccessoryRequest request, IIdentityService identityService);
+    AEPSFinalAcceptExchangeAccessoryResponse FinalAcceptedExchange(AEPSFinalAcceptExchangeAccessoryRequest request, IIdentityService identityService);
 }
