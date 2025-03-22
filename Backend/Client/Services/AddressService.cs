@@ -49,6 +49,7 @@ public class AddressService : BaseService<Address, Guid, VwUserAddress>, IAddres
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -105,6 +106,7 @@ public class AddressService : BaseService<Address, Guid, VwUserAddress>, IAddres
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -135,6 +137,7 @@ public class AddressService : BaseService<Address, Guid, VwUserAddress>, IAddres
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

@@ -1,5 +1,3 @@
-using Client.Controllers.AbstractClass;
-using Client.Controllers.V1.TOS;
 using Client.Services;
 using Client.SystemClient;
 using Client.Utils.Consts;
@@ -8,63 +6,64 @@ using Microsoft.AspNetCore.Mvc;
 using NLog;
 using OpenIddict.Validation.AspNetCore;
 
-namespace Client.Controllers.V1.Orders;
+namespace Client.Controllers.V1.ThirdParty;
 
 /// <summary>
-/// TOSSelectOrdersController - Select Orders
+/// MomoOrderLogicReturnController - Use for Momo after payment return
 /// </summary>
-[Route("api/v1/[controller]")]
 [ApiController]
-public class SelectOrdersController : AbstractApiGetController<SelectOrdersRequest, SelectOrdersResponse, List<SelectOrdersEntity>>
+[Route("api/v1/[controller]")]
+public class MomoOrderLogicReturnController : AbstractApiController<MomoOrderLogicReturnRequest, MomoOrderLogicReturnResponse, string>
 {
-    private static readonly Logger logger = LogManager.GetCurrentClassLogger();
     private readonly IIdentityService _identityService;
     private readonly IOrderService _orderService;
+    private readonly Logger _logger = LogManager.GetCurrentClassLogger();
 
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="identityService"></param>
+    /// <param name="orderService"></param>
     /// <param name="identityApiClient"></param>
-    public SelectOrdersController(IIdentityService identityService, IIdentityApiClient identityApiClient, IOrderService orderService)
+    public MomoOrderLogicReturnController(IIdentityService identityService, IOrderService orderService, IIdentityApiClient identityApiClient)
     {
+        _identityApiClient = identityApiClient;
         _identityService = identityService;
         _orderService = orderService;
-        _identityApiClient = identityApiClient;
     }
 
     /// <summary>
-    /// Incoming Post
+    /// Incoming Patch
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpGet]
+    [HttpPatch]
     [Authorize(AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
-    public override SelectOrdersResponse Get(SelectOrdersRequest request)
+    public override MomoOrderLogicReturnResponse ProcessRequest(MomoOrderLogicReturnRequest request)
     {
-        return Get(request, _identityService, logger, new SelectOrdersResponse());
+        return ProcessRequest(request, _identityService, _logger, new MomoOrderLogicReturnResponse());
     }
 
     /// <summary>
-    /// Main Processing
+    /// Main processing
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    protected override SelectOrdersResponse ExecGet(SelectOrdersRequest request)
+    protected override MomoOrderLogicReturnResponse Exec(MomoOrderLogicReturnRequest request)
     {
-        return _orderService.SelectOrders(_identityService);
+        return _orderService.UpdateOrderStatusBySystem(request, _identityService);
     }
 
     /// <summary>
-    /// Error Check
+    /// Error check
     /// </summary>
     /// <param name="request"></param>
     /// <param name="detailErrorList"></param>
-    /// <param name="transaction"></param>
     /// <returns></returns>
-    protected internal override SelectOrdersResponse ErrorCheck(SelectOrdersRequest request, List<DetailError> detailErrorList)
+    protected internal override MomoOrderLogicReturnResponse ErrorCheck(MomoOrderLogicReturnRequest request, List<DetailError> detailErrorList)
     {
-        var response = new SelectOrdersResponse() { Success = false };
+        var response = new MomoOrderLogicReturnResponse() { Success = false };
+
         if (detailErrorList.Count > 0)
         {
             // Error

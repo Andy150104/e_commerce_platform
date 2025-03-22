@@ -1,12 +1,13 @@
-﻿using Azure;
+﻿using System.Security.Cryptography;
+using System.Text;
+using Client.Controllers.V1.ThirdParty;
+using Client.Utils.Consts;
 using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using RestSharp;
-using System.Security.Cryptography;
-using System.Text;
+using Server.Utils.Consts;
 
-namespace Client.Controllers.V1.MomoPayment.MomoServices
+namespace Client.Logics.Commons.MomoLogics
 {
     public class MomoService : IMomoService
     {
@@ -60,10 +61,12 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
             return momoResponse;
         }
 
-        public async Task<MomoCreatePaymentResponseModel> CreatePaymentOrderAsync(MomoExecuteResponseModel model)
+        public async Task<MomoCreatePaymentResponseModel> CreatePaymentOrderAsync(MomoExecuteResponseModel model, byte platForm, Guid addressId)
         {
-            model.OrderId = DateTime.UtcNow.Ticks.ToString();
-            model.OrderInfo = model.FullName + "_" + model.OrderInfo;
+            // Add extra data to the request
+            var extraData = $"{model.FullName}|{addressId}|{platForm}"; 
+            
+            // Create the raw data for the request
             var rawData =
                 $"partnerCode={_options.Value.PartnerCode}" +
                 $"&accessKey={_options.Value.AccessKey}" +
@@ -71,34 +74,43 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
                 $"&amount={model.Amount}" +
                 $"&orderId={model.OrderId}" +
                 $"&orderInfo={model.OrderInfo}" +
-                $"&returnUrl={_options.Value.ReturnUrlOrder}" +
+                $"&returnUrl={_options.Value.ReturnUrlOrder}" + 
                 $"&notifyUrl={_options.Value.NotifyUrl}" +
-                $"&extraData=";
+                $"&extraData={extraData}";  
+            
+            // Compute the signature
             var signature = ComputeHmacSha256(rawData, _options.Value.SecretKey);
+            
+            // Create the request
             var client = new RestClient(_options.Value.MomoApiUrl);
             var request = new RestRequest() { Method = Method.Post };
             request.AddHeader("Content-Type", "application/json; charset=UTF-8");
             
+            // Create an object representing the request data to Momo
             var requestData = new
             {
                 accessKey = _options.Value.AccessKey,
                 partnerCode = _options.Value.PartnerCode,
-                requestType = _options.Value.RequestType,
                 notifyUrl = _options.Value.NotifyUrl,
                 returnUrl = _options.Value.ReturnUrlOrder,
+                requestType = _options.Value.RequestType,
                 orderId = model.OrderId,
                 amount = model.Amount.ToString(),
                 orderInfo = model.OrderInfo,
                 requestId = model.OrderId,
-                extraData = "",
+                extraData = extraData,
                 signature = signature
             };
-
+            
+            // Add the request data to the request
             request.AddParameter("application/json", JsonConvert.SerializeObject(requestData),
                 ParameterType.RequestBody);
 
+            // Execute the request
             var response = await client.ExecuteAsync(request);
             var momoResponse = JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
+            Console.WriteLine("Raw Momo Response: " + response.Content);
+
             return momoResponse;
         }
 
@@ -118,11 +130,33 @@ namespace Client.Controllers.V1.MomoPayment.MomoServices
                 Amount = amount,
                 OrderId = res[0],
                 OrderInfo = res[2],
-                TransactionId = transId
+                TransactionId = transId,
+            };
+        }
+        
+        public MomoExecuteResponseModel PaymentExecuteOrderAsync(IQueryCollection collection)
+        {
+            var errorCode = collection.First(s => s.Key == "errorCode").Value;
+            var amount = collection.First(s => s.Key == "amount").Value;
+            var orderInfo = collection.First(s => s.Key == "orderInfo").Value;
+            var orderId = collection.First(s => s.Key == "orderId").Value;
+            var transId = collection.First(s => s.Key == "transId").Value;
+            var extraData = collection.First(s => s.Key == "extraData").Value;
+            var res = extraData.ToString().Split('|');
+
+            return new MomoExecuteResponseModel()
+            {
+                ErrorCode = errorCode,
+                FullName = res[0],
+                Amount = amount,
+                OrderId = orderId,
+                OrderInfo = orderInfo,
+                TransactionId = transId,
+                ExtraData = extraData,
             };
         }
 
-        private string ComputeHmacSha256(string message, string secretKey)
+        public string ComputeHmacSha256(string message, string secretKey)
         {
             var keyBytes = Encoding.UTF8.GetBytes(secretKey);
             var messageBytes = Encoding.UTF8.GetBytes(message);

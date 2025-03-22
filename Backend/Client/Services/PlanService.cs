@@ -1,8 +1,8 @@
 using Client.Controllers.V1.HS;
-using Client.Controllers.V1.MomoPayment;
-using Client.Controllers.V1.MomoPayment.MomoServices;
 using Client.Controllers.V1.OnlinePaymentScreen;
 using Client.Controllers.V1.OPS;
+using Client.Controllers.V1.ThirdParty;
+using Client.Logics.Commons.MomoLogics;
 using Client.Models;
 using Client.Repositories;
 using Client.Utils.Consts;
@@ -86,7 +86,7 @@ public class PlanService : BaseService<Plan, Guid, VwPlan>, IPlanService
             if (orderPlan == null)
             {
                 response.SetMessage(MessageId.E11004);
-                return;
+                return false;
             }
 
             // Get RefundPlanRequest
@@ -105,6 +105,7 @@ public class PlanService : BaseService<Plan, Guid, VwPlan>, IPlanService
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -129,7 +130,7 @@ public class PlanService : BaseService<Plan, Guid, VwPlan>, IPlanService
             if (plan == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.PlanNotFound);
-                return;
+                return false;
             }
 
             var orderPlan = new OrderPlan
@@ -157,6 +158,7 @@ public class PlanService : BaseService<Plan, Guid, VwPlan>, IPlanService
             // True
             response.Success = true;
             response.Response = res.PayUrl;
+            return true;
         });
         return response;
     }

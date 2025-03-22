@@ -47,7 +47,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             if (order == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.OrderNotFound);
-                return;
+                return false;
             }
 
             // Insert refund request
@@ -67,6 +67,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
 
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -86,7 +87,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             if (refundRequestOrder == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.RefundRequestOrderNotFound);
-                return;
+                return false;
             }
             
             // Update
@@ -103,6 +104,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -129,14 +131,14 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             if (refundRequestOrder == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.RefundRequestOrderNotFound);
-                return;
+                return false;
             }
 
             if (refundRequestOrder.RefundStatus == (byte)ConstantEnum.RefundOrderStatus.Approved 
                 || refundRequestOrder.RefundStatus == (byte)ConstantEnum.RefundOrderStatus.Rejected)
             {
                 response.SetMessage(MessageId.I00000, "Cannot delete refund request order that has been Approved/ Rejected.");
-                return;
+                return false;
             }
 
             // Delete
@@ -145,6 +147,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
 
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
 
         return response;
@@ -170,10 +173,11 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
                 RefundStatus = x.RefundStatus,
                 CreatedAt = x.CreatedAt,
             })
+            .OrderByDescending(x => x.CreatedAt)
             .ToList();
 
         response.Success = true;
-       // response.Response = refundRequestOrders;
+        response.Response = refundRequestOrders;
         response.SetMessage(MessageId.I00001);
         return response;
     }
@@ -233,7 +237,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             if (refundRequestOrder == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.RefundRequestOrderNotFound);
-                return;
+                return false;
             }
             
             // Update
@@ -246,7 +250,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
                 if (request.RejectedReason == null)
                 {
                     response.SetMessage(MessageId.I00000, "If you Rejected, RejectedReason is required.");
-                    return;
+                    return false;
                 }
                 refundRequestOrder.RefundStatus = (byte)ConstantEnum.RefundOrderStatus.Rejected;
                 refundRequestOrder.RejectedReason = request.RejectedReason;
@@ -259,6 +263,7 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
