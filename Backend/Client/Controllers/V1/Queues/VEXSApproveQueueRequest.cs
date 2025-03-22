@@ -7,7 +7,5 @@ namespace Client.Controllers.V1.VEXS
         public Guid ExchangeId { get; set; }
         
         public Guid QueueId { get; set; }
-
-        public bool isApprove { get; set; }
     }
 }

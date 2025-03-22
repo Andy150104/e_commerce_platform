@@ -22,16 +22,27 @@ public static class ConstantEnum
         Newest = 4,
         Oldest = 5,
     }
-    
+
     /// <summary>
     /// Status of Exchange
     /// </summary>
     public enum ExchangeStatus
     {
         PendingExchange = 1,
-        Approve = 2,
+        isChanging = 2,
         Success = 3,
         Fail = 4
+    }
+
+
+    /// <summary>
+    /// Status of Queue
+    /// </summary>
+    public enum QueueStatus
+    {
+        Waiting = 1,
+        isChanging = 2,
+        Fail = 3
     }
 
     public enum PostingStatus
