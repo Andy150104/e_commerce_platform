@@ -24,13 +24,13 @@ const fields = {
 
 export type MyExchangeState = {
   fields: typeof fields
-  uAEPSGetExchangeAccessoryEntities: AEPSGetExchangeAccessoryEntity[]
+  uAEPSGetExchangeAccessoryEntities: AEPSGetExchangeAccessoryEntity[];
 }
 
 export const useMyExchangeStore = defineStore('MyExchange', {
   state: (): MyExchangeState => ({
     fields,
-    uAEPSGetExchangeAccessoryEntities: []
+    uAEPSGetExchangeAccessoryEntities: [],
   }),
   getters: {
     fieldValues: (state) => {
@@ -62,18 +62,11 @@ export const useMyExchangeStore = defineStore('MyExchange', {
         const res = await apiClient.api.v1.AEPSGetExchangeAccessory.$get({})
       
         // Lưu toàn bộ danh sách từ API
+        if (res.success && res.response) {
         this.uAEPSGetExchangeAccessoryEntities = res.response ?? []
-      
-        // Nếu muốn set fields với dữ liệu đầu tiên
-        if (this.uAEPSGetExchangeAccessoryEntities.length > 0) {
-          const firstItem = this.uAEPSGetExchangeAccessoryEntities[0]
-      
-          Object.keys(firstItem).forEach((key) => {
-            if (this.fields.values.hasOwnProperty(key)) {
-              this.fields.setFieldValue(key, firstItem[key as keyof AEPSGetExchangeAccessoryEntity])
-            }
-          })
-        }
+      } else {
+        console.error(`Không thể lấy dữ liệu`);
+      }
       
         loadingStore.LoadingChange(false)
       }

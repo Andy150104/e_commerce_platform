@@ -2,25 +2,29 @@
   <BaseScreenDashBoard :data-theme="getTheme()">
     <template #body>
       <h1 class="page-title">Manage Exchange Requests</h1>
-      <!-- 📌 PANEL CHỨA FILTER -->
+
+      <!-- Filter Panel -->
       <div class="filter-panel">
         <input v-model="searchQuery" type="text" placeholder="🔍 Exchange name search..." class="filter-input" />
         <select v-model="selectedStatus" class="filter-select">
           <option value="">All</option>
-          <option value="0">⏳ Pending</option>
-          <option value="1">✅ Approved</option>
-          <option value="2">❌ Rejected</option>
+          <option value="1">⏳ Pending</option>
+          <option value="2">⏳ Changing</option>
+          <option value="3">✅ Approved</option>
+          <option value="4">❌ Rejected</option>
         </select>
       </div>
 
-      <!-- 📌 PANEL CHỨA DANH SÁCH EXCHANGE -->
-      <div class="exchange-panel">
-        <div v-if="filteredExchangeList.length > 0" class="exchange-list">
-          <div v-for="item in filteredExchangeList" :key="item.exchangeId ?? ''" class="exchange-card">
-            <div class="exchange-image-container" @click="openGallery(item.exchangeId ?? '')">
-              <img class="exchange-image" :src="getFirstImage(item.exchangeId ?? '')" :alt="item.exchangeName" />
-            </div>
+      <!-- Tab Menu -->
+      <TabMenu :model="tabs" v-model:activeIndex="selectedTabIndex" class="custom-tabmenu" />
 
+      <!-- Nội dung của từng tab -->
+      <div v-if="selectedTabIndex === 0">
+        <div v-if="pendingAndChangingList.length > 0" class="exchange-list">
+          <div v-for="item in pendingAndChangingList" :key="item.exchangeId" class="exchange-card">
+            <div class="exchange-image-container" @click="openGallery(item.exchangeId ?? '')">
+              <img class="exchange-image" :src="getFirstImage(item)" :alt="item.exchangeName" />
+            </div>
             <div class="exchange-content">
               <div class="exchange-text">
                 <h3 class="exchange-name">{{ item.exchangeName || 'N/A' }}</h3>
@@ -33,13 +37,42 @@
             </div>
           </div>
         </div>
-        <p v-else class="empty-message">📭 Không có dữ liệu trao đổi</p>
+        <div v-else class="empty-message"> 
+          <div class="exchange-card">
+            <p class="page-title">📭 Không có dữ liệu trao đổi (Pending/Changing)</p>
+          </div>
+        </div>
+        
+      </div>
+
+      <div v-if="selectedTabIndex === 1">
+        <div v-if="CompletedStatusList.length > 0" class="exchange-list">
+          <div v-for="item in CompletedStatusList" :key="item.exchangeId" class="exchange-card">
+            <div class="exchange-image-container" @click="openGallery(item.exchangeId ?? '')">
+              <img class="exchange-image" :src="getFirstImage(item)" :alt="item.exchangeName" />
+            </div>
+            <div class="exchange-content">
+              <div class="exchange-text">
+                <h3 class="exchange-name">{{ item.exchangeName || 'N/A' }}</h3>
+                <p class="exchange-description">{{ item.description || 'N/A' }}</p>
+                <p class="exchange-status" :class="getStatusClass(item.status)">
+                  {{ getStatusText(item.status) }}
+                </p>
+              </div>
+              <button class="btn-manage" @click="manageRequest(item.exchangeId ?? '')">Manage Request</button>
+            </div>
+          </div>
+        </div>
+        <div v-else class="empty-message"> 
+          <div class="exchange-card">
+            <p class="page-title">📭 Không có dữ liệu trao đổi (Succeed/Failed)</p>
+          </div>
+        </div>
       </div>
     </template>
   </BaseScreenDashBoard>
-
-  <!-- Popup Modal chứa danh sách ảnh nhỏ -->
-  <Dialog v-model:visible="displayGallery" modal header="Image Gallery" :style="{ width: '80vw' }">
+   <!-- Popup Modal chứa danh sách ảnh nhỏ -->
+  <Dialog v-model:visible="displayGallery" modal header="Image Gallery" :style="{ width: '80vw' }"  >
     <div class="gallery-grid">
       <div v-for="(image, index) in currentImages" :key="index" class="gallery-thumbnail" @click="openFullScreen(index)">
         <img :src="image.itemImageSrc" :alt="image.alt" />
@@ -58,127 +91,129 @@
     :showItemNavigators="true"
     :showThumbnailNavigators="true"
     @update:visible="onCloseFullScreen"
+    
   >
-    <template #item="slotProps">
+    <template #item="slotProps" @mousedown="closeGalleryOnOutsideClick">
       <img :src="slotProps.item.itemImageSrc" class="gallery-image" />
     </template>
   </Galleria>
 </template>
 
 <script setup lang="ts">
-  import { ref, computed, onMounted } from 'vue'
-  import { useRouter } from 'vue-router'
-  import BaseScreenDashBoard from '@PKG_SRC/layouts/Basecreen/BaseScreenDashBoard.vue'
-  import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
-  import { useMyExchangeStore } from '../../../stores/Modules/DashBoard/PlannedCustomer/MyExchangeStore'
-  import { useExchangeStore } from '@PKG_SRC/stores/Modules/Blind_Box/ExchangeStore'
-  import Dialog from 'primevue/dialog'
-  import Galleria from 'primevue/galleria'
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import BaseScreenDashBoard from '@PKG_SRC/layouts/Basecreen/BaseScreenDashBoard.vue'
+import { useAuthStore } from '@PKG_SRC/stores/master/authStore'
+import { useMyExchangeStore } from '../../../stores/Modules/DashBoard/PlannedCustomer/MyExchangeStore'
+import TabMenu from 'primevue/tabmenu';
+import type { AEPSGetExchangeAccessoryEntity} from '@PKG_SRC/composables/Client/api/@types'
 
-  const authStore = useAuthStore()
-  const myExchangeStore = useMyExchangeStore()
-  const router = useRouter()
-  const exchangeStore = useExchangeStore()
-  const searchQuery = ref('') 
-  const exchangeList = computed(() => myExchangeStore.uAEPSGetExchangeAccessoryEntities || [])
-  const selectedStatus = ref('')
-  const displayGallery = ref(false) // Hiện modal chứa ảnh nhỏ
-  const displayFullScreen = ref(false) // Hiện gallery ảnh lớn
-  const activeIndex = ref(0)
-  const currentImages = ref<{ itemImageSrc: string | undefined; alt: string }[]>([])
+const authStore = useAuthStore()
+const myExchangeStore = useMyExchangeStore()
+const router = useRouter()
+const searchQuery = ref('')
+const selectedStatus = ref('')
+const exchangeList = computed(() => myExchangeStore.uAEPSGetExchangeAccessoryEntities || [])
+const displayGallery = ref(false);
+const displayFullScreen = ref(false);
+const activeIndex = ref(0);
+const currentImages = ref<{ itemImageSrc: string; alt: string }[]>([]);
+const data = ref<AEPSGetExchangeAccessoryEntity[]>([]); 
+  const selectedTabIndex = ref(0);
+  const tabs = ref([
+  { label: "Pending & Changing exchanges", icon: "pi pi-clock" },
+  { label: "Completed exchanges", icon: "pi pi-check" },
+]);
 
-  const openGallery = (exchangeId: string) => {
-    console.log('Before update:', currentImages.value)
-
-    const images =
-      getExchangeDetails(exchangeId)?.value?.imageBlindBoxList?.map((img) => ({
-        itemImageSrc: img.imageUrls,
-        alt: 'Exchange Image',
-      })) || []
-
-    currentImages.value = images // Cập nhật danh sách ảnh, watch sẽ tự mở modal
-
-    console.log('After update:', currentImages.value)
-  }
-  const getStatusText = (status: number | null | undefined) => {
-    switch (status) {
-      case 0:
-        return 'Pending'
-      case 1:
-        return 'Approved'
-      case 2:
-        return 'Rejected'
-      default:
-        return 'Unknown'
-    }
-  }
-  const getStatusClass = (status: number | null | undefined) => {
-    switch (status) {
-      case 0:
-        return 'status-pending'
-      case 1:
-        return 'status-approved'
-      case 2:
-        return 'status-rejected'
-      default:
-        return ''
-    }
-  }
-  const filteredExchangeList = computed(() => {
-  const keyword = searchQuery.value.toLowerCase().trim()
-  const status = selectedStatus.value
-
+const filteredExchangeList = computed(() => {
   return exchangeList.value.filter((item) => {
-    const matchName = item.exchangeName?.toLowerCase().includes(keyword) || item.description?.toLowerCase().includes(keyword)
-    const matchStatus = status === '' || item.status?.toString() === status
+    const isPendingOrChanging = item.status === 1 || item.status === 2; 
+    const matchSearch = searchQuery.value
+      ? item.exchangeName?.toLowerCase().includes(searchQuery.value.toLowerCase())
+      : true;
+    return isPendingOrChanging && matchSearch;
+  });
+});
+const pendingAndChangingList = computed(() => {
+  return exchangeList.value.filter((item) => item.status === 1 || item.status === 2);
+});
 
-    return matchName && matchStatus
-  })
-})
-  const openFullScreen = (index: number) => {
-    activeIndex.value = index
-    displayGallery.value = false // Đóng modal danh sách ảnh nhỏ
-    displayFullScreen.value = true // Mở gallery full screen
+const CompletedStatusList = computed(() => {
+  return exchangeList.value.filter((item) => item.status !== 1 && item.status !== 2);
+});
+
+
+const openGallery = (exchangeId: string) => {
+  console.log('Clicked on exchangeId:', exchangeId); // Kiểm tra xem có chạy không
+
+  const selectedItem = exchangeList.value.find((item) => item.exchangeId === exchangeId);
+  if (!selectedItem || !selectedItem.imageBlindBoxList || selectedItem.imageBlindBoxList.length === 0) {
+    console.warn('No images found for this exchange.');
+    return;
   }
 
-  // Khi đóng Galleria, mở lại modal gallery
-  const onCloseFullScreen = () => {
-    displayFullScreen.value = false // Đóng Galleria
-    displayGallery.value = true // Mở lại modal danh sách ảnh nhỏ
-  }
-  watch(currentImages, (newVal) => {
+  currentImages.value = selectedItem.imageBlindBoxList.map((img) => ({
+    itemImageSrc: img.imageUrls || '/placeholder.png',
+    alt: 'Gallery image'
+  }));
+
+  displayGallery.value = true;
+  console.log('Gallery opened:', currentImages.value); // Kiểm tra dữ liệu ảnh
+};
+watch(currentImages, (newVal) => {
     if (newVal.length > 0) {
       displayGallery.value = true // Chỉ mở modal khi đã có ảnh
     }
   })
 
-  const manageRequest = (selectedProduct: string) => {
-    if (authStore.isAuthorization) {
-      router.push(`/DashBoard/PlannedCustomer/Exchange-${selectedProduct}`)
-      return
-    }
-  }
 
-  onMounted(async () => {
-    await myExchangeStore.GetMyExchange()
-    const exchangeIds = exchangeList.value.map((item) => item.exchangeId).filter(Boolean) as string[]
-    if (exchangeIds.length > 0) {
-      await exchangeStore.FetchAllExchangeDetails(exchangeIds)
-    }
-  })
-  const getTheme = () => {
-    return localStorage.getItem('nuxt-color-mode') === '0' ? 'dark' : 'light'
+const openFullScreen = (index: number) => {
+  console.log('Opening Galleria at index:', index);
+  activeIndex.value = index; // Đặt index đúng ảnh được chọn
+  displayFullScreen.value = true; // Mở Galleria
+};
+const onCloseFullScreen = () => {
+    displayFullScreen.value = false // Đóng Galleria
+    displayGallery.value = true // Mở lại modal danh sách ảnh nhỏ
   }
-  const getExchangeDetails = (exchangeId: string) => {
-    return computed(() => exchangeStore.exchangeDetailsMap[exchangeId] ?? null)
-  }
+const getFirstImage = (item: any) => {
+  return item.imageBlindBoxList?.[0]?.imageUrls || '/placeholder.png';
+};
 
-  const getFirstImage = (exchangeId: string) => {
-    return (
-      getExchangeDetails(exchangeId)?.value?.imageBlindBoxList?.[0]?.imageUrls ||
-      'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon.jpg'
-    )
+const getStatusClass = (status: number | null | undefined) => {
+  switch (status) {
+    case 1: return 'status-pending';
+    case 2: return 'status-changing';
+    case 3: return 'status-approved';
+    case 4: return 'status-rejected';
+    default: return '';
   }
+};
+
+const getStatusText = (status: number | null | undefined) => {
+  switch (status) {
+    case 1: return '⏳ Pending';
+    case 2: return '🔄 Changing';
+    case 3: return '✅ Success';
+    case 4: return '❌ Rejected';
+    default: return 'Unknown';
+  }
+};
+
+const manageRequest = (selectedProduct: string) => {
+  if (authStore.isAuthorization) {
+    router.push(`/DashBoard/PlannedCustomer/Exchange-${selectedProduct}`)
+  }
+};
+
+onMounted(async () => {
+  await myExchangeStore.GetMyExchange()
+  data.value = myExchangeStore.uAEPSGetExchangeAccessoryEntities || [];
+});
+
+const getTheme = () => {
+  return localStorage.getItem('nuxt-color-mode') === '0' ? 'dark' : 'light';
+};
 </script>
 
 <style scoped>
@@ -243,6 +278,10 @@
     color: #ff9800;
     background-color: #fff3e0;
   }
+  .status-changing {
+  color: #fdc153; /* Màu cam để thể hiện thay đổi */
+  background-color: #fff3e0;
+}
 
   .status-approved {
   background-color: #dff0d8;
@@ -409,4 +448,15 @@
 [data-theme='dark'] .page-title {
   color: white;
 }
+.custom-tabmenu .p-tabmenu-nav {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.custom-tabmenu .p-tabmenu-nav li {
+  flex: 1;
+  text-align: center;
+}
+
 </style>
