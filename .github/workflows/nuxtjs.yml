@@ -1,35 +1,43 @@
-name: Build and Deploy
-on: 
+name: Build and Deploy Frontend
+
+on:
   push:
     branches:
       - fpt/fe/deploy
+
 permissions:
   contents: write
+
 jobs:
   build-and-deploy:
+    # Giúp tránh xung đột khi chạy nhiều workflow cùng lúc
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18]
+
     steps:
-    - name: Checkout 🛎️
-      uses: actions/checkout@v3
+      # Bước 1: Lấy code
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      # Bước 2: Cài đặt Node
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name: Install & Generate 🔧
-      run: |
-        npm ci
-        npm run generate
-      env:
-        NUXT_PUBLIC_API_BASE_URL: ${{ vars.NUXT_PUBLIC_API_BASE_URL  }}
-        NUXT_PUBLIC_IDENTITY_BASE_URL: ${{ vars.NUXT_PUBLIC_IDENTITY_BASE_URL  }}
+      # Bước 3: Cài đặt dependencies và build (generate) trong thư mục Frontend_web
+      - name: Install & Generate
+        run: |
+          cd Frontend_web
+          npm ci
+          npm run generate
+        env:
+          NUXT_PUBLIC_API_BASE_URL: ${{ vars.NUXT_PUBLIC_API_BASE_URL }}
+          NUXT_PUBLIC_IDENTITY_BASE_URL: ${{ vars.NUXT_PUBLIC_IDENTITY_BASE_URL }}
 
-    - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: dist
+      # Bước 4: Deploy lên GitHub Pages (đẩy nội dung dist lên branch gh-pages)
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: Frontend_web/.output/public
