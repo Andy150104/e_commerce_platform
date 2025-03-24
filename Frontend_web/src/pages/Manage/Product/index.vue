@@ -320,7 +320,7 @@
     await store.GetAllProduct()
   })
 </script>
-<style>
+<style scoped>
   h1 {
     font-size: 2rem !important;
     font-weight: bold;

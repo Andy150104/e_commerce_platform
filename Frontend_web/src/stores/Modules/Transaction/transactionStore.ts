@@ -9,7 +9,6 @@ import { useCartStore } from '../Blind_Box/CartStore'
 export type FormSchema = Record<string, string>
 
 export const fieldsInitialize: FormSchema = {
-  quantity: '1',
 }
 
 const errorFieldsInitialize: FormSchema = { ...fieldsInitialize }
@@ -24,14 +23,16 @@ const fields = {
 export type CartState = {
   fields: typeof fields
   address: any
-  paymentUrl: string,
+  orderId: string,
+  GhnOrderCode: string,
 }
 
-export const useProfilePaymentStore = defineStore('Payment', {
+export const useTransactionStore = defineStore('Transaction', {
   state: (): CartState => ({
     fields,
     address: {},
-    paymentUrl: ''
+    orderId: '',
+    GhnOrderCode: ''
   }),
   // state
 
@@ -50,26 +51,15 @@ export const useProfilePaymentStore = defineStore('Payment', {
     ResetStore() {
       this.fields.resetForm()
     },
-    async InsertOrder() {
+    async updateOrder() {
         const apiClient = useApiClient()
-        const cartStore = useCartStore()
-        const loadingStore = useLoadingStore()
-        
-        const orderDetails = cartStore.cartList.map((item) => ({
-          accessoryId: item.accessoryId ?? '',
-          quantity: Number(item.quantity)
-        }))
-        
-        const res = await apiClient.api.v1.InsertOrder.$post({
+        const res = await apiClient.api.v1.MomoOrderLogicReturn.$patch({
           body: {
-            addressId: this.address.addressId,
-            paymentMethod: 1,
-            platForm: 1,
-            orderDetails: orderDetails,
+            ghnOrderCode: this.GhnOrderCode,
+            orderId: this.orderId
           },
         })
         if (!res.success) return false
-        this.paymentUrl = res.response?.momo?.paymentUrl ?? ''
         return true
       },
   },

@@ -1,11 +1,11 @@
 <template>
   <div>
     <div v-if="isInline" class="md:flex md:space-x-4 space-y-4 md:space-y-0">
-      <LabelItem :xml-column="xmlColumn" />
+      <LabelItem v-if="isShowLabel" :xml-column="xmlColumn" />
       <DateTimePicker :xml-column="xmlColumn" :err-msg="errMsg" :disabled="false" :maxlength="maxlength" :date-model="dateModel" />
     </div>
     <div v-else>
-      <LabelItem :xml-column="xmlColumn" />
+      <LabelItem v-if="isShowLabel" :xml-column="xmlColumn" />
       <DateTimePicker
         :xml-column="xmlColumn"
         :err-msg="errMsg"
@@ -29,6 +29,11 @@
       type: String,
       required: true,
       default: '',
+    },
+    isShowLabel: {
+      type: Boolean,
+      required: false,
+      default: true,
     },
     xmlColumn: {
       type: Object as PropType<xmlColumn>,

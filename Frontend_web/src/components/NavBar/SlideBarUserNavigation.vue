@@ -199,7 +199,7 @@
             :item-name="'Product'"
             :option="[
               {
-                link: '#',
+                link: '/Dashboard/HistoryOrder',
                 childItemName: 'History order',
               },
               {

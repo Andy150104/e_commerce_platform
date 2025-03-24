@@ -138,6 +138,15 @@ export type URSUserRegisterRequest = AbstractApiRequest & {
   key: string;
 }
 
+export type MomoOrderLogicReturnResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type MomoOrderLogicReturnRequest = AbstractApiRequest & {
+  orderId: string;
+  ghnOrderCode: string;
+}
+
 export type RROApproveRefundRequestOrderResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
@@ -231,8 +240,17 @@ export type VEXSAddToQueueResponse = AbstractApiResponseOfString & {
 }
 
 export type VEXSAddToQueueRequest = AbstractApiRequest & {
-  blindBoxId: string;
+  exchangeId: string;
   description: string;
+}
+
+export type VEXSApproveQueueResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type VEXSApproveQueueRequest = AbstractApiRequest & {
+  exchangeId?: string | undefined;
+  queueId?: string | undefined;
 }
 
 export type OPSBuyingPlanResponse = AbstractApiResponseOfString & {
@@ -241,7 +259,6 @@ export type OPSBuyingPlanResponse = AbstractApiResponseOfString & {
 
 export type OPSBuyingPlanRequest = AbstractApiRequest & {
   planId: string;
-  voucherId?: string | null | undefined;
 }
 
 export type HSShowPlanResponse = AbstractApiResponseOfListOfHSShowPlanEntity & {
@@ -280,8 +297,15 @@ export type InsertOrderResponse = AbstractApiResponseOfInsertOrderResponseEntity
 }
 
 export type InsertOrderResponseEntity = {
-  paymentUrl?: string | undefined;
+  momo?: MomoResponse | undefined;
   ghnCode?: string | undefined;
+}
+
+export type MomoResponse = {
+  paymentUrl?: string | undefined;
+  qrCodeUrl?: string | undefined;
+  deeplink?: string | undefined;
+  deeplinkWebInApp?: string | undefined;
 }
 
 export type AbstractApiResponseOfInsertOrderResponseEntity = {
@@ -296,6 +320,7 @@ export type AbstractApiResponseOfInsertOrderResponseEntity = {
 export type InsertOrderRequest = AbstractApiRequest & {
   orderDetails?: TOSOrderDetailRequest[] | null | undefined;
   paymentMethod: number;
+  platForm: number;
   addressId: string;
 }
 
@@ -304,15 +329,279 @@ export type TOSOrderDetailRequest = {
   quantity: number;
 }
 
+export type SelectOrderResponse = AbstractApiResponseOfSelectOrderEntity & {
+  response?: SelectOrderEntity | undefined;
+}
+
+export type SelectOrderEntity = {
+  orderId?: string | undefined;
+  quantity?: number | undefined;
+  totalPrice?: number | undefined;
+  status?: number | undefined;
+  createdAt?: string | null | undefined;
+  createdBy?: string | null | undefined;
+  updatedAt?: string | null | undefined;
+  updatedBy?: string | null | undefined;
+  orderDetails?: SelectOrderDetails[] | undefined;
+}
+
+export type SelectOrderDetails = {
+  orderDetailId?: string | undefined;
+  accessoryId?: string | undefined;
+  accessoryName?: string | undefined;
+  quantity?: number | undefined;
+  originalPrice?: number | undefined;
+  unitPrice?: number | undefined;
+  discountPercent?: number | undefined;
+  discountedPrice?: number | undefined;
+}
+
+export type AbstractApiResponseOfSelectOrderEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: SelectOrderEntity | null | undefined;
+}
+
+export type SelectOrdersResponse = AbstractApiResponseOfListOfSelectOrdersEntity & {
+  response?: SelectOrdersEntity[] | undefined;
+}
+
+export type SelectOrdersEntity = {
+  orderId?: string | undefined;
+  quantity?: number | undefined;
+  totalPrice?: number | undefined;
+  status?: number | undefined;
+  orderDetails?: TOSSelectOrderDetails[] | undefined;
+}
+
+export type TOSSelectOrderDetails = {
+  orderDetailId?: string | undefined;
+  accessoryId?: string | undefined;
+  accessoryName?: string | undefined;
+  quantity?: number | undefined;
+  originalPrice?: number | undefined;
+  unitPrice?: number | undefined;
+  discountPercent?: number | undefined;
+  discountedPrice?: number | undefined;
+}
+
+export type AbstractApiResponseOfListOfSelectOrdersEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: SelectOrdersEntity[] | null | undefined;
+}
+
+export type SelectOrdersRequest = AbstractApiRequest
+
 export type AEPSAddExchangeAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
 
-export type AEPSAddExchangeAccessoryRequest = AbstractApiRequest & {
-  name: string;
-  description: string;
-  price: number;
-  imageUrls: string[];
+export type AEPSCheckExchangeRecheckRequestAccessoryResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type AEPSCheckExchangeRecheckRequestAccessoryRequest = AbstractApiRequest & {
+  requestId?: string | undefined;
+  isAccepted?: boolean | undefined;
+}
+
+export type AEPSFinalAcceptExchangeAccessoryResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type AEPSFinalAcceptExchangeAccessoryRequest = AbstractApiRequest & {
+  exchangeId?: string | undefined;
+  queueId?: string | undefined;
+  isAccepted?: boolean | undefined;
+}
+
+export type AEPSGetByIdExchangeAccessoryResponse = AbstractApiResponseOfAEPSGetByIdExchangeAccessoryEntity & {
+  response?: AEPSGetByIdExchangeAccessoryEntity | undefined;
+}
+
+export type AEPSGetByIdExchangeAccessoryEntity = {
+  exchangeId?: string | undefined;
+  exchangeName?: string | undefined;
+  description?: string | undefined;
+  status?: number | null | undefined;
+  blindBoxId?: string | undefined;
+  imageBlindBoxList?: AEPSGetByIdExchangeAccessoryImageList[] | undefined;
+}
+
+export type AEPSGetByIdExchangeAccessoryImageList = {
+  imageId?: string | undefined;
+  imageUrls?: string | undefined;
+}
+
+export type AbstractApiResponseOfAEPSGetByIdExchangeAccessoryEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: AEPSGetByIdExchangeAccessoryEntity | null | undefined;
+}
+
+export type AEPSGetExchangeAccessoryResponse = AbstractApiResponseOfListOfAEPSGetExchangeAccessoryEntity & {
+  response?: AEPSGetExchangeAccessoryEntity[] | undefined;
+}
+
+export type AEPSGetExchangeAccessoryEntity = {
+  exchangeId?: string | undefined;
+  exchangeName?: string | undefined;
+  description?: string | undefined;
+  status?: number | null | undefined;
+  blindBoxId?: string | undefined;
+  imageBlindBoxList?: AEPSGetExchangeAccessoryImageBlindBoxList[] | undefined;
+}
+
+export type AEPSGetExchangeAccessoryImageBlindBoxList = {
+  imageId?: string | undefined;
+  imageUrls?: string | undefined;
+}
+
+export type AbstractApiResponseOfListOfAEPSGetExchangeAccessoryEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: AEPSGetExchangeAccessoryEntity[] | null | undefined;
+}
+
+export type AEPSGetExchangeAccessoryRequest = AbstractApiRequest
+
+export type AEPSGetExchangeRecheckRequestAccessoryResponse = AbstractApiResponseOfListOfAEPSGetExchangeRecheckRequestAccessoryEntity & {
+  response?: AEPSGetExchangeRecheckRequestAccessoryEntity[] | undefined;
+}
+
+export type AEPSGetExchangeRecheckRequestAccessoryEntity = {
+  requestId?: string | undefined;
+  exchangeId?: string | undefined;
+  description?: string | undefined;
+  status?: number | undefined;
+  isActive?: boolean | null | undefined;
+  createdAt?: string | null | undefined;
+  updatedAt?: string | null | undefined;
+  createdBy?: string | null | undefined;
+  updatedBy?: string | null | undefined;
+}
+
+export type AbstractApiResponseOfListOfAEPSGetExchangeRecheckRequestAccessoryEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: AEPSGetExchangeRecheckRequestAccessoryEntity[] | null | undefined;
+}
+
+export type AEPSGetExchangeRecheckRequestAccessoryRequest = AbstractApiRequest
+
+export type AEPSGetFailExchangeAccessoryResponse = AbstractApiResponseOfListOfAEPSGetFailExchangeAccessoryEntity & {
+  response?: AEPSGetFailExchangeAccessoryEntity[] | undefined;
+}
+
+export type AEPSGetFailExchangeAccessoryEntity = {
+  exchangeId?: string | undefined;
+  exchangeName?: string | undefined;
+  description?: string | undefined;
+  status?: number | null | undefined;
+  blindBoxId?: string | undefined;
+}
+
+export type AbstractApiResponseOfListOfAEPSGetFailExchangeAccessoryEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: AEPSGetFailExchangeAccessoryEntity[] | null | undefined;
+}
+
+export type AEPSGetFailExchangeAccessoryRequest = AbstractApiRequest
+
+export type AEPSSendExchangeRecheckRequestAccessoryResponse = AbstractApiResponseOfString & {
+  response?: string | undefined;
+}
+
+export type AEPSSendExchangeRecheckRequestAccessoryRequest = AbstractApiRequest & {
+  exchangeId?: string | undefined;
+  description?: string | null | undefined;
+}
+
+export type VEXSGetOrderExchangeResponse = AbstractApiResponseOfListOfVEXSGetOrderExchangeResponseEntity & {
+  response?: VEXSGetOrderExchangeResponseEntity[] | undefined;
+}
+
+export type VEXSGetOrderExchangeResponseEntity = {
+  exchangeId?: string | undefined;
+  exchangeName?: string | undefined;
+}
+
+export type AbstractApiResponseOfListOfVEXSGetOrderExchangeResponseEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: VEXSGetOrderExchangeResponseEntity[] | null | undefined;
+}
+
+export type VEXSGetOrderExchangeRequest = AbstractApiRequest
+
+export type VEXSGetToQueueResponse = AbstractApiResponseOfListOfVEXSGetToQueueResponseEntity & {
+  response?: VEXSGetToQueueResponseEntity[] | undefined;
+}
+
+export type VEXSGetToQueueResponseEntity = {
+  queueId?: string | undefined;
+  userFullNameQueue?: string | undefined;
+  userImage?: string | undefined;
+  descriptionQueue?: string | undefined;
+  userGender?: string | undefined;
+  userPhone?: string | undefined;
+  userBirthday?: string | undefined;
+  status?: number | null | undefined;
+}
+
+export type AbstractApiResponseOfListOfVEXSGetToQueueResponseEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: VEXSGetToQueueResponseEntity[] | null | undefined;
+}
+
+export type DashboardResponse = AbstractApiResponseOfDashboardEntity & {
+  response?: DashboardEntity | undefined;
+}
+
+export type DashboardEntity = {
+  totalRevenue?: number | undefined;
+  totalRevenueThisMonth?: number | undefined;
+  revenueGrowthRateLastMonth?: number | undefined;
+  totalRevenueToday?: number | undefined;
+  revenueGrowthRateYesterday?: number | undefined;
+  totalOrder?: number | undefined;
+  revenueData?: number[] | undefined;
+  accessoryData?: AccessoryDataResponse[] | undefined;
+}
+
+export type AccessoryDataResponse = {
+  accessoryName?: string | undefined;
+  totalSale?: number | undefined;
+}
+
+export type AbstractApiResponseOfDashboardEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: DashboardEntity | null | undefined;
 }
 
 export type CreateCategoryResponse = AbstractApiResponseOfString & {
@@ -576,6 +865,7 @@ export type DPSSelectItemEntity = {
 export type ItemEntity = {
   codeProduct?: string | undefined;
   nameAccessory?: string | undefined;
+  exchangeName?: string | undefined;
   shortDescription?: string | null | undefined;
   description?: string | null | undefined;
   price?: string | undefined;
@@ -634,5 +924,5 @@ export type MSPInsertImageAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
 export type AbstractApiRequest = {
-
+  
 }

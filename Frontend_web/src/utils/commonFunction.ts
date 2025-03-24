@@ -1,4 +1,4 @@
-import { Gender, SortBy } from '@PKG_SRC/types/enums/constantBackend'
+import { Gender, SortBy, SortByChart } from '@PKG_SRC/types/enums/constantBackend'
 import type { selectItem } from '@PKG_SRC/types/enums/constantFrontend'
 
 export function sleepByPromise(millisecond: number) {
@@ -58,7 +58,7 @@ export function createErrorFields<T extends object>(fieldsInitialize: T): Record
 
   return result as Record<keyof T, string>
 }
-export type MasterName = 'Gender' | 'SortBy'
+export type MasterName = 'Gender' | 'SortBy' | 'SortByChart'
 
 export async function getSelectComponentData(masterName: MasterName, _params: any) {
   switch (masterName) {
@@ -66,6 +66,8 @@ export async function getSelectComponentData(masterName: MasterName, _params: an
       return getEnums(Gender)
     case 'SortBy':
       return getEnumsNumber(SortBy)
+    case 'SortByChart':
+        return getEnumsNumber(SortByChart)
   }
 }
 
@@ -141,4 +143,11 @@ export async function urlToBase64(url: string): Promise<string> {
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
+}
+export function getCurrentDateDDMMYYYY(): string {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const year = now.getFullYear();
+  return `${day}-${month}-${year}`;
 }

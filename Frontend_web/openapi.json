@@ -17,12 +17,78 @@
           "AEPSAddExchangeAccessory"
         ],
         "operationId": "AEPSAddExchangeAccessory_ProcessRequest",
+        "parameters": [
+          {
+            "name": "Name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Description",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Images": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AEPSAddExchangeAccessoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "SaleEmployee",
+              "Owner",
+              "PlannedCustomer"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/AEPSCheckExchangeRecheckRequestAccessory": {
+      "post": {
+        "tags": [
+          "AEPSCheckExchangeRecheckRequestAccessory"
+        ],
+        "operationId": "AEPSCheckExchangeRecheckRequestAccessory_ProcessRequest",
         "requestBody": {
           "x-name": "request",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AEPSAddExchangeAccessoryRequest"
+                "$ref": "#/components/schemas/AEPSCheckExchangeRecheckRequestAccessoryRequest"
               }
             }
           },
@@ -35,7 +101,222 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AEPSAddExchangeAccessoryResponse"
+                  "$ref": "#/components/schemas/AEPSCheckExchangeRecheckRequestAccessoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/AEPSFinalAcceptExchangeAccessory": {
+      "post": {
+        "tags": [
+          "AEPSFinalAcceptExchangeAccessory"
+        ],
+        "operationId": "AEPSFinalAcceptExchangeAccessory_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AEPSFinalAcceptExchangeAccessoryRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AEPSFinalAcceptExchangeAccessoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/AEPSGetByIdExchangeAccessory": {
+      "get": {
+        "tags": [
+          "AEPSGetByIdExchangeAccessory"
+        ],
+        "operationId": "AEPSGetByIdExchangeAccessory_Get",
+        "parameters": [
+          {
+            "name": "ExchangeId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AEPSGetByIdExchangeAccessoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/AEPSGetExchangeAccessory": {
+      "get": {
+        "tags": [
+          "AEPSGetExchangeAccessory"
+        ],
+        "operationId": "AEPSGetExchangeAccessory_Get",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AEPSGetExchangeAccessoryRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AEPSGetExchangeAccessoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/AEPSGetExchangeRecheckRequestAccessory": {
+      "get": {
+        "tags": [
+          "AEPSGetExchangeRecheckRequestAccessory"
+        ],
+        "operationId": "AEPSGetExchangeRecheckRequestAccessory_Get",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AEPSGetExchangeRecheckRequestAccessoryRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AEPSGetExchangeRecheckRequestAccessoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/AEPSGetFailExchangeAccessory": {
+      "get": {
+        "tags": [
+          "AEPSGetFailExchangeAccessory"
+        ],
+        "operationId": "AEPSGetFailExchangeAccessory_Get",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AEPSGetFailExchangeAccessoryRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AEPSGetFailExchangeAccessoryResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/AEPSSendExchangeRecheckRequestAccessory": {
+      "post": {
+        "tags": [
+          "AEPSSendExchangeRecheckRequestAccessory"
+        ],
+        "operationId": "AEPSSendExchangeRecheckRequestAccessory_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AEPSSendExchangeRecheckRequestAccessoryRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AEPSSendExchangeRecheckRequestAccessoryResponse"
                 }
               }
             }
@@ -82,6 +363,65 @@
           {
             "JWT Token": [
               "SaleEmployee",
+              "Owner"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/Dashboard": {
+      "get": {
+        "tags": [
+          "Dashboard"
+        ],
+        "operationId": "Dashboard_Get",
+        "parameters": [
+          {
+            "name": "Month",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "byte",
+              "maximum": 12.0,
+              "minimum": 1.0
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Year",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "maximum": 2100.0,
+              "minimum": 2000.0
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
               "Owner"
             ]
           }
@@ -378,6 +718,7 @@
             "schema": {
               "type": "number",
               "format": "decimal",
+              "minimum": 0.0,
               "nullable": true
             },
             "x-position": 3
@@ -388,6 +729,7 @@
             "schema": {
               "type": "number",
               "format": "decimal",
+              "minimum": 0.0,
               "nullable": true
             },
             "x-position": 4
@@ -653,6 +995,43 @@
         ]
       }
     },
+    "/api/v1/MomoOrderLogicReturn": {
+      "patch": {
+        "tags": [
+          "MomoOrderLogicReturn"
+        ],
+        "operationId": "MomoOrderLogicReturn_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MomoOrderLogicReturnRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MomoOrderLogicReturnResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
     "/api/v1/MPSDeleteAccessory": {
       "patch": {
         "tags": [
@@ -762,7 +1141,9 @@
             "in": "query",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "decimal",
+              "minimum": 0.0,
+              "pattern": "^\\d+$"
             },
             "x-position": 3
           },
@@ -771,7 +1152,9 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 0.0
             },
             "x-position": 4
           },
@@ -924,7 +1307,9 @@
             "in": "query",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "decimal",
+              "minimum": 0.0,
+              "pattern": "^\\d+$"
             },
             "x-position": 4
           },
@@ -933,7 +1318,9 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "maximum": 2147483647.0,
+              "minimum": 0.0
             },
             "x-position": 5
           },
@@ -943,6 +1330,8 @@
             "schema": {
               "type": "number",
               "format": "decimal",
+              "maximum": 100.0,
+              "minimum": 0.0,
               "nullable": true
             },
             "x-position": 6
@@ -1459,6 +1848,77 @@
         ]
       }
     },
+    "/api/v1/SelectOrder": {
+      "get": {
+        "tags": [
+          "SelectOrder"
+        ],
+        "operationId": "SelectOrder_Get",
+        "parameters": [
+          {
+            "name": "OrderId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectOrderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/SelectOrders": {
+      "get": {
+        "tags": [
+          "SelectOrders"
+        ],
+        "operationId": "SelectOrders_Get",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/SelectOrdersRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelectOrdersResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
     "/api/v1/SelectSubCategories": {
       "get": {
         "tags": [
@@ -1815,6 +2275,123 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/VEXSAddToQueueResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/VEXSApproveQueue": {
+      "post": {
+        "tags": [
+          "VEXSApproveQueue"
+        ],
+        "operationId": "VEXSApproveQueue_ProcessRequest",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VEXSApproveQueueRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VEXSApproveQueueResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/VEXSGetOrderExchange": {
+      "get": {
+        "tags": [
+          "VEXSGetOrderExchange"
+        ],
+        "operationId": "VEXSGetOrderExchange_Get",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/VEXSGetOrderExchangeRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VEXSGetOrderExchangeResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/VEXSGetToQueue": {
+      "get": {
+        "tags": [
+          "VEXSGetToQueue"
+        ],
+        "operationId": "VEXSGetToQueue_Get",
+        "parameters": [
+          {
+            "name": "ExchangeId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SearchName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VEXSGetToQueueResponse"
                 }
               }
             }
@@ -2412,6 +2989,48 @@
           }
         ]
       },
+      "MomoOrderLogicReturnResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "MomoOrderLogicReturnRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "orderId",
+              "ghnOrderCode"
+            ],
+            "properties": {
+              "orderId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "ghnOrderCode": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        ]
+      },
       "RROApproveRefundRequestOrderResponse": {
         "allOf": [
           {
@@ -2791,11 +3410,11 @@
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "blindBoxId",
+              "exchangeId",
               "description"
             ],
             "properties": {
-              "blindBoxId": {
+              "exchangeId": {
                 "type": "string",
                 "format": "guid",
                 "minLength": 1
@@ -2803,6 +3422,43 @@
               "description": {
                 "type": "string",
                 "minLength": 1
+              }
+            }
+          }
+        ]
+      },
+      "VEXSApproveQueueResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "VEXSApproveQueueRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "exchangeId": {
+                "type": "string",
+                "format": "guid"
+              },
+              "queueId": {
+                "type": "string",
+                "format": "guid"
               }
             }
           }
@@ -2840,11 +3496,6 @@
                 "type": "string",
                 "format": "guid",
                 "minLength": 1
-              },
-              "voucherId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
               }
             }
           }
@@ -2996,10 +3647,28 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "momo": {
+            "$ref": "#/components/schemas/MomoResponse"
+          },
+          "ghnCode": {
+            "type": "string"
+          }
+        }
+      },
+      "MomoResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
           "paymentUrl": {
             "type": "string"
           },
-          "ghnCode": {
+          "qrCodeUrl": {
+            "type": "string"
+          },
+          "deeplink": {
+            "type": "string"
+          },
+          "deeplinkWebInApp": {
             "type": "string"
           }
         }
@@ -3044,6 +3713,7 @@
             "additionalProperties": false,
             "required": [
               "paymentMethod",
+              "platForm",
               "addressId"
             ],
             "properties": {
@@ -3057,6 +3727,12 @@
               "paymentMethod": {
                 "type": "integer",
                 "format": "byte"
+              },
+              "platForm": {
+                "type": "integer",
+                "format": "byte",
+                "maximum": 2.0,
+                "minimum": 1.0
               },
               "addressId": {
                 "type": "string",
@@ -3081,9 +3757,262 @@
           },
           "quantity": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "maximum": 2147483647.0,
+            "minimum": 1.0
           }
         }
+      },
+      "SelectOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfSelectOrderEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "$ref": "#/components/schemas/SelectOrderEntity"
+              }
+            }
+          }
+        ]
+      },
+      "SelectOrderEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "status": {
+            "type": "integer",
+            "format": "byte"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelectOrderDetails"
+            }
+          }
+        }
+      },
+      "SelectOrderDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "orderDetailId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "accessoryId": {
+            "type": "string"
+          },
+          "accessoryName": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "originalPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "discountPercent": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "discountedPrice": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "AbstractApiResponseOfSelectOrderEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SelectOrderEntity"
+              }
+            ]
+          }
+        }
+      },
+      "SelectOrdersResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfSelectOrdersEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/SelectOrdersEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "SelectOrdersEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "status": {
+            "type": "integer",
+            "format": "byte"
+          },
+          "orderDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TOSSelectOrderDetails"
+            }
+          }
+        }
+      },
+      "TOSSelectOrderDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "orderDetailId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "accessoryId": {
+            "type": "string"
+          },
+          "accessoryName": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "originalPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "discountPercent": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "discountedPrice": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfSelectOrdersEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SelectOrdersEntity"
+            }
+          }
+        }
+      },
+      "SelectOrdersRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
       },
       "AEPSAddExchangeAccessoryResponse": {
         "allOf": [
@@ -3101,7 +4030,23 @@
           }
         ]
       },
-      "AEPSAddExchangeAccessoryRequest": {
+      "AEPSCheckExchangeRecheckRequestAccessoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "AEPSCheckExchangeRecheckRequestAccessoryRequest": {
         "allOf": [
           {
             "$ref": "#/components/schemas/AbstractApiRequest"
@@ -3109,34 +4054,729 @@
           {
             "type": "object",
             "additionalProperties": false,
-            "required": [
-              "name",
-              "description",
-              "price",
-              "imageUrls"
-            ],
             "properties": {
-              "name": {
+              "requestId": {
                 "type": "string",
-                "minLength": 1
+                "format": "guid"
               },
-              "description": {
+              "isAccepted": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "AEPSFinalAcceptExchangeAccessoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "AEPSFinalAcceptExchangeAccessoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "exchangeId": {
                 "type": "string",
-                "minLength": 1
+                "format": "guid"
               },
-              "price": {
-                "type": "number",
-                "format": "decimal"
+              "queueId": {
+                "type": "string",
+                "format": "guid"
               },
-              "imageUrls": {
+              "isAccepted": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "AEPSGetByIdExchangeAccessoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfAEPSGetByIdExchangeAccessoryEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "$ref": "#/components/schemas/AEPSGetByIdExchangeAccessoryEntity"
+              }
+            }
+          }
+        ]
+      },
+      "AEPSGetByIdExchangeAccessoryEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchangeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "exchangeName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "byte",
+            "nullable": true
+          },
+          "blindBoxId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "imageBlindBoxList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AEPSGetByIdExchangeAccessoryImageList"
+            }
+          }
+        }
+      },
+      "AEPSGetByIdExchangeAccessoryImageList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "imageId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "imageUrls": {
+            "type": "string"
+          }
+        }
+      },
+      "AbstractApiResponseOfAEPSGetByIdExchangeAccessoryEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AEPSGetByIdExchangeAccessoryEntity"
+              }
+            ]
+          }
+        }
+      },
+      "AEPSGetExchangeAccessoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfAEPSGetExchangeAccessoryEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/AEPSGetExchangeAccessoryEntity"
                 }
               }
             }
           }
         ]
+      },
+      "AEPSGetExchangeAccessoryEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchangeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "exchangeName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "byte",
+            "nullable": true
+          },
+          "blindBoxId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "imageBlindBoxList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AEPSGetExchangeAccessoryImageBlindBoxList"
+            }
+          }
+        }
+      },
+      "AEPSGetExchangeAccessoryImageBlindBoxList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "imageId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "imageUrls": {
+            "type": "string"
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfAEPSGetExchangeAccessoryEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AEPSGetExchangeAccessoryEntity"
+            }
+          }
+        }
+      },
+      "AEPSGetExchangeAccessoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "AEPSGetExchangeRecheckRequestAccessoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfAEPSGetExchangeRecheckRequestAccessoryEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AEPSGetExchangeRecheckRequestAccessoryEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AEPSGetExchangeRecheckRequestAccessoryEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "exchangeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "byte"
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfAEPSGetExchangeRecheckRequestAccessoryEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AEPSGetExchangeRecheckRequestAccessoryEntity"
+            }
+          }
+        }
+      },
+      "AEPSGetExchangeRecheckRequestAccessoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "AEPSGetFailExchangeAccessoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfAEPSGetFailExchangeAccessoryEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AEPSGetFailExchangeAccessoryEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AEPSGetFailExchangeAccessoryEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchangeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "exchangeName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "integer",
+            "format": "byte",
+            "nullable": true
+          },
+          "blindBoxId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfAEPSGetFailExchangeAccessoryEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AEPSGetFailExchangeAccessoryEntity"
+            }
+          }
+        }
+      },
+      "AEPSGetFailExchangeAccessoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "AEPSSendExchangeRecheckRequestAccessoryResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfString"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "AEPSSendExchangeRecheckRequestAccessoryRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "exchangeId": {
+                "type": "string",
+                "format": "guid"
+              },
+              "description": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "VEXSGetOrderExchangeResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfVEXSGetOrderExchangeResponseEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VEXSGetOrderExchangeResponseEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "VEXSGetOrderExchangeResponseEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "exchangeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "exchangeName": {
+            "type": "string"
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfVEXSGetOrderExchangeResponseEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/VEXSGetOrderExchangeResponseEntity"
+            }
+          }
+        }
+      },
+      "VEXSGetOrderExchangeRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "VEXSGetToQueueResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfVEXSGetToQueueResponseEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/VEXSGetToQueueResponseEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "VEXSGetToQueueResponseEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "queueId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userFullNameQueue": {
+            "type": "string"
+          },
+          "userImage": {
+            "type": "string"
+          },
+          "descriptionQueue": {
+            "type": "string"
+          },
+          "userGender": {
+            "type": "string"
+          },
+          "userPhone": {
+            "type": "string"
+          },
+          "userBirthday": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "integer",
+            "format": "byte",
+            "nullable": true
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfVEXSGetToQueueResponseEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/VEXSGetToQueueResponseEntity"
+            }
+          }
+        }
+      },
+      "DashboardResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfDashboardEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "$ref": "#/components/schemas/DashboardEntity"
+              }
+            }
+          }
+        ]
+      },
+      "DashboardEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "totalRevenue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalRevenueThisMonth": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "revenueGrowthRateLastMonth": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalRevenueToday": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "revenueGrowthRateYesterday": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "revenueData": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "decimal"
+            }
+          },
+          "accessoryData": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessoryDataResponse"
+            }
+          }
+        }
+      },
+      "AccessoryDataResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "accessoryName": {
+            "type": "string"
+          },
+          "totalSale": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AbstractApiResponseOfDashboardEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/DashboardEntity"
+              }
+            ]
+          }
+        }
       },
       "CreateCategoryResponse": {
         "allOf": [
@@ -3631,7 +5271,9 @@
             "properties": {
               "quantity": {
                 "type": "integer",
-                "format": "int32"
+                "format": "int32",
+                "maximum": 2147483647.0,
+                "minimum": 1.0
               },
               "accessoryId": {
                 "type": "string"
@@ -4114,6 +5756,9 @@
             "type": "string"
           },
           "nameAccessory": {
+            "type": "string"
+          },
+          "exchangeName": {
             "type": "string"
           },
           "shortDescription": {
