@@ -1,0 +1,1 @@
+function c(t,i,o="en-US"){const n=t.toString(),r=n.includes(".")?n.split(".")[1].length:0;return new Intl.NumberFormat(o,{style:"currency",currency:i,currencyDisplay:"code",minimumFractionDigits:r,maximumFractionDigits:r}).format(t)}export{c as f};

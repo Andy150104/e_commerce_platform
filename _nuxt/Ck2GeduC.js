@@ -1,0 +1,1 @@
+import{_ as s}from"./DlAUqK2U.js";import{o as r,c as e,a as c,O as t}from"./DFVm4NPh.js";const a={},d={class:"grid-container"},i={class:"grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5"};function n(o,l){return r(),e("div",d,[c("div",i,[t(o.$slots,"body")])])}const m=s(a,[["render",n]]);export{m as default};

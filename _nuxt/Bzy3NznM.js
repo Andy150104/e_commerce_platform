@@ -1,0 +1,1 @@
+import{e as a,A as s,o as l,c as t,t as n,n as r}from"./DFVm4NPh.js";const i=a({__name:"LabelItem",props:{xmlColumn:{type:Object,required:!0},classLabel:{type:String,required:!1,default:s.LABEL_DEFAULT}},setup(e){return(c,m)=>(l(),t("label",{class:r(e.classLabel)},n(e.xmlColumn.name),3))}});export{i as _};
