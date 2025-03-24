@@ -81,9 +81,30 @@ export const useQueueStore = defineStore('queueStore', {
       const apiClient = useApiClient()
       const res = await apiClient.api.v1.VEXSApproveQueue.$post({
         body: {
-          ExchangeId: exchangeId,
+          exchangeId: exchangeId,
           queueId:queueId,
-          isApprove:true
+        },
+      })
+      loadingStore.LoadingChange(false)
+       if (!res.success) {
+             formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
+             return false;
+           }
+         
+           formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
+           return true;
+    },
+    async FinaleApproveQueue(exchangeId: string,queueId:string, isAccepted: boolean) {
+      const loadingStore = useLoadingStore()
+      const formMessage = useFormMessageStore();
+      loadingStore.LoadingChange(true)
+
+      const apiClient = useApiClient()
+      const res = await apiClient.api.v1.AEPSFinalAcceptExchangeAccessory.$post({
+        body: {
+          exchangeId: exchangeId,
+          queueId:queueId,
+          isAccepted:isAccepted
         },
       })
       loadingStore.LoadingChange(false)
