@@ -1,0 +1,70 @@
+name: Deploy Multiple APIs to Azure Web App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: Build & Publish Backend
+        run: |
+          dotnet publish ./client/Client.csproj -c Release -o backend/client
+          dotnet publish ./auth/Auth.csproj -c Release -o backend/auth
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-artifacts
+          path: backend/
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-artifacts
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Deploy Client API vào thư mục /client
+      - name: Deploy Client API
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'swd392-sp25'  # Tên App Service của bạn
+          package: './client'
+          slot-name: 'Production'
+          target-path: 'site/wwwroot/client'
+
+      # Deploy Auth API vào thư mục /auth
+      - name: Deploy Auth API
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'swd392-sp25'  # Tên App Service của bạn
+          package: './auth'
+          slot-name: 'Production'
+          target-path: 'site/wwwroot/auth'

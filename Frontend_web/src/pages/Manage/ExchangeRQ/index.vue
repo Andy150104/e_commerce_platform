@@ -1,25 +1,27 @@
 <template>
   <BaseScreenManage>
     <template #body>
-        <div class="max-w-3xl mx-auto text-center relative z-10 mt-0 pt-0">
-          <h1 class="text-4xl font-bold text-black dark:text-white mb-4 animate-fade-up animate-duration-1000 animate-delay-500">Manage Exchange Requests</h1>
-          <p class="text-lg text-gray-700 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">Manage Exchange Recheck Request!</p>
-          <div class="mt-8 flex justify-center space-x-4"></div>
-        </div>
+      <div class="max-w-3xl mx-auto text-center relative z-10 mt-0 pt-0">
+        <h1 class="text-4xl font-bold text-black dark:text-white mb-4 animate-fade-up animate-duration-1000 animate-delay-500">
+          Manage Exchange Requests
+        </h1>
+        <p class="text-lg text-gray-700 mb-8 animate-fade-up animate-duration-1000 animate-delay-500">Manage Exchange Recheck Request!</p>
+        <div class="mt-8 flex justify-center space-x-4"></div>
+      </div>
       <div
         class="animate-fade-left animate-ease-out animate-delay-100 p-10 md:max-w-none md:p-12 lg:p-30 rounded-xl mb-16 max-w-screen-lg mx-auto h-auto overflow-hidden"
       >
-      <BaseDataTable
-  :items="formattedItems"
-  :columns="columns"
-  :is-selected-columns="true"
-  @on-binding-update-data="onBinding"
-  @on-toggle-status="handleToggleStatus"
-  @on-accept="handleAccept"
-  @on-unaccept="handleUnAccept"
-  :default-fields-select="['requestId', 'statusText']"
-   :showActions="false"
-/>
+        <BaseDataTable
+          :items="formattedItems"
+          :columns="columns"
+          :is-selected-columns="true"
+          @on-binding-update-data="onBinding"
+          @on-toggle-status="handleToggleStatus"
+          @on-accept="handleAccept"
+          @on-unaccept="handleUnAccept"
+          :default-fields-select="['requestId']"
+          :showHActions="true"
+        />
       </div>
     </template>
   </BaseScreenManage>
@@ -86,7 +88,6 @@
       visible: true,
       option: '',
     }),
-    
   }
   const columns = [
     {
@@ -153,19 +154,18 @@
       filterType: 'boolean',
     },
     {
-    field: 'statusText', // Dùng `statusText` thay vì `status`
-    header: 'Status',
-    isFilter: true,
-    isSort: true
-  }
-
- ]
+      field: 'statusText', // Dùng `statusText` thay vì `status`
+      header: 'Status',
+      isFilter: true,
+      isSort: true,
+    },
+  ]
 
   const onBinding = async (items: any) => {
     await nextTick()
     store.fields.setFieldValue('requestId', items.requestId)
     store.fields.setFieldValue('exchangeId', items.exchangeId)
-    store.fields.setFieldValue('status', items.status);
+    store.fields.setFieldValue('status', items.status)
     store.fields.setFieldValue('isActive', items.isActive)
     store.fields.setFieldValue('createdAt', items.createdAt)
     store.fields.setFieldValue('createdBy', items.createdBy)
@@ -174,46 +174,46 @@
     editorValue.value = items.description
   }
   const handleToggleStatus = async (item: any) => {
-  try {
-    console.log("Item nhận được:", item);
-    const { requestId, isAccepted } = item;
+    try {
+      console.log('Item nhận được:', item)
+      const { requestId, isAccepted } = item
 
-    console.log("requestId:", requestId);
-    console.log("isAccepted:", isAccepted);
+      console.log('requestId:', requestId)
+      console.log('isAccepted:', isAccepted)
 
-    if (isAccepted) {
-      await handleAccept(requestId);
-    } else {
-      await handleUnAccept(requestId);
+      if (isAccepted) {
+        await handleAccept(requestId)
+      } else {
+        await handleUnAccept(requestId)
+      }
+    } catch (error) {
+      console.error('Error toggling request status:', error)
     }
-  } catch (error) {
-    console.error('Error toggling request status:', error);
   }
-};
-const formattedItems = computed(() => {
-  return store.uAEPSGetExchangeRecheckRequestAccessoryEntity.map(item => ({
-    ...item,
-    statusText: item.status === 1 ? "Approved" : item.status === 2 ? "Rejected" : "Pending"
-  }));
-});
+  const formattedItems = computed(() => {
+    return store.uAEPSGetExchangeRecheckRequestAccessoryEntity.map((item) => ({
+      ...item,
+      statusText: item.status === 1 ? 'Approved' : item.status === 2 ? 'Rejected' : 'Pending',
+    }))
+  })
 
   const handleAccept = async (requestId: string) => {
-  try {
-    await store.ManageExchange(requestId,true)
-    await store.GetExchange() // Reload data
-  } catch (error) {
-    console.error('Error accepting request:', error)
+    try {
+      await store.ManageExchange(requestId, true)
+      await store.GetExchange() // Reload data
+    } catch (error) {
+      console.error('Error accepting request:', error)
+    }
   }
-}
 
-const handleUnAccept = async (requestId: string) => {
-  try {
-    await store.ManageExchange(requestId,false)
-    await store.GetExchange() // Reload data
-  } catch (error) {
-    console.error('Error unaccepting request:', error)
+  const handleUnAccept = async (requestId: string) => {
+    try {
+      await store.ManageExchange(requestId, false)
+      await store.GetExchange() // Reload data
+    } catch (error) {
+      console.error('Error unaccepting request:', error)
+    }
   }
-}
 
   onMounted(async () => {
     await store.GetExchange()
