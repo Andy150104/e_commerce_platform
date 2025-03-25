@@ -67,7 +67,6 @@ public class SelectOrderController : AbstractApiGetController<SelectOrderRequest
             response.DetailErrorList = detailErrorList;
             return response;
         }
-
         // True
         response.Success = true;
         return response;

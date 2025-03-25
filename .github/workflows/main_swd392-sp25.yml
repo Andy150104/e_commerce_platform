@@ -18,10 +18,16 @@ jobs:
         with:
           dotnet-version: '9.x'
 
+      - name: Debug - List all files
+        run: ls -R
+
       - name: Build & Publish Backend
         run: |
-          dotnet publish ./client/Client.csproj -c Release -o backend/client
-          dotnet publish ./auth/Auth.csproj -c Release -o backend/auth
+          cd Backend
+          ls -R  # Debug: Liệt kê toàn bộ file để kiểm tra
+          dotnet restore Blind-Bag-ECommerce.sln  # Restore toàn bộ project
+          dotnet publish Auth/Auth.csproj -c Release -r linux-x64 --self-contained false -o ../backend/Auth
+          dotnet publish Client/Client.csproj -c Release -r linux-x64 --self-contained false -o ../backend/Client
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -43,6 +49,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: backend-artifacts
+          path: backend/  # Đảm bảo tải về đúng thư mục
+
+      - name: Debug - List downloaded files
+        run: ls -R backend/
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -51,20 +61,18 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Deploy Client API vào thư mục /client
+      # Deploy Client API vào thư mục /client (chữ thường)
       - name: Deploy Client API
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'swd392-sp25'  # Tên App Service của bạn
-          package: './client'
+          app-name: 'swd392-sp25'
+          package: 'backend/client'  # Sửa đường dẫn để khớp với thư mục tải về
           slot-name: 'Production'
-          target-path: 'site/wwwroot/client'
 
-      # Deploy Auth API vào thư mục /auth
+      # Deploy Auth API vào thư mục /auth (chữ thường)
       - name: Deploy Auth API
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'swd392-sp25'  # Tên App Service của bạn
-          package: './auth'
+          app-name: 'swd392-sp25'
+          package: 'backend/auth'  # Sửa đường dẫn để khớp với thư mục tải về
           slot-name: 'Production'
-          target-path: 'site/wwwroot/auth'

@@ -13,4 +13,12 @@ public static class SystemConfig
     public const string EncryptKey = "ENCRYPT_KEY";
     
     public const string EncryptIv = "ENCRYPT_IV";
+    
+    public const string OrderWebRedirectSuccess = "ORDER_WEB_REDIRECT_SUCCESS";
+    
+    public const string OrderWebRedirectFail = "ORDER_WEB_REDIRECT_FAIL";
+    
+    public const string OrderMobileRedirectSuccess = "ORDER_MOBILE_REDIRECT_SUCCESS";
+    
+    public const string OrderMobileRedirectFail = "ORDER_MOBILE_REDIRECT_FAIL";
 }

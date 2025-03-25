@@ -40,39 +40,32 @@ public static class CommonLogic
             _ => query
         };
     }
-    
+
     /// <summary>
     /// Call the API
     /// </summary>
-    public class ApiClient<U, V> where U : AbstractApiResponse<V>
+    public class ApiClient<U, V> where U : AbstractApiResponse<V>, new()
     {
         private readonly HttpClient _httpClient;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="httpClient"></param>
         public ApiClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<ApiResponse<T, V>> CallApiAsync<T>(HttpMethod method,
+        public async Task<U> CallApiAsync(HttpMethod method,
             string url,
             object body = null,
             Dictionary<string, string> headers = null,
             Dictionary<string, string> queryParams = null)
         {
-            // Add query parameters
             if (queryParams != null)
             {
                 url = AddQueryParameters(url, queryParams);
             }
 
-            // Create the request
             var request = new HttpRequestMessage(method, url);
 
-            // Add headers
             if (headers != null)
             {
                 foreach (var header in headers)
@@ -81,87 +74,37 @@ public static class CommonLogic
                 }
             }
 
-            // Add body
-            if (body != null && (method == HttpMethod.Post || method == HttpMethod.Put))
+            if (body != null)
             {
-                var json = JsonSerializer.Serialize(body);
+                var json = JsonConvert.SerializeObject(body);
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
-            // Send the request
             var response = await _httpClient.SendAsync(request);
             var responseContent = await response.Content.ReadAsStringAsync();
 
-            // Check for error
             if (!response.IsSuccessStatusCode)
             {
-                return new ApiResponse<T, V>
+                return new U
                 {
                     Success = false,
-                    MessageId = MessageId.E00000,
-                    Message = responseContent
-                };
-            }
-            
-            // Deserialize the response
-            var jsonResponse = JsonConvert.DeserializeObject<dynamic>(responseContent);
-
-            // Check for error if success is false
-            if (jsonResponse != null && jsonResponse.success == false)
-            {
-                return new ApiResponse<T, V>
-                {
-                    Success = false,
-                    MessageId = MessageId.E00000,
-                    Message = jsonResponse.Message
+                    MessageId = "E00000",
+                    Message = $"Error {response.StatusCode}: {responseContent}"
                 };
             }
 
-            // True
-            var apiResponse = new ApiResponse<T, V>
-            {
-                Success = response.IsSuccessStatusCode,
-                MessageId = MessageId.I00001,
-                Message = MessageId.I00001,
-            };
+            var jsonResponse = JsonConvert.DeserializeObject<V>(responseContent);
 
-            // Deserialize the response
-            if (response.IsSuccessStatusCode)
-            {
-                apiResponse.Response = JsonSerializer.Deserialize<V>(responseContent,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-            }
-
-            return apiResponse;
+            return new U { Success = true, Response = jsonResponse };
         }
 
-        /// <summary>
-        /// Add query parameters
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="queryParams"></param>
-        /// <returns></returns>
         private string AddQueryParameters(string url, Dictionary<string, string> queryParams)
         {
-            var queryString = new StringBuilder();
-            foreach (var param in queryParams)
-            {
-                queryString.Append($"{Uri.EscapeDataString(param.Key)}={Uri.EscapeDataString(param.Value)}&");
-            }
+            var queryString = string.Join("&",
+                queryParams.Select(p => $"{Uri.EscapeDataString(p.Key)}={Uri.EscapeDataString(p.Value)}"));
 
-            return url.Contains("?")
-                ? $"{url}&{queryString.ToString().TrimEnd('&')}"
-                : $"{url}?{queryString.ToString().TrimEnd('&')}";
+            return url.Contains("?") ? $"{url}&{queryString}" : $"{url}?{queryString}";
         }
     }
-
-    /// <summary>
-    /// ApiResponse - Used to return the response from the CallApiAsync
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <typeparam name="V"></typeparam>
-    public class ApiResponse<T, V> : AbstractApiResponse<V>
-    {
-        public override V Response { get; set; }
-    }
+    
 }

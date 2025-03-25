@@ -1,12 +1,32 @@
-﻿services:
-  csharp-personalstore:
-    image: csharp-personalstore
-    build:
-      context: .
-      dockerfile: CSharp-PersonalStore/Dockerfile
+﻿version: '3.8'
 
+services:
   server:
-    image: server
+    container_name: auth_service
     build:
       context: .
-      dockerfile: server/Dockerfile
+      dockerfile: Dockerfile.auth
+    ports:
+      - "2005:2005"
+      - "2006:2006"
+    restart: unless-stopped
+    networks:
+      - app_network
+
+  client:
+    container_name: client_service
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    ports:
+      - "2003:2003"
+      - "2004:2004"
+    depends_on:
+      - server
+    restart: unless-stopped
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
