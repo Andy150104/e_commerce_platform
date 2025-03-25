@@ -20,8 +20,8 @@ jobs:
 
       - name: Build & Publish Backend
         run: |
-          dotnet publish ./client/Client.csproj -c Release -o backend/client
-          dotnet publish ./auth/Auth.csproj -c Release -o backend/auth
+          dotnet publish ./Client/Client.csproj -c Release -o backend/Client
+          dotnet publish ./Auth/Auth.csproj -c Release -o backend/Auth
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -51,20 +51,20 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Deploy Client API vào thư mục /client
+      # Deploy Client API vào thư mục /Client
       - name: Deploy Client API
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'swd392-sp25'  # Tên App Service của bạn
-          package: './client'
+          package: './Client'
           slot-name: 'Production'
-          target-path: 'site/wwwroot/client'
+          target-path: 'site/wwwroot/Client'
 
-      # Deploy Auth API vào thư mục /auth
+      # Deploy Auth API vào thư mục /Auth
       - name: Deploy Auth API
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'swd392-sp25'  # Tên App Service của bạn
-          package: './auth'
+          package: './Auth'
           slot-name: 'Production'
-          target-path: 'site/wwwroot/auth'
+          target-path: 'site/wwwroot/Auth'
