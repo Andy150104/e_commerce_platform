@@ -243,7 +243,7 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
         
         Repository.ExecuteInTransaction(() =>
         {
-            var order = Find(o => o.OrderId == request.OrderId && o.Username == userName).FirstOrDefault();
+            var order = Find(o => o.OrderId == request.OrderId && o.Username == userName && o.IsActive == true).FirstOrDefault();
 
             if (order == null)
             {
@@ -386,7 +386,8 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                 o.OrderId == request.OrderId && 
                 o.Username == userName &&
                 o.Status == ((byte) ConstantEnum.OrderStatus.Processing) &&
-                o.GhnCode == null,
+                o.GhnCode == null &&
+                o.IsActive == true,
                 true,
                 u => u.UsernameNavigation)
             .FirstOrDefault();
@@ -397,7 +398,7 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
             return response;
         }
 
-        if (order.CreatedAt < order.CreatedAt.Value.AddMinutes(100))
+        if (order.CreatedAt.Value.AddMinutes(100) > DateTime.Now)
         {
             var momoUrls = order.MomoUrl.Split(',');
             var momoResponse = new MomoResponse
@@ -411,25 +412,51 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
         }
         else
         {
+            Update(order);
+            SaveChanges("OrderSystem", true);
+            
+            var newOrder = new Order
+            {
+                OrderId = Guid.NewGuid(),
+                Username = userName,
+                AddressId = order.AddressId,
+                Quantity = order.Quantity,
+                TotalPrice = order.TotalPrice,
+                Status = (byte) ConstantEnum.OrderStatus.Processing,
+            };
+            
             // Execute Payment Order
             var momoExcuteResponseModel = new MomoExecuteResponseModel
             {
                 FullName = $"{userName}",
                 Amount = ((int)order.TotalPrice).ToString(),
-                OrderId = order.OrderId.ToString(),
+                OrderId = newOrder.OrderId.ToString(),
                 OrderInfo = $"{order.UsernameNavigation.LastName}-{order.UsernameNavigation.FirstName}_{CommonMessages.OrderDescription}_{order.OrderId}",
             };
         
             var res = await _momoService.CreatePaymentOrderAsync(momoExcuteResponseModel, request.Platform,
                 order.AddressId ?? Guid.Empty);
         
-            response.Response = new MomoResponse
+            var momoResponse = new MomoResponse
             {
                 PaymentUrl = res.PayUrl,
                 QrCodeUrl = res.QrCodeUrl,
                 DeeplinkWebInApp = res.DeeplinkWebInApp,
                 Deeplink = res.Deeplink,
             };
+
+            if(momoResponse.QrCodeUrl == null || momoResponse.PaymentUrl == null || momoResponse.Deeplink == null || momoResponse.DeeplinkWebInApp == null)
+            {
+                response.SetMessage(MessageId.I00000, CommonMessages.PaymentFailed);
+                return response;
+            }
+            
+            var momoUrl = $"{momoResponse.PaymentUrl},{momoResponse.QrCodeUrl},{momoResponse.Deeplink},{momoResponse.DeeplinkWebInApp}";
+            newOrder.MomoUrl = momoUrl;
+            
+            response.Response = momoResponse;
+            Add(newOrder);
+            SaveChanges(userName);
         }
         
         // True
