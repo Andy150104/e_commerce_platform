@@ -9,7 +9,7 @@
             <BreadCrumb
               :breadcrumbs="[
                 { label: 'Service', link: '#' },
-                { label: 'Exchange', link: 'http://localhost:3000/Service/Exchange' },
+                { label: 'Exchange', link: '/Service/Exchange' },
                 { label: 'Blindbox', link: '#' },
               ]"
             />
@@ -43,7 +43,7 @@
                 >
                   <template #body>
                     <BaseControlEditorInput :xml-column="xmlColumns.description" v-model="editorValue" />
-                 </template>
+                  </template>
                 </ModalInputForm>
               </div>
               <hr class="my-6 md:my-8 border-gray-400 dark:border-gray-800" />
@@ -66,16 +66,11 @@
 
 <script setup lang="ts">
   import Accordion from '@PKG_SRC/components/Accordion/Accordion.vue'
-import BaseControlEditorInput from '@PKG_SRC/components/Basecontrol/BaseControlEditorInput.vue'
-  import BaseControlQuantityInput from '@PKG_SRC/components/Basecontrol/BaseControlQuantityInput.vue'
+  import BaseControlEditorInput from '@PKG_SRC/components/Basecontrol/BaseControlEditorInput.vue'
   import BreadCrumb from '@PKG_SRC/components/BreadCrumb/BreadCrumb.vue'
-  import CardCart from '@PKG_SRC/components/Card/CardCart.vue'
   import GalleryCarousel from '@PKG_SRC/components/Gallery/GalleryCarousel.vue'
   import ModalInputForm from '@PKG_SRC/components/Modal/ModalInputForm.vue'
-  import SlideBar from '@PKG_SRC/components/NavBar/SlideBar.vue'
-import UserControlTextFieldFloatLabel from '@PKG_SRC/components/UserControl/UserControlTextFieldFloatLabel.vue'
   import BaseScreenProduct from '@PKG_SRC/layouts/Basecreen/BaseScreenProduct.vue'
-import ExchangeId from '@PKG_SRC/pages/DashBoard/PlannedCustomer/Exchange-[id].vue'
   import { useCartStore } from '@PKG_SRC/stores/Modules/Blind_Box/CartStore'
   import { useDetailProductStore } from '@PKG_SRC/stores/Modules/Blind_Box/DetailProductStore'
   import { useRequestStore } from '@PKG_SRC/stores/Modules/Blind_Box/ExchangeRequestStore'
@@ -131,41 +126,19 @@ import ExchangeId from '@PKG_SRC/pages/DashBoard/PlannedCustomer/Exchange-[id].v
   const imageGalleryList = computed(() => {
     return store.convertImageList(ExchangeStore.imageList?.map((imageUrl) => ({ imageUrl })) ?? [])
   })
-  const addToCart = async () => {
-    await store.AddProductToCart(codeProduct.value)
-    return true
-  }
-
-  const cartList = computed(() => cartStore.cartList)
-
-  const handleAddToCart = async () => {
-    const result = await addToCart()
-    if (result !== false) {
-      await cartStore.GetAllCart()
-      isCartVisible.value = false
-      await nextTick()
-      isCartVisible.value = true
-      const drawerElement = document.getElementById('drawer-navigation')
-      if (drawerElement) {
-        const drawerInstance = new Drawer(drawerElement)
-        isUpdated.value = true
-        drawerInstance.show()
-      }
-    }
-  }
 
   const onConfirm = async () => {
-  formContext.setFieldValue("ExchangeId", codeProduct.value)
-  formContext.setFieldValue("description", editorValue.value)
-  await nextTick()
-  console.log("ExchangeId sau khi set:", formContext.values.ExchangeId)
+    formContext.setFieldValue('ExchangeId', codeProduct.value)
+    formContext.setFieldValue('description', editorValue.value)
+    await nextTick()
     await requestStore.AddToQueue()
+    requestStore.ResetStore()
+    editorValue.value = ''
   }
 
   onMounted(async () => {
     if (!(await ExchangeStore.GetByExchangeID(codeProduct.value))) {
       console.log(store.convertImageList(store.productDetail.imageUrls || []))
-      // window.location.href = 'http://localhost:3000/Home'
     }
   })
 </script>

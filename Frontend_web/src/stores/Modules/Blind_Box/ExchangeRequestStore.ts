@@ -53,22 +53,15 @@ export const useRequestStore = defineStore('RquestQueue', {
       return this.fieldValid
     },
     async AddToQueue() {
-    
-      // Kiểm tra validation
       const validation: any = await this.fields.validate();
-    
       if (validation.valid === false) {
         return false;
       }
-    
       const apiServer = useApiClient();
       const formMessage = useFormMessageStore();
       const apiFieldValues = ConvertCastValue(this.fields.values, fieldsInitialize);
-    
-      // Bắt đầu loading
       const loadingStore = useLoadingStore();
       loadingStore.LoadingChange(true);
-    
       try {
         const res = await apiServer.api.v1.VEXSAddToQueue.$post({
           body: {
@@ -76,16 +69,11 @@ export const useRequestStore = defineStore('RquestQueue', {
             description: apiFieldValues.description,
           },
         });
-    
-    
-        // Tắt loading
         loadingStore.LoadingChange(false);
-    
         if (!res.success) {
           formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
           return false;
         }
-    
         formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
         return true;
       } catch (error) {
