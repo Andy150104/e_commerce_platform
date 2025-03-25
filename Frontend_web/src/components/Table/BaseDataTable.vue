@@ -231,6 +231,10 @@
       isSelectedColumns: false,
       showActions: true, // Mặc định bật
       showHActions: false,
+      isShowAddButton: true,
+      isShowDelete: true,
+      isShowUpdate: true,
+      isStatus: false,
     }
   )
   const loading = ref(false)
