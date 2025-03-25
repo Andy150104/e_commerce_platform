@@ -41,5 +41,7 @@ public class CommonMessages
     public static readonly string ListIsEmpty = "List is Empty";
 
     public static readonly string AddQueueExist = "You already in queue!";
+
+    public static readonly string ReCheckExist = "You already send!";
     
 }
