@@ -38,6 +38,9 @@ public class AEPSAddExchangeAccessoryController : AbstractApiController<AEPSAddE
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
+    [HttpPost]
+    [Authorize(Roles = ConstRole.SaleEmployee + "," + ConstRole.Owner + "," + ConstRole.PlannedCustomer,
+         AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     public override AEPSAddExchangeAccessoryResponse ProcessRequest(AEPSAddExchangeAccessoryRequest request)
     {
         return ProcessRequest(request, _identityService, logger, new AEPSAddExchangeAccessoryResponse());
@@ -48,12 +51,9 @@ public class AEPSAddExchangeAccessoryController : AbstractApiController<AEPSAddE
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPost]
-    [Authorize(Roles = ConstRole.SaleEmployee + "," + ConstRole.Owner,
-         AuthenticationSchemes = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme)]
     protected override AEPSAddExchangeAccessoryResponse Exec(AEPSAddExchangeAccessoryRequest request)
     {
-        return _exchangeService.AddExchangeAccessory(request, _identityService);
+        return  _exchangeService.AddExchangeAccessory(request, _identityService).Result ;
     }
 
     /// <summary>

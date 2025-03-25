@@ -1,6 +1,6 @@
 using System.Net;
 using Client;
-using Client.Controllers.V1.MomoPayment;
+using Client.Controllers.V1.ThirdParty;
 using Client.Models;
 using Client.Models.Helper;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +9,10 @@ using NSwag.Generation.Processors.Security;
 using OpenIddict.Validation.AspNetCore;
 using OpenApiSecurityScheme = NSwag.OpenApiSecurityScheme;
 using Client.SystemClient;
-using Client.Controllers.V1.MomoPayment.MomoServices;
 using Client.Logics.Commons;
+using Client.Logics.Commons.Dashboard;
 using Client.Logics.Commons.GHNLogics;
+using Client.Logics.Commons.MomoLogics;
 using Client.Repositories;
 using Client.Services;
 using Client.Settings;
@@ -26,6 +27,7 @@ builder.Services.AddScoped(typeof(IBaseService<, ,>), typeof(BaseService<, ,>));
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<ILogicCommonRepository, LogicCommonRepository>();
+builder.Services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
 
 // Add services to the container (Service)
 builder.Services.AddScoped<IIdentityService, IdentityService>();
@@ -37,6 +39,7 @@ builder.Services.AddScoped<IBaseService<Voucher, Guid, object>, BaseService<Vouc
 builder.Services.AddScoped<IBaseService<RefundPlanRequest, Guid, object>, BaseService<RefundPlanRequest, Guid, object>>();
 builder.Services.AddScoped<IBaseService<OrderPlan, Guid, object>, BaseService<OrderPlan, Guid, object>>();
 builder.Services.AddScoped<IBaseService<Cart, Guid, VwCartDisplay>, BaseService<Cart, Guid, VwCartDisplay>>();
+builder.Services.AddScoped<IBaseService<OrderDetail, Guid, VwOrderDetailsWithProduct>, BaseService<OrderDetail, Guid, VwOrderDetailsWithProduct>>();
 
 
 builder.Services.AddScoped<IWishListService, WishListService>();
@@ -49,6 +52,7 @@ builder.Services.AddScoped<IAccessoryService, AccessoryService>();
 builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IEmailTemplateService, EmailTemplateService>();
 builder.Services.AddScoped<IRefundRequestOrderService, RefundRequestOrderServiceService>();
 builder.Services.AddScoped<IExchangeRecheckRequestService, ExchangeRecheckRequestService>();
 
@@ -56,6 +60,7 @@ builder.Services.AddScoped<IExchangeRecheckRequestService, ExchangeRecheckReques
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IGHNLogic, GHNLogics>();
+builder.Services.AddScoped<IDashboardLogic, DashboardLogic>();
 
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
 

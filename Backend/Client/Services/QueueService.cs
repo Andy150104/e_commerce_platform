@@ -50,7 +50,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                 if (blindBoxPost == null)
                 {
                     response.SetMessage(MessageId.I00000, CommonMessages.BlindBoxNotFound);
-                    return;
+                    return false;
                 }
 
                 var queue = new Queue
@@ -67,6 +67,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                 // True
                 response.Success = true;
                 response.SetMessage(MessageId.I00001);
+                return true;
             }
         );
         return response;
@@ -93,40 +94,36 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
             var blindBoxPost = _exchangeService.GetById(request.ExchangeId);
             if (blindBoxPost == null)
             {
-                response.SetMessage(MessageId.I00000, CommonMessages.BlindBoxNotFound);
-                return;
+                response.SetMessage(MessageId.E00000, CommonMessages.BlindBoxNotFound);
+                return false;
+            }
+            if(blindBoxPost.Status == (byte)ConstantEnum.ExchangeStatus.isChanging)
+            {
+                response.SetMessage(MessageId.E00000, CommonMessages.ExchangeIsChanging); 
+                return false;
             }
             var queue = Repository.Find(x => x.QueueId == request.QueueId).FirstOrDefault();
             if (queue == null)
             {
-                response.SetMessage(MessageId.I00000);
-                return;
+                response.SetMessage(MessageId.E00000, CommonMessages.QueueNotFound);
+                return false;
             }
-            if (!request.isApprove)
-            {
-                queue.IsActive = false;
-                SaveChanges(userName);
-            }
-            blindBoxPost.Status = (byte)ConstantEnum.ExchangeStatus.Approve;
 
-            var OrderExchange = new OrdersExchange
-            {
-                ExchangeId = request.ExchangeId,
-                OrderExchangeId = Guid.NewGuid(),
-                QueueId = request.QueueId
-            };
+            blindBoxPost.Status = (byte)ConstantEnum.ExchangeStatus.isChanging;
+
+            queue.Status = (byte)ConstantEnum.QueueStatus.isChanging;
+
+            Repository.Update(queue);
+            Repository.SaveChanges(userName);
 
             _exchangeService.Update(blindBoxPost);
             _exchangeService.SaveChanges(userName);
 
-            _orderExchange.Add(OrderExchange);
-            _orderExchange.SaveChanges(userName);
-
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
-        }
-        );
+            return true;
+        });
         return response;
     }
 
@@ -147,7 +144,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
         Repository.ExecuteInTransaction(() =>
         {
             // Get blindBoxPost
-            var blindBoxPost = _exchangeService.Find(x => x.Status == (byte)ConstantEnum.ExchangeStatus.Approve, isTracking: false);
+            var blindBoxPost = _exchangeService.Find(x => x.Status == (byte)ConstantEnum.ExchangeStatus.Success && x.CreatedBy == userName, isTracking: false);
             var queue = _orderExchange.Find(x => x.Queue.CreatedBy == userName, isTracking:false, x => x.Exchange).Select(x => new VEXSGetOrderExchangeResponseEntity
             {
                 ExchangeId = x.ExchangeId,
@@ -174,8 +171,8 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
-        }
-        );
+            return true;
+        });
         return response;
     }
 
@@ -221,6 +218,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

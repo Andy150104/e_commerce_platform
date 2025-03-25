@@ -1,20 +1,24 @@
 using Client.Controllers.V1.AEPS;
+using Client.Controllers.V1.DPS;
+using Client.Controllers.V1.Exchanges;
 using Client.Logics.Commons;
 using Client.Models;
 using Client.Repositories;
 using Client.Utils.Consts;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Client.Services;
 
-public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeService
+public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, IExchangeService
 {
     private readonly IIdentityService _identityService;
     private readonly IBlindBoxService _blindBoxService;
-    private readonly IBaseService<ImagesBlindBox, Guid, object> _imagesService;
+    private readonly IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> _imagesService;
+    private readonly IBaseService<Queue, Guid, object> _queueService;
     private readonly ILogicCommonRepository _logicCommonRepository;
+    private readonly IBaseService<OrdersExchange, Guid, object> _orderExchangeService;
     private readonly CloudinaryLogic _cloudinaryLogic;
-
-
+    
     /// <summary>
     /// Constructor
     /// </summary>
@@ -23,15 +27,18 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
     /// <param name="blindBoxService"></param>
     /// <param name="imagesService"></param>
     /// <param name="logicCommonRepository"></param>
-    public ExchangeService(IBaseRepository<Exchange, Guid, object> repository, IIdentityService identityService, 
-        IBlindBoxService blindBoxService, IBaseService<ImagesBlindBox, Guid, object> imagesService, 
-        ILogicCommonRepository logicCommonRepository, CloudinaryLogic cloudinaryLogic) : base(repository)
+    public ExchangeService(IBaseRepository<Exchange, Guid, VwBlindBoxDisplay> repository,
+        IIdentityService identityService,
+        IBlindBoxService blindBoxService, IBaseService<ImagesBlindBox, Guid, VwImageBlindBox> imagesService,
+        ILogicCommonRepository logicCommonRepository, CloudinaryLogic cloudinaryLogic, IBaseService<Queue, Guid, object> queueService, IBaseService<OrdersExchange, Guid, object> orderExchange) : base(repository)
     {
         _identityService = identityService;
         _blindBoxService = blindBoxService;
         _imagesService = imagesService;
         _logicCommonRepository = logicCommonRepository;
         _cloudinaryLogic = cloudinaryLogic;
+        _queueService = queueService;
+        _orderExchangeService = orderExchange;
     }
 
     /// <summary>
@@ -40,7 +47,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
     /// <param name="request"></param>
     /// <param name="identityService"></param>
     /// <returns></returns>
-    public AEPSAddExchangeAccessoryResponse AddExchangeAccessory(AEPSAddExchangeAccessoryRequest request, IIdentityService identityService)
+    public async Task<AEPSAddExchangeAccessoryResponse> AddExchangeAccessory(AEPSAddExchangeAccessoryRequest request, IIdentityService identityService)
     {
         var response = new AEPSAddExchangeAccessoryResponse() { Success = false };
         
@@ -48,7 +55,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
         var userName = identityService.IdentityEntity.UserName;
 
         // Begin transaction
-        Repository.ExecuteInTransaction(async () =>
+        await Repository.ExecuteInTransactionAsync(async () =>
         {
             // Add new blind box
             var blindBox = new BlindBox
@@ -88,7 +95,8 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
             var exchange = new Exchange
             {
                 BlindBoxId = blindBox.BlindBoxId,
-                Description = request.Description
+                Description = request.Description,
+                ExchangeName = request.Name
             };
 
             // Check image
@@ -110,7 +118,77 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
                 response.SetMessage("Invalid Images");
             }
 
+            return true;
         });
+        return response;
+    }
+
+    /// <summary>
+    /// Final Accepted Exchange
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="identityService"></param>
+    /// <returns></returns>
+    public AEPSFinalAcceptExchangeAccessoryResponse FinalAcceptedExchange(AEPSFinalAcceptExchangeAccessoryRequest request, IIdentityService identityService)
+    {
+        var response = new AEPSFinalAcceptExchangeAccessoryResponse() { Success = false };
+
+        // Get userName
+        var userName = identityService.IdentityEntity.UserName;
+
+        var exchange = Repository.Find(x => x.ExchangeId == request.ExchangeId).FirstOrDefault();
+
+        if(exchange == null)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.ExchangeNotFound);
+            return response;
+        }
+
+        if (exchange.Status != (byte)ConstantEnum.ExchangeStatus.isChanging)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.ExchangeIsNotChanging);
+            return response;
+        }
+
+        var queue = _queueService.Find(x => x.QueueId == request.QueueId).FirstOrDefault();
+
+        if (queue == null)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.QueueNotFound);
+            return response;
+        }
+
+        if (queue.Status != (byte)ConstantEnum.QueueStatus.isChanging)
+        {
+            response.SetMessage(MessageId.E00000, CommonMessages.QueueIsNotChanging);
+            return response;
+        }
+
+        if (request.isAccepted)
+        {
+            exchange.Status = (byte)ConstantEnum.ExchangeStatus.Success;
+            
+            var OrderExchange = new OrdersExchange
+            {
+                ExchangeId = request.ExchangeId,
+                OrderExchangeId = Guid.NewGuid(),
+                QueueId = request.QueueId
+            };
+
+            _orderExchangeService.Add(OrderExchange);
+            _orderExchangeService.SaveChanges(userName);
+
+        }else if(!request.isAccepted)
+        {
+            exchange.Status = (byte)ConstantEnum.ExchangeStatus.PendingExchange;
+            queue.Status = (byte)ConstantEnum.QueueStatus.Fail;
+            
+           _queueService.Update(queue);
+           _queueService.SaveChanges(userName);
+        }
+        Repository.Update(exchange);
+        Repository.SaveChanges(userName);
+
         return response;
     }
 
@@ -172,7 +250,7 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
 
         if (!exchangeList.Any())
         {
-            response.SetMessage(MessageId.E00000);
+            response.SetMessage(MessageId.E00000, CommonMessages.ListIsEmpty);
             return response;
         }
 
@@ -242,5 +320,51 @@ public class ExchangeService : BaseService<Exchange, Guid, object>, IExchangeSer
         response.SetMessage(MessageId.I00001);
 
         return response;
+    }
+
+    /// <summary>
+    /// Select by blind box
+    /// </summary>
+    /// <param name="sortBy"></param>
+    /// <returns></returns>
+    public List<ItemEntity> SelectByBlindBox(byte? sortBy)
+    {
+        var responseEntity = new List<ItemEntity>();
+
+        // Get blind boxes
+        var blindBoxs = _blindBoxService.FindView(x => x.Status == (byte)ConstantEnum.PostingStatus.PendingExchange);
+
+        if (sortBy == (byte)ConstantEnum.Sort.Newest || sortBy == (byte)ConstantEnum.Sort.Oldest)
+        {
+            blindBoxs = CommonLogic.ApplySorting(blindBoxs, sortBy);
+        }
+
+        var blindBoxList = blindBoxs.ToList();
+        foreach (var blindBox in blindBoxList)
+        {
+            // Get image urls
+            var imageUrls = _imagesService
+                .FindView(x => x.BlindBoxId == blindBox!.BlindBoxId)
+                .Select(x => new DpsSelectItemListImageUrl
+                {
+                    ImageUrl = x!.ImageUrl
+                })
+                .ToList();
+
+            // Create entity
+            var entity = new ItemEntity
+            {
+                CodeProduct = blindBox!.BlindBoxId.ToString(),
+                ExchangeName = blindBox.ExchangeName,
+                CreatedAt = blindBox.CreatedAt,
+                FirstNameCreator = blindBox.FirstName!,
+                LastNameCreator = blindBox.LastName!,
+                ImageUrl = imageUrls,
+                ExchangeId = blindBox.ExchangeId,
+            };
+            responseEntity.Add(entity);
+        }
+
+        return responseEntity;
     }
 }

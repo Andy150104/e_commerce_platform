@@ -1,4 +1,6 @@
-namespace Client.Controllers.V1.DPS;
+using System.ComponentModel.DataAnnotations;
+
+namespace Client.Controllers.V1.Accessories;
 
 public class DPSSelectItemRequest : AbstractApiRequest
 {
@@ -6,8 +8,10 @@ public class DPSSelectItemRequest : AbstractApiRequest
     
     public byte? SortBy { get; set; }
     
+    [Range(0, double.MaxValue, ErrorMessage = "Minimum price must be a non-negative value")]
     public decimal? MinimumPrice { get; set; }
     
+    [Range(0, double.MaxValue, ErrorMessage = "Maximum price must be a non-negative value")]
     public decimal? MaximumPrice { get; set; }
     
     public string? NameAccessory { get; set; }

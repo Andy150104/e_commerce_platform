@@ -1,7 +1,5 @@
 ﻿
-using Client.Models;
-
-namespace Client.Controllers.V1.AEPS;
+namespace Client.Controllers.V1.Exchanges;
 
 public class AEPSGetFailExchangeAccessoryResponse : AbstractApiResponse<List<AEPSGetFailExchangeAccessoryEntity>>
 {

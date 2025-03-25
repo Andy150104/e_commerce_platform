@@ -73,6 +73,8 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<VwCategoriesDisplay> VwCategoriesDisplays { get; set; }
 
+    public virtual DbSet<VwEmailTemplateOrderScreen> VwEmailTemplateOrderScreens { get; set; }
+
     public virtual DbSet<VwImageAccessory> VwImageAccessories { get; set; }
 
     public virtual DbSet<VwImageBlindBox> VwImageBlindBoxes { get; set; }
@@ -405,6 +407,10 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.ExchangeName)
+                .HasMaxLength(50)
+                .HasColumnName("exchangeName");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UpdatedAt)
@@ -412,12 +418,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasColumnName("updated_at");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(50)
-                .HasColumnName("updated_by");  
-            entity.Property(e => e.ExchangeName)
-                .HasMaxLength(50)
-                .HasColumnName("exchangeName");
-            entity.Property(e => e.Description)
-                .HasColumnName("description");
+                .HasColumnName("updated_by");
 
             entity.HasOne(d => d.BlindBox).WithMany(p => p.Exchanges)
                 .HasForeignKey(d => d.BlindBoxId)
@@ -574,6 +575,7 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.OrderId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_id");
+            entity.Property(e => e.AddressId).HasColumnName("address_id");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -581,6 +583,10 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
+            entity.Property(e => e.GhnCode)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("ghn_code");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.Status).HasColumnName("status");
@@ -596,6 +602,10 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.Username)
                 .HasMaxLength(50)
                 .HasColumnName("username");
+
+            entity.HasOne(d => d.Address).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.AddressId)
+                .HasConstraintName("FK_orders_address");
 
             entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Username)
@@ -702,15 +712,15 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.OrderExchangeId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("order_exchange_id");
-            entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
-            entity.Property(e => e.QueueId).HasColumnName("queue_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
+            entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.QueueId).HasColumnName("queue_id");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -1146,11 +1156,16 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");
+            entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.ExchangeId).HasColumnName("exchange_id");
+            entity.Property(e => e.ExchangeName)
+                .HasMaxLength(50)
+                .HasColumnName("exchangeName");
             entity.Property(e => e.FirstName).HasColumnName("first_name");
             entity.Property(e => e.ImageUrl).HasColumnName("image_url");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.LastName).HasColumnName("last_name");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -1206,6 +1221,38 @@ public partial class BBExTradingFloorContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("category_name");
             entity.Property(e => e.ParentId).HasColumnName("parent_id");
+        });
+
+        modelBuilder.Entity<VwEmailTemplateOrderScreen>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_EmailTemplate_OrderScreen");
+
+            entity.Property(e => e.Body).HasColumnName("body");
+            entity.Property(e => e.CreateAt)
+                .HasPrecision(6)
+                .HasColumnName("create_at");
+            entity.Property(e => e.CreateBy)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("create_by");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.ScreenName)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("screen_name");
+            entity.Property(e => e.Title).HasColumnName("title");
+            entity.Property(e => e.UpdateAt)
+                .HasPrecision(6)
+                .HasColumnName("update_at");
+            entity.Property(e => e.UpdateBy)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("update_by");
         });
 
         modelBuilder.Entity<VwImageAccessory>(entity =>
@@ -1586,32 +1633,6 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasForeignKey(d => d.WishlistId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_wishlist_blind_box__wishlists");
-        });
-
-        modelBuilder.Entity<ExchangeRecheckRequest>(entity =>
-        {
-            entity.HasKey(e => e.RequestId).HasName("PK_ExchangeRecheckRequest");
-
-            entity.ToTable("ExchangeRecheckRequest");
-
-            entity.Property(e => e.RequestId)
-                .HasColumnName("requestId");
-            entity.Property(e => e.ExchangeId).HasColumnName("exchangeId");
-            entity.Property(e => e.CreatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("created_by");
-            entity.Property(e => e.IsActive).HasColumnName("is_active");
-            entity.Property(e => e.UpdatedAt)
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(50)
-                .HasColumnName("updated_by");
-            entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.Status).HasColumnName("status");
         });
 
         OnModelCreatingPartial(modelBuilder);

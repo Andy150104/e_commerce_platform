@@ -22,7 +22,7 @@
           </div>
           <CardContainer>
             <template #body>
-              <CardProduct2 ref="cardRef" :is-show-wish-list="false" :is-exchange="true" :product-model="store.produtList" :label-name="'Exchange now'" @on-buy="onBuyNow" :is-have-side-bar="true">
+              <CardProduct2 ref="cardRef" :is-show-wish-list="false" :is-exchange="true" :product-model="store.ExchangeList" :label-name="'Exchange now'" @on-buy="onBuyNow" :is-have-side-bar="true">
               </CardProduct2>
               <CardSkeleton v-if="store.isLoadingSkeletonCard" />
             </template>
@@ -120,7 +120,7 @@
     () => store.fieldValues.sortBy,
     async (newVal, oldVal) => {
       if (newVal !== oldVal) {
-        store.produtList = []
+        store.ExchangeList = []
         store.fields.setFieldValue('sortBy', newVal)
         await fetchProducts()
         initCarousels()
