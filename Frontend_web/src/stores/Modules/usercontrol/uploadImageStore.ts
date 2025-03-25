@@ -4,10 +4,12 @@ import { defineStore } from 'pinia'
 
 export type UploadImageState = {
   uploadImage: UploadedImage[]
+  image: string
 }
 export const useUploadImageStore = defineStore('Upload Image', {
   state: (): UploadImageState => ({
     uploadImage: [],
+    image: ''
   }),
   getters: {},
   actions: {
@@ -40,6 +42,7 @@ export const useUploadImageStore = defineStore('Upload Image', {
       formData.append('upload_preset', uploadPreset)
       try {
         const response = await axios.post(url, formData)
+        this.image = response.data.secure_url
         return response.data.secure_url
       } catch (error) {
         console.error('Error uploading base64 image to Cloudinary:', error)

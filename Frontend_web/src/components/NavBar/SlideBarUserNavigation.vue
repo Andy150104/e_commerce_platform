@@ -199,7 +199,7 @@
             :item-name="'Product'"
             :option="[
               {
-                link: '/Manage/Product/OrderExchange',
+                link: '/Dashboard/HistoryOrder',
                 childItemName: 'History order',
               },
               {

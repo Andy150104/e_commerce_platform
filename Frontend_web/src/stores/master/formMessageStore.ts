@@ -1,4 +1,4 @@
-import type { AbstractApiResponseOfString, DetailError } from '@PKG_API/@types'
+import type { AbstractApiResponseOfString } from '@PKG_SRC/composables/Client/api/@types'
 import { defineStore } from 'pinia'
 
 export const useFormMessageStore = defineStore('formMessage', {
