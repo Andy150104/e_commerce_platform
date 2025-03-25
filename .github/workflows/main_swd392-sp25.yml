@@ -18,9 +18,14 @@ jobs:
         with:
           dotnet-version: '9.x'
 
+      - name: Debug - List all files
+        run: ls -R
+
       - name: Build & Publish Backend
         run: |
           cd Backend
+          ls -R  # Debug: Liệt kê toàn bộ file để kiểm tra
+          dotnet restore Blind-Bag-ECommerce.sln  # Restore toàn bộ project
           dotnet publish Auth/Auth.csproj -c Release -o ../backend/Auth
           dotnet publish Client/Client.csproj -c Release -o ../backend/Client
 
