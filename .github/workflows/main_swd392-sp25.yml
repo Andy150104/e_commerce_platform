@@ -3,7 +3,7 @@ name: Deploy Multiple APIs to Azure Web App
 on:
   push:
     branches:
-      - main
+      - feature/MomoPayment
   workflow_dispatch:
 
 jobs:
