@@ -72,6 +72,7 @@ export const useQueueStore = defineStore('queueStore', {
     },
     ResetStore() {
       this.fields.resetForm()
+      this.queueListDetail = []
     },
     async ApproveQueue(exchangeId: string,queueId:string) {
       const loadingStore = useLoadingStore()

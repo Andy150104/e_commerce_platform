@@ -1,145 +1,190 @@
 <template>
   <BaseScreenDashBoard>
     <template #body>
-      <div class="flex justify-center items-center h-full">
+      <div>
+        <!-- Vùng container chính -->
         <div class="container mx-auto px-4 py-8">
+          <!-- Grid chia 2 cột trên desktop, 1 cột trên mobile -->
           <div class="grid grid-cols-1 gap-6 md:grid-cols-[1fr_2fr]">
-            <!-- Danh sách Queue -->
-            <div class="h-full space-y-4 overflow-y-auto flex flex-col justify-center items-center">
+            <!-- CỘT TRÁI: Danh sách Queue -->
+            <div class="h-[80vh] space-y-4 overflow-y-auto">
+              <!-- Trường hợp không có hàng đợi -->
               <div v-if="store.queueListDetail.length === 0" class="text-gray-500 text-lg text-center">No queue available</div>
 
+              <!-- Vòng lặp hiển thị từng Queue -->
               <div
                 v-for="queueDetail in store.queueListDetail"
                 :key="queueDetail.queueId"
                 @click="handleSelect(queueDetail)"
-                class="relative rounded-lg border p-4 shadow transition flex justify-between items-center"
+                class="animate-fade-right animate-once animate-ease-in-out relative rounded-lg border p-4 shadow transition"
                 :class="[
                   selectedQueueDetail?.queueId === queueDetail.queueId ? 'border-2 border-sky-500 bg-sky-50' : 'border border-gray-200 bg-white',
                   (queueDetail.status === 2 || !hasQueueStatus2) && queueDetail.status !== 3 ? 'cursor-pointer' : 'opacity-50 cursor-not-allowed',
                 ]"
               >
-                <div>
-                  <h2 class="mb-2 text-lg text-gray-600 font-semibold flex items-center">
-                    {{ queueDetail.userFullNameQueue || 'N/A' }}
-                    <span
-                      class="ml-2 text-sm font-medium px-2 py-1 rounded-full"
-                      :class="{
-                        'bg-yellow-500 text-white': queueDetail.status === 1,
-                        'bg-blue-500 text-white': queueDetail.status === 2,
-                        'bg-red-500 text-white': queueDetail.status === 3,
-                      }"
-                    >
-                      {{ queueDetail.status === 1 ? 'Waiting' : queueDetail.status === 2 ? 'Changing' : 'Fail' }}
-                    </span>
+                <!-- Nhãn trạng thái ở góc trên bên phải -->
+                <span
+                  class="absolute top-4 right-4 rounded px-2 py-1 text-xs font-semibold text-white"
+                  :class="{
+                    'bg-yellow-500': queueDetail.status === 1,
+                    'bg-blue-500': queueDetail.status === 2,
+                    'bg-red-500': queueDetail.status === 3,
+                  }"
+                >
+                  {{ queueDetail.status === 1 ? 'Waiting' : queueDetail.status === 2 ? 'Changing' : 'Fail' }}
+                </span>
+                <h2 class="mb-2 text-lg font-semibold text-gray-600">
+                  {{ queueDetail.userFullNameQueue || 'N/A' }}
+                </h2>
+                <div class="mb-3 flex items-center space-x-2">
+                  <span class="inline-block rounded bg-blue-200 px-2 py-1 text-sm text-gray-800">
+                    {{ 'Gender: ' + (queueDetail.userGender || 'N/A') }}
+                  </span>
+                  <span class="inline-block rounded bg-yellow-200 px-2 py-1 text-sm text-gray-800">
+                    {{ 'Birthday: ' + (queueDetail.userBirthday || 'N/A') }}
+                  </span>
+                  <span class="inline-block rounded bg-green-200 px-2 py-1 text-sm text-gray-800">
+                    {{ 'Phone: ' + (queueDetail.userPhone || 'N/A') }}
+                  </span>
+                </div>
+                <div
+                  v-if="isMobile && selectedQueueDetail?.queueId === queueDetail.queueId"
+                  class="animate-fade-left animate-once animate-ease-in-out block md:hidden mt-4 rounded-lg border border-gray-200 bg-white p-4 shadow"
+                >
+                  <img
+                    :src="
+                      selectedQueueDetail?.userImage && selectedQueueDetail.userImage.trim() !== ''
+                        ? selectedQueueDetail.userImage
+                        : 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
+                    "
+                    alt="Profile Picture"
+                    class="w-32 h-32 md:w-48 md:h-48 rounded-full border mx-auto md:mx-0 object-cover"
+                  />
+                  <h2 class="mb-2 text-xl font-semibold">
+                    {{ selectedQueueDetail.userFullNameQueue }}
                   </h2>
+                  <div class="mt-4">
+                    <p class="mb-2 text-gray-600"><strong>Gender: </strong>{{ selectedQueueDetail.userGender }}</p>
+                    <p class="mb-2 text-gray-600"><strong>Birth Day: </strong>{{ selectedQueueDetail.userBirthday }}</p>
+                    <p class="mb-2 text-gray-600"><strong>Phone: </strong>{{ selectedQueueDetail.userPhone }}</p>
+                  </div>
+                  <button
+                    v-if="selectedQueueDetail?.status !== 2 && selectedQueueDetail?.status !== 3"
+                    @click.stop="OnApproveQueue(selectedQueueDetail?.queueId)"
+                    class="mt-4 rounded bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600"
+                  >
+                    Approve Exchange
+                  </button>
+                  <div v-else-if="selectedQueueDetail?.status === 2 && updatedQueueDetail?.status !== 3" class="mt-4 flex space-x-2">
+                    <button @click.stop="FinaleApproveQueue(true)" class="rounded bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600">
+                      Accept
+                    </button>
+                    <button @click.stop="FinaleApproveQueue(false)" class="rounded bg-gray-500 px-4 py-2 font-medium text-white hover:bg-gray-600">
+                      Reject
+                    </button>
+                  </div>
+                  <div v-else-if="updatedQueueDetail?.status === 3" class="mt-4 text-green-500 font-semibold">Exchange Completed</div>
 
-                  <div class="mb-3 flex items-center space-x-2">
-                    <span class="inline-block rounded bg-blue-200 px-2 py-1 text-sm text-gray-800">
-                      {{ 'Gender: ' + (queueDetail.userGender || 'N/A') }}
-                    </span>
-                    <span class="inline-block rounded bg-yellow-200 px-2 py-1 text-sm text-gray-800">
-                      {{ 'Birthday: ' + (queueDetail.userBirthday || 'N/A') }}
-                    </span>
-                    <span class="inline-block rounded bg-green-200 px-2 py-1 text-sm text-gray-800">
-                      {{ 'Phone: ' + (queueDetail.userPhone || 'N/A') }}
-                    </span>
+                  <!-- Mô tả -->
+                  <div class="mt-4 p-4 rounded-lg border border-gray-200 bg-gray-50 w-full">
+                    <div class="text-gray-600 h-3/5 overflow-y-auto">
+                      <h1>Description:</h1>
+                      <div class="custom">
+                        <div v-html="selectedQueueDetail.descriptionQueue || 'No description available'"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-
-                <!-- Panel xuất hiện ngay dưới queue đã chọn (CHỈ trên mobile) -->
-                <QueueDetailPanel
-                  v-if="isMobile && selectedQueueDetail?.queueId === queueDetail.queueId"
-                  :detail="selectedQueueDetail"
-                  @close="selectedQueueDetail = null"
-                  @approve="OnApproveQueue"
-                />
               </div>
             </div>
 
-            <!-- Panel Chi Tiết (Chỉ hiển thị trên desktop) -->
+            <!-- CỘT PHẢI: Panel Chi Tiết (hiển thị trên desktop) -->
             <div
               v-if="selectedQueueDetail && !isMobile"
               :key="rightPanelKey"
-              class="animate-fade-left animate-once animate-ease-in-out bg-white rounded-lg border border-gray-200 shadow p-6 md:sticky md:top-0 md:right-0 md:h-auto md:w-auto md:max-w-none w-full max-w-md mx-auto mt-4"
+              class="animate-fade-left animate-once animate-ease-in-out hidden md:block sticky h-full overflow-auto top-0 rounded-lg border border-gray-200 bg-white p-6 shadow"
             >
-              <div class="grid grid-cols-1 md:grid-cols-[auto_1fr_auto] gap-6 items-start">
-                <!-- Ảnh đại diện -->
-                <img
-                  :src="
-                    selectedQueueDetail.userImage ||
-                    'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
-                  "
-                  alt="Profile Picture"
-                  class="w-32 h-32 md:w-48 md:h-48 rounded-full border mx-auto md:mx-0 object-cover"
-                />
-
-                <!-- Thông tin chi tiết -->
-                <div class="space-y-2 text-center md:text-left">
-                  <h2 class="text-2xl text-gray-600 font-semibold">{{ selectedQueueDetail.userFullNameQueue || 'N/A' }}</h2>
-                  <p class="text-gray-600">Công ty HICAS</p>
-                  <p class="text-gray-600"><strong>Gender: </strong>{{ selectedQueueDetail.userGender || 'N/A' }}</p>
-                  <p class="text-gray-600"><strong>Birth Day: </strong>{{ selectedQueueDetail.userBirthday || 'N/A' }}</p>
-                  <p class="text-gray-600"><strong>Phone: </strong>{{ selectedQueueDetail.userPhone || 'N/A' }}</p>
+              <!-- Header: Tên + Nút duyệt -->
+              <div class="mb-6 flex items-start justify-between">
+                <div>
+                  <div>
+                    <h2 class="mb-2 text-2xl font-semibold">{{ selectedQueueDetail.userFullNameQueue || 'N/A' }}</h2>
+                  </div>
+                  <img
+                    :src="
+                      selectedQueueDetail?.userImage && selectedQueueDetail.userImage.trim() !== ''
+                        ? selectedQueueDetail.userImage
+                        : 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ='
+                    "
+                    alt="Profile Picture"
+                    class="w-32 h-32 md:w-48 md:h-48 rounded-full border mx-auto md:mx-0 object-cover"
+                  />
                 </div>
-
-                <!-- Nút Approve Exchange (chỉ hiển thị khi status không phải 2) -->
+                <!-- Nút Approve / Accept / Reject / Completed -->
                 <button
                   v-if="selectedQueueDetail?.status !== 2 && selectedQueueDetail?.status !== 3"
                   @click="OnApproveQueue(selectedQueueDetail?.queueId)"
-                  class="self-start rounded bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600 block"
+                  class="rounded bg-red-500 px-4 py-2 font-medium text-white hover:bg-red-600"
                 >
                   Approve Exchange
                 </button>
-
-                <div v-if="selectedQueueDetail?.status === 2 && updatedQueueDetail?.status !== 3">
+                <div v-else-if="selectedQueueDetail?.status === 2 && updatedQueueDetail?.status !== 3" class="space-x-2">
                   <button @click="FinaleApproveQueue(true)" class="rounded bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600">
                     Accept
                   </button>
-
                   <button @click="FinaleApproveQueue(false)" class="rounded bg-gray-500 px-4 py-2 font-medium text-white hover:bg-gray-600">
                     Reject
                   </button>
                 </div>
+                <div v-else-if="updatedQueueDetail?.status === 3" class="text-green-500 font-semibold">Exchange Completed</div>
+              </div>
 
-                <div v-if="updatedQueueDetail?.status === 3" class="text-green-500 font-semibold">Exchange Completed</div>
+              <!-- Thông tin cơ bản -->
+              <div class="mb-6">
+                <p class="mb-2 text-gray-600"><strong>Gender: </strong>{{ selectedQueueDetail.userGender || 'N/A' }}</p>
+                <p class="mb-2 text-gray-600"><strong>Birth Day: </strong>{{ selectedQueueDetail.userBirthday || 'N/A' }}</p>
+                <p class="mb-2 text-gray-600"><strong>Phone: </strong>{{ selectedQueueDetail.userPhone || 'N/A' }}</p>
               </div>
 
               <!-- Mô tả -->
-              <div class="mt-6 p-4 rounded-lg border border-gray-200 bg-gray-50 w-full min-h-[160px]">
-                <p class="text-gray-600">
-                  <strong>Description: </strong>
-                  <span v-html="selectedQueueDetail.descriptionQueue || 'No description available'"></span>
-                </p>
+              <div class="p-4 rounded-lg border border-gray-200 bg-gray-50 w-full">
+                <div class="text-gray-600 h-[50vh] overflow-y-auto">
+                  <h1>Description:</h1>
+                  <div class="custom">
+                    <div v-html="selectedQueueDetail.descriptionQueue || 'No description available'"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Modal Lỗi Hệ Thống -->
+        <Teleport to="body">
+          <div v-if="showErrorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="bg-white rounded-lg p-6 w-96 shadow-lg text-center">
+              <h2 class="text-xl font-semibold text-red-600">Lỗi hệ thống</h2>
+              <p class="text-gray-700 mt-2">{{ errorMessage }}</p>
+              <p class="text-gray-600 mt-2">Vui lòng liên hệ CSKH để được hỗ trợ.</p>
+              <button @click="showErrorModal = false" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Đóng</button>
+            </div>
+          </div>
+        </Teleport>
+
+        <!-- Modal Hoàn Tất Exchange -->
+        <Teleport to="body">
+          <div v-if="showExchangeCompletedModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div class="bg-white rounded-lg p-6 w-96 shadow-lg text-center">
+              <h2 class="text-xl font-semibold text-green-600">Exchange has been completed</h2>
+              <p class="text-gray-700 mt-4">You can go back to the planned customer page.</p>
+              <p class="text-gray-700 mt-4">If this exchange is still happening, please let us know!</p>
+              <router-link to="/DashBoard/PlannedCustomer" class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600">
+                Go to My Exchange
+              </router-link>
+            </div>
+          </div>
+        </Teleport>
       </div>
-      <Teleport to="body">
-        <div v-if="showErrorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div class="bg-white rounded-lg p-6 w-96 shadow-lg text-center">
-            <h2 class="text-xl font-semibold text-red-600">Lỗi hệ thống</h2>
-            <p class="text-gray-700 mt-2">{{ errorMessage }}</p>
-            <p class="text-gray-600 mt-2">Vui lòng liên hệ CSKH để được hỗ trợ.</p>
-            <button @click="showErrorModal = false" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Đóng</button>
-          </div>
-        </div>
-      </Teleport>
-      <Teleport to="body">
-        <div v-if="showExchangeCompletedModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div class="bg-white rounded-lg p-6 w-96 shadow-lg text-center">
-            <h2 class="text-xl font-semibold text-green-600">Exchange has been completed</h2>
-            <p class="text-gray-700 mt-4">You can go back to the planned customer page.</p>
-            <p class="text-gray-700 mt-4">If this exchange is still happening, please let us know!</p>
-            <a
-              href="http://localhost:3000/DashBoard/PlannedCustomer"
-              class="mt-4 inline-block px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Go to My Exchange
-            </a>
-          </div>
-        </div>
-      </Teleport>
     </template>
   </BaseScreenDashBoard>
 </template>
@@ -188,10 +233,8 @@
     if (!ExchangeId.value || !QueueId) return
 
     try {
-      await store.ApproveQueue(ExchangeId.value, QueueId) // Gửi request duyệt
-      await store.GetQueueById(ExchangeId.value) // Fetch lại danh sách queue
-
-      // Giữ nguyên queue đang chọn nếu nó vẫn tồn tại sau khi fetch
+      await store.ApproveQueue(ExchangeId.value, QueueId)
+      await store.GetQueueById(ExchangeId.value)
       const updatedQueue = store.queueListDetail.find((q) => q.queueId === selectedQueueDetail.value?.queueId)
       if (updatedQueue) {
         selectedQueueDetail.value = updatedQueue // Cập nhật lại trạng thái
@@ -205,20 +248,13 @@
 
   const FinaleApproveQueue = async (isAccepted: boolean) => {
     if (!ExchangeId.value || !selectedQueueDetail.value?.queueId) return
-
-    console.log('Exchangeid:', ExchangeId.value, 'QueueId:', selectedQueueDetail.value?.queueId, 'isAccepted:', isAccepted)
-
-    // Gọi API nhưng **éo tin nó**
     await store.FinaleApproveQueue(ExchangeId.value, selectedQueueDetail.value.queueId, isAccepted)
-
-    console.log('✅ API gọi xong, tự cập nhật UI...')
     if (isAccepted) {
       updatedQueueDetail.value = { ...selectedQueueDetail.value, status: 3 }
     }
-    // **Tìm queue bị cập nhật và đổi status**
     store.queueListDetail = store.queueListDetail.map((queue) => {
       if (queue.queueId === selectedQueueDetail.value?.queueId) {
-        return { ...queue, status: isAccepted ? 2 : 3 } // Nếu reject thì set status = 3
+        return { ...queue, status: isAccepted ? 2 : 3 }
       }
       return queue
     })
@@ -251,7 +287,6 @@
     checkScreenSize()
     window.addEventListener('resize', checkScreenSize)
     await store.GetQueueById(ExchangeId.value)
-   
 
     const status2Queues = store.queueListDetail.filter((q) => q.status === 2)
     if (status2Queues.length > 1) {
@@ -265,5 +300,17 @@
 
   onUnmounted(() => {
     window.removeEventListener('resize', checkScreenSize)
+    store.ResetStore()
   })
 </script>
+<style scoped>
+  :deep(.custom h1) {
+    @apply text-3xl font-bold my-4;
+  }
+  :deep(.custom h2) {
+    @apply text-2xl font-semibold my-3;
+  }
+  :deep(.custom h3) {
+    @apply text-xl font-medium my-2;
+  }
+</style>

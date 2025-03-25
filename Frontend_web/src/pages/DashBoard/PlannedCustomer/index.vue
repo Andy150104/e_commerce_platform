@@ -20,7 +20,7 @@
 
       <!-- Nội dung của từng tab -->
       <div v-if="selectedTabIndex === 0">
-        <div v-if="pendingAndChangingList.length > 0" class="exchange-list">
+        <div v-if="pendingAndChangingList.length > 0" class="exchange-list w-full mt-6 h-[80vh] overflow-y-auto">
           <div v-for="item in pendingAndChangingList" :key="item.exchangeId" class="exchange-card">
             <div class="exchange-image-container" @click="openGallery(item.exchangeId ?? '')">
               <img class="exchange-image" :src="getFirstImage(item)" :alt="item.exchangeName" />
