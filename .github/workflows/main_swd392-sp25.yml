@@ -23,11 +23,11 @@ jobs:
 
       - name: Build & Publish Backend
         run: |
-          cd Backend  # Di chuyển vào thư mục chứa solution
-          ls -R  # Debug: Liệt kê toàn bộ file
+          cd Backend
+          ls -R  # Debug: Liệt kê toàn bộ file để kiểm tra
           dotnet restore Blind-Bag-ECommerce.sln  # Restore toàn bộ project
-          dotnet publish Auth/Auth.csproj -c Release -o ../backend/auth
-          dotnet publish Client/Client.csproj -c Release -o ../backend/client
+          dotnet publish Auth/Auth.csproj -c Release -r linux-x64 --self-contained false -o ../backend/Auth
+          dotnet publish Client/Client.csproj -c Release -r linux-x64 --self-contained false -o ../backend/Client
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
