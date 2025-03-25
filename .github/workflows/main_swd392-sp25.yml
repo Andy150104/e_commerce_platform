@@ -62,7 +62,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'swd392-sp25'  # Tên App Service của bạn
-          package: './backend/Client'
+          package: './Backend/Client'
           slot-name: 'Production'
 
       # Deploy Auth API vào thư mục /Auth
@@ -70,5 +70,5 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'swd392-sp25'  # Tên App Service của bạn
-          package: './backend/Auth'
+          package: './Backend/Auth'
           slot-name: 'Production'
