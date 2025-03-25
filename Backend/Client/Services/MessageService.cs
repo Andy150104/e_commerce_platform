@@ -40,7 +40,7 @@ namespace Client.Services
                 response.Response = "Receiver not exist";
                 return response;
             }
-            Repository.AddAsync(new Message
+            Repository.Add(new Message
             {
                 Content = message.Content,
                 CreatedBy = message.SenderId,
@@ -49,7 +49,7 @@ namespace Client.Services
                 SenderId = message.SenderId,
                 Status = message.Status
             });
-            Repository.SaveChangesAsync(sender.UserName);
+            Repository.SaveChanges(sender.UserName);
 
             response.IsSuccess = true;
             response.Response = "Successfully";

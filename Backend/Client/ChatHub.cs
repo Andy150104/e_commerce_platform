@@ -20,7 +20,7 @@ namespace Client
                 await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", sender, message);
                 _service.AddMessage(new MessageEntityRequest()
                 {
-                    ReceiverId = message,
+                    ReceiverId = receiver,
                     SenderId = sender,
                     Content = message
                 });
