@@ -64,6 +64,7 @@ public class ExchangeRecheckRequestService : BaseService<ExchangeRecheckRequest,
 
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -149,6 +150,7 @@ public class ExchangeRecheckRequestService : BaseService<ExchangeRecheckRequest,
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

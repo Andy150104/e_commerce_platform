@@ -54,4 +54,5 @@ public class CommonMessages
 
     public static readonly string ReCheckExist = "You already send!";
     
+    public static readonly string SignatureInvalid = "Signature invalid";
 }

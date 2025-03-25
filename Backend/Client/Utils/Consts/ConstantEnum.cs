@@ -102,4 +102,15 @@ public static class ConstantEnum
         Approved = 1,
         Rejected = 2
     }
+    
+    public enum Platform
+    {
+        Web = 1,
+        Mobile = 2
+    }
+    
+    public enum PaymentStatus
+    {        
+        Success = 0,
+    }
 }

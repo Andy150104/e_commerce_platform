@@ -31,6 +31,7 @@ export type ImageListResponse = {
 export type DisplayProductState = {
   fields: typeof fields
   produtList: ItemEntity[]
+  ExchangeList:ItemEntity[]
   totalRecords: Number
   imageList: ImageListResponse
   isLoadingSkeletonCard: boolean
@@ -40,6 +41,7 @@ export const useDisplayProductStore = defineStore('Product', {
   state: (): DisplayProductState => ({
     fields,
     produtList: [],
+    ExchangeList:[],
     totalRecords: 0,
     imageList: {} as ImageListResponse,
     isLoadingSkeletonCard: false,
@@ -83,6 +85,12 @@ export const useDisplayProductStore = defineStore('Product', {
       this.isLoadingSkeletonCard = false
       if (!res.success) return false
       this.totalRecords = res.response?.totalRecords ?? 0
+      if (res.response?.items) {
+        this.ExchangeList = res.response.items.map(item => ({
+          ...item,
+          codeProduct: item.exchangeId ?? undefined // Map ExchangeId -> codeProduct
+        }))
+      }
       if (res.response?.items) this.produtList = res.response.items
       return true
     },

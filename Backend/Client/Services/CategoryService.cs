@@ -38,6 +38,7 @@ public class CategoryService : BaseService<Category, Guid, VwCategoriesDisplay>,
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -155,7 +156,7 @@ public class CategoryService : BaseService<Category, Guid, VwCategoriesDisplay>,
             if (category == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.CategoryNotFound);
-                return;
+                return true;
             }
 
             category.CategoryName = request.CategoryName;
@@ -166,6 +167,7 @@ public class CategoryService : BaseService<Category, Guid, VwCategoriesDisplay>,
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -187,7 +189,7 @@ public class CategoryService : BaseService<Category, Guid, VwCategoriesDisplay>,
             if (category == null)
             {
                 response.SetMessage(MessageId.I00000, CommonMessages.CategoryNotFound);
-                return;
+                return true;
             }
             
             var subCategories = Find(x => x.ParentId == request.CategoryId && x.IsActive == true).ToList();
@@ -203,6 +205,7 @@ public class CategoryService : BaseService<Category, Guid, VwCategoriesDisplay>,
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }

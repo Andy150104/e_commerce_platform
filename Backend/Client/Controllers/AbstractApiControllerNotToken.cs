@@ -14,7 +14,7 @@ public abstract class AbstractApiControllerNotToken<T, TU, TV> : ControllerBase
     /// <summary>
     /// API entry point
     /// </summary>
-    public abstract TU Post(T request);
+    public abstract TU ProcessRequest(T request);
 
     /// <summary>
     /// Main processing
@@ -42,7 +42,7 @@ public abstract class AbstractApiControllerNotToken<T, TU, TV> : ControllerBase
     /// <param name="logger"></param>
     /// <param name="returnValue"></param>
     /// <returns></returns>
-    protected TU Post(T request, IIdentityService identityService, Logger logger, TU returnValue)
+    protected TU ProcessRequest(T request, IIdentityService identityService, Logger logger, TU returnValue)
     {
         var loggingUtil = new LoggingUtil(logger, identityService.IdentityEntity.UserName ?? "System");
         try

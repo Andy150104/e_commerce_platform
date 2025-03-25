@@ -34,7 +34,7 @@ public class GHNLogics : IGHNLogic
         request.Items = orderDetails.Select(x => new GhnOrderItem
         {
             Code = x.AccessoryId,
-            Name = accessoryNames.FirstOrDefault(a => a.Key == x.AccessoryId).Value,
+            Name = accessoryNames.FirstOrDefault(a => a.Key == x.AccessoryId).Value ?? "Unknown",
             Quantity = x.Quantity,
             Price = Convert.ToInt32(x.UnitPrice),
             Length = 10, 
@@ -42,7 +42,6 @@ public class GHNLogics : IGHNLogic
             Height = 10, 
             Weight = 500
         }).ToList();
-        
         
         try
         {

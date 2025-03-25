@@ -8,19 +8,11 @@ public class SelectOrdersResponse : AbstractApiResponse<List<SelectOrdersEntity>
 public class SelectOrdersEntity
 {
     public Guid OrderId { get; set; }
-
-    public string Username { get; set; } = null!;
-
+    
     public int Quantity { get; set; }
 
     public decimal TotalPrice { get; set; }
-
-    public DateTime? CreatedAt { get; set; }
     
-    public DateTime? UpdatedAt { get; set; }
-
-    public string? UpdatedBy { get; set; }
-
     public byte Status { get; set; }
     
     public List<TOSSelectOrderDetails> OrderDetails { get; set; }
@@ -32,7 +24,7 @@ public class TOSSelectOrderDetails
     
     public string AccessoryId { get; set; }
     
-    public string ProductName { get; set; }
+    public string AccessoryName { get; set; }
 
     public int Quantity { get; set; }
 
@@ -40,17 +32,7 @@ public class TOSSelectOrderDetails
     
     public decimal UnitPrice { get; set; }
     
-    public string? ProductDescription { get; set; }
-    
-    public decimal? DiscountPercent { get; set; }
+    public decimal DiscountPercent { get; set; }
 
-    public decimal? DiscountedPrice { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-
-    public string CreatedBy { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
-
-    public string UpdatedBy { get; set; }
+    public decimal DiscountedPrice { get; set; }
 }

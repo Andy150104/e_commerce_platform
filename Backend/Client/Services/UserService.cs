@@ -49,7 +49,7 @@ public class UserService : BaseService<User, string, VwUserProfile>, IUserServic
             if (userSelect != null)
             {
                 response.SetMessage(MessageId.E11004);
-                return;
+                return false;
             }
         
             var newUser = new User()
@@ -83,6 +83,7 @@ public class UserService : BaseService<User, string, VwUserProfile>, IUserServic
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
@@ -166,6 +167,7 @@ public class UserService : BaseService<User, string, VwUserProfile>, IUserServic
             // True
             response.Success = true;
             response.SetMessage(MessageId.I00001);
+            return true;
         });
         return response;
     }
