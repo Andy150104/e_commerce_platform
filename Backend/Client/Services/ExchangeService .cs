@@ -102,10 +102,10 @@ public class ExchangeService : BaseService<Exchange, Guid, VwBlindBoxDisplay>, I
             // Check image
             if (!checkImage)
             {
-                exchange.Status = (byte) ConstantEnum.PostingStatus.Fail;
+                exchange.Status = (byte) ConstantEnum.ExchangeStatus.Fail;
             }
             else
-                exchange.Status = (byte) ConstantEnum.PostingStatus.PendingExchange;
+                exchange.Status = (byte) ConstantEnum.ExchangeStatus.PendingExchange;
 
             Repository.Add(exchange);
             _identityService.SaveChanges(userName);
