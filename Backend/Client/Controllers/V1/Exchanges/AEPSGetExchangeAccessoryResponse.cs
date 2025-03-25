@@ -20,7 +20,7 @@ public class AEPSGetExchangeAccessoryEntity
 
     public Guid BlindBoxId { get; set; }
 
-    public ICollection<AEPSGetExchangeAccessoryImageBlindBoxList> imageBlindBoxList = new List<AEPSGetExchangeAccessoryImageBlindBoxList>();
+    public ICollection<AEPSGetExchangeAccessoryImageBlindBoxList> imageBlindBoxList { get; set; }
 }
 
 public class AEPSGetExchangeAccessoryImageBlindBoxList
