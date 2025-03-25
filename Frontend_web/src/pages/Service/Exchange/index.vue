@@ -60,8 +60,10 @@
   import { useForm } from 'vee-validate'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import BaseControlSearchOneField from '@PKG_SRC/components/Basecontrol/BaseControlSearchOneField.vue'
+import { useExchangeStore } from '@PKG_SRC/stores/Modules/Blind_Box/ExchangeStore'
 
   const store = useDisplayProductStore()
+  const exchangeStore = useExchangeStore()
   const searchStore = useSearchStore()
   const cartStore = useCartStore()
   const detailProductStore = useDetailProductStore()
