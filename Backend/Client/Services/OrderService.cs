@@ -1,6 +1,7 @@
 using Client.Controllers.V1.Orders;
 using Client.Controllers.V1.ThirdParty;
 using Client.Controllers.V1.TOS;
+using Client.Logics.Commons;
 using Client.Logics.Commons.GHNLogics;
 using Client.Logics.Commons.MomoLogics;
 using Client.Models;
@@ -19,10 +20,16 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
     private readonly ICartItemService _cartItemService;
     private readonly IBaseService<OrderDetail, Guid, VwOrderDetailsWithProduct> _orderDetailService;
     private readonly IGHNLogic _ghnLogic;
+    private readonly HttpClient _httpClient;
+    private readonly static string _apiToken = "880e415a-fc97-11ef-82e7-a688a46b55a3";
+    private readonly static string _shopId = "196113";
+
+    private readonly static string _createOrderUrl = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/create";
+    private readonly static string _trackingOrderUrl = "https://dev-online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/detail";
 
     public OrderService(IBaseRepository<Order, Guid, VwOrder> repository, IMomoService momoService,
         IAddressService addressService, IAccessoryService accessoryService, IGHNLogic ghnLogic,
-        ICartItemService cartItemService, IBaseService<OrderDetail, Guid, VwOrderDetailsWithProduct> orderDetailService) : base(repository)
+        ICartItemService cartItemService, IBaseService<OrderDetail, Guid, VwOrderDetailsWithProduct> orderDetailService, HttpClient httpClient) : base(repository)
     {
         _momoService = momoService;
         _addressService = addressService;
@@ -30,6 +37,9 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
         _ghnLogic = ghnLogic;
         _cartItemService = cartItemService;
         _orderDetailService = orderDetailService;
+        _httpClient = httpClient;
+        _httpClient.DefaultRequestHeaders.Add("Token", _apiToken);
+        _httpClient.DefaultRequestHeaders.Add("ShopId", _shopId);
     }
 
     /// <summary>
@@ -155,7 +165,11 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                     request.AddressId);
 
                 // If payment failed
-                if (res.ErrorCode != (byte)ConstantEnum.PaymentStatus.Success)
+                if (res.ErrorCode != (byte)ConstantEnum.PaymentStatus.Success || 
+                    res.PayUrl == null ||
+                    res.QrCodeUrl == null ||
+                    res.DeeplinkWebInApp == null ||
+                    res.Deeplink == null)
                 {
                     response.SetMessage(MessageId.I00000, CommonMessages.PaymentFailed);
                     return false;
@@ -170,12 +184,21 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
                     DeeplinkWebInApp = res.DeeplinkWebInApp,
                     Deeplink = res.Deeplink,
                 };
+                
+                if(momoResponse.QrCodeUrl == null || momoResponse.PaymentUrl == null || momoResponse.Deeplink == null || momoResponse.DeeplinkWebInApp == null)
+                {
+                    response.SetMessage(MessageId.I00000, CommonMessages.PaymentFailed);
+                    return false;
+                }
 
                 // Set Response
                 response.Response = new InsertOrderResponseEntity
                 {
                     Momo = momoResponse,
                 };
+                var momoUrl = $"{momoResponse.PaymentUrl},{momoResponse.QrCodeUrl},{momoResponse.Deeplink},{momoResponse.DeeplinkWebInApp}";
+                
+                newOrder.MomoUrl = momoUrl;
             }
             else
             {
@@ -348,6 +371,112 @@ public class OrderService : BaseService<Order, Guid, VwOrder>, IOrderService
         response.Success = true;
         response.Response = orderEntity;
         response.SetMessage(MessageId.I00001);
+        return response;
+    }
+
+    public async Task<PaymentOrderCallbackResponse> PaymentOrderCallback(PaymentOrderCallbackRequest request, IIdentityService identityService)
+    {
+        var response = new PaymentOrderCallbackResponse { Success = false };
+        
+        // Get userName
+        var userName = identityService.IdentityEntity.UserName;
+        
+        // Get Order
+        var order = Find(o => 
+                o.OrderId == request.OrderId && 
+                o.Username == userName &&
+                o.Status == ((byte) ConstantEnum.OrderStatus.Processing) &&
+                o.GhnCode == null,
+                true,
+                u => u.UsernameNavigation)
+            .FirstOrDefault();
+
+        if (order == null)
+        {
+            response.SetMessage(MessageId.I00000, CommonMessages.OrderNotFound);
+            return response;
+        }
+
+        if (order.CreatedAt < order.CreatedAt.Value.AddMinutes(100))
+        {
+            var momoUrls = order.MomoUrl.Split(',');
+            var momoResponse = new MomoResponse
+            {
+                PaymentUrl = momoUrls[0],
+                QrCodeUrl = momoUrls[1],
+                Deeplink = momoUrls[2],
+                DeeplinkWebInApp = momoUrls[3],
+            };
+            response.Response = momoResponse;
+        }
+        else
+        {
+            // Execute Payment Order
+            var momoExcuteResponseModel = new MomoExecuteResponseModel
+            {
+                FullName = $"{userName}",
+                Amount = ((int)order.TotalPrice).ToString(),
+                OrderId = order.OrderId.ToString(),
+                OrderInfo = $"{order.UsernameNavigation.LastName}-{order.UsernameNavigation.FirstName}_{CommonMessages.OrderDescription}_{order.OrderId}",
+            };
+        
+            var res = await _momoService.CreatePaymentOrderAsync(momoExcuteResponseModel, request.Platform,
+                order.AddressId ?? Guid.Empty);
+        
+            response.Response = new MomoResponse
+            {
+                PaymentUrl = res.PayUrl,
+                QrCodeUrl = res.QrCodeUrl,
+                DeeplinkWebInApp = res.DeeplinkWebInApp,
+                Deeplink = res.Deeplink,
+            };
+        }
+        
+        // True
+        response.Success = true;
+        response.SetMessage(MessageId.I00001);
+        return response;
+    }
+    
+    
+    
+    public async Task<TrackingGhnOrderResponse> TrackingOrderAsync(TrackingGhnOrderRequest trackingGhnOrderRequest, IIdentityService identityService)
+    {
+        var response = new TrackingGhnOrderResponse { Success = false };
+        
+        // Get userName
+        var userName = identityService.IdentityEntity.UserName;
+
+        var ghnCode = Find(x => x.OrderId == trackingGhnOrderRequest.OrderId && x.Username == userName)
+            .Select(x => x.GhnCode).FirstOrDefault();
+        
+        
+        var apiClient = new CommonLogic.ApiClient<TrackingGhnOrderResponse, GhnOrderResponse>(_httpClient);
+        
+        var headers = new Dictionary<string, string>
+        {
+            {"Token", _apiToken},
+            {"ShopId", _shopId}
+        };
+        
+        var queryParams = new Dictionary<string, string>
+        {
+            { "order_code", ghnCode }
+        };
+
+        var apiResponse = await apiClient.CallApiAsync(HttpMethod.Get, _trackingOrderUrl, null, headers, queryParams);
+        
+        if (!apiResponse.Success)
+        {
+            response.MessageId = apiResponse.MessageId;
+            response.Message = apiResponse.Message;
+            return response;
+        }
+
+        // True
+        response.Success = true;
+        response.SetMessage(MessageId.I00001);
+        response.Response = apiResponse.Response;
         return response;
     }
 }

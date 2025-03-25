@@ -181,6 +181,35 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
         response.SetMessage(MessageId.I00001);
         return response;
     }
+    
+    /// <summary>
+    /// Select refund request orders
+    /// </summary>
+    /// <returns></returns>
+    public RROSelectRefundRequestOrdersResponse SelectRefundRequestOrders(IIdentityService identityService)
+    {
+        var response = new RROSelectRefundRequestOrdersResponse { Success = false };
+
+        // Get refund request orders
+        var refundRequestOrders = FindView(x => x.UserName == identityService.IdentityEntity.UserName)
+            .Select(x => new RROSelectRefundRequestOrdersEntity
+            {
+                RefundId = x!.RefundId,
+                OrderId = x.OrderId,
+                UserName = x.UserName,
+                PaymentMethod = x.PaymentMethod,
+                RefundAmount = x.RefundAmount,
+                RefundStatus = x.RefundStatus,
+                CreatedAt = x.CreatedAt,
+            })
+            .OrderByDescending(x => x.CreatedAt)
+            .ToList();
+
+        response.Success = true;
+        response.Response = refundRequestOrders;
+        response.SetMessage(MessageId.I00001);
+        return response;
+    }
 
     /// <summary>
     /// Select refund request order
@@ -211,7 +240,35 @@ public class RefundRequestOrderServiceService : BaseService<RefundRequestsOrder,
             .FirstOrDefault();
         
         response.Success = true;
-        //response.Response = refundRequestOrder;
+        response.Response = refundRequestOrder;
+        response.SetMessage(MessageId.I00001);
+        return response;
+    }
+
+    public RROSelectRefundRequestOrderResponse SelectRefundRequestOrder(RROSelectRefundRequestOrderRequest request, IIdentityService identityService)
+    {
+        var response = new RROSelectRefundRequestOrderResponse { Success = false };
+        
+        // Get refund request order
+        var refundRequestOrder = FindView(x => x.RefundId == request.RefundId && x.UserName == identityService.IdentityEntity.UserName)
+            .Select(x => new RROSelectRefundRequestOrderEntity
+            {
+                RefundId = x!.RefundId,
+                OrderId = x.OrderId,
+                PaymentMethod = x.PaymentMethod,
+                RefundAmount = x.RefundAmount,
+                RefundStatus = x.RefundStatus,
+                CreatedAt = x.CreatedAt,
+                RefundReason = x.RefundReason,
+                ApprovedAt = x.ApprovedAt,
+                ProcessedBy = x.ProcessedBy,
+                RejectedReason = x.RejectedReason,
+                UpdatedAt = x.UpdatedAt,
+            })
+            .FirstOrDefault();
+        
+        response.Success = true;
+        response.Response = refundRequestOrder;
         response.SetMessage(MessageId.I00001);
         return response;
     }

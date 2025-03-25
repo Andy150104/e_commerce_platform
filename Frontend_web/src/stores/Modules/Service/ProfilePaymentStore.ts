@@ -64,11 +64,12 @@ export const useProfilePaymentStore = defineStore('Payment', {
           body: {
             addressId: this.address.addressId,
             paymentMethod: 1,
+            platForm: 1,
             orderDetails: orderDetails,
           },
         })
         if (!res.success) return false
-        this.paymentUrl = res.response?.paymentUrl ?? ''
+        this.paymentUrl = res.response?.momo?.paymentUrl ?? ''
         return true
       },
   },

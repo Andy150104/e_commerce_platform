@@ -7,6 +7,8 @@ using Client.Utils.Consts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Server.Utils.Consts;
+using Client.Utils.Consts;
+using SystemConfig = Client.Models.SystemConfig;
 
 namespace Client.Controllers.V1.ThirdParty
 {
@@ -21,10 +23,12 @@ namespace Client.Controllers.V1.ThirdParty
         private readonly IEmailTemplateService _emailTemplateService;
         private readonly IGHNLogic _ghnLogic;
         private readonly IBaseService<OrderDetail, Guid, VwOrderDetailsWithProduct> _orderDetailService;
+        private readonly IBaseService<SystemConfig, string, VwSystemConfig> _systemConfigService;
 
         public MomoController(IMomoService momoService, AppDbContext appDbContext, IOrderService orderService,
             IUserService userService, IBaseService<OrderDetail, Guid, VwOrderDetailsWithProduct> orderDetailService,
-            IEmailTemplateService emailTemplateService, IGHNLogic ghnLogic)
+            IEmailTemplateService emailTemplateService, IGHNLogic ghnLogic,
+            IBaseService<SystemConfig, string, VwSystemConfig> systemConfigService)
         {
             _momoService = momoService;
             _appDbContext = appDbContext;
@@ -33,6 +37,7 @@ namespace Client.Controllers.V1.ThirdParty
             _orderDetailService = orderDetailService;
             _emailTemplateService = emailTemplateService;
             _ghnLogic = ghnLogic;
+            _systemConfigService = systemConfigService;
         }
 
         //[HttpPost]
@@ -89,67 +94,99 @@ namespace Client.Controllers.V1.ThirdParty
         [HttpGet("Order")]
         public async Task<IActionResult> PaymentOrderCallBack()
         {
-           // Get response from Momo
-        var responseQuery = _momoService.PaymentExecuteOrderAsync(HttpContext.Request.Query);
+            // Get response from Momo
+            var responseQuery = _momoService.PaymentExecuteOrderAsync(HttpContext.Request.Query);
+
+            var extraValues = responseQuery.ExtraData.Split('|');
+            
+            var systemConfigs = await _systemConfigService.FindView().ToListAsync();
         
-        var extraValues = responseQuery.ExtraData.Split('|');
-        // PlatForm
-        var platForm = extraValues[2];
-        
-        if (responseQuery.ErrorCode != ((byte) ConstantEnum.PaymentStatus.Success).ToString())
-        { 
-            if (platForm.Equals(((byte) ConstantEnum.Platform.Web)))
+            // Get Url
+            var orderWebRedirectFailUrl = systemConfigs.Find(s => s.Id == Client.Utils.Consts.SystemConfig.OrderWebRedirectFail)?.Value;
+            var orderMobileRedirectFailUrl = systemConfigs.Find(s => s.Id == Client.Utils.Consts.SystemConfig.OrderMobileRedirectFail)?.Value;
+            
+            // PlatForm
+            var platForm = extraValues[2];
+
+            if (responseQuery.ErrorCode != ((byte) ConstantEnum.PaymentStatus.Success).ToString())
             {
-                return Redirect(CommonUrl.WebUrlTrackingFail);
+                if (platForm == ((byte) ConstantEnum.Platform.Web).ToString())
+                {
+                    return Redirect(orderWebRedirectFailUrl!);
+                }
+                
+                return Redirect(orderMobileRedirectFailUrl!);
             }
+
+            // Get order
+            var order = _orderService.Find(or => or.OrderId == Guid.Parse(responseQuery.OrderId)).FirstOrDefault()!;
+
+            var user = _userService.Find(u => u.UserName == responseQuery.FullName,
+                    true,
+                    u => u.Addresses)
+                .FirstOrDefault();
+            if (user == null)
+                return BadRequest();
+
+            // Address
+            var addressId = Guid.Parse(extraValues[1]);
+
+            // Get Address
+            var address = user.Addresses.FirstOrDefault(a => a.AddressId == addressId);
+
+            // Get Order Details
+            var orderDetails = _orderDetailService
+                .Find(or => or.OrderId == order.OrderId,
+                    true,
+                    a => a.Accessory)
+                .ToList();
+
+            var listAccessoryName = new List<KeyValuePair<string, string>>();
+            foreach (var orderDetail in orderDetails)
+            {
+                var accessory = orderDetail!.Accessory;
+                listAccessoryName.Add(new KeyValuePair<string, string>(accessory.AccessoryId, accessory.Name));
+            }
+
+            // Create GHN order
+            var ghn = await _ghnLogic.CreateOrderGHNAsync(orderDetails!, user, address!, listAccessoryName);
+            var ghnCode = ghn.Data.OrderCode;
+            
+            // Get Url
+            var orderWebRedirectSuccessUrl = systemConfigs.Find(s => s!.Id == Client.Utils.Consts.SystemConfig.OrderWebRedirectSuccess)?.Value;
+            var orderMobileRedirectSuccessUrl = systemConfigs.Find(s => s!.Id == Client.Utils.Consts.SystemConfig.OrderMobileRedirectSuccess)?.Value;
+            
+            // Send Mail
+            var detailErrorList = new List<DetailError>();
+            MomoOrderSendMail.SendMailGhnCode(_emailTemplateService, order, user.Email!, _appDbContext, detailErrorList);
+
+            if (platForm.Equals(((byte)ConstantEnum.Platform.Web).ToString()))
+                return Redirect(ReplaceSuccessUrl(orderWebRedirectSuccessUrl!, order.OrderId.ToString(), ghnCode));
             else
-            {
-                return Redirect(CommonUrl.MobileUrlTrackingFail);
-            }
+                return Redirect(ReplaceSuccessUrl(orderMobileRedirectSuccessUrl!, order.OrderId.ToString(), ghnCode));
         }
 
-        // Get order
-        var order = _orderService.Find(or => or.OrderId == Guid.Parse(responseQuery.OrderId)).FirstOrDefault()!;
-
-        var user = _userService.Find(u => u.UserName == responseQuery.FullName,
-                true,
-                u => u.Addresses)
-            .FirstOrDefault();
-        if (user == null)
-            return BadRequest();
-        
-        // Address
-        var addressId = Guid.Parse(extraValues[1]);
-
-        // Get Address
-        var address = user.Addresses.FirstOrDefault(a => a.AddressId == addressId);
-
-        // Get Order Details
-        var orderDetails = _orderDetailService
-            .Find(or => or.OrderId == order.OrderId,
-                true,
-                a => a.Accessory)
-            .ToList();
-
-        var listAccessoryName = new List<KeyValuePair<string, string>>();
-        foreach (var orderDetail in orderDetails)
+        /// <summary>
+        /// Replace OrderId and GhnCode for success URL
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="orderId"></param>
+        /// <param name="ghnCode"></param>
+        /// <returns></returns>
+        private string ReplaceSuccessUrl(string url, string orderId, string ghnCode)
         {
-            var accessory = orderDetail.Accessory;
-            listAccessoryName.Add(new KeyValuePair<string, string>(accessory.AccessoryId, accessory.Name));
-        }
-
-        // Create GHN order
-        var ghnCode = _ghnLogic.CreateOrderGHNAsync(orderDetails, user, address, listAccessoryName).Result.Data
-            .OrderCode;
-
-        // Send Mail
-        var detailErrorList = new List<DetailError>();
-        MomoOrderSendMail.SendMailGhnCode(_emailTemplateService, order, user.Email, _appDbContext, detailErrorList);
-
-        if (platForm.Equals(((byte) ConstantEnum.Platform.Web).ToString())) 
-            return Redirect($"{CommonUrl.WebUrlTrackingSuccess}?orderId={order.OrderId}&GhnOrderCode={ghnCode}");
-        else
-            return Redirect(CommonUrl.MobileUrlTrackingSuccess);
+            var replacements = new Dictionary<string, string>
+            {
+                { "${order_id}", orderId },
+                { "${ghn_order_code}", ghnCode }
+            };
+            
+            foreach (var replacement in replacements)
+            {
+                url = url.Replace(replacement.Key, replacement.Value);
+            }
+            
+            return url;
         }
     }
 }

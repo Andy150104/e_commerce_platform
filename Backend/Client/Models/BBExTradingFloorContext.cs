@@ -87,6 +87,8 @@ public partial class BBExTradingFloorContext : DbContext
 
     public virtual DbSet<VwRefundRequestOrder> VwRefundRequestOrders { get; set; }
 
+    public virtual DbSet<VwSystemConfig> VwSystemConfigs { get; set; }
+
     public virtual DbSet<VwUserAddress> VwUserAddresses { get; set; }
 
     public virtual DbSet<VwUserAuthentication> VwUserAuthentications { get; set; }
@@ -589,6 +591,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ghn_code");
             entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.MomoUrl).HasColumnName("momo_url");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.TotalPrice)
@@ -1411,6 +1414,34 @@ public partial class BBExTradingFloorContext : DbContext
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)
                 .HasColumnName("userName");
+        });
+
+        modelBuilder.Entity<VwSystemConfig>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("VW_SystemConfig");
+
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("created_by");
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .HasColumnName("id");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
+            entity.Property(e => e.ScreenName)
+                .HasMaxLength(100)
+                .HasColumnName("screen_name");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(50)
+                .HasColumnName("updated_by");
+            entity.Property(e => e.Value).HasColumnName("value");
         });
 
         modelBuilder.Entity<VwUserAddress>(entity =>

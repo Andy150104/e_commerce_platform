@@ -53,7 +53,7 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                     return false;
                 }
 
-                var existQueue = Repository.Find(x => x.CreatedBy == userName && x.ExchangeId == request.ExchangeId).FirstOrDefault();
+                var existQueue = Repository.Find(x => x.CreatedBy == userName && x.ExchangeId == request.ExchangeId && x.Status != (byte)ConstantEnum.QueueStatus.Fail).FirstOrDefault();
                 if(existQueue != null)
                 {
                     response.SetMessage(MessageId.E00000, CommonMessages.AddQueueExist);

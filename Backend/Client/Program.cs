@@ -156,6 +156,8 @@ var app = builder.Build();
 app.UseCors();
 app.UseRouting();
 app.UseAuthentication();
+app.UseDeveloperExceptionPage(); 
+app.UseStatusCodePages(); 
 app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();

@@ -40,7 +40,7 @@
               <img
                 v-else
                 class="rounded-full object-cover mx-auto aspect-square w-40 h-40 md:w-64 md:h-64"
-                :src="`https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg`"
+                :src="store.uDSSelectUserProfileEntity.imageUrl ||`https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg`"
                 alt="User Profile Image"
               />
             </div>
@@ -200,6 +200,10 @@
   }
 
   const Update = async () => {
+   await  uploadImageStore.uploadCloudinaryBase64(uploadImageStore.uploadImage[0].imagePreview)
+   
+   console.log("proifle url: ",uploadImageStore.image)
+    store.fields.setFieldValue("imageUrl",uploadImageStore.image)
     await store.UpdateUser()
     isActive.value = false
     successMessage.value = true

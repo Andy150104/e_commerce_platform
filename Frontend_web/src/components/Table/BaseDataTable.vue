@@ -20,6 +20,7 @@
             <div class="flex justify-between gap-6">
               <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined @click="clearFilter" />
               <ModalInputForm
+                v-if="isShowAddButton"
                 :header="'Add New Product'"
                 :button-icon="'pi pi-plus'"
                 :button-label="'New Product'"
@@ -94,7 +95,12 @@
           <InputText v-else v-model="filterModel.value" type="text" @input="filterCallback()" :placeholder="`Search by ${col.header}`" />
         </template>
       </Column>
-      <Column field="statusText" header="Status"  v-if="!showActions">
+      <Column field="description" header="Description" :sortable="true" v-if="showHActions">
+        <template #body="{ data }">
+          <div v-html="data.description"></div>
+        </template>
+      </Column>
+      <Column field="statusText" header="Status"  v-if="showHActions">
         <template #body="{ data }">
           <span
             :class="{
@@ -107,10 +113,32 @@
           </span>
         </template>
       </Column>
-      <Column header="Actions" style="min-width: 12rem">
+      <Column field="statusText" header="Status" v-if="isStatus">
+        <template #body="{ data }">
+          <span
+            :class="{
+              'text-green-500 font-bold': data.refundStatus === 2,
+              'text-red-500 font-bold': data.refundStatus === 3,
+              'text-yellow-500 font-bold': data.refundStatus === 1,
+            }"
+          >
+            <p v-if="data.refundStatus === 1">
+              Pending
+            </p>
+            <p v-if="data.refundStatus === 2">
+              Approve
+            </p>
+            <p v-if="data.refundStatus === 3">
+              Reject
+            </p>
+          </span>
+        </template>
+      </Column>
+      <Column v-if="isShowUpdate || isShowDelete" header="Actions" style="min-width: 12rem">
         <template #body="slotProps">
           <div v-if="showActions">
             <ModalInputForm
+              v-if="isShowUpdate"
               @on-blinding-update="onBindingUpdate(slotProps.data)"
               :is-only-show-icon="true"
               :header="'Update Accessory With Id <strong>' + slotProps.data.accessoryId + '</strong>'"
@@ -124,6 +152,7 @@
               </template>
             </ModalInputForm>
             <ModalConfirm
+              v-if="isShowDelete"
               :is-only-show-icon="true"
               @on-confirm="confirmDeleteProduct(slotProps.data)"
               :content="'Are you sure you want to delete <strong>' + slotProps.data.accessoryId + '</strong>?'"
@@ -191,11 +220,21 @@
       pageSize?: number
       isSelectedColumns?: boolean
       showActions?: boolean
+      showHActions?: boolean
+      isShowAddButton?: boolean
+      isShowDelete?: boolean
+      isShowUpdate?: boolean
+      isStatus?: boolean
     }>(),
     {
       pageSize: 10,
       isSelectedColumns: false,
       showActions: true, // Mặc định bật
+      showHActions: false,
+      isShowAddButton: true,
+      isShowDelete: true,
+      isShowUpdate: true,
+      isStatus: false,
     }
   )
   const loading = ref(false)

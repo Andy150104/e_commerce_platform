@@ -29,6 +29,8 @@ public partial class Order
 
     public string? GhnCode { get; set; }
 
+    public string? MomoUrl { get; set; }
+
     public virtual Address? Address { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();

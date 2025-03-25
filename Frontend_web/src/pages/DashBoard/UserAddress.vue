@@ -114,6 +114,12 @@
             </div>
             <hr v-if="index < store.uUDSSelectUserAddressEntity.length - 1" class="border-gray-300 dark:border-gray-600 my-4" />
           </div>
+          <div
+            v-if="!store.uUDSSelectUserAddressEntity?.length"
+            class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 flex justify-center items-center h-32"
+          >
+            <p class="text-gray-700 dark:text-gray-300 text-lg font-semibold">Your Address Book is empty.</p>
+          </div>
         </div>
       </div>
     </template>
@@ -182,11 +188,10 @@
     }),
   }
 
-
   // Binding data to field
   const onBinding = async (addressId: string) => {
     const address = await store.uUDSSelectUserAddressEntity.find((a) => a.addressId === addressId)
-    console.log("ADDRESS ID : "+ address?.addressId)
+    console.log('ADDRESS ID : ' + address?.addressId)
     store.fields.setFieldValue('addressId', address?.addressId)
     store.fields.setFieldValue('addressLine', address?.addressLine)
     store.fields.setFieldValue('ward', address?.ward)
@@ -205,7 +210,7 @@
       store.GetAddress()
     }
   }
-  const updateAddress = async () =>{
+  const updateAddress = async () => {
     const success = await store.UpdateAddress()
     if (success) {
       store.GetAddress()

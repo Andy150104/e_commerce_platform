@@ -1543,6 +1543,43 @@
         ]
       }
     },
+    "/api/v1/PaymentOrderCallback": {
+      "post": {
+        "tags": [
+          "PaymentOrderCallback"
+        ],
+        "operationId": "PaymentOrderCallback_Post",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentOrderCallbackRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentOrderCallbackResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
     "/api/v1/RROApproveRefundRequestOrder": {
       "patch": {
         "tags": [
@@ -1700,6 +1737,45 @@
         ]
       }
     },
+    "/api/v1/RROSelectRefundRequestOrderByUser": {
+      "get": {
+        "tags": [
+          "RROSelectRefundRequestOrderByUser"
+        ],
+        "operationId": "RROSelectRefundRequestOrderByUser_Get",
+        "parameters": [
+          {
+            "name": "RefundId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RROSelectRefundRequestOrderResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Customer",
+              "PlannedCustomer"
+            ]
+          }
+        ]
+      }
+    },
     "/api/v1/RROSelectRefundRequestOrders": {
       "get": {
         "tags": [
@@ -1732,6 +1808,44 @@
           {
             "JWT Token": [
               "Owner"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/RROSelectRefundRequestOrdersByUser": {
+      "get": {
+        "tags": [
+          "RROSelectRefundRequestOrdersByUser"
+        ],
+        "operationId": "RROSelectRefundRequestOrdersByUser_Get",
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/RROSelectRefundRequestOrdersRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RROSelectRefundRequestOrdersResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": [
+              "Customer",
+              "PlannedCustomer"
             ]
           }
         ]
@@ -1943,6 +2057,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SelectSubCategoriesResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/TrackingGhnOrder": {
+      "post": {
+        "tags": [
+          "TrackingGhnOrder"
+        ],
+        "operationId": "TrackingGhnOrder_Post",
+        "requestBody": {
+          "x-name": "filter",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackingGhnOrderRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingGhnOrderResponse"
                 }
               }
             }
@@ -3763,6 +3914,80 @@
           }
         }
       },
+      "PaymentOrderCallbackResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfMomoResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "$ref": "#/components/schemas/MomoResponse"
+              }
+            }
+          }
+        ]
+      },
+      "AbstractApiResponseOfMomoResponse": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MomoResponse"
+              }
+            ]
+          }
+        }
+      },
+      "PaymentOrderCallbackRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "orderId",
+              "platform"
+            ],
+            "properties": {
+              "orderId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              },
+              "platform": {
+                "type": "integer",
+                "format": "byte",
+                "maximum": 2.0,
+                "minimum": 1.0
+              }
+            }
+          }
+        ]
+      },
       "SelectOrderResponse": {
         "allOf": [
           {
@@ -4011,6 +4236,274 @@
           {
             "type": "object",
             "additionalProperties": false
+          }
+        ]
+      },
+      "TrackingGhnOrderResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfGhnOrderResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "$ref": "#/components/schemas/GhnOrderResponse"
+              }
+            }
+          }
+        ]
+      },
+      "GhnOrderResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GhnOrderData"
+          }
+        }
+      },
+      "GhnOrderData": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "returnName": {
+            "type": "string"
+          },
+          "returnPhone": {
+            "type": "string"
+          },
+          "returnAddress": {
+            "type": "string"
+          },
+          "returnWardCode": {
+            "type": "string"
+          },
+          "returnDistrictId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "returnLocation": {
+            "$ref": "#/components/schemas/GhnLocation"
+          },
+          "fromName": {
+            "type": "string"
+          },
+          "fromPhone": {
+            "type": "string"
+          },
+          "fromAddress": {
+            "type": "string"
+          },
+          "fromWardCode": {
+            "type": "string"
+          },
+          "fromDistrictId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "fromLocation": {
+            "$ref": "#/components/schemas/GhnLocation"
+          },
+          "toName": {
+            "type": "string"
+          },
+          "toPhone": {
+            "type": "string"
+          },
+          "toAddress": {
+            "type": "string"
+          },
+          "toWardCode": {
+            "type": "string"
+          },
+          "toDistrictId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toLocation": {
+            "$ref": "#/components/schemas/GhnLocation"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "length": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "codAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "insuranceValue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requiredNote": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GhnOrderItem"
+            }
+          },
+          "orderCode": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "leadtimeOrder": {
+            "$ref": "#/components/schemas/GhnLeadTime"
+          }
+        }
+      },
+      "GhnLocation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "lat": {
+            "type": "number",
+            "format": "double"
+          },
+          "long": {
+            "type": "number",
+            "format": "double"
+          },
+          "cellCode": {
+            "type": "string"
+          },
+          "placeId": {
+            "type": "string"
+          },
+          "trustLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "wardcode": {
+            "type": "string"
+          },
+          "mapSource": {
+            "type": "string"
+          }
+        }
+      },
+      "GhnOrderItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "length": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "weight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "itemOrderCode": {
+            "type": "string"
+          }
+        }
+      },
+      "GhnLeadTime": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fromEstimateDate": {
+            "type": "string"
+          },
+          "toEstimateDate": {
+            "type": "string"
+          }
+        }
+      },
+      "AbstractApiResponseOfGhnOrderResponse": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GhnOrderResponse"
+              }
+            ]
+          }
+        }
+      },
+      "TrackingGhnOrderRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "orderId"
+            ],
+            "properties": {
+              "orderId": {
+                "type": "string",
+                "format": "guid",
+                "minLength": 1
+              }
+            }
           }
         ]
       },

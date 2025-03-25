@@ -15,7 +15,19 @@
           Welcome, Admin!
         </p>
       </div>
-
+      <div class="flex items-center gap-4 w-64">
+        <UserControlDateField
+          :xml-column="xmlColumns.Date"
+          :err-msg="fieldErrors.Date"
+          :disabled="false"
+          :is-show-label="false"
+          :maxlength="10"
+          :date-model="parsedDateString"
+          :is-inline="true"
+          :date-picker-position="'bottom left'"
+        />
+        <Button security="contrast" @click="onViewData">View</Button>
+      </div>
       <!-- Nền với gradient tinh tế -->
       <main
         class="animate-flip-up animate-once animate-ease-out animate-normal animate-fill-forwards min-h-screen bg-gradient-to-br from-blue-50 to-white p-6 dark:from-gray-900 dark:to-gray-800 dark:text-white space-y-6"
@@ -37,9 +49,9 @@
               </svg>
             </div>
             <!-- Giảm kích thước tiêu đề, con số và phần trăm -->
-            <h3 class="mb-3 text-xs font-semibold text-gray-600 dark:text-gray-300">Sales Performance</h3>
-            <p class="text-xl font-bold text-gray-800 dark:text-white">$23,127</p>
-            <p class="mt-1 text-xs text-green-500">+3% so với tháng trước</p>
+            <h3 class="mb-3 text-base md:text-xl font-semibold text-gray-600 dark:text-gray-300">Total Revenue</h3>
+            <p class="text-xl font-bold text-gray-800 dark:text-white">{{ moneyFormatter(store.DashBoardEntity.totalRevenue ?? 0) }}</p>
+            <!-- <p class="mt-1 text-xs text-green-500">+3% so với tháng trước</p> -->
           </div>
 
           <!-- Card 2 -->
@@ -62,9 +74,11 @@
                 />
               </svg>
             </div>
-            <h3 class="mb-3 text-xs font-semibold text-gray-600 dark:text-gray-300">Total Sales</h3>
-            <p class="text-xl font-bold text-gray-800 dark:text-white">1,849</p>
-            <p class="mt-1 text-xs text-green-500">+3% so với tháng trước</p>
+            <h3 class="mb-3 text-base md:text-xl font-semibold text-gray-600 dark:text-gray-300">Month Revenue</h3>
+            <p class="text-xl font-bold text-gray-800 dark:text-white">
+              {{ moneyFormatter(store.DashBoardEntity.totalRevenueThisMonth ?? 0) }}
+            </p>
+            <p class="mt-1 text-xs text-green-500">{{ '+' + store.DashBoardEntity.revenueGrowthRateLastMonth + '% so với tháng trước' }}</p>
           </div>
 
           <!-- Card 3 -->
@@ -86,9 +100,9 @@
                 />
               </svg>
             </div>
-            <h3 class="mb-3 text-xs font-semibold text-gray-600 dark:text-gray-300">Average Revenue</h3>
-            <p class="text-xl font-bold text-gray-800 dark:text-white">$15,239</p>
-            <p class="mt-1 text-xs text-green-500">+9% so với tháng trước</p>
+            <h3 class="mb-3 text-base md:text-xl font-semibold text-gray-600 dark:text-gray-300">Today Revenue</h3>
+            <p class="text-xl font-bold text-gray-800 dark:text-white">{{ moneyFormatter(store.DashBoardEntity.totalRevenueToday ?? 0) }}</p>
+            <p class="mt-1 text-xs text-green-500">{{ '+' + store.DashBoardEntity.revenueGrowthRateYesterday + '% so với hôm qua' }}</p>
           </div>
 
           <!-- Card 4 -->
@@ -103,9 +117,9 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
               </svg>
             </div>
-            <h3 class="mb-3 text-xs font-semibold text-gray-600 dark:text-gray-300">Total Sessions</h3>
-            <p class="text-xl font-bold text-gray-800 dark:text-white">2,034</p>
-            <p class="mt-1 text-xs text-green-500">+5% so với tháng trước</p>
+            <h3 class="mb-3 text-base md:text-xl font-semibold text-gray-600 dark:text-gray-300">Total Orders</h3>
+            <p class="text-xl font-bold text-gray-800 dark:text-white">{{ store.DashBoardEntity.totalOrder + ' Orders' }}</p>
+            <!-- <p class="mt-1 text-xs text-green-500">+5% so với tháng trước</p> -->
           </div>
         </section>
 
@@ -117,16 +131,25 @@
           <div
             class="col-span-2 rounded-lg border border-gray-200 bg-white p-6 shadow-lg hover:shadow-2xl transition-shadow dark:border-gray-800 dark:bg-gray-800"
           >
-            <h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-white">Total Revenue</h3>
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Total Revenue</h3>
+              <BaseControlSelectInput
+                :xml-column="xmlColumns.sortBy"
+                :model="fieldValues.sortBy"
+                :disabled="false"
+                :master-name="'SortByChart'"
+                class="w-48"
+              />
+            </div>
             <p class="mb-4 text-gray-700 dark:text-gray-300">
-              <span class="text-2xl font-bold text-gray-900 dark:text-white">$94,127</span>
-              <span class="ml-2 text-green-500">(+9% so với tháng trước)</span>
+              <span class="text-2xl font-bold text-gray-900 dark:text-white">{{ moneyFormatter(store.DashBoardEntity.totalRevenue ?? 0) }}</span>
+              <!-- <span class="ml-2 text-green-500">(+9% so với tháng trước)</span> -->
             </p>
             <!-- Placeholder chart -->
             <div class="items-center justify-center rounded-md bg-gray-100 dark:bg-gray-700">
-                <div>
-                    <BaseControlBarChart />
-                </div>
+              <div>
+                <BaseControlBarChart class="animate-fade-right animate-once animate-duration-1000" v-if="store.DashBoardEntity.revenueData" :chartData="singleDatasetChart" />
+              </div>
             </div>
           </div>
 
@@ -134,52 +157,36 @@
           <div
             class="animate-fade-right animate-once animate-duration-1000 animate-delay-[600ms] animate-ease-in-out rounded-lg border border-gray-200 bg-white p-6 shadow-lg hover:shadow-2xl transition-shadow dark:border-gray-800 dark:bg-gray-800"
           >
-            <h3 class="mb-2 text-lg font-semibold text-gray-800 dark:text-white">Popular Products</h3>
-            <ul class="space-y-2 text-gray-700 dark:text-gray-300">
-              <li class="flex items-center justify-between">
-                <span>Macbook Pro 16 M1</span>
-                <span class="rounded-full bg-green-100 px-2 py-0.5 text-sm text-green-700 dark:bg-green-800 dark:text-green-200"> 45% </span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>iPhone 12</span>
-                <span class="rounded-full bg-green-100 px-2 py-0.5 text-sm text-green-700 dark:bg-green-800 dark:text-green-200"> 30% </span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>Macbook Air M1</span>
-                <span class="rounded-full bg-green-100 px-2 py-0.5 text-sm text-green-700 dark:bg-green-800 dark:text-green-200"> 15% </span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>Apple 24" M1 iMac Pro Display XDR</span>
-                <span class="rounded-full bg-green-100 px-2 py-0.5 text-sm text-green-700 dark:bg-green-800 dark:text-green-200"> 10% </span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Thông tin dưới (cards) -->
-        <section
-          class="animate-fade-right animate-once animate-duration-1000 animate-delay-[600ms] animate-ease-in-out grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3"
-        >
-          <div
-            class="rounded-lg border border-gray-200 bg-white p-6 shadow-lg hover:shadow-2xl transition-shadow dark:border-gray-800 dark:bg-gray-800"
-          >
-            <h3 class="mb-3 text-xs font-semibold text-gray-600 dark:text-gray-300">Average Order Value</h3>
-            <p class="text-xl font-bold text-gray-800 dark:text-white">$992</p>
-            <p class="mt-1 text-xs text-green-500">+2% so với tháng trước</p>
-          </div>
-          <div
-            class="rounded-lg border border-gray-200 bg-white p-6 shadow-lg hover:shadow-2xl transition-shadow dark:border-gray-800 dark:bg-gray-800"
-          >
-            <h3 class="mb-3 text-xs font-semibold text-gray-600 dark:text-gray-300">Average Sales</h3>
-            <p class="text-xl font-bold text-gray-800 dark:text-white">840</p>
-            <p class="mt-1 text-xs text-green-500">+1.3% so với tháng trước</p>
-          </div>
-          <div
-            class="rounded-lg border border-gray-200 bg-white p-6 shadow-lg hover:shadow-2xl transition-shadow dark:border-gray-800 dark:bg-gray-800"
-          >
-            <h3 class="mb-3 text-xs font-semibold text-gray-600 dark:text-gray-300">Total Visitors</h3>
-            <p class="text-xl font-bold text-gray-800 dark:text-white">11,240</p>
-            <p class="mt-1 text-xs text-green-500">+32.5% so với tháng trước</p>
+            <div>
+              <Tabs value="0">
+                <TabList>
+                  <Tab value="0">Products</Tab>
+                  <Tab value="1">Product chart</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel value="0">
+                    <h3 class="animate-fade-left animate-once animate-duration-1000 mb-2 text-lg font-semibold text-gray-800 dark:text-white">
+                      Popular Products
+                    </h3>
+                    <ul class="animate-fade-left animate-once animate-duration-1000 space-y-2 text-gray-700 dark:text-gray-300">
+                      <li v-for="item in store.DashBoardEntity.accessoryData" class="flex items-center justify-between">
+                        <span>{{ item.accessoryName }}</span>
+                        <span class="rounded-full bg-green-100 px-2 py-0.5 text-sm text-green-700 dark:bg-green-800 dark:text-green-200">
+                          {{ item.totalSale }} products</span
+                        >
+                      </li>
+                    </ul>
+                  </TabPanel>
+                  <TabPanel value="1">
+                    <BaseControlBarChart
+                      class="animate-fade-right animate-once animate-duration-1000"
+                      :is-horizontal="true"
+                      :chartData="accessoryDatasetChart"
+                    />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </div>
           </div>
         </section>
       </main>
@@ -188,6 +195,146 @@
 </template>
 
 <script setup lang="ts">
-  import BaseControlBarChart from '@PKG_SRC/components/Chart/BaseControlBarChart.vue';
-import BaseScreenManage from '@PKG_SRC/layouts/Basecreen/BaseScreenManage.vue'
+  import BaseControlSelectInput from '@PKG_SRC/components/Basecontrol/BaseControlSelectInput.vue'
+  import BaseControlBarChart from '@PKG_SRC/components/Chart/BaseControlBarChart.vue'
+  import UserControlDateField from '@PKG_SRC/components/UserControl/UserControlDateField.vue'
+  import BaseScreenManage from '@PKG_SRC/layouts/Basecreen/BaseScreenManage.vue'
+  import { useMODManageOrderStore } from '@PKG_SRC/stores/Modules/Manage/MODManageOrderStore'
+  import { Currency, Locale } from '@PKG_SRC/types/enums/constantFrontend'
+  import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
+  import { useForm } from 'vee-validate'
+import { stringifyQuery } from 'vue-router'
+
+  const store = useMODManageOrderStore()
+  const { fieldValues, fieldErrors } = storeToRefs(store)
+  const formContext = useForm({ initialValues: fieldValues.value })
+  store.SetFields(formContext)
+  const allRevenueData = ref<number[]>([])
+  const allMonths = [
+    'Tháng 1',
+    'Tháng 2',
+    'Tháng 3',
+    'Tháng 4',
+    'Tháng 5',
+    'Tháng 6',
+    'Tháng 7',
+    'Tháng 8',
+    'Tháng 9',
+    'Tháng 10',
+    'Tháng 11',
+    'Tháng 12',
+  ]
+  const xmlColumns = {
+    Date: XmlLoadColumn({
+      id: 'Date',
+      name: 'Date',
+      rules: '',
+      visible: true,
+      option: '',
+    }),
+    sortBy: XmlLoadColumn({
+      id: 'sortBy',
+      name: 'sortBy',
+      rules: '',
+      visible: true,
+      option: '',
+    }),
+  }
+  const singleDatasetChart = ref({
+    labels: [] as string[],
+    datasets: [] as any[],
+  })
+
+  const accessoryDatasetChart = ref({
+    labels: [] as string[],
+    datasets: [] as any[],
+  })
+
+  const parsedDateString = computed(() => {
+    return fieldValues.value.Date
+  })
+
+  const moneyFormatter = (money?: number) => {
+    if (money) return formatMoney(money, Currency.VND, Locale.VI_VN)
+  }
+
+  const onViewData = async () => {
+    await store.GetDashBoardManageOrder()
+  }
+
+  watch(
+    () => store.fieldValues.sortBy,
+    async (newVal, oldVal) => {
+      if (newVal !== oldVal) {
+        store.fields.setFieldValue('sortBy', newVal)
+        let slicedLabels: string[] = []
+        let slicedData: number[] = []
+        const val = Number(newVal)
+        switch (val) {
+          case 0: // "12 Months"
+            slicedLabels = allMonths
+            slicedData = allRevenueData.value
+            break
+          case 1: // "First 6 Months"
+            slicedLabels = allMonths.slice(0, 6)
+            slicedData = allRevenueData.value.slice(0, 6)
+            break
+          case 2: // "Later 6 Months"
+            slicedLabels = allMonths.slice(6, 12)
+            slicedData = allRevenueData.value.slice(6, 12)
+            break
+          case 3: // "1-3 Months"
+            slicedLabels = allMonths.slice(0, 3)
+            slicedData = allRevenueData.value.slice(0, 3)
+            break
+          case 4: // "4-6 Months"
+            slicedLabels = allMonths.slice(3, 6)
+            slicedData = allRevenueData.value.slice(3, 6)
+            break
+          case 5: // "7-9 Months"
+            slicedLabels = allMonths.slice(6, 9)
+            slicedData = allRevenueData.value.slice(6, 9)
+            break
+          case 6: // "10-12 Months"
+            slicedLabels = allMonths.slice(9, 12)
+            slicedData = allRevenueData.value.slice(9, 12)
+            break
+          default:
+            slicedLabels = allMonths
+            slicedData = allRevenueData.value
+        }
+
+        singleDatasetChart.value.labels = slicedLabels
+        singleDatasetChart.value.datasets[0].data = slicedData
+      }
+    }
+  )
+
+  onMounted(async () => {
+    await store.GetDashBoardManageOrder()
+    allRevenueData.value = store.DashBoardEntity.revenueData ?? []
+    singleDatasetChart.value.labels = allMonths
+    singleDatasetChart.value.datasets = [
+      {
+        type: 'bar',
+        label: 'Doanh thu (triệu đồng)',
+        backgroundColor: '#42A5F5',
+        data: allRevenueData.value,
+      },
+    ]
+    const accessoryData = store.DashBoardEntity.accessoryData ?? []
+    accessoryDatasetChart.value.labels = accessoryData.map((item) => item.accessoryName ?? '')
+    accessoryDatasetChart.value.datasets = [
+      {
+        type: 'bar',
+        label: 'Total sale products',
+        backgroundColor: '#42A5F5',
+        data: accessoryData.map((item) => item.totalSale),
+      },
+    ]
+  })
+
+  onUnmounted(() => {
+    store.$reset()
+  })
 </script>
