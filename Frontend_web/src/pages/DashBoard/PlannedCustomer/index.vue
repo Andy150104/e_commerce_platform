@@ -34,8 +34,8 @@
             </div>
             <div class="exchange-content">
               <div class="exchange-text">
-                <h3 class="dark:text-white">{{ item.exchangeName || 'N/A' }}</h3>
-                <p class="exchange-description">{{ item.description || 'N/A' }}</p>
+                <h3 class="text-xl font-bold dark:text-white">{{ item.exchangeName || 'N/A' }}</h3>
+                <p class="exchange-description" v-html="item.description || 'N/A'"></p>
                 <p class="exchange-status" :class="getStatusClass(item.status)">
                   {{ getStatusText(item.status) }}
                 </p>
@@ -59,8 +59,8 @@
             </div>
             <div class="exchange-content">
               <div class="exchange-text">
-                <h3 class="exchange-name">{{ item.exchangeName || 'N/A' }}</h3>
-                <p class="exchange-description">{{ item.description || 'N/A' }}</p>
+                <h3 class="text-xl font-bold dark:text-white">{{ item.exchangeName || 'N/A' }}</h3>
+                <p class="exchange-description" v-html="item.description || 'N/A'"></p>
                 <p class="exchange-status" :class="getStatusClass(item.status)">
                   {{ getStatusText(item.status) }}
                 </p>

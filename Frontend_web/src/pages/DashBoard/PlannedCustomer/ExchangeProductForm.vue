@@ -23,13 +23,7 @@
             :err-msg="fieldErrors.name"
             placeholder="Enter your Product name"
           />
-          <UserControlTextFieldLabel
-            :xml-column="xmlColumns.description"
-            :maxlength="200"
-            :err-msg="fieldErrors.description"
-            placeholder="Product description"
-          />
-  
+          <BaseControlEditorInput :xml-column="xmlColumns.description" v-model="editorValue" />
           <UserControlUploadImage :max-number-image="6" :is-show-popover="false" :label="'Upload up to 6 images'" />
   
           <div class="flex space-x-4">
@@ -49,6 +43,7 @@
   import UserControlUploadImage from '@PKG_SRC/components/UserControl/UserControlUploadImage.vue'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import { defineEmits } from 'vue';
+  import BaseControlEditorInput from '@PKG_SRC/components/Basecontrol/BaseControlEditorInput.vue'
   import { useAddExchangeStore } from '@PKG_SRC/stores/Modules/Blind_Box/AddExchangeStore'
   import { useUploadImageStore } from '@PKG_SRC/stores/Modules/usercontrol/uploadImageStore'
 
@@ -57,6 +52,7 @@
   const store = useAddExchangeStore()
   const successState = ref(false)
   const failedState = ref(false)
+  const editorValue = ref('')
   const visible = ref(false) // Điều khiển hiển thị popup
   const { fieldValues, fieldErrors } = storeToRefs(store)
   const formContext = useForm({ initialValues: fieldValues.value })
@@ -75,6 +71,7 @@
   }
   
   const AddExchange = async () => {
+    store.fields.setFieldValue('description',editorValue.value)
     const success = await store.addExchangeProduct();
   if (success) {
     emit('added'); // Emit event nếu thêm thành công
