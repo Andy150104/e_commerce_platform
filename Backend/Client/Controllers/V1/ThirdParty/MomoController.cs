@@ -50,8 +50,8 @@ namespace Client.Controllers.V1.ThirdParty
         public IActionResult PaymentCallBack()
         {
             const string updateRole = "https://localhost:5090/api/v1/UpdateRole";
-            const string trueUrl = "";
-            const string falseUrl = "";
+            string trueUrl = CommonUrl.PlanBuyingSuccess;
+            string falseUrl = CommonUrl.WebUrlTrackingFail;
             var response = _momoService.PaymentExecuteAsync(HttpContext.Request.Query);
             var orderPlan = _appDbContext.OrderPlans.FirstOrDefault(or => or.OrderId == Guid.Parse(response.OrderId));
             var plan = _appDbContext.Plans.AsNoTracking().FirstOrDefault(p => p.PlanId == orderPlan.PlanId);
@@ -64,7 +64,7 @@ namespace Client.Controllers.V1.ThirdParty
                 {
                     _appDbContext.OrderPlans.Remove(orderPlan);
                     _appDbContext.SaveChanges();
-                    return BadRequest();
+                    return Redirect(falseUrl);
                 }
             }
 
@@ -77,7 +77,7 @@ namespace Client.Controllers.V1.ThirdParty
 
                 //Update Role
                 var httpClient = new HttpClient();
-                var body = new { isOnlyValidation = false, userName = userName.FirstName, planId = orderPlan.PlanId };
+                var body = new { isOnlyValidation = false, userName = userName.UserName, planId = orderPlan.PlanId };
                 var res = httpClient.PostAsJsonAsync(updateRole, body).Result;
                 if (res.IsSuccessStatusCode)
                 {
@@ -88,7 +88,7 @@ namespace Client.Controllers.V1.ThirdParty
                 }
             }
 
-            return Ok(true);
+            return Redirect(trueUrl);
         }
 
         [HttpGet("Order")]

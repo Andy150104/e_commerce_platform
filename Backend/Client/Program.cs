@@ -86,6 +86,8 @@ builder.Services.AddDbContext<BBExTradingFloorContext>(options =>
 // Add services to the container.
 builder.Services.AddControllers();
 
+// SignalR Service
+builder.Services.AddSignalR();
 // Swagger configuration to output API type definitions
 builder.Services.AddOpenApiDocument(config =>
 {
@@ -156,6 +158,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();
+app.MapHub<ChatHub>("chat-hub");
 app.UseOpenApi();
 app.UseSwaggerUi();
 app.Run();

@@ -22,7 +22,7 @@
           </div>
           <CardContainer>
             <template #body>
-              <CardProduct2 ref="cardRef" :is-show-wish-list="false" :is-exchange="true" :product-model="store.produtList" :label-name="'Exchange now'" @on-buy="onBuyNow" :is-have-side-bar="true">
+              <CardProduct2 ref="cardRef" :is-show-wish-list="false" :is-exchange="true" :product-model="store.ExchangeList" :label-name="'Exchange now'" @on-buy="onBuyNow" :is-have-side-bar="true">
               </CardProduct2>
               <CardSkeleton v-if="store.isLoadingSkeletonCard" />
             </template>
@@ -60,8 +60,10 @@
   import { useForm } from 'vee-validate'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import BaseControlSearchOneField from '@PKG_SRC/components/Basecontrol/BaseControlSearchOneField.vue'
+import { useExchangeStore } from '@PKG_SRC/stores/Modules/Blind_Box/ExchangeStore'
 
   const store = useDisplayProductStore()
+  const exchangeStore = useExchangeStore()
   const searchStore = useSearchStore()
   const cartStore = useCartStore()
   const detailProductStore = useDetailProductStore()
@@ -120,7 +122,7 @@
     () => store.fieldValues.sortBy,
     async (newVal, oldVal) => {
       if (newVal !== oldVal) {
-        store.produtList = []
+        store.ExchangeList = []
         store.fields.setFieldValue('sortBy', newVal)
         await fetchProducts()
         initCarousels()
