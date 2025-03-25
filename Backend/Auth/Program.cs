@@ -189,4 +189,6 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseOpenApi();
 app.UseSwaggerUi();
+app.UseDeveloperExceptionPage();
+app.UseStatusCodePages(); 
 app.Run();
