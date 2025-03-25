@@ -329,6 +329,24 @@ export type TOSOrderDetailRequest = {
   quantity: number;
 }
 
+export type PaymentOrderCallbackResponse = AbstractApiResponseOfMomoResponse & {
+  response?: MomoResponse | undefined;
+}
+
+export type AbstractApiResponseOfMomoResponse = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: MomoResponse | null | undefined;
+}
+
+export type PaymentOrderCallbackRequest = AbstractApiRequest & {
+  orderId: string;
+  platform: number;
+}
+
 export type SelectOrderResponse = AbstractApiResponseOfSelectOrderEntity & {
   response?: SelectOrderEntity | undefined;
 }
@@ -397,6 +415,88 @@ export type AbstractApiResponseOfListOfSelectOrdersEntity = {
 }
 
 export type SelectOrdersRequest = AbstractApiRequest
+
+export type TrackingGhnOrderResponse = AbstractApiResponseOfGhnOrderResponse & {
+  response?: GhnOrderResponse | undefined;
+}
+
+export type GhnOrderResponse = {
+  code?: number | undefined;
+  message?: string | undefined;
+  data?: GhnOrderData | undefined;
+}
+
+export type GhnOrderData = {
+  returnName?: string | undefined;
+  returnPhone?: string | undefined;
+  returnAddress?: string | undefined;
+  returnWardCode?: string | undefined;
+  returnDistrictId?: number | undefined;
+  returnLocation?: GhnLocation | undefined;
+  fromName?: string | undefined;
+  fromPhone?: string | undefined;
+  fromAddress?: string | undefined;
+  fromWardCode?: string | undefined;
+  fromDistrictId?: number | undefined;
+  fromLocation?: GhnLocation | undefined;
+  toName?: string | undefined;
+  toPhone?: string | undefined;
+  toAddress?: string | undefined;
+  toWardCode?: string | undefined;
+  toDistrictId?: number | undefined;
+  toLocation?: GhnLocation | undefined;
+  weight?: number | undefined;
+  length?: number | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
+  codAmount?: number | undefined;
+  insuranceValue?: number | undefined;
+  requiredNote?: string | undefined;
+  content?: string | undefined;
+  items?: GhnOrderItem[] | undefined;
+  orderCode?: string | undefined;
+  status?: string | undefined;
+  leadtimeOrder?: GhnLeadTime | undefined;
+}
+
+export type GhnLocation = {
+  lat?: number | undefined;
+  long?: number | undefined;
+  cellCode?: string | undefined;
+  placeId?: string | undefined;
+  trustLevel?: number | undefined;
+  wardcode?: string | undefined;
+  mapSource?: string | undefined;
+}
+
+export type GhnOrderItem = {
+  name?: string | undefined;
+  code?: string | undefined;
+  quantity?: number | undefined;
+  length?: number | undefined;
+  width?: number | undefined;
+  height?: number | undefined;
+  weight?: number | undefined;
+  itemOrderCode?: string | undefined;
+}
+
+export type GhnLeadTime = {
+  fromEstimateDate?: string | undefined;
+  toEstimateDate?: string | undefined;
+}
+
+export type AbstractApiResponseOfGhnOrderResponse = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+
+  response?: GhnOrderResponse | null | undefined;
+}
+
+export type TrackingGhnOrderRequest = AbstractApiRequest & {
+  orderId: string;
+}
 
 export type AEPSAddExchangeAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;

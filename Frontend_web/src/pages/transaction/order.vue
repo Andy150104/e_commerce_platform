@@ -47,7 +47,7 @@
     const route = useRoute()
     const successParam = route.query.success ?? ''
     const orderIdParam = route.query.orderId ?? ''
-    const ghnOrderCodeParam = route.query.GhnOrderCode ?? ''
+    const ghnOrderCodeParam = route.query.ghnOrderCode ?? ''
     successValue.value = successParam === 'true'
     store.orderId = typeof orderIdParam === 'string' ? orderIdParam : ''
     store.GhnOrderCode = typeof ghnOrderCodeParam === 'string' ? ghnOrderCodeParam : ''

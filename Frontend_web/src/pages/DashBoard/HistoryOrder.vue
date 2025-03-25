@@ -2,9 +2,12 @@
   <BaseScreenDashBoard>
     <template #body>
       <div>
-        <h1 class=" animate-fade-down animate-duration-1000 animate-delay-300 mb-6 text-2xl font-bold text-gray-800">History Order</h1>
+        <h1 class="animate-fade-down animate-duration-1000 animate-delay-300 mb-6 text-2xl font-bold text-gray-800">History Order</h1>
         <div class="animate-fade-up animate-duration-1000 animate-delay-300 mx-auto p-4 sm:p-6 lg:p-8 max-h-[80vh] 3xl:mx-32 overflow-y-auto">
-          <div v-for="item in store.DOHSelectHistoryOrder" class="space-y-6 mb-12 animate-fade-right animate-once animate-duration-1000 animate-delay-[600ms] animate-ease-in-out">
+          <div
+            v-for="item in store.DOHSelectHistoryOrder"
+            class="space-y-6 mb-12 animate-fade-right animate-once animate-duration-1000 animate-delay-[600ms] animate-ease-in-out"
+          >
             <!-- Bắt đầu 1 Đơn hàng -->
             <div class="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
               <!-- Header đơn hàng: Mã đơn, Ngày đặt, Trạng thái, v.v. -->
@@ -54,10 +57,11 @@
                     :button-label="'Send Refund Request'"
                     :button-severity="'contrast'"
                     :width="'80rem'"
-                    @on-confirm=""
-                    @on-blinding-insert=""
+                    @on-confirm="onDoRefund"
+                    @on-blinding-insert="onBindlingData(item.orderId ?? '')"
                   >
                     <template #body>
+                      <BaseControlEditorInput :xml-column="xmlColumns.refundReason" v-model="editorValue" />
                     </template>
                   </ModalInputForm>
                 </div>
@@ -70,11 +74,36 @@
   </BaseScreenDashBoard>
 </template>
 <script setup lang="ts">
+  import BaseControlEditorInput from '@PKG_SRC/components/Basecontrol/BaseControlEditorInput.vue'
   import ModalInputForm from '@PKG_SRC/components/Modal/ModalInputForm.vue'
-import BaseScreenDashBoard from '@PKG_SRC/layouts/Basecreen/BaseScreenDashBoard.vue'
+  import BaseScreenDashBoard from '@PKG_SRC/layouts/Basecreen/BaseScreenDashBoard.vue'
   import { useDHOHistoryStore } from '@PKG_SRC/stores/Modules/DashBoard/DHOHistoryStore'
+  import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
+  import { useForm } from 'vee-validate'
 
   const store = useDHOHistoryStore()
+  const { fieldValues, fieldErrors } = storeToRefs(store)
+  const formContext = useForm({ initialValues: fieldValues.value })
+  store.SetFields(formContext)
+  const editorValue = ref('')
+  const orderId = ref<string>('')
+  const xmlColumns = {
+    refundReason: XmlLoadColumn({
+      id: 'refundReason',
+      name: 'Refund Reason',
+      rules: 'required',
+      visible: true,
+      option: '',
+    }),
+  }
+
+  const onBindlingData = (id :string) => {
+    orderId.value =  id
+  }
+
+  const onDoRefund = async () => {
+    await store.RefundMoney(orderId.value, editorValue.value)
+  }
 
   onMounted(async () => {
     await store.GetDashHistoryOrder()
