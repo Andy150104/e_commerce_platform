@@ -49,7 +49,14 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                 var blindBoxPost = _exchangeService.GetById(request.ExchangeId);
                 if (blindBoxPost == null)
                 {
-                    response.SetMessage(MessageId.I00000, CommonMessages.BlindBoxNotFound);
+                    response.SetMessage(MessageId.E00000, CommonMessages.BlindBoxNotFound);
+                    return;
+                }
+
+                var existQueue = Repository.Find(x => x.CreatedBy == userName).FirstOrDefault();
+                if(existQueue != null)
+                {
+                    response.SetMessage(MessageId.E00000, CommonMessages.AddQueueExist);
                     return;
                 }
 
@@ -195,8 +202,6 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
         // Begin transaction
         Repository.ExecuteInTransaction(() =>
         {
-            var user = _userService.SelectUserProfile(identityService).Response;
-
             var queue = Repository.Find(x => x.ExchangeId == request.ExchangeId, isTracking: false);
 
             if (request.SearchName != null)
@@ -204,17 +209,26 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                 queue = queue.Where(x => x.CreatedBy == request.SearchName);  
             }
 
+
             var res = queue.Select(x => new VEXSGetToQueueResponseEntity
             {
                 QueueId = x.QueueId,
                 DescriptionQueue = x.Description,
                 Status = x.Status,
-                userBirthday = user.BirthDate.Value,
-                userFullNameQueue = user.FirstName,
-                UserGender = user.Gender == 0 ? "Male" : "Female" ,
-                UserImage = user.ImageUrl,
-                UserPhone = user.PhoneNumber
+                userFullNameQueue = x.CreatedBy
             }).ToList();
+
+            foreach(var i in res)
+            {
+                if(i.userFullNameQueue != null)
+                {
+                    var user = _userService.GetById(i.userFullNameQueue);
+                    i.userBirthday = user.BirthDate.Value;
+                    i.UserGender = user.Gender == 0 ? "Male" : "Female";
+                    i.UserImage = user.ImageUrl;
+                    i.UserPhone = user.PhoneNumber;
+                }
+            }
 
             response.Response = res;
 

@@ -60,7 +60,7 @@ namespace Client.Controllers.V1.MomoPayment
 
                 //Update Role
                 var httpClient = new HttpClient();
-                var body = new { isOnlyValidation = false, userName = userName.FirstName, planId = orderPlan.PlanId };
+                var body = new { isOnlyValidation = false, userName = userName.UserName, planId = orderPlan.PlanId };
                 var res = httpClient.PostAsJsonAsync(updateRole, body).Result;
                 if (res.IsSuccessStatusCode)
                 {

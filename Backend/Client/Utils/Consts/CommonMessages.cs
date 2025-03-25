@@ -39,5 +39,7 @@ public class CommonMessages
     public static readonly string FailedToFetchGHNApi = "Failed to fetch GHN API";
 
     public static readonly string ListIsEmpty = "List is Empty";
+
+    public static readonly string AddQueueExist = "You already in queue!";
     
 }
