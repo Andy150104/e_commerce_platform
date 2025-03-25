@@ -112,7 +112,7 @@ public class LogicCommonRepository : ILogicCommonRepository
         var httpClient = new HttpClient();
         var contentList = new List<object>
         {
-            new { type = "text", text = "Is this image a blind box or Baby Three? The answer must be true or false." }
+            new { type = "text", text = "Determine if it is a blind box contained in a box or bag. Return only 'true' if it is a blind box that is contained within a box or bag, or 'false' if it is not." }
         };
         foreach (var url in imageUrls)
         {
