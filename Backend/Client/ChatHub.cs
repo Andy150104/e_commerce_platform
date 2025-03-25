@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Client.Services;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Client
 {
     public sealed class ChatHub : Hub
     {
+        private IMessageService _service;
+        public ChatHub(IMessageService messageService)
+        {
+            _service = messageService;
+        }
+
         private static Dictionary<string, string> ConnectedUsers = new();
 
         public async Task SendMessage(string sender, string receiver, string message)
@@ -11,6 +18,12 @@ namespace Client
             if (ConnectedUsers.TryGetValue(receiver, out string receiverConnectionId))
             {
                 await Clients.Client(receiverConnectionId).SendAsync("ReceiveMessage", sender, message);
+                _service.AddMessage(new MessageEntityRequest()
+                {
+                    ReceiverId = receiver,
+                    SenderId = sender,
+                    Content = message
+                });
             }
         }
 
