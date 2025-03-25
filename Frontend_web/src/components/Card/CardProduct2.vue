@@ -46,6 +46,7 @@
     <!-- Content Section -->
     <div class="p-6 flex flex-col flex-1">
       <h5 class="mb-2 text-xl font-semibold tracking-tight text-gray-800">{{ product.nameAccessory }}</h5>
+      <h5 class="mb-2 text-xl font-semibold tracking-tight text-gray-800">{{ product.exchangeName }}</h5>
       <div class="mb-4">
         <p class="text-sm text-gray-600">{{ product.shortDescription ?? "Don't have short description" }}</p>
       </div>
@@ -65,6 +66,9 @@
           <span class="text-gray-600 text-sm ml-2">{{ '(' + formatRating(product.averageRating ?? 0) + '/5.0)' }}</span>
         </div>
       </div>
+      <div class="text-gray-600 text-lg">
+          <p>Create By: {{ product.firstNameCreator + ' ' + product.lastNameCreator }}</p>
+        </div>
       <div class="flex items-center space-x-4 mt-auto">
         <button
           v-if="isShowButton2"
