@@ -1,5 +1,6 @@
 using Client.Models;
 using Client.Services;
+using Client.Utils.Consts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Client.Logics.Commons.Dashboard;
@@ -28,7 +29,7 @@ public class DashboardLogic : IDashboardLogic
     /// <returns></returns>
     public async Task<decimal> SelectTotalRevenueAsync()
     {
-        return await _orderService.FindView().SumAsync(x => x.TotalPrice);
+        return await _orderService.FindView(x => x.OrderStatus == ((byte) ConstantEnum.OrderStatus.Success)).SumAsync(x => x.TotalPrice);
     }
 
     /// <summary>
@@ -55,7 +56,10 @@ public class DashboardLogic : IDashboardLogic
         // 23:59:59
         DateTime dateTimeEnd = date.ToDateTime(TimeOnly.MaxValue); 
 
-        return await _orderService.FindView(o => o.CreatedAt >= dateTimeStart && o.CreatedAt <= dateTimeEnd)
+        return await _orderService.FindView(o =>
+                o.CreatedAt >= dateTimeStart &&
+                o.CreatedAt <= dateTimeEnd && 
+                o.OrderStatus == ((byte) ConstantEnum.OrderStatus.Success))
             .SumAsync(o => o.TotalPrice);
     }
 
@@ -65,7 +69,7 @@ public class DashboardLogic : IDashboardLogic
     /// <returns></returns>
     public async Task<int> SelectTotalOrdersAsync()
     {
-        return await _orderService.FindView().CountAsync();
+        return await _orderService.FindView(x => x.OrderStatus == ((byte) ConstantEnum.OrderStatus.Success)).CountAsync();
     }
 
     /// <summary>
@@ -76,7 +80,7 @@ public class DashboardLogic : IDashboardLogic
     {
         // Get revenues
         var revenues = await _orderService
-            .FindView()
+            .FindView(x => x.OrderStatus == ((byte) ConstantEnum.OrderStatus.Success))
             .GroupBy(o => o.CreatedAt.Value.Month)
             .Select(g => new { Month = g.Key, Total = g.Sum(o => o.TotalPrice) })
             .OrderBy(g => g.Month)
@@ -100,33 +104,25 @@ public class DashboardLogic : IDashboardLogic
     /// <returns></returns>
     public async Task<List<AccessoryDataResponse>> SelectBestSellingAccessoriesAsync()
     {
+        // Get Order Success
+        var orderIds = await _orderService
+            .FindView(o => o.OrderStatus == (byte) ConstantEnum.OrderStatus.Success)
+            .Select(o => o.OrderId)
+            .ToListAsync();
+        
         //Group data by AccessoryId and calculate total sale
-        var result = await _orderDetailService
-            .FindView()
-            .GroupBy(od => od.AccessoryId)
-            .Select(g => new
+        var bestSellingAccessories = await _orderDetailService
+            .FindView(od => orderIds.Contains(od.OrderId))
+            .GroupBy(od => new { od.AccessoryId, od.ProductName }) // Join Accessory luôn
+            .Select(g => new AccessoryDataResponse
             {
-                AccessoryId = g.Key,
+                AccessoryName = g.Key.ProductName,
                 TotalSale = g.Sum(od => od.Quantity)
             })
             .OrderByDescending(g => g.TotalSale)
             .ToListAsync();
 
-        // Get list of AccessoryId from result
-        var accessoryIds = result.Select(r => r.AccessoryId).ToList();
-
-        // Get list of AccessoryName from AccessoryId
-        var accessoryNames = await _accessoryService.FindView(a => accessoryIds.Contains(a.AccessoryId))
-            .ToDictionaryAsync(a => a.AccessoryId, a => a.AccessoryName);
-
-        // Create response
-        var bestSellingProducts = result.Select(r => new AccessoryDataResponse
-        {
-            AccessoryName = accessoryNames.ContainsKey(r.AccessoryId) ? accessoryNames[r.AccessoryId] : "",
-            TotalSale = r.TotalSale
-        }).ToList();
-
-        return bestSellingProducts;
+        return bestSellingAccessories;
     }
 
 }

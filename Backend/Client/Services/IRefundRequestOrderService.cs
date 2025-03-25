@@ -12,8 +12,10 @@ public interface IRefundRequestOrderService : IBaseService<RefundRequestsOrder, 
     RRODeleteRefundRequestOrderResponse DeleteRefundRequestOrder(RRODeleteRefundRequestOrderRequest request, IIdentityService identityService);
     
     RROSelectRefundRequestOrdersResponse SelectRefundRequestOrders();
+    RROSelectRefundRequestOrdersResponse SelectRefundRequestOrders(IIdentityService identityService);
         
     RROSelectRefundRequestOrderResponse SelectRefundRequestOrder(RROSelectRefundRequestOrderRequest request);
+    RROSelectRefundRequestOrderResponse SelectRefundRequestOrder(RROSelectRefundRequestOrderRequest request, IIdentityService identityService);
     
     RROApproveRefundRequestOrderResponse ApproveRefundRequestOrder(RROApproveRefundRequestOrderRequest request, IIdentityService identityService);
 }
