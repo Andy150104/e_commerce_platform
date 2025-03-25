@@ -133,7 +133,7 @@ public class ExchangeRecheckRequestService : BaseService<ExchangeRecheckRequest,
             if(exist != null)
             {
                 response.SetMessage(MessageId.E00000, CommonMessages.ReCheckExist);
-                return;
+                return false;
             }
 
             var exchangeReCheckRequest = new ExchangeRecheckRequest

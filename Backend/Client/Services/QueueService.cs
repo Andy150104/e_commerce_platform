@@ -50,14 +50,14 @@ public class QueueService : BaseService<Queue, Guid, object>, IQueueService
                 if (blindBoxPost == null)
                 {
                     response.SetMessage(MessageId.E00000, CommonMessages.BlindBoxNotFound);
-                    return;
+                    return false;
                 }
 
                 var existQueue = Repository.Find(x => x.CreatedBy == userName).FirstOrDefault();
                 if(existQueue != null)
                 {
                     response.SetMessage(MessageId.E00000, CommonMessages.AddQueueExist);
-                    return;
+                    return false;
                 }
 
                 var queue = new Queue
