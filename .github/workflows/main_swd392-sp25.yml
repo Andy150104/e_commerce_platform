@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - Backend
+name: Deploy Multiple APIs to Azure Web App
 
 on:
   push:
@@ -9,46 +9,34 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: read
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up .NET Core
+      - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
-      # Build cả 2 project
-      - name: Build Auth API
-        run: dotnet build Backend/Auth -c Release
+      - name: Build & Publish Backend
+        run: |
+          dotnet publish ./client/Client.csproj -c Release -o backend/client
+          dotnet publish ./auth/Auth.csproj -c Release -o backend/auth
 
-      - name: Build Client API
-        run: dotnet build Backend/Client -c Release
-
-      # Publish cả 2 project
-      - name: Publish Auth API
-        run: dotnet publish Backend/Auth -c Release -o "${{env.DOTNET_ROOT}}/auth"
-
-      - name: Publish Client API
-        run: dotnet publish Backend/Client -c Release -o "${{env.DOTNET_ROOT}}/client"
-
-      # Upload artifact cho quá trình deploy
-      - name: Upload artifacts
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: backend-artifacts
-          path: |
-            ${{env.DOTNET_ROOT}}/auth
-            ${{env.DOTNET_ROOT}}/client
+          path: backend/
 
   deploy:
     runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
       - name: Download artifacts
@@ -63,18 +51,20 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Deploy Client API lên App Service Client
+      # Deploy Client API vào thư mục /client
       - name: Deploy Client API
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'client-api-app-name'
-          slot-name: 'Production'
+          app-name: 'swd392-sp25'  # Tên App Service của bạn
           package: './client'
+          slot-name: 'Production'
+          target-path: 'site/wwwroot/client'
 
-      # Deploy Auth API lên App Service Auth
+      # Deploy Auth API vào thư mục /auth
       - name: Deploy Auth API
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'auth-api-app-name'
-          slot-name: 'Production'
+          app-name: 'swd392-sp25'  # Tên App Service của bạn
           package: './auth'
+          slot-name: 'Production'
+          target-path: 'site/wwwroot/auth'
