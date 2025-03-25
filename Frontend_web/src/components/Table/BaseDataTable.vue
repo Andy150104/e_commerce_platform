@@ -94,7 +94,12 @@
           <InputText v-else v-model="filterModel.value" type="text" @input="filterCallback()" :placeholder="`Search by ${col.header}`" />
         </template>
       </Column>
-      <Column field="statusText" header="Status"  v-if="!showActions">
+      <Column field="description" header="Description" :sortable="true" v-if="showHActions">
+        <template #body="{ data }">
+          <div v-html="data.description"></div>
+        </template>
+      </Column>
+      <Column field="statusText" header="Status"  v-if="showHActions">
         <template #body="{ data }">
           <span
             :class="{
@@ -191,11 +196,13 @@
       pageSize?: number
       isSelectedColumns?: boolean
       showActions?: boolean
+      showHActions?: boolean
     }>(),
     {
       pageSize: 10,
       isSelectedColumns: false,
       showActions: true, // Mặc định bật
+      showHActions: false,
     }
   )
   const loading = ref(false)
