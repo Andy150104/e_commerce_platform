@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy ASP.Net Core app to Azure Web App - swd392-sp25
+name: Build and deploy ASP.Net Core app to Azure Web App - Backend
 
 on:
   push:
@@ -13,56 +10,71 @@ jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
+      # Build cả 2 project
+      - name: Build Auth API
+        run: dotnet build Backend/Auth -c Release
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+      - name: Build Client API
+        run: dotnet build Backend/Client -c Release
 
-      - name: Upload artifact for deployment job
+      # Publish cả 2 project
+      - name: Publish Auth API
+        run: dotnet publish Backend/Auth -c Release -o "${{env.DOTNET_ROOT}}/auth"
+
+      - name: Publish Client API
+        run: dotnet publish Backend/Client -c Release -o "${{env.DOTNET_ROOT}}/client"
+
+      # Upload artifact cho quá trình deploy
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: backend-artifacts
+          path: |
+            ${{env.DOTNET_ROOT}}/auth
+            ${{env.DOTNET_ROOT}}/client
 
   deploy:
     runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
 
     steps:
-      - name: Download artifact from build job
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
-      
+          name: backend-artifacts
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_155493C27DC34369B3D0402AB82ECCA1 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0880174799A7415A9B2AA6383334B083 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_708514DDC36E459496F30AEB74D31B29 }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      # Deploy Client API lên App Service Client
+      - name: Deploy Client API
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'swd392-sp25'
+          app-name: 'client-api-app-name'
           slot-name: 'Production'
-          package: .
-          
+          package: './client'
+
+      # Deploy Auth API lên App Service Auth
+      - name: Deploy Auth API
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'auth-api-app-name'
+          slot-name: 'Production'
+          package: './auth'
