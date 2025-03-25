@@ -536,6 +536,7 @@ public partial class BBExTradingFloorContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
+            entity.Property(e => e.IsActive).HasColumnName("is_active");
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(50)
                 .HasColumnName("created_by");

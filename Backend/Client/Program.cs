@@ -61,6 +61,7 @@ builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("Mo
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IGHNLogic, GHNLogics>();
 builder.Services.AddScoped<IDashboardLogic, DashboardLogic>();
+builder.Services.AddScoped<IMessageService, MessageService>();
 
 builder.Services.AddScoped<IIdentityApiClient, IdentityApiClient>();
 
