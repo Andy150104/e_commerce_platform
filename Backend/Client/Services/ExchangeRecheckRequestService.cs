@@ -129,6 +129,13 @@ public class ExchangeRecheckRequestService : BaseService<ExchangeRecheckRequest,
 
             var exchange = _exchangeService.GetFailExchangeAccessory(new AEPSGetFailExchangeAccessoryRequest (), identityService).Response.FirstOrDefault(x => x.ExchangeId == request.ExchangeId);
 
+            var exist = Repository.Find(x => x.CreatedBy == userName).FirstOrDefault();
+            if(exist != null)
+            {
+                response.SetMessage(MessageId.E00000, CommonMessages.ReCheckExist);
+                return false;
+            }
+
             var exchangeReCheckRequest = new ExchangeRecheckRequest
             {
                 RequestId = Guid.NewGuid(),

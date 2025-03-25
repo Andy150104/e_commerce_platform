@@ -29,4 +29,14 @@ public class CommonUrl
     /// Url for mobile tracking fail
     /// </summary>
     public static readonly string MobileUrlTrackingFail = "https://localhost:5090/api/v1/UpdateRole";
+
+    /// <summary>
+    /// Url for Plan Buying success
+    /// </summary>
+    public static readonly string PlanBuyingSuccess = "https://localhost:3000/transaction/order?success=true";
+
+    /// <summary>
+    /// Url for Plan Buying fail
+    /// </summary>
+    public static readonly string PlanBuyingFail = "https://localhost:3000/transaction/order?success=true";
 }
