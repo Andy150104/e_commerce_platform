@@ -144,6 +144,10 @@
                   link: '/Manage/Revenue',
                   childItemName: 'Revenue',
                 },
+                {
+                  link: '/Manage/ExchangeRQ',
+                  childItemName: 'Manage Recheck Request',
+                },
               ]"
             >
               <template #body>

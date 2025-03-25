@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@aspida/axios": "^1.14.0",
+    "@microsoft/signalr": "^8.0.7",
     "@nuxthq/ui": "^2.7.0",
     "@pinia/nuxt": "^0.9.0",
     "@primeuix/themes": "^1.0.0",

@@ -199,8 +199,12 @@
             :item-name="'Product'"
             :option="[
               {
-                link: '/Manage/Product/OrderExchange',
+                link: '/Dashboard/HistoryOrder',
                 childItemName: 'History order',
+              },
+              {
+                link: '/Dashboard/OrderExchange',
+                childItemName: 'Exchange History',
               },
               {
                 link: '/Dashboard/Wishlist',

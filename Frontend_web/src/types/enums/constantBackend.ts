@@ -17,3 +17,12 @@ export enum SortBy {
   Newest = 4,
   Oldest = 5,
 }
+export enum SortByChart {
+  "12 Months" = 0,
+  "First 6 Months" = 1,
+  "Later 6 Months" = 2,
+  "1-3 Months" = 3,
+  "4-6 Months" = 4,
+  "7-9 Months" = 5,
+  "10-12 Months" = 6,
+}

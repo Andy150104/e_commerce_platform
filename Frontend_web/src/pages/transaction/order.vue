@@ -28,25 +28,29 @@
         Your premium subscription will expire on <strong>June 2, 2024</strong>.
       </p>
       <!-- Nút hành động -->
-      <a href="#" class="inline-block rounded-md bg-green-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-green-500">
+      <router-link to="/Dashboard/UserProfile" class="inline-block rounded-md bg-green-600 px-5 py-2 font-semibold text-white transition-colors hover:bg-green-500">
         Your dashboard
-      </a>
+      </router-link>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+  import { useTransactionStore } from '@PKG_SRC/stores/Modules/Transaction/transactionStore'
+  import { ref, computed, onMounted } from 'vue'
+  import { useRoute } from 'vue-router'
 
-const successValue = ref<boolean>(false)
-const isSuccess = computed(() => successValue.value)
+  const store = useTransactionStore()
+  const successValue = ref<boolean>(false)
+  const isSuccess = computed(() => successValue.value)
 
-onMounted(() => {
-  const route = useRoute()
-  let querySuccess = route.query.success
-  if (Array.isArray(querySuccess)) {
-    querySuccess = querySuccess[0]
-  }
-  successValue.value = querySuccess === 'true'
-})
+  onMounted(() => {
+    const route = useRoute()
+    const successParam = route.query.success ?? ''
+    const orderIdParam = route.query.orderId ?? ''
+    const ghnOrderCodeParam = route.query.ghnOrderCode ?? ''
+    successValue.value = successParam === 'true'
+    store.orderId = typeof orderIdParam === 'string' ? orderIdParam : ''
+    store.GhnOrderCode = typeof ghnOrderCodeParam === 'string' ? ghnOrderCodeParam : ''
+    store.updateOrder()
+  })
 </script>

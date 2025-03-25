@@ -1,37 +1,37 @@
 <template>
-      <Chart type="bar" :data="computedChartData" :options="computedChartOptions" class="w-full h-[30rem]" />
-  </template>
-  
-  <script lang="ts" setup>
+  <Chart type="bar" :data="computedChartData" :options="computedChartOptions" class="w-full h-[30rem] 3xl:h-[50rem]" />
+</template>
+
+<script lang="ts" setup>
   import { computed } from 'vue'
-  
+
   interface ChartDataType {
     labels: string[]
     datasets: any[]
   }
-  
+
   interface ChartOptionsType {
     maintainAspectRatio: boolean
     aspectRatio: number
     plugins: Record<string, any>
     scales: Record<string, any>
+    indexAxis?: 'x' | 'y'
+    [key: string]: any
   }
-  
+
   // Định nghĩa props để có thể truyền data từ ngoài vào
   const props = defineProps<{
     chartData?: ChartDataType
     chartOptions?: ChartOptionsType
+    isHorizontal?: boolean
   }>()
-  
+
   // Lấy style từ document để dùng cho default data/options
   const documentStyle = getComputedStyle(document.documentElement)
-  
+
   // Hàm tạo dữ liệu mặc định cho Chart
   const defaultChartData = (): ChartDataType => ({
-    labels: [
-      'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 
-      'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
-    ],
+    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
     datasets: [
       {
         type: 'line',
@@ -40,7 +40,7 @@
         borderWidth: 2,
         fill: false,
         tension: 0.4,
-        data: [30, 45, 40, 60, 55, 65, 70]
+        data: [30, 45, 40, 60, 55, 65, 70],
       },
       {
         type: 'bar',
@@ -48,56 +48,68 @@
         backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
         data: [15, 20, 25, 30, 28, 35, 32],
         borderColor: 'white',
-        borderWidth: 2
+        borderWidth: 2,
       },
       {
         type: 'bar',
         label: 'Lợi nhuận (triệu đồng)',
         backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-        data: [15, 25, 15, 30, 27, 30, 38]
-      }
-    ]
+        data: [15, 25, 15, 30, 27, 30, 38],
+      },
+    ],
   })
-  
+
   // Hàm tạo options mặc định cho Chart
-  const defaultChartOptions = (): ChartOptionsType => {
+  const defaultChartOptions = (isHorizontal: boolean): ChartOptionsType => {
     const textColor = documentStyle.getPropertyValue('--p-text-color')
     const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color')
     const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color')
-  
+
     return {
       maintainAspectRatio: false,
       aspectRatio: 0.6,
+      indexAxis: isHorizontal ? 'y' : 'x',
       plugins: {
         legend: {
           labels: {
-            color: textColor
-          }
-        }
+            color: textColor,
+          },
+        },
       },
       scales: {
         x: {
           ticks: {
-            color: textColorSecondary
+            color: textColorSecondary,
           },
           grid: {
-            color: surfaceBorder
-          }
+            color: surfaceBorder,
+          },
         },
         y: {
           ticks: {
-            color: textColorSecondary
+            color: textColorSecondary,
           },
           grid: {
-            color: surfaceBorder
-          }
+            color: surfaceBorder,
+          },
+        },
+      },
+      // Thêm onClick để bắt sự kiện click
+      onClick: (_: any, elements: any, chart: any) => {
+        if (elements && elements.length > 0) {
+          const element = elements[0]
+          const datasetIndex = element.datasetIndex
+          const dataIndex = element.index
+          const dataset = chart.data.datasets[datasetIndex]
+          const value = dataset.data[dataIndex]
+
+          console.log('Giá trị cột được click:', value)
         }
-      }
+      },
     }
   }
-  
+
   // Sử dụng computed để ưu tiên sử dụng props nếu được truyền, ngược lại dùng default
   const computedChartData = computed(() => props.chartData || defaultChartData())
-  const computedChartOptions = computed(() => props.chartOptions || defaultChartOptions())
-  </script>
-  
+  const computedChartOptions = computed(() => props.chartOptions || defaultChartOptions(props.isHorizontal ?? false))
+</script>
