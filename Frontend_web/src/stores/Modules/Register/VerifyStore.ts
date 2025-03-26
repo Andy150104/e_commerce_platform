@@ -82,8 +82,6 @@ export const useVerifyStore = defineStore('Verify', {
       return true
     },
     async RegisterUserClient(key: string) {
-      const validation: any = await this.fields.validate()
-      if (validation.valid === false) return false
       const apiClient = useApiClient()
       const formMessage = useFormMessageStore()
       const useImageStore = useUploadImageStore()
@@ -111,7 +109,6 @@ export const useVerifyStore = defineStore('Verify', {
         return false
       }
       formMessage.SetFormMessage(res as AbstractApiResponseOfString, true)
-      this.activeAccount(key)
       return true
     },
     async activeAccount(key: string) {

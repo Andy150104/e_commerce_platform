@@ -207,7 +207,8 @@
   const onMoveToConfirmStep = async () => {
     isNext.value = true
     if (store.createFlgPlan) {
-      store.RegisterUserClient(String(route.query.key))
+      await store.RegisterUserClient(String(route.query.key))
+      await store.activeAccount(String(route.query.key))
       updateFlags(false, false, false, true)
       window.location.href = 'http://localhost:3000/Home'
       return
