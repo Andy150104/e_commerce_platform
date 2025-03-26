@@ -140,7 +140,8 @@
             </template>
           </DropDownControl>
         </li>
-        <li v-if="verifyTokenStore.roleName === 'PlannedCustomer'">
+        <div>
+          <li v-show="verifyTokenStore.roleName === 'PlannedCustomer'">
           <DropDownControl
             :item-name="'My VIP'"
             :option="[
@@ -173,6 +174,7 @@
             </template>
           </DropDownControl>
         </li>
+        </div>
         <li>
           <router-link
             to="/DashBoard/Message"
@@ -270,7 +272,9 @@
     verifyTokenStore.GetRoleName()
     window.addEventListener('resize', handleResize)
     initFlowbite()
-    initDropdowns()
+    setTimeout(() =>{
+      initDropdowns()
+    },1000)
   })
   onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
