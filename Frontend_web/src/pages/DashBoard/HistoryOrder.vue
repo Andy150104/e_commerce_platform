@@ -17,12 +17,19 @@
                   <span>Ngày đặt: {{ item.createdAt }}</span>
                   <span
                     >Trạng thái:
-                    <span class="font-semibold text-green-600">Đã hoàn thành</span>
+                    <span v-if="item.status === StatusOrder.Processing" class="font-semibold text-yellow-400">Processing</span>
+                    <span v-if="item.status === StatusOrder.Failed" class="font-semibold text-red-600">Failed</span>
+                    <span v-if="item.status === StatusOrder.Success" class="font-semibold text-green-600">Success</span>
                   </span>
                 </div>
                 <!-- Nút Xem chi tiết (tuỳ chọn) -->
                 <div class="mt-3 sm:mt-0">
-                  <button class="rounded-md bg-blue-600 px-4 py-2 text-sm text-white transition hover:bg-blue-700">Xem chi tiết</button>
+                  <button
+                    class="rounded-md bg-blue-600 px-4 py-2 text-sm text-white transition hover:bg-blue-700"
+                    @click="onRePayment(item.orderId ?? '')"
+                  >
+                    Pay back
+                  </button>
                 </div>
               </div>
 
@@ -78,6 +85,7 @@
   import ModalInputForm from '@PKG_SRC/components/Modal/ModalInputForm.vue'
   import BaseScreenDashBoard from '@PKG_SRC/layouts/Basecreen/BaseScreenDashBoard.vue'
   import { useDHOHistoryStore } from '@PKG_SRC/stores/Modules/DashBoard/DHOHistoryStore'
+  import { StatusOrder } from '@PKG_SRC/types/enums/constantFrontend'
   import { XmlLoadColumn } from '@PKG_SRC/utils/xml'
   import { useForm } from 'vee-validate'
 
@@ -97,12 +105,16 @@
     }),
   }
 
-  const onBindlingData = (id :string) => {
-    orderId.value =  id
+  const onBindlingData = (id: string) => {
+    orderId.value = id
   }
 
   const onDoRefund = async () => {
     await store.RefundMoney(orderId.value, editorValue.value)
+  }
+
+  const onRePayment = async (orderId: string) => {
+    await store.RePayment(orderId)
   }
 
   onMounted(async () => {

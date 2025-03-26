@@ -1,4 +1,8 @@
+import { useApiClient } from '@PKG_SRC/composables/Client/apiClient'
+import { useUserStore } from '@PKG_SRC/stores/master/userStore'
 import { defineStore } from 'pinia'
+import { useLoadingStore } from '../usercontrol/loadingStore'
+import { useFormMessageStore } from '@PKG_SRC/stores/master/formMessageStore'
 
 export interface ConversationItem {
   receiverId: string
@@ -11,7 +15,7 @@ export interface ConversationItem {
 
 export interface ChatMessage {
   conversationId: string
-  sender: 'mine' | 'other'
+  sender: string
   content: string
   time: string
 }
@@ -19,64 +23,59 @@ export interface ChatMessage {
 export const useTest2Store = defineStore('test2', {
   state: () => ({
     conversations: [] as ConversationItem[],
-    messages: {} as Record<string, ChatMessage[]>
+    messages: {} as Record<string, ChatMessage[]>,
   }),
 
   actions: {
-    GetMessage() {
-      this.conversations = [
-        {
-          receiverId: 'User01',
-          receiverName: 'Jay',
-          avatar: 'https://i.pravatar.cc/40?img=1',
-          time: '12:30',
-          lastMessage: 'Hello from Jay',
-          unreadCount: 0
-        },
-        {
-          receiverId: 'User02',
-          receiverName: 'Playmaka',
-          avatar: 'https://i.pravatar.cc/40?img=1',
-          time: '12:30',
-          lastMessage: 'Hello from Jay',
-          unreadCount: 0
-        },
-        {
-          receiverId: 'User03',
-          receiverName: 'Maria',
-          avatar: 'https://i.pravatar.cc/40?img=2',
-          time: '12:32',
-          lastMessage: 'Hello from Maria',
-          unreadCount: 0
-        },
-        {
-          receiverId: 'User04',
-          receiverName: 'UserC',
-          avatar: 'https://i.pravatar.cc/40?img=3',
-          time: '12:33',
-          lastMessage: 'Hi there...',
-          unreadCount: 0
-        }
-      ]
-    },
-
-    GetMessageById(id: string) {
-      if (!this.messages[id]) {
-        this.messages[id] = [
-          {
-            conversationId: id,
-            sender: 'other',
-            content: `Hello from ${id}`,
-            time: '12:30'
-          },
-          {
-            conversationId: id,
-            sender: 'mine',
-            content: `Hi ${id}, how are you?`,
-            time: '12:31'
-          }
-        ]
+    async GetMessage() {
+      const apiClient = useApiClient()
+      const loadingStore = useLoadingStore()
+      const formMessage = useFormMessageStore()
+      loadingStore.LoadingChange(true)
+      const res = await apiClient.api.v1.GetMessage.$get()
+      loadingStore.LoadingChange(false)
+      if (!res.success) {
+        return false
       }
+      if (res.response) {
+        this.conversations = res.response.map((item) => ({
+          receiverId: item.receiverId || '',
+          receiverName: item.receiverName || '',
+          avatar: item.avatar || '',
+          time: item.time || '',
+          lastMessage: item.lastMessage || '',
+          unreadCount: 0,
+        }))
+      }
+      return true
+    },
+    GetConversationById(id: string): ConversationItem | undefined {
+      return this.conversations.find((c) => c.receiverId === id)
+    },
+    async GetMessageById(id: string) {
+      const apiClient = useApiClient()
+      const loadingStore = useLoadingStore()
+      const formMessage = useFormMessageStore()
+      loadingStore.LoadingChange(true)
+      const res = await apiClient.api.v1.GetMessageWUserName.$get({
+        query:{
+          UserName: id
+        }
+      })
+      loadingStore.LoadingChange(false)
+      if (!res.success) {
+        formMessage.SetFormMessageNotApiRes('E00001', true, res.message ?? '')
+        return false
+      }
+      if (res.response) {
+        this.messages[id] = res.response.map(item => ({
+          conversationId: item.conversationId ?? '',
+          sender: item.sender ?? 'mine',
+          content: item.content ?? '',
+          time: item.createdAt ?? ''
+        }))
+      }
+      return true
     },
 
     // Hàm push tin nhắn mới
@@ -91,6 +90,6 @@ export const useTest2Store = defineStore('test2', {
         conv.lastMessage = newMsg.content
         conv.time = newMsg.time
       }
-    }
-  }
+    },
+  },
 })

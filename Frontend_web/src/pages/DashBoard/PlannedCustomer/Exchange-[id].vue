@@ -10,8 +10,6 @@
             <div class="h-[80vh] space-y-4 overflow-y-auto">
               <!-- Trường hợp không có hàng đợi -->
               <div v-if="store.queueListDetail.length === 0" class="text-gray-500 text-lg text-center">No queue available</div>
-
-              <!-- Vòng lặp hiển thị từng Queue -->
               <div
                 v-for="queueDetail in store.queueListDetail"
                 :key="queueDetail.queueId"
@@ -129,6 +127,11 @@
                   Approve Exchange
                 </button>
                 <div v-else-if="selectedQueueDetail?.status === 2 && updatedQueueDetail?.status !== 3" class="space-x-2">
+                  <ModelFullScreen class="ml-3 mb-4">
+                    <template #body>
+                      <ChatGateWay :user-name="userStore.UserInfo.usrId" :receiver-id="selectedQueueDetail.userFullNameQueue" />
+                    </template>
+                  </ModelFullScreen>
                   <button @click="FinaleApproveQueue(true)" class="rounded bg-green-500 px-4 py-2 font-medium text-white hover:bg-green-600">
                     Accept
                   </button>
@@ -190,8 +193,10 @@
 </template>
 
 <script setup lang="ts">
-  import QueueDetailPanel from '@PKG_SRC/components/Modal/QueueDetailPanel.vue'
+  import ChatGateWay from '@PKG_SRC/components/Chat/ChatGateWay.vue'
+  import ModelFullScreen from '@PKG_SRC/components/Modal/ModelFullScreen.vue'
   import BaseScreenDashBoard from '@PKG_SRC/layouts/Basecreen/BaseScreenDashBoard.vue'
+  import { useUserStore } from '@PKG_SRC/stores/master/userStore'
   import { useExchangeStore } from '@PKG_SRC/stores/Modules/Blind_Box/ExchangeStore'
   import { useQueueStore } from '@PKG_SRC/stores/Modules/DashBoard/PlannedCustomer/queueStore'
   import { ref, onMounted, onUnmounted } from 'vue'
@@ -200,6 +205,7 @@
   const exchangeStore = useExchangeStore()
   const selectedQueueDetail = ref<any>()
   const isMobilePanelVisible = ref(false)
+  const userStore = useUserStore()
   const rightPanelKey = ref(0)
   const route = useRoute()
   const isMobile = ref(window.innerWidth < 768) // Kiểm tra nếu là mobile
@@ -280,7 +286,6 @@
 
   onMounted(async () => {
     await exchangeStore.GetByExchangeID(ExchangeId.value)
-    // Kiểm tra trạng thái của exchangeDetails để hiển thị modal thông báo
     if (exchangeStore.exchangeDetails?.status === 3 || exchangeStore.exchangeDetails?.status === 4) {
       showExchangeCompletedModal.value = true
     }

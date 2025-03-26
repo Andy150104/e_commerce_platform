@@ -51,3 +51,9 @@ export enum Catogry {
   ParentCategory = '0',
   ChildCategory = '1',
 }
+
+export enum StatusOrder {
+  Processing = 1,
+  Success = 2,
+  Failed = 3,
+}

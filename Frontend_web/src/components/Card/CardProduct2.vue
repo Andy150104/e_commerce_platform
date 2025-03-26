@@ -67,7 +67,7 @@
         </div>
       </div>
       <div class="text-gray-600 text-lg">
-          <p>Create By: {{ product.firstNameCreator + ' ' + product.lastNameCreator }}</p>
+          <p v-if="product.firstNameCreator || product.lastNameCreator ">Create By: {{ product.firstNameCreator + ' ' + product.lastNameCreator }}</p>
         </div>
       <div class="flex items-center space-x-4 mt-auto">
         <button

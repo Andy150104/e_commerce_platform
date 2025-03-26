@@ -633,6 +633,47 @@ export type AEPSSendExchangeRecheckRequestAccessoryRequest = AbstractApiRequest 
   description?: string | null | undefined;
 }
 
+export type GetMessageResponse = AbstractApiResponseOfListOfGetMessageEntity & {
+  response?: GetMessageEntity[] | undefined;
+}
+
+export type GetMessageEntity = {
+  receiverId?: string | undefined;
+  receiverName?: string | undefined;
+  avatar?: string | undefined;
+  time?: string | undefined;
+  lastMessage?: string | undefined;
+}
+
+export type AbstractApiResponseOfListOfGetMessageEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: GetMessageEntity[] | null | undefined;
+}
+
+export type GetMessageRequest = AbstractApiRequest
+
+export type GetMessageWUserNameResponse = AbstractApiResponseOfListOfGetMessageWEntity & {
+  response?: GetMessageWEntity[] | undefined;
+}
+
+export type GetMessageWEntity = {
+  conversationId?: string | undefined;
+  sender?: string | undefined;
+  content?: string | undefined;
+  createdAt?: string | null | undefined;
+}
+
+export type AbstractApiResponseOfListOfGetMessageWEntity = {
+  success?: boolean | undefined;
+  messageId?: string | undefined;
+  message?: string | undefined;
+  detailErrorList?: DetailError[] | undefined;
+  response?: GetMessageWEntity[] | null | undefined;
+}
+
 export type VEXSGetOrderExchangeResponse = AbstractApiResponseOfListOfVEXSGetOrderExchangeResponseEntity & {
   response?: VEXSGetOrderExchangeResponseEntity[] | undefined;
 }
@@ -1023,6 +1064,7 @@ export type MPSUpdateAccessoryResponse = AbstractApiResponseOfString & {
 export type MSPInsertImageAccessoryResponse = AbstractApiResponseOfString & {
   response?: string | undefined;
 }
+
 export type AbstractApiRequest = {
   
 }
