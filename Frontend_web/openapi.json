@@ -871,6 +871,76 @@
         ]
       }
     },
+    "/api/v1/GetMessage": {
+      "get": {
+        "tags": [
+          "GetMessage"
+        ],
+        "operationId": "GetMessage_Get",
+        "parameters": [
+          {
+            "name": "request",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/GetMessageRequest"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMessageResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/GetMessageWUserName": {
+      "get": {
+        "tags": [
+          "GetMessageWUserName"
+        ],
+        "operationId": "GetMessageWUserName_Get",
+        "parameters": [
+          {
+            "name": "UserName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMessageWUserNameResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT Token": []
+          }
+        ]
+      }
+    },
     "/api/v1/HSShowPlan": {
       "get": {
         "tags": [
@@ -5014,6 +5084,155 @@
             }
           }
         ]
+      },
+      "GetMessageResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfGetMessageEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetMessageEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetMessageEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "receiverId": {
+            "type": "string"
+          },
+          "receiverName": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastMessage": {
+            "type": "string"
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfGetMessageEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/GetMessageEntity"
+            }
+          }
+        }
+      },
+      "GetMessageRequest": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiRequest"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
+      },
+      "GetMessageWUserNameResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AbstractApiResponseOfListOfGetMessageWEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "response": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/GetMessageWEntity"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetMessageWEntity": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "conversationId": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "AbstractApiResponseOfListOfGetMessageWEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "detailErrorList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetailError"
+            }
+          },
+          "response": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/GetMessageWEntity"
+            }
+          }
+        }
       },
       "VEXSGetOrderExchangeResponse": {
         "allOf": [

@@ -1,6 +1,6 @@
 <template>
   <!-- Container chính -->
-  <div class="flex h-screen overflow-hidden bg-gray-100">
+  <div class="flex h-[80vh] overflow-hidden bg-gray-100">
     <!-- SIDEBAR (Danh sách chat) -->
     <aside class="w-full md:w-1/4 flex flex-col bg-white border-r border-gray-200 shadow-sm" :class="[isChatActive ? 'hidden' : 'flex', 'md:flex']">
       <!-- Header sidebar -->
@@ -181,12 +181,11 @@
   import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr'
   import { useTest2Store } from '@PKG_SRC/stores/Modules/Mypg/test2'
   import BaseControlTextArea from '@PKG_SRC/components/Basecontrol/BaseControlTextArea.vue'
+import { useUserStore } from '@PKG_SRC/stores/master/userStore'
 
-  // Lấy userName từ query param ?userName=xxx
-  const userNameParam = new URLSearchParams(window.location.search).get('userName') || 'UserA'
-  const userName = ref(userNameParam)
+  const userStore = useUserStore()
+  const userName = ref(userStore.UserInfo.usrId)
 
-  // Địa chỉ hub (khớp với server .NET)
   const hubUrl = `https://localhost:5092/chat-hub?userName=${userName.value}`
 
   const store = useTest2Store()
@@ -307,7 +306,6 @@
     }
   }
 
-  // Khi bấm chọn 1 chat
   function handleItemClick(id: string) {
     store.GetMessageById(id)
     selectedChatId.value = id
@@ -319,12 +317,10 @@
     scrollToBottom()
   }
 
-  // Nút back (mobile)
   function goBackToList() {
     isChatActive.value = false
   }
-
-  // onMounted
+  
   onMounted(async () => {
     store.GetMessage()
     await connectSignalR()

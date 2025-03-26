@@ -83,5 +83,25 @@ export const useDHOHistoryStore = defineStore('DHOHistoryStore', {
       formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
       return true
     },
+    async RePayment(orderId: string) {
+      const apiClient = useApiClient()
+      const loadingStore = useLoadingStore()
+      const formMessage = useFormMessageStore()
+      const uploadStore = useUploadImageStore()
+      loadingStore.LoadingChange(true)
+      const res = await apiClient.api.v1.PaymentOrderCallback.$post({
+        body:{
+          orderId: orderId,
+          platform: 1,
+        }
+      })
+      loadingStore.LoadingChange(false)
+      if (!res.success){
+        formMessage.SetFormMessageNotApiRes('E00001', true, res.message ?? '')
+        return false
+      }
+      formMessage.SetFormMessage(res as AbstractApiResponseOfString, true);
+      return res.response?.paymentUrl
+    },
   },
 })
